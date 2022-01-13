@@ -13,7 +13,7 @@ export default function Login({ navigation, route, props }) {
   const [Email, setEmail] = useState("")
   const [Password, setPassword] = useState("")
   const [checked, setChecked] = useState(false);
-  const [IsLodding,setIslogin]= useState(false)
+  const [IsLodding,setIsLodding]= useState(false)
   const [isSelection, setisSelection] = useState(false);
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
@@ -33,7 +33,7 @@ export default function Login({ navigation, route, props }) {
       Alert.alert("Enter Password")
     }
     else {
-      setIslogin(true)
+      setIsLodding(true)
       dispatch(authAction.login(Email, Password));
     }
   }
@@ -58,12 +58,12 @@ export default function Login({ navigation, route, props }) {
         // AsyncStorage.setItem('org_id', loginData.data.user.org_id.toString())
         // Alert.alert("loginsuccesfull")
         console.log("redirect..........")
-        setIslogin(false)
+        setIsLodding(false)
         navigation.navigate("MainStack")
         // dispatch(authAction.clearResponse())
       }
       else if (loginData.status == "failed") {
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(loginData.message)                                                                                //otherwise alert show 
       }
       else {

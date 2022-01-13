@@ -12,7 +12,7 @@ export default function SetPassword({ navigation, route, props }) {
   const [state, setstate] = useState("")
   const [state1, setstate1] = useState("")
   const [email, setemail] = useState(route.params ? route.params.email : '')
-  const [IsLodding, setIslogin] = useState(false)
+  const [IsLodding, setIsLodding] = useState(false)
 
   const dispatch = useDispatch()
   const PassData = useSelector(state => state.setPassword.data)
@@ -25,18 +25,18 @@ export default function SetPassword({ navigation, route, props }) {
         // console.log('sucess..............',PassData.data.uid)
         setstate("")
         setstate1("")
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(PassData.message)
         navigation.navigate("Login")
       }
       else if (PassData.status == "failed") {
         // console.log('sucess...........false...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(PassData.message)                                                                                //otherwise alert show 
         // setNumber('');
       }
       else if (PassData.status == "fail") {
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(PassData.message)
       }
       else {
@@ -52,7 +52,7 @@ export default function SetPassword({ navigation, route, props }) {
       Alert.alert("Enter Re- Password")
     }
     else {
-      setIslogin(true)
+      setIsLodding(true)
       dispatch(setPasswordAction.setPassword(email, state, state1));
       // navigation.navigate("Varification")
     }

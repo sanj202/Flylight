@@ -14,7 +14,8 @@ import {
   Task_Manager,
   Report2,
   EditProfile,
-  Notification
+  Notification,
+  Splash
 } from '../screens/index'
 import { HomeTabs } from './bottom/homeTab'
 import { AuthStack } from './authStack';

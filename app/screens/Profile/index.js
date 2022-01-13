@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Text, StyleSheet, Image, TextInput,ActivityIndicator,
+    View, Text, StyleSheet, Image, TextInput, ActivityIndicator,
     StatusBar, TouchableOpacity, ScrollView, ToastAndroidAlert, Dimensions
 } from 'react-native';
 import styles from './styles';
@@ -12,7 +12,7 @@ import { profileAction } from '../../redux/Actions';
 export default function AddContact({ navigation }) {
 
     const [user, setUser] = useState('');
-    const [IsLodding,setIslogin]= useState(false)
+    const [IsLodding, setIsLodding] = useState(false)
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
     const profileData = useSelector(state => state.profile.userDetail)
@@ -21,7 +21,7 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (loginData) {
             if (loginData.status == "success") {
-                setIslogin(true)
+                setIsLodding(true)
                 dispatch(profileAction.profile(
                     loginData.data.uid,
                     loginData.data.org_uid,
@@ -35,16 +35,16 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (profileData) {
             if (profileData.status == "200") {
-                setIslogin(false)
+                setIsLodding(false)
                 // console.log('profileData.................', profileData.data.user)
                 setUser(profileData.data.user)
                 dispatch(profileAction.clearResponse())
             }
             else if (profileData == '') {
-                setIslogin(false)
+                setIsLodding(false)
             }
             else {
-                setIslogin(false)
+                setIsLodding(false)
                 Alert.alert(profileData.message)
             }
         }
@@ -154,13 +154,12 @@ export default function AddContact({ navigation }) {
                     fontFamily: 'Roboto', fontWeight: '500', color: '#000000'
                 }}>{user.name}</Text>
             </View>
-
-        
-{IsLodding == true ? 
-          <ActivityIndicator size="small" color="#0000ff" />
-          :
-          <View />
-}
+            
+            {IsLodding == true ?
+                <ActivityIndicator size="small" color="#0000ff" />
+                :
+                <View />
+            }
             <View style={{ margin: '5%', }}>
                 <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
                 <View style={styles.inputFields}>

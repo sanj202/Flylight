@@ -12,7 +12,7 @@ import styles from './styles';
 export default function Varification({ navigation, route }) {
 
   const [state, setstate] = useState(route.params ? route.params.email : '')
-  const [IsLodding, setIslogin] = useState(false)
+  const [IsLodding, setIsLodding] = useState(false)
   const CELL_COUNT = 6;
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
@@ -35,12 +35,12 @@ export default function Varification({ navigation, route }) {
       if (FotpData.status == "success") {
         // console.log('sucess..............', FotpData)
         setValue('')
-        setIslogin(false)
+        setIsLodding(false)
         navigation.navigate("SetPassword", {email: FotpData.data.email })
       }
       else if (FotpData.status == "failed") {
         // console.log('sucess...........false...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(FotpData.message)                                                                                //otherwise alert show 
       }
     }
@@ -54,13 +54,13 @@ export default function Varification({ navigation, route }) {
     if (resendOtpData) {
       if (resendOtpData.status == "success") {
         // console.log('sucess..............', otpData)
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(resendOtpData.message)
 
       }
       else if (resendOtpData.status == "failed") {
         // console.log('sucess...........false...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(resendOtpData.message)                                                                                //otherwise alert show 
 
       }
@@ -80,7 +80,7 @@ export default function Varification({ navigation, route }) {
     }
 
     else {
-      setIslogin(true)
+      setIsLodding(true)
       dispatch(FvarificationAction.varification(value, state));
 
       // navigation.navigate("Varification")
@@ -89,7 +89,7 @@ export default function Varification({ navigation, route }) {
   }
 
   const resend = () => {
-    setIslogin(true)
+    setIsLodding(true)
     dispatch(resendOtpAction.resend(state));
   }
 

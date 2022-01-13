@@ -11,7 +11,7 @@ import styles from './styles';
 export default function Varification({ navigation, route }) {
   // console.log("previes screen ....................", route.params.uid)
   const [state, setstate] = useState(route.params ? route.params.uid : '')
-  const [IsLodding, setIslogin] = useState(false)
+  const [IsLodding, setIsLodding] = useState(false)
   const CELL_COUNT = 6;
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
@@ -32,12 +32,12 @@ export default function Varification({ navigation, route }) {
         // navigation.navigate("MainStack", {
         //   uid: route.params.uid
         // })
-        setIslogin(false)
+        setIsLodding(false)
         navigation.navigate("Login")
       }
       else if (otpData.status == "failed") {
         // console.log('sucess...........false...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(otpData.message)                                                                                //otherwise alert show 
       }
     }
@@ -51,12 +51,12 @@ export default function Varification({ navigation, route }) {
     if (resendOtpData) {
       if (resendOtpData.status == "success") {
         // console.log('sucess..............', otpData)
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(resendOtpData.message)
       }
       else if (resendOtpData.status == "failed") {
         // console.log('sucess...........false...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(resendOtpData.message)                                                                                //otherwise alert show 
       }
     }
@@ -71,7 +71,7 @@ export default function Varification({ navigation, route }) {
       Alert.alert("Enter OTP")
     }
     else {
-      setIslogin(true)
+      setIsLodding(true)
       dispatch(varificationAction.varification(value, state));
       // navigation.navigate("Varification")
       // navigation.navigate('DashBoard');
@@ -79,7 +79,7 @@ export default function Varification({ navigation, route }) {
   }
 
   const resend = () => {
-    setIslogin(true)
+    setIsLodding(true)
     dispatch(resendOtpAction.resend(state));
   }
 

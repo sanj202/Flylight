@@ -10,7 +10,7 @@ import { forgotPassAction } from '../../redux/Actions/index'
 export default function ForgotPassword({ navigation }) {
 
   const [state, setstate] = useState("")
-  const [IsLodding, setIslogin] = useState(false)
+  const [IsLodding, setIsLodding] = useState(false)
   const dispatch = useDispatch()
   const getData = useSelector(state => state.forgotPass.data)
 
@@ -20,25 +20,25 @@ export default function ForgotPassword({ navigation }) {
         // console.log('sucess..............',)
         Alert.alert(getData.message)
         setstate("")
-        setIslogin(false)
+        setIsLodding(false)
         navigation.navigate("F_Varification", { email: getData.data.email})
       }
       else if (getData.status == 'warning') {
         // console.log('sucess...........warning...')
         Alert.alert(getData.message)
         setstate("")
-        setIslogin(false)
+        setIsLodding(false)
         navigation.navigate("F_Varification", {email: getData.data.email})                                                                                                           //otherwise alert show 
       }
       else if (getData.status == "fail") {
         // console.log('sucess...........fail...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(getData.message)                                                                                //otherwise alert show 
 
       }
       else if (getData.status == "failed") {
         // console.log('sucess...........failed...')
-        setIslogin(false)
+        setIsLodding(false)
         Alert.alert(getData.message)                                                                                //otherwise alert show 
 
       }
@@ -57,7 +57,7 @@ export default function ForgotPassword({ navigation }) {
       Alert.alert(" Enter Email/Mobile ")
     }
     else {
-      setIslogin(true)
+      setIsLodding(true)
       dispatch(forgotPassAction.forgotPassword(state));
 
       // navigation.navigate("F_Varification")

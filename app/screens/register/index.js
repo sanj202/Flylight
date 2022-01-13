@@ -16,7 +16,7 @@ export default function Register({ navigation }) {
     const [Org, setOrg] = useState("")
     const [Password, setPassword] = useState("")
     const [Cpassword, setCpassword] = useState("")
-    const [IsLodding,setIslogin]= useState(false)
+    const [IsLodding,setIsLodding]= useState(false)
     const dispatch = useDispatch()
     const registerData = useSelector(state => state.register.data)
 
@@ -26,7 +26,7 @@ export default function Register({ navigation }) {
                 // console.log('sucess..............', registerData.data.uid)
                 setName(""), setEmail(""), setPhone("")
                 setOrg(""), setPassword(""), setCpassword("")
-                setIslogin(false)
+                setIsLodding(false)
                 navigation.navigate("Varification", {uid: registerData.data.uid})
             }
             else if (registerData.status == "failed") {
@@ -65,7 +65,7 @@ export default function Register({ navigation }) {
                 c_password: Cpassword,
                 phone: Phone,
             }
-            setIslogin(true)
+            setIsLodding(true)
             dispatch(registerAction.register(data));
         }
     }
