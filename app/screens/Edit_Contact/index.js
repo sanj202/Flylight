@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     ToastAndroid, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, ActivityIndicator
 } from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -42,6 +42,7 @@ export default function EditContact({ navigation, route }) {
     const [Campagin, setCampagin] = useState(route.params.Edata ? route.params.Edata.campaign : null);
     const [isFocus1, setIsFocus1] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
+    const [IsLodding, setIsLodding] = useState(false)
 
     const { width, height } = Dimensions.get('window');
 
@@ -150,6 +151,7 @@ export default function EditContact({ navigation, route }) {
                     }
                     //   console.log("data....................",data)
                     dispatch(editContactAction.EditContact(data, loginData.data.token));
+                    setIsLodding(true)
                 }
             }
         }
@@ -158,18 +160,23 @@ export default function EditContact({ navigation, route }) {
     useEffect(() => {
         if (Data) {
             if (Data.status == "success") {
-                // console.log("sucess..........",Data.message)
                 Alert.alert(Data.message)
+                setIsLodding(false)
                 dispatch(editContactAction.clearResponse());
-
                 navigation.goBack()
             }
             else if (Data.status == "failed") {
+                setIsLodding(false)
                 Alert.alert(Data.message)
             }
             else if (Data.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(Data.message)
             }
+            else{
+                setIsLodding(false)  
+            }
+
         }
         else {
 
@@ -179,17 +186,7 @@ export default function EditContact({ navigation, route }) {
     // console.log('default...........................................',navigation)
     return (
         <View style={{ flex: 1 }}>
-            <StatusBar
-                barStyle="dark-content"
-                // dark-content, light-content and default
-                hidden={false}
-                //To hide statusBar
-                backgroundColor="#2B6EF2"
-                //Background color of statusBar only works for Android
-                translucent={false}
-                //allowing light, but not detailed shapes
-                networkActivityIndicatorVisible={true}
-            />
+          
             <Header
                 // style={{ height: "1%" }}
                 onPressLeft={() => {
@@ -728,6 +725,12 @@ export default function EditContact({ navigation, route }) {
                             )}
                         />
                     </View>
+
+                    {IsLodding == true ?
+                        <ActivityIndicator size="small" color="#0000ff" />
+                        :
+                        <View />}
+
                     <TouchableOpacity style={[styles.button, { marginHorizontal: '2%' }]}
                         // onPress={() => setModalVisible2(!modalVisible2)}
                         onPress={() => AddContactFuction()}

@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { profileAction } from '../../redux/Actions';
+import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation }) {
 
@@ -15,11 +16,12 @@ export default function AddContact({ navigation }) {
     const [IsLodding, setIsLodding] = useState(false)
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
     const profileData = useSelector(state => state.profile.userDetail)
     const loginData = useSelector(state => state.auth.data)
 
     useEffect(() => {
-        if (loginData) {
+        if (loginData || isFocused) {
             if (loginData.status == "success") {
                 dispatch(profileAction.profile(
                     loginData.data.uid,
@@ -30,13 +32,12 @@ export default function AddContact({ navigation }) {
                 setIsLodding(true)
             }
         }
-    }, [loginData])
+    }, [loginData , isFocused])
 
     useEffect(() => {
         if (profileData) {
             if (profileData.status == "200") {
                 setIsLodding(false)
-                // console.log('profileData.................', profileData.data.user)
                 setUser(profileData.data.user)
                 dispatch(profileAction.clearResponse())
             }

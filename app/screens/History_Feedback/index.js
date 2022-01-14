@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, StyleSheet, Image, TextInput, Dimensions,
+  View, Text, StyleSheet, Image, TextInput, Dimensions, ActivityIndicator,
   TouchableOpacity, ScrollView, ToastAndroid, Alert, StatusBar
 } from 'react-native';
 import styles from './styles';
@@ -108,6 +108,7 @@ export default function AddContact({ navigation, route }) {
   ];
 
   const [feedback, setfeedback] = useState()
+  const [IsLodding, setIsLodding] = useState(false)
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
   const FeedbackData = useSelector(state => state.history.feedback)
@@ -142,6 +143,7 @@ export default function AddContact({ navigation, route }) {
             // feedback_id: "16"
           }
           dispatch(historyAction.AddEdit_feedback_History(loginData.data.token, data));
+          setIsLodding(true)
         }
       }
     }
@@ -152,16 +154,18 @@ export default function AddContact({ navigation, route }) {
     if (FeedbackData) {
       if (FeedbackData.status == 'success') {
         Alert.alert(FeedbackData.message)
+        setIsLodding(false)
         setfname(''), setlname(''), setphone(''), setCity(''),
-          setState(), setdescription(), setdate(new Date()), settime(new Date())
+          setState(), setdescription(), setDate(new Date()), settime(new Date())
         navigation.navigate('History');
         dispatch(historyAction.clearHistoryFeedbackResponse())
       }
       else if (FeedbackData.status == 'fail') {
         Alert.alert(FeedbackData.message)
+        setIsLodding(false)
       }
       else {
-
+        setIsLodding(false)
       }
 
     }
@@ -542,6 +546,11 @@ export default function AddContact({ navigation, route }) {
             </View>
           )}
         />
+
+        {IsLodding == true ?
+          <ActivityIndicator size="small" color="#0000ff" />
+          :
+          <View />}
         <TouchableOpacity style={[styles.button, {
           marginLeft: '2%', borderRadius: 20,
           marginRight: '2%'

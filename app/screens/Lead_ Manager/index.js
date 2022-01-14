@@ -12,7 +12,7 @@ import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { leadAction, opportunityAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import {useIsFocused} from "@react-navigation/core"
+import { useIsFocused } from "@react-navigation/core"
 
 export default function lead_manager({ navigation, route }) {
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
@@ -189,7 +189,7 @@ export default function lead_manager({ navigation, route }) {
   const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
 
   useEffect(() => {
-    if (loginData  || isFocused) {
+    if (loginData || isFocused) {
       if (loginData.status == "success") {
         dispatch(leadAction.leadList(
           loginData.data.token,
@@ -206,7 +206,7 @@ export default function lead_manager({ navigation, route }) {
         setIsLodding(true)
       }
     }
-  }, [loginData , isFocused])
+  }, [loginData, isFocused])
 
 
   useEffect(() => {
@@ -736,19 +736,24 @@ export default function lead_manager({ navigation, route }) {
               </TouchableOpacity>
             </View>
 
-           
+
             <View style={{ marginTop: '-1%' }}></View>
             {IsLodding == true ?
-              <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
+              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
               :
-             
-            <FlatList
-              style={{ height: height / 1.55 }}
-              data={AllList}
-              renderItem={AllView}
-            />
-         
-          }
+              <View>
+                {AllList !== undefined && AllList.length > 0 ?
+                  <FlatList
+                    style={{ height: height / 1.55 }}
+                    data={AllList}
+                    renderItem={AllView}
+                  />
+                  :
+                  <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+
+
+              </View>
+            }
             <View style={{ marginTop: '2%' }}></View>
           </View>
 
@@ -874,18 +879,21 @@ export default function lead_manager({ navigation, route }) {
             <View style={{ marginTop: '2%' }}></View>
 
             {IsLodding == true ?
-              <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
+              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
               :
-             
+              <View>
+                {Lead !== undefined && Lead.length > 0 ?
+                  <FlatList
+                    style={{ height: height / 1.7 }}
 
-            <FlatList
-              style={{ height: height / 1.7 }}
+                    data={Lead}
+                    renderItem={LeadView}
+                  />
 
-              data={Lead}
-              renderItem={LeadView}
-            />
-           
-          }
+                  :
+                  <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+                }
+              </View>}
             <View style={{ marginTop: '2%' }}></View>
           </View>
           :
@@ -1009,14 +1017,22 @@ export default function lead_manager({ navigation, route }) {
             <View style={{ marginTop: '2%' }}></View>
 
             {IsLodding == true ?
-              <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
+              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
               :
-            <FlatList
-              style={{ height: height / 1.7 }}
-              data={Opportunity}
-              renderItem={OpportunityVIew}
-            />
-          }
+              <View>
+                {Opportunity !== undefined && Opportunity.length > 0 ?
+                  <FlatList
+                    style={{ height: height / 1.7 }}
+                    data={Opportunity}
+                    renderItem={OpportunityVIew}
+                  />
+
+                  :
+                  <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+                }
+              </View>
+
+            }
             <View style={{ marginTop: '2%' }}></View>
           </View>
           :

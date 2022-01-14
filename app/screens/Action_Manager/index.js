@@ -320,7 +320,7 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        // onPress={() => deleteData({ type: 'status', id: item.id })}
+                    // onPress={() => deleteData({ type: 'status', id: item.id })}
                     // onPress={() => setModalVisible2(true)}
                     >
                         <Image
@@ -349,8 +349,8 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        // onPress={() => setModalVisible2(true)}
-                        // onPress={() => deleteData({ type: 'Action', id: item.id })}
+                    // onPress={() => setModalVisible2(true)}
+                    // onPress={() => deleteData({ type: 'Action', id: item.id })}
 
                     >
                         <Image
@@ -485,17 +485,21 @@ export default function action_manager({ navigation }) {
                                             fontFamily: 'Roboto',
                                             fontWeight: 'bold', color: '#2D2D2D', padding: '3%'
                                         }}>Status</Text>
+                                        {allStatus !== undefined && allStatus.length > 0 ?
+                                            <FlatList
+                                                style={
+                                                    Platform.OS == 'ios' ?
+                                                        { height: "69%" }
+                                                        :
+                                                        { height: "58%" }}
+                                                data={allStatus}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                renderItem={StatusView}
+                                            />
+                                            :
+                                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+                                        }
 
-                                        <FlatList
-                                            style={
-                                                Platform.OS == 'ios' ?
-                                                    { height: "69%" }
-                                                    :
-                                                    { height: "58%" }}
-                                            data={allStatus}
-                                            keyExtractor={(item, index) => index.toString()}
-                                            renderItem={StatusView}
-                                        />
                                     </View>
                                 </View>
 
@@ -539,16 +543,21 @@ export default function action_manager({ navigation }) {
                                 <View style={{ marginTop: '10%' }}>
                                     <View style={[styles.listData1,]}>
                                         <Text style={{ marginLeft: '3%', fontSize: 19, fontFamily: 'Roboto', fontWeight: 'bold', color: '#2D2D2D', padding: '3%' }}>Actions</Text>
-                                        <FlatList
-                                            style=
-                                            {Platform.OS == 'ios' ?
-                                                { height: "69%" }
-                                                :
-                                                { height: "58%" }}
-                                            data={allAction}
-                                            keyExtractor={(item, index) => index.toString()}
-                                            renderItem={ActionView}
-                                        />
+                                        {allAction !== undefined && allAction.length > 0 ?
+                                            <FlatList
+                                                style=
+                                                {Platform.OS == 'ios' ?
+                                                    { height: "69%" }
+                                                    :
+                                                    { height: "58%" }}
+                                                data={allAction}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                renderItem={ActionView}
+                                            />
+
+                                            :
+                                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+                                        }
                                     </View>
                                 </View>
                             </View>
