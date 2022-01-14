@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {ActivityIndicator,Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
-  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert,RefreshControl} from 'react-native';
+  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert,RefreshControl
+} from 'react-native';
 import { Card } from 'react-native-paper';
 import PieChart from 'react-native-pie-chart';
 import Header from "../../component/header/index";
@@ -19,6 +20,19 @@ export default function Dashboard({ navigation, route, props }) {
   const [Taccounts, setTaccounts] = useState('')
   const [Tcontacts, setTcontacts] = useState('')
   const [IsLodding, setIsLodding] = useState(true)
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => 
+    Get_Data(),
+    setRefreshing(false)
+    );
+  }, []);
 
   const isFocused = useIsFocused();
   const dispatch = useDispatch()
@@ -110,7 +124,16 @@ export default function Dashboard({ navigation, route, props }) {
         console.log('dashborad calll/.....................')
       }
     }
-  }, [loginData,isFocused])
+  }, [loginData ,isFocused])
+
+  const Get_Data =()=>{
+    dispatch(dashboardAction.dashboard(
+      loginData.data.uid,
+      loginData.data.org_uid,
+      loginData.data.cProfile.toString(),
+      loginData.data.token
+    ));
+  }
 
   useEffect(() => {
     if (dashboardData) {
@@ -202,7 +225,12 @@ export default function Dashboard({ navigation, route, props }) {
         </Pressable >
       </View>
 
-<ScrollView >
+<ScrollView refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }>
       {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
