@@ -1,38 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
-  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert
-} from 'react-native';
+import {ActivityIndicator,Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
+  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert,RefreshControl} from 'react-native';
 import { Card } from 'react-native-paper';
 import PieChart from 'react-native-pie-chart';
 import Header from "../../component/header/index";
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { dashboardAction } from '../../redux/Actions/index'
+import {useIsFocused} from "@react-navigation/core"
 
 export default function Dashboard({ navigation, route, props }) {
 
-  const loginData = useSelector(state => state.auth.data)
-
   const [Opportunity, setOpportunity] = useState('7-Days');
-  const [isService, setisService] = useState('Opportunity');
-
   const [modalVisible2, setModalVisible2] = useState(true);
   const [modalVisible3, setModalVisible3] = useState(false);
-
-  const [Token, setToken] = useState('');
-  const [Orguid, setOrguid] = useState('');
-  const [Uid, setUid] = useState('');
-  const [cProfile, setcProfile] = useState('');
-
   const [Topportunitys, setTopportunitys] = useState('')
   const [Tleads, setTleads] = useState('')
   const [Taccounts, setTaccounts] = useState('')
   const [Tcontacts, setTcontacts] = useState('')
+  const [IsLodding, setIsLodding] = useState(true)
 
+  const isFocused = useIsFocused();
   const dispatch = useDispatch()
+  const loginData = useSelector(state => state.auth.data)
   const dashboardData = useSelector(state => state.dashboard.data)
 
+
+  console.log('loginData.................',loginData)
   const widthAndHeight = 160
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
@@ -81,30 +75,17 @@ export default function Dashboard({ navigation, route, props }) {
     useShadowColorFromDataset: false // optional
   };
 
-  const checkValue = (value) => {
-    // console.log("data,......................", A)
-    setisService(value)
-  }
 
   const checkStatusValue = (value) => {
-    // console.log("data,......................", value)
     setOpportunity(value)
-  }
-
-  const newFunction = () => {
-    // console.log('callllllllllllllllllllllllllllllllllllll')
-    navigation.navigate('ReportFeedback')
-    // console.log('callllllllllllllllafterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrlll')
   }
 
   const addContacts = () => {
     setModalVisible2(!modalVisible2),
-      // Dashboard()
       setModalVisible3(!modalVisible3)
   }
 
   const SkipContact = () => {
-    // Dashboard()
     setModalVisible2(!modalVisible2)
   }
 
@@ -113,13 +94,12 @@ export default function Dashboard({ navigation, route, props }) {
       navigation.navigate('AddContactUpload')
   }
   const ManuallyAdd = () => {
-    // console.log("m..................................")
     setModalVisible3(!modalVisible3),
       navigation.navigate("addTab")
   }
 
   useEffect(() => {
-    if (loginData) {
+    if (loginData || isFocused ) {
       if (loginData.status == "success") {
         dispatch(dashboardAction.dashboard(
           loginData.data.uid,
@@ -127,51 +107,38 @@ export default function Dashboard({ navigation, route, props }) {
           loginData.data.cProfile.toString(),
           loginData.data.token
         ));
+        console.log('dashborad calll/.....................')
       }
     }
-  }, [loginData])
+  }, [loginData,isFocused])
 
   useEffect(() => {
     if (dashboardData) {
+      setIsLodding(false)
       if (dashboardData.status == "200") {
         setTopportunitys(dashboardData.data.total_opportunities)
         setTaccounts(dashboardData.data.total_accounts)
         setTcontacts(dashboardData.data.total_contacts)
         setTleads(dashboardData.data.total_leads)
-
         if (!dashboardData.data.total_contacts == []) {
           setModalVisible2(false)
         }
+        dispatch(dashboardAction.clearResponse())
       }
-      else if (dashboardData == '') {
-        // console.log('sucess...........false...')
-        // Alert.alert(dashboardData.message)                                                                                //otherwise alert show 
+      else if (dashboardData == '') {                                                                               //otherwise alert show 
       }
       else {
         Alert.alert(dashboardData.message)
       }
     }
     else {
-
     }
-
   }, [dashboardData])
 
   return (
-    <View style={styles.container}>
-
-      <StatusBar
-        barStyle="dark-content"
-        // dark-content, light-content and default
-        hidden={false}
-        //To hide statusBar
-        backgroundColor="#2B6EF2"
-        //Background color of statusBar only works for Android
-        translucent={false}
-        //allowing light, but not detailed shapes
-        networkActivityIndicatorVisible={true}
-      />
-
+    <View style={styles.container} 
+    >
+    
       <Header
         style={Platform.OS == 'ios' ?
           { height: "18%" } : { height: "16%" }}
@@ -235,6 +202,12 @@ export default function Dashboard({ navigation, route, props }) {
         </Pressable >
       </View>
 
+<ScrollView >
+      {IsLodding == true ?
+                <ActivityIndicator size="small" color="#0000ff" />
+                :
+                
+                <View>
       <View
         style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
         <TouchableOpacity style={{ marginRight: '5%' }}
@@ -253,6 +226,7 @@ export default function Dashboard({ navigation, route, props }) {
         </TouchableOpacity>
       </View>
       {/* <ScrollView> */}
+
       <Card style={{ margin: '3%', padding: 5 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: '3%', paddingBottom: '2%' }}>
 
@@ -456,9 +430,8 @@ export default function Dashboard({ navigation, route, props }) {
         )}
         keyExtractor={(item) => item.title}
       />
-        {/* </ScrollView> */}
-        
-      {/* <View style={{backgroundColor:'',height:'4%'}} /> */}
+      </View> }
+     </ScrollView>
       <Modal
         animationType="slide"
         transparent={true}

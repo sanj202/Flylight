@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
+import {ActivityIndicator,Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -17,6 +15,8 @@ export default function action_manager({ navigation }) {
     const [modalVisible2, setModalVisible2] = useState(false);
     const [modalVisible3, setModalVisible3] = useState(false);
     const [modalVisible4, setModalVisible4] = useState(false);
+
+    const [IsLodding, setIsLodding] = useState(false)
 
     const DeleteFunction = (value) => {
         setModalVisible2(!modalVisible2)
@@ -50,6 +50,9 @@ export default function action_manager({ navigation }) {
     const addStatusData = useSelector(state => state.actionmanager.addStatus)
     const statusList = useSelector(state => state.actionmanager.statuslist)
 
+
+    // console.log("get..........................",actionList,statusList)
+
     useEffect(() => {
         if (loginData) {
             if (loginData.status == "success") {
@@ -68,16 +71,19 @@ export default function action_manager({ navigation }) {
         if (actionList) {
             if (actionList.status == "200") {
                 setallAction(actionList.data)
+                setIsLodding(false)
                 dispatch(actionmanagerAction.clearActionResponse())
             }
             else if (actionList.status == "failed") {
+                setIsLodding(false)
                 Alert.alert(leadList.message)
             }
             else if (actionList.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(actionList.message)
             }
             else {
-
+                setIsLodding(false)
             }
         }
         else {
@@ -88,15 +94,19 @@ export default function action_manager({ navigation }) {
         if (statusList) {
             if (statusList.status == "200") {
                 setallStatus(statusList.data)
+                setIsLodding(false)
                 dispatch(actionmanagerAction.clearStatusResponse())
             }
             else if (statusList.status == "failed") {
+                setIsLodding(false)
                 Alert.alert(statusList.message)
             }
             else if (statusList.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(statusList.message)
             }
             else {
+                setIsLodding(false)
             }
         }
         else {
@@ -139,6 +149,7 @@ export default function action_manager({ navigation }) {
                     dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token,));
                 }
             }
+            setIsLodding(true)
         }
     }
 
@@ -146,17 +157,21 @@ export default function action_manager({ navigation }) {
         if (addActionData) {
             if (addActionData.status == "success") {
                 Alert.alert(addActionData.message)
+                setIsLodding(false)
                 setnewAction('')
                 dispatch(actionmanagerAction.clearAddActionResponse())
                 Get_ActionStatus()
             }
             else if (addActionData.status == "failed") {
+                setIsLodding(false)
                 Alert.alert(leadList.message)
             }
             else if (addActionData.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(addActionData.message)
             }
             else {
+                setIsLodding(false)
             }
         }
         else {
@@ -168,15 +183,19 @@ export default function action_manager({ navigation }) {
             if (addStatusData.status == "success") {
                 Alert.alert(addStatusData.message)
                 setnewStatus('')
+                setIsLodding(false)
                 dispatch(actionmanagerAction.clearAddStatusResponse())
                 Get_ActionStatus()
             }
             else if (addStatusData.status == "failed") {
+                setIsLodding(false)
             }
             else if (addStatusData.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(addStatusData.message)
             }
             else {
+                setIsLodding(false)
             }
         }
         else {
@@ -217,6 +236,7 @@ export default function action_manager({ navigation }) {
                     }
                     dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
                 }
+
             }
         }
 
@@ -383,6 +403,12 @@ export default function action_manager({ navigation }) {
 
                                     </View>
                                 </View>
+
+                                {IsLodding == true ?
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    :
+                    <View />}
+
                                 <TouchableOpacity
                                     onPress={() => AddActionFunction("Status")}
                                     style={styles.buttonClose3}
@@ -442,6 +468,12 @@ export default function action_manager({ navigation }) {
                                         />
                                     </View>
                                 </View>
+
+                                {IsLodding == true ?
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    :
+                    <View />}
+
                                 <TouchableOpacity
                                     onPress={() => AddActionFunction("Action")}
                                     style={styles.buttonClose3}

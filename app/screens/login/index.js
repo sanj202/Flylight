@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,ActivityIndicator,
-  TextInput,Image,Alert,StatusBar,SafeAreaView,Platform} from 'react-native';
+import {
+  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator,
+  TextInput, Image, Alert, StatusBar, SafeAreaView, Platform
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from './styles';
@@ -13,16 +15,18 @@ export default function Login({ navigation, route, props }) {
   const [Email, setEmail] = useState("")
   const [Password, setPassword] = useState("")
   const [checked, setChecked] = useState(false);
-  const [IsLodding,setIsLodding]= useState(false)
+  const [IsLodding, setIsLodding] = useState(false)
   const [isSelection, setisSelection] = useState(false);
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
 
   useEffect(() => {
     AsyncStorage.getItem('Email', (err, Email) => {
-      if (Email !== null) {setEmail(Email)} })
+      if (Email !== null) { setEmail(Email) }
+    })
     AsyncStorage.getItem('Password', (err, Password) => {
-      if (Password !== null) {setPassword(Password)} })
+      if (Password !== null) { setPassword(Password) }
+    })
   }, [])
 
   const login = () => {
@@ -173,11 +177,11 @@ export default function Login({ navigation, route, props }) {
 
         <View style={styles.inputFields2}>
           <Image
-            style={Platform.OS == 'ios' ? 
-            [styles.icon, {height: 19.20, width: 17.80,margin: '3%'}]
+            style={Platform.OS == 'ios' ?
+              [styles.icon, { height: 19.20, width: 17.80, margin: '3%' }]
               :
-              [styles.icon, {height: 19.20, width: 17.80,margin: '3%', marginTop: '5%',}]
-              }
+              [styles.icon, { height: 19.20, width: 17.80, margin: '3%', marginTop: '5%', }]
+            }
             source={require('../../images/icon-password.png')}
           />
           <TextInput
@@ -194,10 +198,16 @@ export default function Login({ navigation, route, props }) {
             onPress={() => setisSelection(!isSelection)}
           >
             <Image
-              style={[styles.icon, {
+              style={
+                Platform.OS == 'ios' ? [styles.icon, {
                 height: 18, width: 20,
                 marginTop: '5.5%', marginRight: '5%'
-              }]}
+              }]
+            :
+            [styles.icon, {
+              height: 18, width: 20,
+              marginTop: '25%', marginRight: '5%'
+            }]}
               source={require('../../images/private.png')}
             />
           </TouchableOpacity>
@@ -222,11 +232,11 @@ export default function Login({ navigation, route, props }) {
             </View>
             <Text style={{ fontSize: 12, marginLeft: '-10%', fontFamily: 'Roboto', color: '#6B7285' }}>Remember me</Text>
           </View>
-{IsLodding == true ? 
-          <ActivityIndicator size="small" color="#0000ff" />
-          :
-          <View />
-}
+          {IsLodding == true ?
+            <ActivityIndicator size="small" color="#0000ff" />
+            :
+            <View />
+          }
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgotPassword')}>
             <Text style={{ color: '#FB4B0D', fontSize: 12, marginRight: '5%', fontFamily: 'Roboto' }}>Forgot password?</Text>

@@ -1,35 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View,
-    Text,
-    Image,
-    TextInput,
-    Alert,
-    Modal,
-    Pressable,
-    TouchableOpacity,
-    ScrollView,
-    ToastAndroid,
-    StatusBar,
-    Dimensions
-} from 'react-native';
+import {View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
+StatusBar, Dimensions, ActivityIndicator} from 'react-native';
 import styles from './styles';
-import { Picker, } from '@react-native-picker/picker'
-import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 
-
 export default function AddContact({ navigation, route }) {
-
-
-
-    // console.log("routedata..............", route.params)
 
     const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
     const [isFocus3, setIsFocus3] = useState(false);
@@ -59,15 +39,15 @@ export default function AddContact({ navigation, route }) {
     const [revenue, setrevenue] = useState(route.params.Edata ? route.params.Edata.annual_revenue : "")
     const [campaign, setcampaign] = useState(route.params.Edata ? route.params.Edata.campaign : null);
     const [description, setdescription] = useState(route.params.Edata ? route.params.Edata.campaign : null);
-
+    const [IsLodding, setIsLodding] = useState(false)
     const [isFocus1, setIsFocus1] = useState(false);
 
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const leadData = useSelector(state => state.leads.newLead)
+    const leadOwner = useSelector(state => state.leads.leadOwner)
 
-    // console.log("leadData...............",leadData)
     const [selectedValue, setSelectedValue] = useState('');
     const [selectedValue1, setSelectedValue1] = useState('');
     const [selectedValue2, setSelectedValue2] = useState('');
@@ -213,7 +193,41 @@ export default function AddContact({ navigation, route }) {
 
 
 
+    const [leadOwnerData, setleadOwnerData] = useState()
+// console.log('leadOwnerData...........',leadOwnerData.map((item,index)=>
+//         [{lable : item.user.avatar ,value : item.user.avatar }))
+    useEffect(() => {
+        if (loginData) {
+            if (loginData.status == "success") {
+                dispatch(leadAction.LeadOwnerList(
+                    loginData.data.uid,
+                    loginData.data.org_uid,
+                    loginData.data.cProfile.toString(),
+                    loginData.data.token
+                ));
+            }
+        }
+    }, [loginData])
 
+
+    useEffect(() => {
+        if (leadOwner) {
+            if (leadOwner.status == "200") {
+                setleadOwnerData(leadOwner.data )
+            }
+            else if (leadOwner.status == "failed") {
+                // Alert.alert(leadData.message)
+                // dispatch(leadAction.clearResponse());
+            }
+            else if (leadOwner.status == "fail") {
+                // Alert.alert(leadData.message)
+                // dispatch(leadAction.clearResponse());
+            }
+        }
+        else {
+
+        }
+    }, [leadOwner])
 
     const AddLeadFuction = () => {
         if (title == "") {
@@ -307,6 +321,7 @@ export default function AddContact({ navigation, route }) {
                         }
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
                     }
+                    setIsLodding(true)
                 }
             }
         }
@@ -315,43 +330,34 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (leadData) {
             if (leadData.status == "success") {
+                setIsLodding(false)
                 setModalVisible(true)
                 dispatch(leadAction.clearResponse());
             }
             else if (leadData.status == "failed") {
+                setIsLodding(false)
                 Alert.alert(leadData.message)
                 dispatch(leadAction.clearResponse());
             }
             else if (leadData.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(leadData.message)
                 dispatch(leadAction.clearResponse());
             }
         }
         else {
-
+            setIsLodding(false)
         }
     }, [leadData])
 
     const addLeadSuccesfully = () => {
+        setIsLodding(false)
         setModalVisible(!modalVisible);
         navigation.navigate('lead_manager')
     }
 
     return (
         <View style={{ flex: 1 }}>
-
-            <StatusBar
-                barStyle="dark-content"
-                // dark-content, light-content and default
-                hidden={false}
-                //To hide statusBar
-                backgroundColor="#2B6EF2"
-                //Background color of statusBar only works for Android
-                translucent={false}
-                //allowing light, but not detailed shapes
-                networkActivityIndicatorVisible={true}
-            />
-
             <Header
                 // style={{ height: "14%" }}
                 onPressLeft={() => {
@@ -421,7 +427,7 @@ export default function AddContact({ navigation, route }) {
                             {show && (
                                 <DateTimePicker
                                     testID="dateTimePicker"
-                                    style={{ paddingVertical: '5%', width: '50%' }}
+                                    style={{ paddingVertical: '5%', width: '50%',color:'red' }}
                                     // is24Hour={true}
                                     value={date}
                                     mode={mode}
@@ -807,56 +813,15 @@ export default function AddContact({ navigation, route }) {
                     </View>
 
 
-                    {/* <View style={{ marginTop: '2%' }}>
+                  
 
-                        <Dropdown
-                            style={[styles.dropdown3, isFocus]}
-                            placeholderStyle={styles.placeholderStyle3}
-                            selectedTextStyle={styles.selectedTextStyle3}
-                            // inputSearchStyle={styles.inputSearchStyle3}
-                            iconStyle={styles.iconStyle3}
-                            data={data4}
-                            // search
-                            maxHeight={160}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={!isFocus ? 'Transfer Lead' : '...'}
-                            // searchPlaceholder="Search..."
-                            value={value3}
-                            onFocus={() => setIsFocus4(true)}
-                            onBlur={() => setIsFocus4(false)}
-                            onChange={item => {
-                                setValue4(item.value);
-                                setIsFocus4(false);
-                            }}
-                            renderLeftIcon={() => (
+                
 
-                                <View>
-                                    <Image
-                                        source={require('../../images/list.png')}
-                                        style={{ height: 21.20, width: 16, marginLeft: '5%' }}
-                                    />
-                                </View>
-                            )}
-                        />
-                    </View> */}
+{IsLodding == true ?
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    :
+                    <View />}
 
-                    {/* <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 30, width: 23, marginTop: '4%' }]}
-                            source={require('../../images/list.png')}
-                        />
-
-                        <Picker
-                            selectedValue={selectedValue2}
-                            style={{ width: '90%', }}
-                            onValueChange={(itemValue, itemIndex) =>
-                                setSelectedValue2(itemValue)
-                            }>
-                            <Picker.Item label="Transfer Lead" value="Transfer Lead" />
-                            <Picker.Item label="Transfer Lead2" value="Transfer Lead2" />
-                        </Picker>
-                    </View> */}
 
                     <TouchableOpacity style={[styles.button, { marginLeft: '2%', marginRight: '2%' }]}
                         onPress={() => AddLeadFuction()}

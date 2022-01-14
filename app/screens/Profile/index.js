@@ -12,7 +12,7 @@ import { profileAction } from '../../redux/Actions';
 export default function AddContact({ navigation }) {
 
     const [user, setUser] = useState('');
-    const [IsLodding, setIsLodding] = useState(false)
+    const [IsLodding, setIsLodding] = useState(true)
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
     const profileData = useSelector(state => state.profile.userDetail)
@@ -21,7 +21,6 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (loginData) {
             if (loginData.status == "success") {
-                setIsLodding(true)
                 dispatch(profileAction.profile(
                     loginData.data.uid,
                     loginData.data.org_uid,
@@ -138,7 +137,8 @@ export default function AddContact({ navigation }) {
                 {user.avatar ?
                     <Image
                         // source={require('../../images/avtar.jpg')}
-                        source={{ uri: user.avatar }}
+                        // source={{ uri: user.avatar }}
+                        source={require('../../images/avtar.jpg')}
                         style={{ height: 121, width: 121, borderRadius: 80, marginTop: '2.5%', alignSelf: 'center' }}
                     />
                     :
@@ -154,55 +154,58 @@ export default function AddContact({ navigation }) {
                     fontFamily: 'Roboto', fontWeight: '500', color: '#000000'
                 }}>{user.name}</Text>
             </View>
-            
+
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
-                <View />
-            }
-            <View style={{ margin: '5%', }}>
-                <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
-                <View style={styles.inputFields}>
-                    <Image
-                        style={{ height: 18, width: 17, marginRight: '2%' }}
-                        source={require('../../images/user.png')}
-                    />
-                    <Text style={{ fontSize: 13, color: '#B9BAC8', fontFamily: 'Roboto' }}>{user.name}</Text>
-                </View>
-                <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Mobile Number</Text>
-                <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, { height: 19, width: 19 }]}
-                        source={require('../../images/VVVV.png')}
-                    />
-                    <Text style={{ fontSize: 13, color: '#B9BAC8', fontFamily: 'Roboto' }}>{user.phone}</Text>
-                </View>
-                <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Email</Text>
-                <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, { height: 17, width: 21, }]}
-                        source={require('../../images/mail.png')}
-                    />
-                    <Text style={{ marginTop: '1%', fontSize: 13, color: '#B9BAC8', fontFamily: 'Roboto' }}>{user.email}</Text>
-                </View>
-                <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Address</Text>
-                <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, { height: 24, width: 18, marginTop: '-0.5%' }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <Text style={{ fontSize: 13, color: '#B9BAC8', fontFamily: 'Roboto' }}>{user.street + ',' + user.city + ',' + user.state + ',' + user.country + ',' + user.zip}</Text>
-                </View>
-                <TouchableOpacity style={styles.button} onPress={() => LogoutSession()}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={styles.textButton}>Logout</Text>
+
+
+                <View style={{ margin: '5%', }}>
+                    <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
+                    <View style={styles.inputFields}>
                         <Image
-                            source={require('../../images/White_logout.png')}
-                            style={{ height: 17, width: 20, marginTop: '1.5%' }}
+                            style={{ height: 18, width: 17, marginRight: '2%' }}
+                            source={require('../../images/user.png')}
                         />
+                        <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#000000', fontFamily: 'Roboto' }}>{user.name ? user.name : ''}</Text>
                     </View>
-                </TouchableOpacity>
-            </View>
+                    <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Mobile Number</Text>
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 19, width: 19 }]}
+                            source={require('../../images/VVVV.png')}
+                        />
+                        <Text style={{ fontSize: 13, color: '#000000', fontWeight: 'bold', fontFamily: 'Roboto' }}>{user.phone ? user.phone : ''}</Text>
+                    </View>
+                    <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Email</Text>
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 17, width: 21, }]}
+                            source={require('../../images/mail.png')}
+                        />
+                        <Text style={{ marginTop: '1%', fontWeight: 'bold', fontSize: 13, color: '#000000', fontFamily: 'Roboto' }}>{user.email ? user.email : ''}</Text>
+                    </View>
+                    <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Address</Text>
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 24, width: 18, marginTop: '-0.5%' }]}
+                            source={require('../../images/address.png')}
+                        />
+                        <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#000000', fontFamily: 'Roboto' }}>{user.state ? user.street + ',' + user.city + ',' + user.state + ',' + user.country + ',' + user.zip : ''}</Text>
+                    </View>
+                    <TouchableOpacity style={styles.button} 
+                    // onPress={() => LogoutSession()}
+                    >
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                            <Text style={styles.textButton}>Logout</Text>
+                            <Image
+                                source={require('../../images/White_logout.png')}
+                                style={{ height: 17, width: 20, marginTop: '1.5%' }}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            }
         </View>
     );
 }

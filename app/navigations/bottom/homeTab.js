@@ -23,7 +23,8 @@ import {
   History_Feedback,
   Report2,
   Notification,
-  EditProfile
+  EditProfile,
+  DashBoard
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -32,6 +33,7 @@ const Tab = createBottomTabNavigator();
 const screenHeight = Dimensions.get('screen').height;
 const windowHeight = Dimensions.get('window').height;
 const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
+
 function HomeTabs() {
   return (
     <Tab.Navigator
@@ -41,8 +43,6 @@ function HomeTabs() {
         tabBarOptions: {
           activeTintColor: '#fff',
           inactiveTintColor: 'lightgray',
-          // keyboardHidesTabBar: true
-          // position:'absolute'
         }
       }}
       initialRouteName='Home'
@@ -51,6 +51,7 @@ function HomeTabs() {
         name="Home"
         component={TopTab}
         options={{
+         tabBarHideOnKeyboard : true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
@@ -67,6 +68,7 @@ function HomeTabs() {
         }} />
       <Tab.Screen name="Report" component={Report}
         options={{
+         tabBarHideOnKeyboard : true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
@@ -84,37 +86,27 @@ function HomeTabs() {
 
       <Tab.Screen name="addTab" component={AddContact}
         options={{
+         tabBarHideOnKeyboard : true,
           tabBarLabelStyle: { color: '#2296E4' },
           title: 'addTab',
           tabBarIcon: ({ size, focused, color }) => {
             return (
-              // console.log("tab.........................."),
               <View
-                style={Platform.OS == 'ios' ?
+               style={Platform.OS == 'ios' ?
                   { marginTop: '-4%' }
                   :
-                  { marginTop: '-12%' }
-                }
-              >
-
+                  { marginTop: '-16%' }
+                } >
                 <View style={styles.base}>
                   <View style={styles.baseTop} />
                 </View>
-
                 <View>
                   <View
-                    style={[styles.box,
-                      // {
-                      //   transform: [{ rotate: "180deg" }],
-                      // },
-                    ]}
-                  >
+                    style={styles.box}  >
                   </View>
                   <Image
-                    style={{
-                      width: 48, height: 48,
-                      // alignItems: 'center',
-                      marginTop: '65%', marginHorizontal: '23%'
+                    style={{ width: 48, height: 48, marginTop: '65%', marginHorizontal: '23%'
+                      // alignItems: 'center', 
                     }}
                     source={require('../../images/Add.png')}
                   />
@@ -126,11 +118,12 @@ function HomeTabs() {
 
       < Tab.Screen name="AddContact" component={Contacts}
         options={{
+         tabBarHideOnKeyboard : true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
           },
-          title: 'AddContact',
+          title: 'ContactList',
           tabBarIcon: ({ size, focused, color }) => {
             return (
               <Image
@@ -143,6 +136,7 @@ function HomeTabs() {
 
       < Tab.Screen name="Profile" component={Profile}
         options={{
+         tabBarHideOnKeyboard : true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',

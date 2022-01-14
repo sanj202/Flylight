@@ -1,9 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    SafeAreaView, Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image,
-    ToastAndroid, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
+    Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
+    ActivityIndicator,RefreshControl,Platform,ScrollView} from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
 import { BottomSheet, Button, ListItem } from 'react-native-elements';
@@ -11,10 +10,12 @@ import Header from '../../component/header/index'
 import { contactListAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import moment from 'moment';
+import {useIsFocused} from "@react-navigation/core"
 
 export default function Contacts({ navigation }) {
 
     const { width, height } = Dimensions.get('window');
+    const isFocused = useIsFocused();
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const contactData = useSelector(state => state.contactList.contacts)
@@ -24,9 +25,12 @@ export default function Contacts({ navigation }) {
     const [modalVisible2, setModalVisible2] = useState(true);
     const [modalVisible3, setModalVisible3] = useState(false);
     const [search, setSearch] = useState('');
-    
+    const [IsLodding, setIsLodding] = useState(true)
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
+
+
+  
 
     // useEffect(() => {
     //     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -41,7 +45,7 @@ export default function Contacts({ navigation }) {
     // }, []);
 
     useEffect(() => {
-        if (loginData) {
+    if (loginData || isFocused) {
             if (loginData.status == "success") {
                 dispatch(contactListAction.contactList(
                     loginData.data.token,
@@ -52,13 +56,12 @@ export default function Contacts({ navigation }) {
                 ));
             }
         }
-    }, [loginData])
+    }, [loginData ,isFocused])
 
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                // console.log("sucess..........", contactData.data)
-                // setcontact(contactData.data)
+                setIsLodding(false)
                 setFilteredDataSource(contactData.data)
                 setMasterDataSource(contactData.data)
 
@@ -70,14 +73,12 @@ export default function Contacts({ navigation }) {
                 }
 
                 dispatch(contactListAction.clearResponse())
-                // Alert.alert(Data.message)
             }
             else if (contactData.status == "failed") {
-                // Alert.alert(contactData.message)
-                // console.log("sucess..failed........")
+                setIsLodding(false)
             }
             else {
-
+                setIsLodding(false)
             }
         }
         else {
@@ -203,6 +204,8 @@ export default function Contacts({ navigation }) {
                     navigation.navigate('Notification')
                 }}
             />
+
+
             <View>
                 <View style={styles.inputFields2}>
                     <Image
@@ -217,14 +220,26 @@ export default function Contacts({ navigation }) {
                         underlineColorAndroid="transparent"
                     />
                 </View>
+            </View>
+            {/* <ScrollView refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }> */}
+
+            {IsLodding == true ?
+                <ActivityIndicator size="small" color="#0000ff" />
+                :
                 <FlatList
                     data={filteredDataSource}
                     keyExtractor={(item, index) => index.toString()}
                     ItemSeparatorComponent={ItemSeparatorView}
                     renderItem={ContactView}
                 />
-            </View>
-     
+            }
+            {/* </ScrollView> */}
+            <View style={{ height: '3%' }}></View>
             <BottomSheet
                 modalProps={{
                     animationType: 'fade',
@@ -232,7 +247,12 @@ export default function Contacts({ navigation }) {
                     onRequestClose: () => { setIsVisible(false); },
                 }}
                 isVisible={isVisible}>
-                <View style={{ width: width, height: height / 6 }}>
+                <View style={
+                    Platform.OS == 'ios' ? 
+                    { width: width, height: height / 6 }
+                    :
+                    { width: width, height: height / 5.1 }
+                }>
                     <View style={styles.headerView2}>
                         <TouchableOpacity
                             onPress={() => AddFunction('Call Next', EditcontactId)}>
@@ -352,7 +372,7 @@ export default function Contacts({ navigation }) {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    
+
                 </Card>
             </Modal>
         </View>

@@ -1,34 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View,
-    Text,
-    Image,
-    TextInput,
-    Alert,
-    Modal,
-    Pressable,
-    TouchableOpacity,
-    ScrollView,
-    ToastAndroid,
-    StatusBar,
-    Dimensions,
-    Platform
-} from 'react-native';
+import {View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
+    StatusBar, Dimensions, ActivityIndicator} from 'react-native';
 import styles from './styles';
-import { Picker, } from '@react-native-picker/picker'
-import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { opportunityAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 
-
 export default function AddContact({ navigation, route }) {
-
-    // console.log("routedata..............", route.params)
 
     const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
     const [isFocus3, setIsFocus3] = useState(false);
@@ -58,15 +39,13 @@ export default function AddContact({ navigation, route }) {
     const [revenue, setrevenue] = useState(route.params.Edata ? route.params.Edata.annual_revenue : "")
     const [campaign, setcampaign] = useState(route.params.Edata ? route.params.Edata.campaign : null);
     const [description, setdescription] = useState(route.params.Edata ? route.params.Edata.campaign : null);
-
+    const [IsLodding, setIsLodding] = useState(false)
     const [isFocus1, setIsFocus1] = useState(false);
 
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const opportunityData = useSelector(state => state.opportunitys.newOpportunity)
-
-    // console.log("opportunityData...............", opportunityData)
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -275,6 +254,7 @@ export default function AddContact({ navigation, route }) {
                         // console.log("data....................", data)
                         dispatch(opportunityAction.addOpportunity(data, loginData.data.token,));
                     }
+                    setIsLodding(true)
                 }
             }
         }
@@ -283,40 +263,32 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (opportunityData) {
             if (opportunityData.status == "success") {
-                // console.log("sucess..........",Data.message)
-                // Alert.alert(opportunityData.message)
+                setIsLodding(false)
                 setModalVisible(true)
-
-                // navigation.goBack()
                 dispatch(opportunityAction.clearResponse());
-
             }
             else if (opportunityData.status == "failed") {
+                setIsLodding(false)
                 Alert.alert(opportunityData.message)
                 dispatch(opportunityAction.clearResponse());
             }
             else if (opportunityData.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(opportunityData.message)
                 dispatch(opportunityAction.clearResponse());
             }
         }
         else {
-
+            setIsLodding(false)
         }
     }, [opportunityData])
 
 
     const addopportunitySuccesfully = () => {
+        setIsLodding(false)
         setModalVisible(!modalVisible);
         navigation.navigate('lead_manager')
     }
-
-    // const EditLead = () => {
-    //     setModalVisible(!modalVisible)
-    //     // ToastAndroid.show("Add Succesfully !", ToastAndroid.SHORT);
-    //     navigation.navigate('lead_manager')
-    // };
-
     return (
         <View style={{ flex: 1 }}>
 
@@ -797,6 +769,10 @@ export default function AddContact({ navigation, route }) {
                             onChangeText={e20 => setcampaign(e20)}
                             placeholder="Campaign" />
                     </View>
+                    {IsLodding == true ?
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    :
+                    <View />}
 
                     <TouchableOpacity style={[styles.button, { marginLeft: '2%', marginRight: '2%' }]}
                         onPress={() => AddOpportunityFuction()}

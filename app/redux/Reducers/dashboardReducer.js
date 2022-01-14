@@ -16,7 +16,6 @@ const dashboardR = (state = initialState, action) => {
             };
         case Dashboard_Clear:
             return {
-                ...state,
                 data: []
             };
         default:

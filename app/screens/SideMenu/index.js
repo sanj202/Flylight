@@ -230,7 +230,7 @@ export default function SideMenu({ navigation }) {
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
-                        onPress={() => navigation.navigate("Logout")}
+                        // onPress={() => navigation.navigate("Logout")}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image

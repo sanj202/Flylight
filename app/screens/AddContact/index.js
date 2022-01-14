@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ToastAndroid,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  Image,
-  Button,
-  ScrollView,
-  Modal,
-  Alert,
-  Pressable,
-  StatusBar,
-  Dimensions,
-  Platform
+  ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+  Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
 } from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -33,7 +19,6 @@ export default function AddContact({ navigation }) {
   const [title, settitle] = useState("")
   const [fname, setfname] = useState("")
   const [lname, setlname] = useState("")
-  const [dateB, setdateB] = useState("")
   const [gender, setgender] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   const [phone, setphone] = useState("")
@@ -57,24 +42,21 @@ export default function AddContact({ navigation }) {
   const [Campagin, setCampagin] = useState(null);
   const [isFocus1, setIsFocus1] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [IsLodding, setIsLodding] = useState(false)
   const { width, height } = Dimensions.get('window');
 
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
   const Data = useSelector(state => state.ManuallyAddContact.data)
-  // console.log("reducerdataa.........",Data)
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [text, settext] = useState(true)
 
-
   const onChangeFrom = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
-
     setDate(currentDate)
-    // let formattedDate = moment(currentDate).format('YYYY-MM-DD');
   };
   const showMode = (currentMode) => {
     setShow(!show);
@@ -132,7 +114,6 @@ export default function AddContact({ navigation }) {
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
-      // console.log("formateDate.........", formateDate)
       if (loginData) {
         if (loginData.status == "success") {
           const data = {
@@ -164,6 +145,7 @@ export default function AddContact({ navigation }) {
             zip: ZipCode,
           }
           dispatch(addcontactManuallyAction.M_addContact(data, loginData.data.token));
+          setIsLodding(true)
         }
       }
     }
@@ -173,34 +155,28 @@ export default function AddContact({ navigation }) {
     if (Data) {
       if (Data.status == "success") {
         console.log("sucess..........", Data.message)
-        // Alert.alert(Data.message)
+        setIsLodding(false)
         setModalVisible2(!modalVisible2)
+        dispatch(addcontactManuallyAction.clearResponse())
       }
       else if (Data.status == "failed") {
+        setIsLodding(false)
         Alert.alert(Data.message)
+        dispatch(addcontactManuallyAction.clearResponse())
       }
       else if (Data.status == "fail") {
+        setIsLodding(false)
         Alert.alert(Data.message)
+        dispatch(addcontactManuallyAction.clearResponse())
       }
     }
     else {
-
+      setIsLodding(false)
     }
   }, [Data])
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar
-        barStyle="dark-content"
-        // dark-content, light-content and default
-        hidden={false}
-        //To hide statusBar
-        backgroundColor="#2B6EF2"
-        //Background color of statusBar only works for Android
-        translucent={false}
-        //allowing light, but not detailed shapes
-        networkActivityIndicatorVisible={true}
-      />
       <Header
         // style={{ height: "12%" }}
         onPressLeft={() => {
@@ -215,31 +191,6 @@ export default function AddContact({ navigation }) {
 
       <ScrollView style={{ width: width, height: height }}>
         <View style={{ margin: '5%' }}>
-
-          {/* {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={mode}
-            // is24Hour={true}
-            display="compact"
-            onChange={onChangeFrom}
-          />
-        )}
-
-        <TouchableOpacity
-            onPress={showDatepicker}
-          >
-            <View style={styles.pickers}>
-              <Image
-                style={{ height: 22, width: 20, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/pikerCalander.png')}
-              />
-              <Text style={{ marginTop: '5%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-            </View>
-          </TouchableOpacity> */}
-
-
           <View style={{ marginTop: '2%' }}>
             {/* {renderLabel()} */}
             <Dropdown
@@ -311,34 +262,6 @@ export default function AddContact({ navigation }) {
               onChangeText={e3 => setlname(e3)}
               placeholder="Last Name" />
           </View>
-
-          {/* <TouchableOpacity
-            style={{
-              borderWidth: 1,
-              borderColor: '#C3C7E5',
-              borderRadius: 10,
-              // marginHorizontal: '3%',
-              paddingVertical: 2,
-              marginVertical: '2%'
-            }}
-            onPress={showDatepicker} >
-            <Image style={[styles.icon, {
-              height: 25, width: '6%', marginLeft: '4%', marginTop: '2%'
-            }]}
-              source={require('../../images/DOB.png')}
-            />
-            <DateTimePicker
-              testID="dateTimePicker"
-              style={{ width: '50%', marginTop: '-10%' }}
-              value={date}
-              // moment(date).format("YYYY-MM-DD")
-              mode={mode}
-              // dateFormat=''
-              // is24Hour={true}
-              display="default"
-              onChange={onChangeFrom}
-            />
-          </TouchableOpacity> */}
 
           <TouchableOpacity
             style={{
@@ -439,6 +362,7 @@ export default function AddContact({ navigation }) {
             <TextInput
               style={{ flex: 1 }}
               value={phone}
+              keyboardType='numeric'
               onChangeText={e5 => setphone(e5)}
               placeholder="Enter Mobile Number" />
           </View>
@@ -454,6 +378,7 @@ export default function AddContact({ navigation }) {
             <TextInput
               style={{ flex: 1 }}
               value={Aphone}
+              keyboardType='numeric'
               onChangeText={e6 => setAphone(e6)}
               placeholder="Alternate Mobile Number"
             />
@@ -727,15 +652,11 @@ export default function AddContact({ navigation }) {
             />
           </View>
 
+          {IsLodding == true ?
+            <ActivityIndicator size="small" color="#0000ff" />
+            :
+            <View />}
 
-          {/* <View style={styles.inputFields}>
-            <Image
-              style={[styles.icon, { height: 28, width: 20, marginTop: '2%' }]}
-              source={require('../../images/list.png')}
-            />
-            <TextInput style={{ flex: 1 }}
-              placeholder="Select a Campagin" />
-          </View> */}
           <TouchableOpacity style={styles.button}
             // onPress={() => setModalVisible2(!modalVisible2)}
             onPress={() => AddContactFuction()}

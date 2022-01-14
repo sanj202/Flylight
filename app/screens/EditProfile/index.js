@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, Image, Alert,
-    StatusBar, SafeAreaView, Dimensions, Platform
+    Text, View, ActivityIndicator, TouchableOpacity, TextInput, Image, Alert, Dimensions, Platform
 } from 'react-native';
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -13,6 +12,7 @@ import moment from 'moment';
 
 export default function EditProfile({ navigation, route }) {
     const { width, height } = Dimensions.get('window');
+    const [IsLodding, setIsLodding] = useState(false)
     const [zip, setzip] = useState(route.params ? route.params.zip : "")
     const [city, setcity] = useState(route.params ? route.params.city : "")
     const [state, setstate] = useState(route.params ? route.params.state : "")
@@ -32,7 +32,7 @@ export default function EditProfile({ navigation, route }) {
     const onChangeFrom = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
-  
+
         setDate(currentDate)
         // let formattedDate = moment(currentDate).format('YYYY-MM-DD');
     };
@@ -53,7 +53,6 @@ export default function EditProfile({ navigation, route }) {
 
 
     const Update = () => {
-
         if (fname == "") {
             Alert.alert(" Enter first name ")
         }
@@ -82,13 +81,22 @@ export default function EditProfile({ navigation, route }) {
             let formateDate = moment(date).format("YYYY-MM-DD")
             if (loginData) {
                 if (loginData.status == "success") {
-                    dispatch(editProfileAction.Eprofile(
-                        loginData.data.uid,
-                        loginData.data.org_uid,
-                        loginData.data.cProfile.toString(),
-                        loginData.data.token,
-                        fname, lname, phone, formateDate, street, city, state, zip, country
-                    ));
+                    const data = {
+                        first_name: fname,
+                        last_name: lname,
+                        phone: phone,
+                        dob: formateDate,
+                        street: street,
+                        city: city,
+                        state: state,
+                        zip: zip,
+                        country: country,
+                        uid: loginData.data.uid,
+                        org_uid: loginData.data.org_uid,
+                        profile_id: loginData.data.cProfile.toString(),
+                    }
+                    dispatch(editProfileAction.Eprofile(data, loginData.data.token));
+                    setIsLodding(true)
                 }
             }
         }
@@ -97,33 +105,23 @@ export default function EditProfile({ navigation, route }) {
     useEffect(() => {
         if (UpdatedData) {
             if (UpdatedData.status == "success") {
-                // console.log('sucess..............', UpdatedData)
+                setIsLodding(false)
                 Alert.alert(UpdatedData.message)
-                setzip(""),
-                    setcity(""),
-                    setfname(""),
-                    setlname(""),
-                    setDate(new Date()),
-                    setstate(""),
-                    setstreet(""),
-                    setcountry("")
                 navigation.navigate("Profile", {
                 })
+                dispatch(editProfileAction.clearResponse())
             }
             else if (UpdatedData.status == "failed") {
-                // console.log('sucess...........false...')
-                Alert.alert(UpdatedData.message)                                                                                //otherwise alert show 
-                // setNumber('');
-                // setLoading(false);
-                // dispatch(AuthActions.clearResponse());
+                setIsLodding(false)
+                Alert.alert(UpdatedData.message)
             }
             else if (UpdatedData.status == "fail") {
-                // console.log('sucess...........false...')
+                setIsLodding(false)
                 Alert.alert(UpdatedData.message)
             }
         }
         else {
-            // setLoading(false);
+            setIsLodding(false)
         }
 
     }, [UpdatedData])
@@ -152,10 +150,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
-                            height: 22, width: '5.5%',
-                            margin: '2%'
-                        }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
+                                height: 22, width: '5.5%',
+                                margin: '2%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 22, width: '6%',
+                                    margin: '2%', marginTop: '3%'
+                                }]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
@@ -170,10 +174,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
-                            height: 22, width: '5.5%',
-                            margin: '2%'
-                        }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
+                                height: 22, width: '5.5%',
+                                margin: '2%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 22, width: '6%',
+                                    margin: '2%', marginTop: '3%'
+                                }]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
@@ -188,7 +198,10 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, { height: 17, width: '6%', margin: '2.5%' }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, { height: 17, width: '6%', margin: '2.5%' }]
+                                :
+                                [styles.icon, { height: 18, width: '6.5%', margin: '2.5%',marginTop:'5%' }]}
                         source={require('../../images/mail.png')}
                     />
                     <TextInput
@@ -204,11 +217,17 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon,
+                       style={
+                        Platform.OS == 'ios' ?  [styles.icon,
                         {
                             height: 24, width: '4.5%',
                             margin: '2%'
-                        }]}
+                        }] :
+                        [styles.icon,
+                            {
+                                height: 24, width: '4.6%',
+                                margin: '2%',marginTop:'3.5%'
+                            }]}
                         source={require('../../images/mobile.png')}
                     />
                     <TextInput
@@ -228,9 +247,14 @@ export default function EditProfile({ navigation, route }) {
                     onPress={showDatepicker} >
                     <View style={Platform.OS == 'ios' ?
                         styles.inputFields2 : [styles.inputFields2, { paddingVertical: '2%' }]}>
-                        <Image style={[styles.icon, {
+                        <Image 
+                        style={Platform.OS == 'ios' ? [styles.icon, {
                             height: 25, width: '6%', marginLeft: '2%', marginTop: '2%'
+                        }] :
+                        [styles.icon, {
+                            height: 25, width: '6.7%', marginLeft: '2%', marginTop: '2%'
                         }]}
+
                             source={require('../../images/DOB.png')}
                         />
                         {show && (
@@ -247,7 +271,7 @@ export default function EditProfile({ navigation, route }) {
                         }
                         {Platform.OS == 'ios' ? <View>
                             {text == true ?
-                                <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
+                                <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Date of Birth</Text>
                                 :
                                 <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
                             }
@@ -255,7 +279,7 @@ export default function EditProfile({ navigation, route }) {
                             :
                             <View>
                                 {text == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' ,marginLeft: '10%'}}>From</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of birth</Text>
                                     :
                                     <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                 }
@@ -268,10 +292,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
                             height: 24, width: '5.5%',
                             margin: '1.6%'
-                        }]}
+                        }]
+                    :
+                    [styles.icon, {
+                        height: 24, width: '5.5%',
+                        margin: '1.6%',marginTop:'3%'
+                    }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -285,10 +315,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
-                            height: 24, width: '5.5%',
-                            margin: '1.6%'
-                        }]}
+                      style={
+                        Platform.OS == 'ios' ? [styles.icon, {
+                        height: 24, width: '5.5%',
+                        margin: '1.6%'
+                    }]
+                :
+                [styles.icon, {
+                    height: 24, width: '5.5%',
+                    margin: '1.6%',marginTop:'3%'
+                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -301,10 +337,16 @@ export default function EditProfile({ navigation, route }) {
                 <Text style={styles.fieldsLable}>State</Text>
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
-                            height: 24, width: '5.5%',
-                            margin: '1.6%'
-                        }]}
+                      style={
+                        Platform.OS == 'ios' ? [styles.icon, {
+                        height: 24, width: '5.5%',
+                        margin: '1.6%'
+                    }]
+                :
+                [styles.icon, {
+                    height: 24, width: '5.5%',
+                    margin: '1.6%',marginTop:'3%'
+                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -317,10 +359,16 @@ export default function EditProfile({ navigation, route }) {
                 <Text style={styles.fieldsLable}>Country</Text>
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
-                            height: 24, width: '5.5%',
-                            margin: '1.6%'
-                        }]}
+                      style={
+                        Platform.OS == 'ios' ? [styles.icon, {
+                        height: 24, width: '5.5%',
+                        margin: '1.6%'
+                    }]
+                :
+                [styles.icon, {
+                    height: 24, width: '5.5%',
+                    margin: '1.6%',marginTop:'3%'
+                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -335,10 +383,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={[styles.icon, {
-                            height: 24, width: '5.5%',
-                            margin: '1.6%'
-                        }]}
+                      style={
+                        Platform.OS == 'ios' ? [styles.icon, {
+                        height: 24, width: '5.5%',
+                        margin: '1.6%'
+                    }]
+                :
+                [styles.icon, {
+                    height: 24, width: '5.5%',
+                    margin: '1.6%',marginTop:'3%'
+                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -348,6 +402,11 @@ export default function EditProfile({ navigation, route }) {
                         placeholder="   Zip Code"
                     />
                 </View>
+
+                {IsLodding == true ?
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    :
+                    <View />}
 
                 <TouchableOpacity
                     style={styles.button}

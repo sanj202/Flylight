@@ -1,9 +1,15 @@
-import {Import_Lead, Add_Edit_Lead, Get_Lead, Lead_CLEAR } from '../Actions/actionTypes';
+import {
+    Import_Lead,
+    Add_Edit_Lead,
+    LeadOwner, LeadOwner_Success, LeadOwner_Clear,
+    Get_Lead, Lead_CLEAR
+} from '../Actions/actionTypes';
 
 const initialState = {
     newLead: [],
     getLead: [],
-    importLead:[],
+    importLead: [],
+    leadOwner: [],
 };
 const LeadR = (state = initialState, action) => {
     switch (action.type) {
@@ -26,6 +32,18 @@ const LeadR = (state = initialState, action) => {
             // console.log("callllll............")
             return {
                 newLead: []
+            }
+        case LeadOwner:
+            return {
+               ...state
+            }
+        case LeadOwner_Success:
+            return {
+                leadOwner: action.payload
+            }
+        case LeadOwner_Clear:
+            return {
+                leadOwner: []
             }
         default:
             return state;

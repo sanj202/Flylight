@@ -1,109 +1,57 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, ScrollView, StatusBar, View, Text, TouchableOpacity, Image, Touchable } from 'react-native';
-import PieChart from 'react-native-pie-chart';
-import {
-    LineChart,
-    BarChart,
-    // PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
-} from 'react-native-chart-kit'
+import { ActivityIndicator, ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper'
 import styles from "./styles";
-import LinearGradient from 'react-native-linear-gradient';
 import Header from '../../component/header'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { reportAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 
-import moment from 'moment';
-
-
-// import PieChart from 'react-native-chart-kit';
-
 export default function Report({ navigation }) {
-
     const data = [
         { label: 'My List  ', value: '+ My List' },
         { label: 'Sales List', value: 'Sales List' },
         // { label: '+ Add List', value: '+ Add List' },
     ];
 
-
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
-    
+    const [IsLodding, setIsLodding] = useState(true)
     // const { width, height } = Dimensions.get('window');
     const [Report, setReport] = useState()
     const dispatch = useDispatch()
+    const loginData = useSelector(state => state.auth.data)
     const reportData = useSelector(state => state.report.getReportList)
 
-    console.log("reportData............",reportData)
-
-    // useEffect(() => {
-    //     if (loginData) {
-    //         if (loginData.status == "success") {
-    //             dispatch(reportAction.reportList(
-    //                 loginData.data.token,
-    //                 loginData.data.uid,
-    //                 loginData.data.org_uid,
-    //                 loginData.data.cProfile.toString(),
-    //                 loginData.data.user.org_id.toString(),
-    //             ));
-    //         }
-    //     }
-    // }, [loginData])
-
     useEffect(() => {
-        AsyncStorage.getItem('token', (err, token) => {
-            console.log("Async.........")
-            if (token !== null) {
-                AsyncStorage.getItem('org_id', (err, org_id) => {
-                    if (org_id !== null) {
-                        AsyncStorage.getItem('org_uid', (err, org_uid) => {
-                            if (org_uid !== null) {
-                        AsyncStorage.getItem('uid', (err, uid) => {
-                            if (uid !== null) {
-                                AsyncStorage.getItem('cProfile', (err, cProfile) => {
-                                    if (cProfile !== null) {
-                                        AsyncStorage.getItem('user_id', (err, user_id) => {
-                                            if (user_id !== null) {
-                                                console.log("Async.........")
-                                                dispatch(reportAction.reportList(token, uid, cProfile, org_id ,org_uid));
-                                                // dispatch(opportunityAction.OpportunityList(token, uid, cProfile, org_uid));
-                                            }
-                                        })
-                                    }
-                                })
-                            }
-                        })
-                    }
-                        })
-                    }
-                })
+        if (loginData) {
+            if (loginData.status == "success") {
+                dispatch(reportAction.reportList(
+                    loginData.data.token,
+                    loginData.data.uid,
+                    loginData.data.cProfile.toString(),
+                    loginData.data.user.org_id.toString(),
+                    loginData.data.org_uid,
+                ));
             }
-        })
-    }, []);
+        }                                         
+    }, [loginData])
 
     useEffect(() => {
         if (reportData) {
             if (reportData.status == "200") {
-                // console.log("sucess..........", reportData.data)
+                setIsLodding(false)
                 setReport(reportData.data)
-                // dispatch(leadAction.clearResponse())
-                //   Alert.alert(reportData.message)
             }
             else if (reportData.status == "failed") {
-                // Alert.alert(leadList.message)
-                // console.log("sucess..failed........")
+                setIsLodding(false)
             }
             else if (reportData.status == "fail") {
+                setIsLodding(false)
                 Alert.alert(reportData.message)
             }
             else {
-
+                setIsLodding(false)
             }
         }
         else {
@@ -111,22 +59,8 @@ export default function Report({ navigation }) {
         }
     }, [reportData])
 
-
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
-            
-            <StatusBar
-                barStyle="dark-content"
-                // dark-content, light-content and default
-                hidden={false}
-                //To hide statusBar
-                backgroundColor="#2B6EF2"
-                //Background color of statusBar only works for Android
-                translucent={false}
-                //allowing light, but not detailed shapes
-                networkActivityIndicatorVisible={true}
-            />
-
             <Header
                 // style={{ height: "10%" }}
                 onPressLeft={() => {
@@ -183,7 +117,10 @@ export default function Report({ navigation }) {
                 </View>
             </View>
 
-
+            {IsLodding == true ?
+                <ActivityIndicator size="small" color="#0000ff" />
+                :
+                
             <ScrollView>
                 <Card style={styles.card}>
                     <TouchableOpacity>
@@ -307,7 +244,7 @@ export default function Report({ navigation }) {
                     </TouchableOpacity>
                 </Card>
             </ScrollView>
+        }
         </View>
-
-    );
+        );
 }

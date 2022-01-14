@@ -72,6 +72,11 @@ export const Add_Edit_Lead = "Add_Edit_Lead"
 export const Get_Lead = 'Get_Lead'
 export const Lead_CLEAR = 'Lead_CLEAR'
 
+//LeadOwnerList
+export const LeadOwner = "LeadOwner"
+export const LeadOwner_Success = "LeadOwner_Success"
+export const LeadOwner_Clear = 'LeadOwner_Clear'
+
 //Lead manager Opportunity
 export const Import_Opportunity = "Import_Opportunity"
 export const Add_Edit_Opportunity = "Add_Edit_Opportunity"

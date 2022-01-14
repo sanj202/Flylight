@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity,
+  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator,
   TextInput, Picker, FlatList, Image, Button, ScrollView,
   Modal, Alert, Pressable, StatusBar, Dimensions, Platform
 } from 'react-native';
@@ -176,6 +176,7 @@ export default function lead_manager({ navigation, route }) {
   const [AllList, setAllList] = useState('')
   const [Lead, setLead] = useState('')
   const [Opportunity, setOpportunity] = useState('')
+  const [IsLodding, setIsLodding] = useState(false)
   const { width, height } = Dimensions.get('window');
 
   const dispatch = useDispatch()
@@ -200,6 +201,7 @@ export default function lead_manager({ navigation, route }) {
           loginData.data.cProfile.toString(),
           loginData.data.org_uid,
         ));
+        setIsLodding(true)
       }
     }
   }, [loginData])
@@ -208,17 +210,16 @@ export default function lead_manager({ navigation, route }) {
   useEffect(() => {
     if (leadList) {
       if (leadList.status == "200") {
-        // console.log("sucess..........", leadList.data)
         setLead(leadList.data)
         CombineArrayData()
+        setIsLodding(false)
         dispatch(leadAction.clearResponse())
       }
       else if (leadList.status == "failed") {
-        // Alert.alert(leadList.message)
-        // console.log("sucess..failed........")
+        setIsLodding(false)
       }
       else {
-
+        setIsLodding(false)
       }
     }
     else {
@@ -232,14 +233,14 @@ export default function lead_manager({ navigation, route }) {
         // console.log("sucess..........", opportunityList.data)
         setOpportunity(opportunityList.data)
         CombineArrayData()
+        setIsLodding(false)
         dispatch(opportunityAction.clearResponse())
       }
       else if (opportunityList.status == "failed") {
-        // Alert.alert(leadList.message)
-        // console.log("sucess..failed........")
+        setIsLodding(false)
       }
       else {
-
+        setIsLodding(false)
       }
     }
     else {
@@ -252,6 +253,7 @@ export default function lead_manager({ navigation, route }) {
       if (importLead.status == "success") {
         Alert.alert(importLead.message)
         CombineArrayData()
+        setIsLodding(false)
         // dispatch(opportunityAction.clearResponse())
       }
       else if (importLead.status == "failed") {
@@ -270,6 +272,7 @@ export default function lead_manager({ navigation, route }) {
       if (importOpportunity.status == "success") {
         Alert.alert(importOpportunity.message)
         CombineArrayData()
+        setIsLodding(false)
         // dispatch(opportunityAction.clearResponse())
       }
       else if (importOpportunity.status == "failed") {
@@ -648,7 +651,7 @@ export default function lead_manager({ navigation, route }) {
         isService == "All" ?
 
           <View style={{ marginTop: '3%' }}>
-            <View style={{  flexDirection: 'row',justifyContent: 'space-around', padding: '2%'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
               <TouchableOpacity
                 style={{ width: '48%' }}
                 onPress={showDatepicker}
@@ -733,12 +736,13 @@ export default function lead_manager({ navigation, route }) {
               </TouchableOpacity>
             </View>
 
-
-
-
-
+           
             <View style={{ marginTop: '-1%' }}></View>
-
+            {IsLodding == true ?
+              <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
+              :
+              <View />
+            }
             <FlatList
               style={{ height: height / 1.55 }}
               data={AllList}
@@ -755,7 +759,7 @@ export default function lead_manager({ navigation, route }) {
       {
         isService == "Lead" ?
           <View style={{ marginTop: '3%' }}>
-            <View style={{  flexDirection: 'row',justifyContent: 'space-around', padding: '2%'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
               <TouchableOpacity
                 style={{ width: '48%' }}
                 onPress={showDatepicker}
@@ -866,12 +870,22 @@ export default function lead_manager({ navigation, route }) {
               </TouchableOpacity>
 
             </View>
+
             <View style={{ marginTop: '2%' }}></View>
+
+            {IsLodding == true ?
+              <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
+              :
+              <View />
+            }
+
             <FlatList
               style={{ height: height / 1.7 }}
+
               data={Lead}
               renderItem={LeadView}
             />
+
             <View style={{ marginTop: '2%' }}></View>
           </View>
           :
@@ -882,7 +896,7 @@ export default function lead_manager({ navigation, route }) {
         isService == "Opportunity" ?
 
           <View style={{ marginTop: '3%' }}>
-            <View style={{  flexDirection: 'row',justifyContent: 'space-around', padding: '2%'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
               <TouchableOpacity
                 style={{ width: '48%' }}
                 onPress={showDatepicker}
@@ -993,6 +1007,13 @@ export default function lead_manager({ navigation, route }) {
 
             </View>
             <View style={{ marginTop: '2%' }}></View>
+
+            {IsLodding == true ?
+              <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
+              :
+              <View />
+            }
+            
             <FlatList
               style={{ height: height / 1.7 }}
               data={Opportunity}

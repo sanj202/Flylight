@@ -14,8 +14,7 @@ import {
   Task_Manager,
   Report2,
   EditProfile,
-  Notification,
-  Splash
+ Notification
 } from '../screens/index'
 import { HomeTabs } from './bottom/homeTab'
 import { AuthStack } from './authStack';
@@ -29,7 +28,8 @@ const Stack = createStackNavigator();
 export function MainStack({route}) {
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} >
+    <Stack.Navigator screenOptions={{ headerShown: false }} // initialRouteName='HomeTabs' 
+    >
       <Stack.Screen name='HomeTabs' component={HomeTabs} options={{ headerShown: false }} />
       <Stack.Screen name='Edit_Contact' component={Edit_Contact} />
       {/* <Stack.Screen name='EditProfile' component={EditProfile} /> */}
