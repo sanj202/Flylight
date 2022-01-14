@@ -80,7 +80,7 @@ export const TaskList = (token, uid, profile_id, org_id) => {
                     'Authorization': 'Bearer ' + token,
                 },
                 body: JSON.stringify({
-                    uid: "kriti-dubey-gXRJhVOAyC1640168109",
+                    uid:uid,
                     profile_id: profile_id,
                     orgId : org_id
                 }),

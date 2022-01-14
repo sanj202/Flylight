@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator,Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
+import {
+    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
+} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
 import Header from '../../component/header/index'
 import styles from './styles'
+import { useIsFocused } from "@react-navigation/core"
 
 export default function action_manager({ navigation }) {
 
@@ -44,17 +47,20 @@ export default function action_manager({ navigation }) {
     const { width, height } = Dimensions.get('window');
 
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const addActionData = useSelector(state => state.actionmanager.addAction)
     const actionList = useSelector(state => state.actionmanager.actionlist)
     const addStatusData = useSelector(state => state.actionmanager.addStatus)
     const statusList = useSelector(state => state.actionmanager.statuslist)
+    const deletestatus = useSelector(state => state.actionmanager.deleteStatus)
+    const deleteaction = useSelector(state => state.actionmanager.deleteAction)
 
 
-    // console.log("get..........................",actionList,statusList)
+    console.log('deletre..........................', deleteaction, deletestatus)
 
     useEffect(() => {
-        if (loginData) {
+        if (loginData || isFocused) {
             if (loginData.status == "success") {
                 const data = {
                     uid: loginData.data.uid,
@@ -63,9 +69,10 @@ export default function action_manager({ navigation }) {
                 }
                 dispatch(actionmanagerAction.getAction(data, loginData.data.token));
                 dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
+                setIsLodding(true)
             }
         }
-    }, [loginData])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (actionList) {
@@ -122,6 +129,7 @@ export default function action_manager({ navigation }) {
         }
         dispatch(actionmanagerAction.getAction(data, loginData.data.token));
         dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
+        setIsLodding(true)
     }
 
     const AddActionFunction = (text) => {
@@ -134,7 +142,7 @@ export default function action_manager({ navigation }) {
                         orgId: loginData.data.user.org_id.toString(),
                         status: newStatus,
                         org_uid: loginData.data.org_uid,
-                        action_id: EditingId
+                        // action_id: EditingId
                     }
                     dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
                 }
@@ -207,11 +215,11 @@ export default function action_manager({ navigation }) {
         settype(value.text)
         setEditingId(value.Id)
         setEditingValue(value.status)
-        setIsVisible(true)
+        setIsVisible(!isVisible)
     }
 
     const EditData = (value) => {
-        setIsVisible(false)
+        setIsVisible(!isVisible)
         if (loginData) {
             if (loginData.status == "success") {
                 if (type == "Action") {
@@ -226,19 +234,65 @@ export default function action_manager({ navigation }) {
                     dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
                 }
                 else {
+
+                    console.log("satsu........................edit")
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
                         orgId: loginData.data.user.org_id.toString(),
                         status: EditingValue,
                         org_uid: loginData.data.org_uid,
-                        action_id: EditingId
+                        status_id: EditingId
                     }
                     dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
                 }
-
+                setIsLodding(true)
             }
         }
+
+        // setModalVisible4(!modalVisible4)
+
+        // if (value == 'Status') {
+        //     setModalVisible(!modalVisible)
+        //     setModalVisible4(!modalVisible4)
+        // }
+        // else {
+        //     setModalVisible3(!modalVisible3)
+        //     setModalVisible4(!modalVisible4)
+        // }
+    }
+
+    const deleteData = (value) => {
+        setIsVisible(!isVisible)
+        if (loginData) {
+            if (loginData.status == "success") {
+
+                if (value.type == "Action") {
+                    const data = {
+                        uid: loginData.data.uid,
+                        profile_id: loginData.data.cProfile.toString(),
+                        orgId: loginData.data.user.org_id.toString(),
+                        action: EditingValue,
+                        org_uid: loginData.data.org_uid,
+                        action_id: value.id
+                    }
+                    dispatch(actionmanagerAction.delete_Action(data, loginData.data.token));
+                }
+                else {
+                    const data = {
+                        uid: loginData.data.uid,
+                        profile_id: loginData.data.cProfile.toString(),
+                        orgId: loginData.data.user.org_id.toString(),
+                        status: EditingValue,
+                        org_uid: loginData.data.org_uid,
+                        status_id: value.id
+                    }
+                    dispatch(actionmanagerAction.delete_Status(data, loginData.data.token));
+                }
+                setIsLodding(true)
+            }
+        }
+
 
         // setModalVisible4(!modalVisible4)
 
@@ -266,8 +320,8 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        //    onPress={() => DeleteFunction("Status") }
-                        onPress={() => setModalVisible2(true)}
+                        // onPress={() => deleteData({ type: 'status', id: item.id })}
+                    // onPress={() => setModalVisible2(true)}
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', }}
@@ -295,7 +349,9 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => setModalVisible2(true)}
+                        // onPress={() => setModalVisible2(true)}
+                        // onPress={() => deleteData({ type: 'Action', id: item.id })}
+
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', }}
@@ -377,129 +433,130 @@ export default function action_manager({ navigation }) {
 
             </View>
 
-            {
-                isService == "Status" ?
-                    <View style={{ marginLeft: '3%', marginRight: '3%' }}>
-                        <View style={{ marginTop: '4%' }}>
-                            <View style={{ marginTop: '2.5%' }}>
-                                <View style={[styles.listData1, { paddingBottom: "10%" }]}>
-                                    <Text style={{ marginLeft: '3%', fontSize: 19, fontWeight: 'bold', color: '#2D2D2D', paddingTop: '1%', padding: '2%' }}>Add Status</Text>
-                                    <View style={styles.listData}>
 
-                                        <Image
-                                            style={
-                                                Platform.OS == 'ios' ?
-                                                    [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
-                                                    :
-                                                    [styles.icon, { height: 24, width: 26, marginHorizontal: '2%', marginTop: '5%' }]}
-                                            source={require('../../images/statusnet.png')}
-                                        />
-                                        <TextInput
-                                            style={{ flex: 1 }}
-                                            value={newStatus}
-                                            onChangeText={e2 => setnewStatus(e2)}
-                                            placeholder="Enter Status"
-                                        />
+            {IsLodding == true ?
+                <ActivityIndicator size="small" color="#0000ff" />
+                :
 
+                <View>
+                    {
+                        isService == "Status" ?
+                            <View style={{ marginLeft: '3%', marginRight: '3%' }}>
+                                <View style={{ marginTop: '4%' }}>
+                                    <View style={{ marginTop: '2.5%' }}>
+                                        <View style={[styles.listData1, { paddingBottom: "10%" }]}>
+                                            <Text style={{ marginLeft: '3%', fontSize: 19, fontWeight: 'bold', color: '#2D2D2D', paddingTop: '1%', padding: '2%' }}>Add Status</Text>
+                                            <View style={styles.listData}>
+
+                                                <Image
+                                                    style={
+                                                        Platform.OS == 'ios' ?
+                                                            [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
+                                                            :
+                                                            [styles.icon, { height: 24, width: 26, marginHorizontal: '2%', marginTop: '5%' }]}
+                                                    source={require('../../images/statusnet.png')}
+                                                />
+                                                <TextInput
+                                                    style={{ flex: 1 }}
+                                                    value={newStatus}
+                                                    onChangeText={e2 => setnewStatus(e2)}
+                                                    placeholder="Enter Status"
+                                                />
+
+                                            </View>
+                                        </View>
+
+
+
+                                        <TouchableOpacity
+                                            onPress={() => AddActionFunction("Status")}
+                                            style={styles.buttonClose3}
+                                        >
+                                            <Text style={styles.textStyle3}>Save Status</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
 
-                                {IsLodding == true ?
-                    <ActivityIndicator size="small" color="#0000ff" />
-                    :
-                    <View />}
+                                <View style={{ marginTop: '10%' }}>
+                                    <View style={[styles.listData1]}>
+                                        <Text style={{
+                                            marginLeft: '3%',
+                                            fontSize: 19,
+                                            fontFamily: 'Roboto',
+                                            fontWeight: 'bold', color: '#2D2D2D', padding: '3%'
+                                        }}>Status</Text>
 
-                                <TouchableOpacity
-                                    onPress={() => AddActionFunction("Status")}
-                                    style={styles.buttonClose3}
-                                >
-                                    <Text style={styles.textStyle3}>Save Status</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-
-                        <View style={{ marginTop: '10%' }}>
-                            <View style={[styles.listData1]}>
-                                <Text style={{
-                                    marginLeft: '3%',
-                                    fontSize: 19,
-                                    fontFamily: 'Roboto',
-                                    fontWeight: 'bold', color: '#2D2D2D', padding: '3%'
-                                }}>Status</Text>
-
-                                <FlatList
-                                    style={
-                                        Platform.OS == 'ios' ?
-                                            { height: "69%" }
-                                            :
-                                            { height: "58%" }}
-                                    data={allStatus}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    renderItem={StatusView}
-                                />
-                            </View>
-                        </View>
-
-                    </View>
-                    :
-                    <View />
-            }
-
-            {
-                isService == "Action" ?
-                    <View style={{ marginLeft: '3%', marginRight: '3%' }}>
-                        <View style={{ marginTop: '4%' }}>
-                            <View style={{ marginTop: '2.5%' }}>
-                                <View style={[styles.listData1, { paddingBottom: "10%" }]}>
-                                    <Text style={{ marginLeft: '3%', fontSize: 19, fontWeight: 'bold', color: '#2D2D2D', paddingTop: '1%', padding: '2%' }}>Add Action</Text>
-                                    <View style={styles.listData}>
-                                        <Image
+                                        <FlatList
                                             style={
                                                 Platform.OS == 'ios' ?
-                                                    [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
+                                                    { height: "69%" }
                                                     :
-                                                    [styles.icon, { height: 24, width: 26, marginHorizontal: '2%', marginTop: '5%' }]}
-                                            source={require('../../images/statusnet.png')}
-                                        />
-                                        <TextInput style={{ flex: 1 }}
-                                            value={newAction}
-                                            onChangeText={e => setnewAction(e)}
-                                            placeholder="Enter Action"
+                                                    { height: "58%" }}
+                                            data={allStatus}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            renderItem={StatusView}
                                         />
                                     </View>
                                 </View>
 
-                                {IsLodding == true ?
-                    <ActivityIndicator size="small" color="#0000ff" />
-                    :
-                    <View />}
+                            </View>
+                            :
+                            <View />
+                    }
 
-                                <TouchableOpacity
-                                    onPress={() => AddActionFunction("Action")}
-                                    style={styles.buttonClose3}
-                                >
-                                    <Text style={styles.textStyle3}>Save Action</Text>
-                                </TouchableOpacity>
+                    {
+                        isService == "Action" ?
+                            <View style={{ marginLeft: '3%', marginRight: '3%' }}>
+                                <View style={{ marginTop: '4%' }}>
+                                    <View style={{ marginTop: '2.5%' }}>
+                                        <View style={[styles.listData1, { paddingBottom: "10%" }]}>
+                                            <Text style={{ marginLeft: '3%', fontSize: 19, fontWeight: 'bold', color: '#2D2D2D', paddingTop: '1%', padding: '2%' }}>Add Action</Text>
+                                            <View style={styles.listData}>
+                                                <Image
+                                                    style={
+                                                        Platform.OS == 'ios' ?
+                                                            [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
+                                                            :
+                                                            [styles.icon, { height: 24, width: 26, marginHorizontal: '2%', marginTop: '5%' }]}
+                                                    source={require('../../images/statusnet.png')}
+                                                />
+                                                <TextInput style={{ flex: 1 }}
+                                                    value={newAction}
+                                                    onChangeText={e => setnewAction(e)}
+                                                    placeholder="Enter Action"
+                                                />
+                                            </View>
+                                        </View>
+
+                                        <TouchableOpacity
+                                            onPress={() => AddActionFunction("Action")}
+                                            style={styles.buttonClose3}
+                                        >
+                                            <Text style={styles.textStyle3}>Save Action</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <View style={{ marginTop: '10%' }}>
+                                    <View style={[styles.listData1,]}>
+                                        <Text style={{ marginLeft: '3%', fontSize: 19, fontFamily: 'Roboto', fontWeight: 'bold', color: '#2D2D2D', padding: '3%' }}>Actions</Text>
+                                        <FlatList
+                                            style=
+                                            {Platform.OS == 'ios' ?
+                                                { height: "69%" }
+                                                :
+                                                { height: "58%" }}
+                                            data={allAction}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            renderItem={ActionView}
+                                        />
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                        <View style={{ marginTop: '10%' }}>
-                            <View style={[styles.listData1,]}>
-                                <Text style={{ marginLeft: '3%', fontSize: 19, fontFamily: 'Roboto', fontWeight: 'bold', color: '#2D2D2D', padding: '3%' }}>Actions</Text>
-                                <FlatList
-                                    style=
-                                    {Platform.OS == 'ios' ?
-                                        { height: "69%" }
-                                        :
-                                        { height: "58%" }}
-                                    data={allAction}
-                                    keyExtractor={(item, index) => index.toString()}
-                                    renderItem={ActionView}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    :
-                    <View />
+                            :
+                            <View />
+                    }
+
+                </View>
             }
 
             <BottomSheet

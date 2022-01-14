@@ -1,16 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import {
-    Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
-    ActivityIndicator,RefreshControl,Platform,ScrollView} from 'react-native';
+import { Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
+         ActivityIndicator,RefreshControl,Platform,ScrollView} from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
 import { BottomSheet, Button, ListItem } from 'react-native-elements';
 import Header from '../../component/header/index'
 import { contactListAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import moment from 'moment';
 import {useIsFocused} from "@react-navigation/core"
+import moment from 'moment';
 
 export default function Contacts({ navigation }) {
 
@@ -22,15 +21,12 @@ export default function Contacts({ navigation }) {
 
     const [EditcontactId, setEditConatctId] = useState([])
     const [isVisible, setIsVisible] = useState(false);
-    const [modalVisible2, setModalVisible2] = useState(true);
+    const [modalVisible2, setModalVisible2] = useState(false);
     const [modalVisible3, setModalVisible3] = useState(false);
     const [search, setSearch] = useState('');
-    const [IsLodding, setIsLodding] = useState(true)
+    const [IsLodding, setIsLodding] = useState(false)
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
-
-
-  
 
     // useEffect(() => {
     //     fetch('https://jsonplaceholder.typicode.com/posts')
@@ -47,12 +43,12 @@ export default function Contacts({ navigation }) {
     useEffect(() => {
     if (loginData || isFocused) {
             if (loginData.status == "success") {
+                setIsLodding(true)
                 dispatch(contactListAction.contactList(
                     loginData.data.token,
                     loginData.data.uid,
                     loginData.data.cProfile.toString(),
                     loginData.data.org_uid,
-                    // loginData.data.user.id.toString()
                 ));
             }
         }
@@ -61,7 +57,7 @@ export default function Contacts({ navigation }) {
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                setIsLodding(false)
+               
                 setFilteredDataSource(contactData.data)
                 setMasterDataSource(contactData.data)
 
@@ -71,7 +67,7 @@ export default function Contacts({ navigation }) {
                 else {
                     setModalVisible2(false)
                 }
-
+                setIsLodding(false)
                 dispatch(contactListAction.clearResponse())
             }
             else if (contactData.status == "failed") {

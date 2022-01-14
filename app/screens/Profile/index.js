@@ -12,7 +12,7 @@ import { profileAction } from '../../redux/Actions';
 export default function AddContact({ navigation }) {
 
     const [user, setUser] = useState('');
-    const [IsLodding, setIsLodding] = useState(true)
+    const [IsLodding, setIsLodding] = useState(false)
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
     const profileData = useSelector(state => state.profile.userDetail)
@@ -27,6 +27,7 @@ export default function AddContact({ navigation }) {
                     loginData.data.cProfile.toString(),
                     loginData.data.token
                 ));
+                setIsLodding(true)
             }
         }
     }, [loginData])
@@ -54,6 +55,7 @@ export default function AddContact({ navigation }) {
     const LogoutSession = () => {
         navigation.navigate('Logout')
     };
+    
     return (
         <View style={{ flex: 1, width: width, height: height }}>
             <StatusBar

@@ -121,9 +121,6 @@ export const Add_Edit_Status = "Add_Edit_Status"
 export const Add_Edit_Status_Success = "Add_Edit_Status_Success"
 export const Add_Edit_Status_Clear = "Add_Edit_Status_Clear"
 
-// export const Get_Opportunity = 'Get_Opportunity'
-// export const Action_Clear = 'Action_Clear'
-
 
 //getAction
 export const Get_Action = "Get_Action"
@@ -134,3 +131,13 @@ export const Action_Clear = 'Action_Clear'
 export const Get_Status = "Get_Status"
 export const Status_Success = "Status_Success"
 export const Status_Clear = 'Status_Clear'
+
+//Delete_IdAction
+export const Get_Action_Delete = "Get_Action_Delete"
+export const Action_Delete_Success = "Action_Delete_Success"
+export const Action_Delete_Clear = 'Action_Delete_Clear'
+
+//Delete Status
+export const Get_Status_Delete = "Get_Status_Delete"
+export const Status_Delete_Success = "Status_Delete_Success"
+export const Status_Delete_Clear = 'Status_Delete_Clear'

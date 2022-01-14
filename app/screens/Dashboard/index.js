@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator,Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
-  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert,RefreshControl
+import {
+  ActivityIndicator, Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
+  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert, RefreshControl
 } from 'react-native';
 import { Card } from 'react-native-paper';
 import PieChart from 'react-native-pie-chart';
@@ -8,12 +9,12 @@ import Header from "../../component/header/index";
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { dashboardAction } from '../../redux/Actions/index'
-import {useIsFocused} from "@react-navigation/core"
+import { useIsFocused } from "@react-navigation/core"
 
 export default function Dashboard({ navigation, route, props }) {
 
   const [Opportunity, setOpportunity] = useState('7-Days');
-  const [modalVisible2, setModalVisible2] = useState(true);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [Topportunitys, setTopportunitys] = useState('')
   const [Tleads, setTleads] = useState('')
@@ -28,9 +29,9 @@ export default function Dashboard({ navigation, route, props }) {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => 
-    Get_Data(),
-    setRefreshing(false)
+    wait(2000).then(() =>
+      Get_Data(),
+      setRefreshing(false)
     );
   }, []);
 
@@ -40,7 +41,7 @@ export default function Dashboard({ navigation, route, props }) {
   const dashboardData = useSelector(state => state.dashboard.data)
 
 
-  console.log('loginData.................',loginData)
+  console.log('loginData.................', loginData)
   const widthAndHeight = 160
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
@@ -113,7 +114,7 @@ export default function Dashboard({ navigation, route, props }) {
   }
 
   useEffect(() => {
-    if (loginData || isFocused ) {
+    if (loginData || isFocused) {
       if (loginData.status == "success") {
         dispatch(dashboardAction.dashboard(
           loginData.data.uid,
@@ -124,9 +125,11 @@ export default function Dashboard({ navigation, route, props }) {
         console.log('dashborad calll/.....................')
       }
     }
-  }, [loginData ,isFocused])
+    Get_Data()
+  }, [loginData, isFocused])
 
-  const Get_Data =()=>{
+  const Get_Data = () => {
+    setIsLodding(true)
     dispatch(dashboardAction.dashboard(
       loginData.data.uid,
       loginData.data.org_uid,
@@ -143,8 +146,8 @@ export default function Dashboard({ navigation, route, props }) {
         setTaccounts(dashboardData.data.total_accounts)
         setTcontacts(dashboardData.data.total_contacts)
         setTleads(dashboardData.data.total_leads)
-        if (!dashboardData.data.total_contacts == []) {
-          setModalVisible2(false)
+        if (dashboardData.data.total_contacts == []) {
+          setModalVisible2(true)
         }
         dispatch(dashboardAction.clearResponse())
       }
@@ -159,9 +162,9 @@ export default function Dashboard({ navigation, route, props }) {
   }, [dashboardData])
 
   return (
-    <View style={styles.container} 
+    <View style={styles.container}
     >
-    
+
       <Header
         style={Platform.OS == 'ios' ?
           { height: "18%" } : { height: "16%" }}
@@ -174,304 +177,307 @@ export default function Dashboard({ navigation, route, props }) {
         }}
       />
 
-      <View
-        style={styles.reView}>
-        <Pressable
-          style={{ width: '49%' }}
-          onPress={() => navigation.navigate('lead_manager', {
-            key: 'Opportunity'
-          })}
-        >
-          <Card
-            style={[styles.cardBox]} >
-            <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Opportunity</Text>
-            <Text style={styles.counter}>{Topportunitys}</Text>
-          </Card>
-        </Pressable >
-        <Pressable
-          style={{ width: '49%' }}
-          onPress={() => navigation.navigate('lead_manager', {
-            key: 'Lead'
-          })}>
-          <Card
-            style={[styles.cardBox2]}>
-            <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Leads</Text>
-            <Text style={styles.counter2}>{Tleads}</Text>
-          </Card>
-        </Pressable >
-      </View>
 
-      <View
-        style={[styles.reView, { marginTop: 0 }]}>
-        <Pressable
-          style={{ width: '49%' }}
-        // onPress={() => navigation.navigate('lead_manager')}
-        >
-          <Card
-            style={[styles.cardBox]} >
-            <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
-            <Text style={styles.counter}>{Taccounts}</Text>
-          </Card>
-        </Pressable >
-        <Pressable
-          style={{ width: '49%' }}
-          onPress={() => navigation.navigate('AddContact')}
-        >
-          <Card
-            style={[styles.cardBox2]}>
-            <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
-            <Text style={styles.counter2}>{Tcontacts}</Text>
-          </Card>
-        </Pressable >
-      </View>
-
-<ScrollView refreshControl={
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-      />
-    }>
       {IsLodding == true ?
-                <ActivityIndicator size="small" color="#0000ff" />
-                :
-                
-                <View>
-      <View
-        style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
-        <TouchableOpacity style={{ marginRight: '5%' }}
-          onPress={() => checkValue("Opportunity")}
-        >
-          <View style={{ borderBottomWidth: 3, borderColor: '#6998F8', }} >
-            <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', fontSize: 16 }}>Opportunity</Text></View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("All_Lead")}
-        >
-          <Text style={{
-            fontFamily: 'Roboto'
-            , fontWeight: 'bold', fontSize: 16
-          }}>Leads</Text>
-        </TouchableOpacity>
-      </View>
-      {/* <ScrollView> */}
+        <ActivityIndicator size="small" color="#0000ff" />
+        :
 
-      <Card style={{ margin: '3%', padding: 5 }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: '3%', paddingBottom: '2%' }}>
+        <View>
+          <View
+            style={styles.reView}>
+            <Pressable
+              style={{ width: '49%' }}
+              onPress={() => navigation.navigate('lead_manager', {
+                key: 'Opportunity'
+              })}
+            >
+              <Card
+                style={[styles.cardBox]} >
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Opportunity</Text>
+                <Text style={styles.counter}>{Topportunitys}</Text>
+              </Card>
+            </Pressable >
+            <Pressable
+              style={{ width: '49%' }}
+              onPress={() => navigation.navigate('lead_manager', {
+                key: 'Lead'
+              })}>
+              <Card
+                style={[styles.cardBox2]}>
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Leads</Text>
+                <Text style={styles.counter2}>{Tleads}</Text>
+              </Card>
+            </Pressable >
+          </View>
 
-          <PieChart
-            widthAndHeight={widthAndHeight}
-            series={series}
-            sliceColor={sliceColor}
-          />
-          <Text style={[styles.parcentage, { marginTop: '15%', marginLeft: '8%' }]}>30%</Text>
-          <Text style={[styles.parcentage, { marginTop: '29%', marginLeft: '28%' }]}>70%</Text>
-          <View style={{ opacity: 10 }}>
+          <View
+            style={[styles.reView, { marginTop: 0 }]}>
+            <Pressable
+              style={{ width: '49%' }}
+            // onPress={() => navigation.navigate('lead_manager')}
+            >
+              <Card
+                style={[styles.cardBox]} >
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
+                <Text style={styles.counter}>{Taccounts}</Text>
+              </Card>
+            </Pressable >
+            <Pressable
+              style={{ width: '49%' }}
+              onPress={() => navigation.navigate('AddContact')}
+            >
+              <Card
+                style={[styles.cardBox2]}>
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
+                <Text style={styles.counter2}>{Tcontacts}</Text>
+              </Card>
+            </Pressable >
+          </View>
 
-            <Text style={{ marginLeft: '5%', color: '#0F0F0F', fontSize: 14 }}>OPPORTUNITY</Text>
+          <ScrollView refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              color='#0000ff'
+              onRefresh={onRefresh}
+            />
+          }>
 
             <View
-              style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
-              <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '5%' }}>
-                <View style={{
-                  backgroundColor: '#6191F3',
-                  height: 15, width: 15, borderRadius: 15 / 2, marginRight: '3%'
-                }}>
-                </View>
-                <Text style={{ fontSize: 12, fontFamily: 'Roboto', color: '#111111' }}>Pending  </Text>
-                <View style={{
-                  backgroundColor: '#FFBC04', height: 15, width: 15, borderRadius: 15 / 2,
-                  marginLeft: '2%', marginRight: '5%'
-                }}>
-                </View>
-                <Text style={{ fontSize: 12, fontFamily: 'Roboto', color: '#111111', marginRight: '-6.5%' }}>Called</Text>
-              </View>
+              style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
+              <TouchableOpacity style={{ marginRight: '5%' }}
+                onPress={() => checkValue("Opportunity")}
+              >
+                <View style={{ borderBottomWidth: 3, borderColor: '#6998F8', }} >
+                  <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', fontSize: 16 }}>Opportunity</Text></View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("All_Lead")}
+              >
+                <Text style={{
+                  fontFamily: 'Roboto'
+                  , fontWeight: 'bold', fontSize: 16
+                }}>Leads</Text>
+              </TouchableOpacity>
             </View>
-            {
-              Opportunity == "Today" ?
-                <TouchableOpacity
-                  style={{
-                    marginTop: '5%', marginLeft: '10%',
-                    borderRadius: 15, borderWidth: 1, width: '80%',
-                    backgroundColor: '#2450FF', borderColor: '#2450FF',
-                  }}
-                  onPress={() => checkStatusValue("Today")}
-                >
-                  <Text
-                    style={[styles.opportunityText,
-                    {
-                      color: 'white', fontSize: 14,
-                      fontFamily: 'Roboto',
-                    }
-                    ]}>
-                    Today
-                  </Text>
-                </TouchableOpacity>
-                : <TouchableOpacity
-                  style={{
-                    marginTop: '5%',
-                    marginLeft: '10%',
-                    borderRadius: 15,
-                    borderWidth: 1,
-                    width: '80%',
-                    backgroundColor: '#EBEBEB',
-                    borderColor: '#EBEBEB'
-                  }}
-                  onPress={() => checkStatusValue("Today")}
-                >
-                  <Text
-                    style={[styles.opportunityText,
-                    { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
-                    ]}>
-                    Today
-                  </Text>
-                </TouchableOpacity>
-            }
+            {/* <ScrollView> */}
 
-            {
-              Opportunity == "7-Days" ?
-                <TouchableOpacity
-                  style={{
-                    marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                    borderWidth: 1, width: '80%',
-                    backgroundColor: '#2450FF',
-                    borderColor: '#2450FF',
-                  }}
-                  onPress={() => checkStatusValue("7-Days")}
-                >
-                  <Text
-                    style={[styles.opportunityText,
-                    { color: 'white', fontSize: 14, fontFamily: 'Roboto', }
-                    ]}>
-                    7 Days
-                  </Text>
-                </TouchableOpacity>
-                : <TouchableOpacity
-                  style={{
-                    marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                    borderWidth: 1, width: '80%',
-                    backgroundColor: '#EBEBEB',
-                    borderColor: '#EBEBEB'
-                  }}
-                  onPress={() => checkStatusValue("7-Days")}
-                >
-                  <Text
-                    style={[styles.opportunityText,
-                    { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
-                    ]}>
-                    7 Days
-                  </Text>
-                </TouchableOpacity>
-            }
+            <Card style={{ margin: '3%', padding: 5 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: '3%', paddingBottom: '2%' }}>
 
+                <PieChart
+                  widthAndHeight={widthAndHeight}
+                  series={series}
+                  sliceColor={sliceColor}
+                />
+                <Text style={[styles.parcentage, { marginTop: '15%', marginLeft: '8%' }]}>30%</Text>
+                <Text style={[styles.parcentage, { marginTop: '29%', marginLeft: '28%' }]}>70%</Text>
+                <View style={{ opacity: 10 }}>
 
+                  <Text style={{ marginLeft: '5%', color: '#0F0F0F', fontSize: 14 }}>OPPORTUNITY</Text>
 
-            {
-              Opportunity == "30-Days" ?
-                <TouchableOpacity
-                  style={{
-                    marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                    borderWidth: 1, width: '80%',
-                    backgroundColor: '#2450FF',
-                    borderColor: '#2450FF',
-                  }}
-                  onPress={() => checkStatusValue("30-Days")}
-                >
-                  <Text
-                    style={[styles.opportunityText,
-                    { color: 'white', fontSize: 14, fontFamily: 'Roboto', }
-                    ]}>
-                    30 Days
-                  </Text>
-                </TouchableOpacity>
-                : <TouchableOpacity
-                  onPress={() => checkStatusValue("30-Days")}
-                  style={{
-                    marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                    borderWidth: 1, width: '80%',
-                    backgroundColor: '#EBEBEB',
-                    borderColor: '#EBEBEB'
-                  }}
-                >
-                  <Text
-                    style={[styles.opportunityText,
-                    { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
-                    ]}>
-                    30 Days
-                  </Text>
-                </TouchableOpacity>
-            }
-          </View>
-        </View>
-      </Card>
-    
-      <FlatList
-        data={DATA}
-
-        renderItem={({ item, index }) => (
-          <View style={{
-            // marginTop: '2.5%'
-          }}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Task_Manager')}
-            >
-              <View style={styles.listData}>
-                <View style={{ flexDirection: 'row', }}>
+                  <View
+                    style={{ flexDirection: 'row', justifyContent: 'space-between', }}>
+                    <View style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '5%' }}>
+                      <View style={{
+                        backgroundColor: '#6191F3',
+                        height: 15, width: 15, borderRadius: 15 / 2, marginRight: '3%'
+                      }}>
+                      </View>
+                      <Text style={{ fontSize: 12, fontFamily: 'Roboto', color: '#111111' }}>Pending  </Text>
+                      <View style={{
+                        backgroundColor: '#FFBC04', height: 15, width: 15, borderRadius: 15 / 2,
+                        marginLeft: '2%', marginRight: '5%'
+                      }}>
+                      </View>
+                      <Text style={{ fontSize: 12, fontFamily: 'Roboto', color: '#111111', marginRight: '-6.5%' }}>Called</Text>
+                    </View>
+                  </View>
                   {
-                    item.image == '1' ?
-                      <Image
-                        style={{ height: 48, width: 48, marginTop: '2%' }}
-                        // source={require('../../images/message.png')}
-                        // source={require('../../images/call.png')}
-                        source={require('../../images/blue_bell.png')}
-                      /> : <View />}
-                  {item.image == '2' ?
-                    <Image
-                      style={{ height: 48, width: 48, marginTop: '2%' }}
-                      // source={require('../../images/message.png')}
-                      source={require('../../images/call.png')}
-                    // source={require('../../images/blue_bell.png')}
-                    /> : <View />}
-                  {item.image == '3' ?
-                    <Image
-                      style={{ height: 48, width: 48, marginTop: '2%' }}
-                      source={require('../../images/message.png')}
-                    // source={require('../../images/call.png')}
-                    // source={require('../../images/blue_bell.png')}
-                    /> : <View />
+                    Opportunity == "Today" ?
+                      <TouchableOpacity
+                        style={{
+                          marginTop: '5%', marginLeft: '10%',
+                          borderRadius: 15, borderWidth: 1, width: '80%',
+                          backgroundColor: '#2450FF', borderColor: '#2450FF',
+                        }}
+                        onPress={() => checkStatusValue("Today")}
+                      >
+                        <Text
+                          style={[styles.opportunityText,
+                          {
+                            color: 'white', fontSize: 14,
+                            fontFamily: 'Roboto',
+                          }
+                          ]}>
+                          Today
+                        </Text>
+                      </TouchableOpacity>
+                      : <TouchableOpacity
+                        style={{
+                          marginTop: '5%',
+                          marginLeft: '10%',
+                          borderRadius: 15,
+                          borderWidth: 1,
+                          width: '80%',
+                          backgroundColor: '#EBEBEB',
+                          borderColor: '#EBEBEB'
+                        }}
+                        onPress={() => checkStatusValue("Today")}
+                      >
+                        <Text
+                          style={[styles.opportunityText,
+                          { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
+                          ]}>
+                          Today
+                        </Text>
+                      </TouchableOpacity>
                   }
 
-                  {/* <View style={{ marginLeft: '-10%', marginTop: '3%' }}> */}
-                  <View style={{ marginTop: '4%', marginLeft: '6%' }}>
-                    <Text style={{ fontSize: 14, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.title}</Text>
-                    <Text style={{ fontSize: 13, fontFamily: 'ROboto', color: '#0F0F0F' }}>{item.subtitle}</Text>
-                  </View>
-                </View>
-                <View style={{ marginTop: '5%' }}>
-                  <Image
-                    style={{ height: 21, width: 21, marginRight: '2%' }}
-                    source={require('../../images/arrow.png')}
-                  />
+                  {
+                    Opportunity == "7-Days" ?
+                      <TouchableOpacity
+                        style={{
+                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
+                          borderWidth: 1, width: '80%',
+                          backgroundColor: '#2450FF',
+                          borderColor: '#2450FF',
+                        }}
+                        onPress={() => checkStatusValue("7-Days")}
+                      >
+                        <Text
+                          style={[styles.opportunityText,
+                          { color: 'white', fontSize: 14, fontFamily: 'Roboto', }
+                          ]}>
+                          7 Days
+                        </Text>
+                      </TouchableOpacity>
+                      : <TouchableOpacity
+                        style={{
+                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
+                          borderWidth: 1, width: '80%',
+                          backgroundColor: '#EBEBEB',
+                          borderColor: '#EBEBEB'
+                        }}
+                        onPress={() => checkStatusValue("7-Days")}
+                      >
+                        <Text
+                          style={[styles.opportunityText,
+                          { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
+                          ]}>
+                          7 Days
+                        </Text>
+                      </TouchableOpacity>
+                  }
+
+
+
+                  {
+                    Opportunity == "30-Days" ?
+                      <TouchableOpacity
+                        style={{
+                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
+                          borderWidth: 1, width: '80%',
+                          backgroundColor: '#2450FF',
+                          borderColor: '#2450FF',
+                        }}
+                        onPress={() => checkStatusValue("30-Days")}
+                      >
+                        <Text
+                          style={[styles.opportunityText,
+                          { color: 'white', fontSize: 14, fontFamily: 'Roboto', }
+                          ]}>
+                          30 Days
+                        </Text>
+                      </TouchableOpacity>
+                      : <TouchableOpacity
+                        onPress={() => checkStatusValue("30-Days")}
+                        style={{
+                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
+                          borderWidth: 1, width: '80%',
+                          backgroundColor: '#EBEBEB',
+                          borderColor: '#EBEBEB'
+                        }}
+                      >
+                        <Text
+                          style={[styles.opportunityText,
+                          { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
+                          ]}>
+                          30 Days
+                        </Text>
+                      </TouchableOpacity>
+                  }
                 </View>
               </View>
-            </TouchableOpacity>
-          </View>
-        )}
-        keyExtractor={(item) => item.title}
-      />
-      </View> }
-     </ScrollView>
+            </Card>
+
+            <FlatList
+              data={DATA}
+
+              renderItem={({ item, index }) => (
+                <View style={{
+                  // marginTop: '2.5%'
+                }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Task_Manager')}
+                  >
+                    <View style={styles.listData}>
+                      <View style={{ flexDirection: 'row', }}>
+                        {
+                          item.image == '1' ?
+                            <Image
+                              style={{ height: 48, width: 48, marginTop: '2%' }}
+                              // source={require('../../images/message.png')}
+                              // source={require('../../images/call.png')}
+                              source={require('../../images/blue_bell.png')}
+                            /> : <View />}
+                        {item.image == '2' ?
+                          <Image
+                            style={{ height: 48, width: 48, marginTop: '2%' }}
+                            // source={require('../../images/message.png')}
+                            source={require('../../images/call.png')}
+                          // source={require('../../images/blue_bell.png')}
+                          /> : <View />}
+                        {item.image == '3' ?
+                          <Image
+                            style={{ height: 48, width: 48, marginTop: '2%' }}
+                            source={require('../../images/message.png')}
+                          // source={require('../../images/call.png')}
+                          // source={require('../../images/blue_bell.png')}
+                          /> : <View />
+                        }
+
+                        {/* <View style={{ marginLeft: '-10%', marginTop: '3%' }}> */}
+                        <View style={{ marginTop: '4%', marginLeft: '6%' }}>
+                          <Text style={{ fontSize: 14, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.title}</Text>
+                          <Text style={{ fontSize: 13, fontFamily: 'ROboto', color: '#0F0F0F' }}>{item.subtitle}</Text>
+                        </View>
+                      </View>
+                      <View style={{ marginTop: '5%' }}>
+                        <Image
+                          style={{ height: 21, width: 21, marginRight: '2%' }}
+                          source={require('../../images/arrow.png')}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+              keyExtractor={(item) => item.title}
+            />
+
+          </ScrollView>
+        </View>
+      }
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible2}
         onRequestClose={() => {
-          // Alert.alert("Modal has been closed.");
           setModalVisible2(!modalVisible2);
         }}
       >
         <View style={styles.centeredViewM}>
           <View style={styles.modalViewM}>
-            {/* <View style={styles.headerView2M}> */}
             <TouchableOpacity
               style={{ alignSelf: 'flex-end', }}
               onPress={() => setModalVisible2(!modalVisible2)}
@@ -481,7 +487,6 @@ export default function Dashboard({ navigation, route, props }) {
                 source={require('../../images/crossImgR.png')}
               />
             </TouchableOpacity>
-            {/* </View> */}
 
             <Text style={styles.titleM}>
               Do You Want To{'\n'}Add Contacts?

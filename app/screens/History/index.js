@@ -1,30 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  Image,
-  Button,
-  ScrollView,
-  Modal,
-  Alert,
-  Pressable,
-  StatusBar,
-  Platform
+  Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Image, Button, ScrollView,
+  Modal, Alert, Pressable, StatusBar, Platform, ActivityIndicator
 } from 'react-native';
-import { Card, useTheme } from 'react-native-paper'
 import styles from "./styles";
-import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { historyAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
+import { useIsFocused } from "@react-navigation/core"
 
 export default function lead_manager({ navigation }) {
 
@@ -104,42 +90,46 @@ export default function lead_manager({ navigation }) {
   }
   // const { width, height } = Dimensions.get('window');
   const [History, setHistory] = useState()
+  const [IsLodding, setIsLodding] = useState(false)
   const dispatch = useDispatch()
+  const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
   const historyData = useSelector(state => state.history.getHistoryList)
 
   useEffect(() => {
-    if (loginData) {
+    if (loginData || isFocused) {
       if (loginData.status == "success") {
         dispatch(historyAction.historyList(
           loginData.data.token,
           loginData.data.uid,
           loginData.data.cProfile.toString(),
           loginData.data.user.org_id.toString(),
-          loginData.data.org_uid,
-          // loginData.data.user.id.toString(),  
+          loginData.data.org_uid, 
         ));
+        setIsLodding(true)
       }
     }
-  }, [loginData])
+  }, [loginData, isFocused])
 
   useEffect(() => {
     if (historyData) {
       if (historyData.status == "200") {
         console.log("sucess..........", historyData.data)
         setHistory([historyData.data])
-        // dispatch(leadAction.clearResponse())
+        setIsLodding(false)
         //   Alert.alert(historyData.message)
       }
       else if (historyData.status == "failed") {
+        setIsLodding(false)
         // Alert.alert(leadList.message)
         // console.log("sucess..failed........")
       }
       else if (historyData.status == "fail") {
+        setIsLodding(false)
         Alert.alert(historyData.message)
       }
       else {
-
+        setIsLodding(false)
       }
     }
     else {
@@ -147,7 +137,7 @@ export default function lead_manager({ navigation }) {
     }
   }, [historyData])
 
-// console.log("Hia...................",History)
+  // console.log("Hia...................",History)
 
   const HistoryView = ({ item }) => {
     // console.log("item.....HistoryView..............", item)
@@ -199,60 +189,7 @@ export default function lead_manager({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="dark-content"
-        // dark-content, light-content and default
-        hidden={false}
-        //To hide statusBar
-        backgroundColor="#2B6EF2"
-        //Background color of statusBar only works for Android
-        translucent={false}
-        //allowing light, but not detailed shapes
-        networkActivityIndicatorVisible={true}
-      />
-
-      {/* <LinearGradient
-        colors={['#2B6EF2', '#8DB3FF',]}
-
-        style={{
-          // flex: 1,
-          borderBottomLeftRadius: 20,
-          borderBottomRightRadius: 20,
-          height: "10%",
-          width: "100%",
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            margin: '5%',
-          }}>
-          <TouchableOpacity
-            onPress={() => navigation.openDrawer()}
-          >
-            <Image
-              style={styles.image2}
-              source={require('../../images/home.png')}
-            />
-          </TouchableOpacity>
-          <Text style={{
-            color: 'white', fontSize: 16,
-            fontFamily: 'Roboto'
-          }}>History</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Notification')}
-          >
-            <Image
-              style={styles.image2}
-              source={require('../../images/Notifications.png')}
-            />
-          </TouchableOpacity>
-        </View>
-      </LinearGradient> */}
-
       <Header
-        // style={{ height: "16%" }}
         onPressLeft={() => {
           // navigation.OpenDrawer()
           navigation.goBack()
@@ -263,13 +200,6 @@ export default function lead_manager({ navigation }) {
         }}
       />
 
-      {/* ------------------------------------------------------------------ */}
-
-      {/* <View> */}
-
-      {/* </View> */}
-
-      {/* <View> */}
       {shows && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -280,11 +210,6 @@ export default function lead_manager({ navigation }) {
           onChange={onChangeTo}
         />
       )}
-      {/* </View> */}
-
-      {/* ------------------------------------------------------------------------- */}
-
-
 
       <View style={{
         flexDirection: 'row',
@@ -304,7 +229,7 @@ export default function lead_manager({ navigation }) {
             {show && (
               <DateTimePicker
                 testID="dateTimePicker"
-                style={{ backgroundColor: '', marginTop: '-5%',width:'100%' }}
+                style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
                 value={date}
                 mode={mode}
                 // is24Hour={true}
@@ -314,12 +239,12 @@ export default function lead_manager({ navigation }) {
             )
             }
             {Platform.OS == 'ios' ? <View>
-                {text == true ?
-                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                  :
-                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                }
-              </View>
+              {text == true ?
+                <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
+                :
+                <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
+              }
+            </View>
               :
               <View>
                 {text == true ?
@@ -423,17 +348,21 @@ export default function lead_manager({ navigation }) {
       </TouchableOpacity>
 
       {/* <View style={{ backgroundColor: 'red', height: 20 }}></View> */}
-{
-        History == [] || [null] ? 
-        <View></View>
+      {IsLodding == true ?
+        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
         :
-        <FlatList
-        // style={{ height: height / 1.55 }}
-        data={History}
-        renderItem={HistoryView}
-      />
-}
-   
+        <View>
+          {History !== undefined && History.length > 0 ?
+            <FlatList
+              // style={{ height: height / 1.55 }}
+              data={History}
+              renderItem={HistoryView}
+            />
+            :
+            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+        </View>
+      }
+
       {/* <View style={{ marginTop: '2.5%' }}>
         <TouchableOpacity
           onPress={() => Detail('New')}

@@ -12,6 +12,7 @@ import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { leadAction, opportunityAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
+import {useIsFocused} from "@react-navigation/core"
 
 export default function lead_manager({ navigation, route }) {
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
@@ -180,6 +181,7 @@ export default function lead_manager({ navigation, route }) {
   const { width, height } = Dimensions.get('window');
 
   const dispatch = useDispatch()
+  const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
   const leadList = useSelector(state => state.leads.getLead)
   const importLead = useSelector(state => state.leads.importLead)
@@ -187,7 +189,7 @@ export default function lead_manager({ navigation, route }) {
   const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
 
   useEffect(() => {
-    if (loginData) {
+    if (loginData  || isFocused) {
       if (loginData.status == "success") {
         dispatch(leadAction.leadList(
           loginData.data.token,
@@ -204,7 +206,7 @@ export default function lead_manager({ navigation, route }) {
         setIsLodding(true)
       }
     }
-  }, [loginData])
+  }, [loginData , isFocused])
 
 
   useEffect(() => {
@@ -290,8 +292,6 @@ export default function lead_manager({ navigation, route }) {
 
     setAllList([...Lead, ...Opportunity]);
   }
-
-  // console.log("setAllListsetAllListsetAllList..........", AllList.length)
 
   const AllView = ({ item }) => {
     return (
@@ -741,14 +741,14 @@ export default function lead_manager({ navigation, route }) {
             {IsLodding == true ?
               <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
               :
-              <View />
-            }
+             
             <FlatList
               style={{ height: height / 1.55 }}
               data={AllList}
               renderItem={AllView}
             />
-
+         
+          }
             <View style={{ marginTop: '2%' }}></View>
           </View>
 
@@ -876,8 +876,7 @@ export default function lead_manager({ navigation, route }) {
             {IsLodding == true ?
               <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
               :
-              <View />
-            }
+             
 
             <FlatList
               style={{ height: height / 1.7 }}
@@ -885,7 +884,8 @@ export default function lead_manager({ navigation, route }) {
               data={Lead}
               renderItem={LeadView}
             />
-
+           
+          }
             <View style={{ marginTop: '2%' }}></View>
           </View>
           :
@@ -1011,14 +1011,12 @@ export default function lead_manager({ navigation, route }) {
             {IsLodding == true ?
               <ActivityIndicator size="large" color="#0000ff" style={{marginTop:'40%'}}/>
               :
-              <View />
-            }
-            
             <FlatList
               style={{ height: height / 1.7 }}
               data={Opportunity}
               renderItem={OpportunityVIew}
             />
+          }
             <View style={{ marginTop: '2%' }}></View>
           </View>
           :

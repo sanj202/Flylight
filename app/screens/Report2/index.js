@@ -6,6 +6,7 @@ import styles from "./styles";
 import Header from '../../component/header'
 import { reportAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
+import { useIsFocused } from "@react-navigation/core"
 
 export default function Report({ navigation }) {
     const data = [
@@ -20,11 +21,12 @@ export default function Report({ navigation }) {
     // const { width, height } = Dimensions.get('window');
     const [Report, setReport] = useState()
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const reportData = useSelector(state => state.report.getReportList)
 
     useEffect(() => {
-        if (loginData) {
+        if (loginData || isFocused) {
             if (loginData.status == "success") {
                 dispatch(reportAction.reportList(
                     loginData.data.token,
@@ -34,8 +36,8 @@ export default function Report({ navigation }) {
                     loginData.data.org_uid,
                 ));
             }
-        }                                         
-    }, [loginData])
+        }
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (reportData) {
@@ -120,131 +122,131 @@ export default function Report({ navigation }) {
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
-                
-            <ScrollView>
-                <Card style={styles.card}>
-                    <TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Total Opportunity</Text>
-                                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.total_opportunities : '0'}</Text>
-                            </View>
-                            <View style={{
-                                height: 37, width: 42, borderWidth: 2, marginTop: '3%',
-                                padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#E90054'
-                            }}>
-                                <Image
-                                    source={require('../../images/arrow_white.png')}
-                                    style={{ height: 13, width: 20, }}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
 
-                <Card style={[styles.card, { backgroundColor: '#6FD3F5' }]}>
-                    <TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Total Leads</Text>
-                                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.total_leads : '0'}</Text>
+                <ScrollView>
+                    <Card style={styles.card}>
+                        <TouchableOpacity>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Total Opportunity</Text>
+                                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.total_opportunities : '0'}</Text>
+                                </View>
+                                <View style={{
+                                    height: 37, width: 42, borderWidth: 2, marginTop: '3%',
+                                    padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#E90054'
+                                }}>
+                                    <Image
+                                        source={require('../../images/arrow_white.png')}
+                                        style={{ height: 13, width: 20, }}
+                                    />
+                                </View>
                             </View>
-                            <View style={{
-                                height: 37, width: 42, borderWidth: 2, marginTop: '3%',
-                                padding: '2.5%', borderRadius: 10, borderColor: '#fff',
-                                backgroundColor: '#04AEE8'
-                            }}>
-                                <Image
-                                    source={require('../../images/arrow_white.png')}
-                                    style={{ height: 13, width: 20, }}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
+                        </TouchableOpacity>
+                    </Card>
 
-                <Card style={[styles.card, { backgroundColor: '#EFEF2A' }]}>
-                    <TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Opportunity Called</Text>
-                                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.opportunities_called : '0'}</Text>
+                    <Card style={[styles.card, { backgroundColor: '#6FD3F5' }]}>
+                        <TouchableOpacity>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Total Leads</Text>
+                                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.total_leads : '0'}</Text>
+                                </View>
+                                <View style={{
+                                    height: 37, width: 42, borderWidth: 2, marginTop: '3%',
+                                    padding: '2.5%', borderRadius: 10, borderColor: '#fff',
+                                    backgroundColor: '#04AEE8'
+                                }}>
+                                    <Image
+                                        source={require('../../images/arrow_white.png')}
+                                        style={{ height: 13, width: 20, }}
+                                    />
+                                </View>
                             </View>
-                            <View style={{
-                                height: 37, width: 42, borderWidth: 2, marginTop: '3%',
-                                padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#D1D100'
-                            }}>
-                                <Image
-                                    source={require('../../images/arrow_white.png')}
-                                    style={{ height: 13, width: 20, }}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
+                        </TouchableOpacity>
+                    </Card>
 
-                <Card style={[styles.card, { backgroundColor: '#EF2AE2' }]}>
-                    <TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Lead Called</Text>
-                                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.lead_called : '0'}</Text>
+                    <Card style={[styles.card, { backgroundColor: '#EFEF2A' }]}>
+                        <TouchableOpacity>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Opportunity Called</Text>
+                                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.opportunities_called : '0'}</Text>
+                                </View>
+                                <View style={{
+                                    height: 37, width: 42, borderWidth: 2, marginTop: '3%',
+                                    padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#D1D100'
+                                }}>
+                                    <Image
+                                        source={require('../../images/arrow_white.png')}
+                                        style={{ height: 13, width: 20, }}
+                                    />
+                                </View>
                             </View>
-                            <View style={{
-                                height: 37, width: 42, borderWidth: 2, marginTop: '3%',
-                                padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#EF2AE2'
-                            }}>
-                                <Image
-                                    source={require('../../images/arrow_white.png')}
-                                    style={{ height: 13, width: 20, }}
-                                />
+                        </TouchableOpacity>
+                    </Card>
+
+                    <Card style={[styles.card, { backgroundColor: '#EF2AE2' }]}>
+                        <TouchableOpacity>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Lead Called</Text>
+                                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.lead_called : '0'}</Text>
+                                </View>
+                                <View style={{
+                                    height: 37, width: 42, borderWidth: 2, marginTop: '3%',
+                                    padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#EF2AE2'
+                                }}>
+                                    <Image
+                                        source={require('../../images/arrow_white.png')}
+                                        style={{ height: 13, width: 20, }}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
+                        </TouchableOpacity>
+                    </Card>
 
 
-                <Card style={[styles.card, { backgroundColor: '#F99A70' }]}>
-                    <TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Opportunity Pending</Text>
-                                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.opportunities_pending : '0'}</Text>
+                    <Card style={[styles.card, { backgroundColor: '#F99A70' }]}>
+                        <TouchableOpacity>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Opportunity Pending</Text>
+                                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.opportunities_pending : '0'}</Text>
+                                </View>
+                                <View style={{
+                                    height: 37, width: 42, borderWidth: 2, marginTop: '3%',
+                                    padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#F94C00'
+                                }}>
+                                    <Image
+                                        source={require('../../images/arrow_white.png')}
+                                        style={{ height: 13, width: 20, }}
+                                    />
+                                </View>
                             </View>
-                            <View style={{
-                                height: 37, width: 42, borderWidth: 2, marginTop: '3%',
-                                padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#F94C00'
-                            }}>
-                                <Image
-                                    source={require('../../images/arrow_white.png')}
-                                    style={{ height: 13, width: 20, }}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
+                        </TouchableOpacity>
+                    </Card>
 
-                <Card style={[styles.card, { backgroundColor: '#2AEF4B' }]}>
-                    <TouchableOpacity>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <View>
-                                <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Leads Pending</Text>
-                                <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.lead_pending : '0'}</Text>
+                    <Card style={[styles.card, { backgroundColor: '#2AEF4B' }]}>
+                        <TouchableOpacity>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                <View>
+                                    <Text style={{ fontSize: 20, color: '#FFFFFF', fontFamily: 'Roboto' }} >Leads Pending</Text>
+                                    <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }} >{Report ? Report.lead_pending : '0'}</Text>
+                                </View>
+                                <View style={{
+                                    height: 37, width: 42, borderWidth: 2, marginTop: '3%',
+                                    padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#00CF23'
+                                }}>
+                                    <Image
+                                        source={require('../../images/arrow_white.png')}
+                                        style={{ height: 13, width: 20, }}
+                                    />
+                                </View>
                             </View>
-                            <View style={{
-                                height: 37, width: 42, borderWidth: 2, marginTop: '3%',
-                                padding: '2.5%', borderRadius: 10, borderColor: '#fff', backgroundColor: '#00CF23'
-                            }}>
-                                <Image
-                                    source={require('../../images/arrow_white.png')}
-                                    style={{ height: 13, width: 20, }}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </Card>
-            </ScrollView>
-        }
+                        </TouchableOpacity>
+                    </Card>
+                </ScrollView>
+            }
         </View>
-        );
+    );
 }

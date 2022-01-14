@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, StyleSheet, TouchableOpacity,
-    TextInput, Picker, FlatList, Image, Button, ScrollView,
+    Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
     Modal, Alert, Pressable, StatusBar, Dimensions
 } from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import Header from '../../component/header/index'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { taskmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
+import { useIsFocused } from "@react-navigation/core"
 
 export default function lead_manager({ navigation }) {
 
@@ -86,14 +84,16 @@ export default function lead_manager({ navigation }) {
 
     const { width, height } = Dimensions.get('window');
     const [allTask, setallTask] = useState()
+    const [IsLodding, setIsLodding] = useState(false)
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const taskList = useSelector(state => state.taskmanager.getList)
 
     // console.log("taskList................", taskList)
 
     useEffect(() => {
-        if (loginData) {
+        if (loginData || isFocused) {
             if (loginData.status == "success") {
                 dispatch(taskmanagerAction.TaskList(
                     loginData.data.token,
@@ -102,26 +102,33 @@ export default function lead_manager({ navigation }) {
                     loginData.data.user.org_id.toString()
                 ));
             }
+            setIsLodding(true)
         }
-    }, [loginData])
+    }, [loginData, isFocused])
 
+
+    //   console.log("taskList.....................",taskList)
     useEffect(() => {
         if (taskList) {
             if (taskList.status == "200") {
-                // console.log("sucess..........", taskList.data)
                 setallTask(taskList.data)
+                setIsLodding(false)
                 // dispatch(leadAction.clearResponse())
                 //   Alert.alert(taskList.message)
             }
             else if (taskList.status == "failed") {
+
+                setIsLodding(false)
                 // Alert.alert(leadList.message)
                 // console.log("sucess..failed........")
             }
             else if (taskList.status == "fail") {
+
+                setIsLodding(false)
                 Alert.alert(taskList.message)
             }
             else {
-
+                setIsLodding(false)
             }
         }
         else {
@@ -206,18 +213,6 @@ export default function lead_manager({ navigation }) {
 
     return (
         <View style={styles.container}>
-
-            <StatusBar
-                barStyle="dark-content"
-                // dark-content, light-content and default
-                hidden={false}
-                //To hide statusBar
-                backgroundColor="#2B6EF2"
-                //Background color of statusBar only works for Android
-                translucent={false}
-                //allowing light, but not detailed shapes
-                networkActivityIndicatorVisible={true}
-            />
 
             <Header
                 style={{ height: "14%" }}
@@ -329,15 +324,31 @@ export default function lead_manager({ navigation }) {
 
             {isService == "All" ?
                 <View style={{ marginTop: '3%' }}>
-                    <FlatList
-                        // style={{ height: height / 1.55 }}
-                        data={allTask}
-                        renderItem={AllView}
-                    />
+                    {IsLodding == true ?
+                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                        :
+                        <View>
+                         
+                         {allTask !==undefined && allTask.length > 0 ?
+                            <FlatList
+                                // style={{ height: height / 1.55 }}
+                                data={allTask}
+                                renderItem={AllView}
+                            />
+                            :
+                            <Text style={{fontSize:20,textAlign:'center',marginTop:'3%'}}>No data Found</Text> }
+                        </View>
+                    }
                 </View>
                 :
                 <View />
             }
+
+
+
+
+
+
 
             {
                 isService == "To-Do" ?
@@ -670,15 +681,7 @@ export default function lead_manager({ navigation }) {
                                 style={{ height: 32, width: "16%", }}
                                 source={require('../../images/pikerCalander.png')}
                             />
-                            {/* <DateTimePicker
-                                testID="dateTimePicker"
-                                style={{ backgroundColor: '', marginTop: '-18%' }}
-                                value={date}
-                                mode={mode}
-                                // is24Hour={true}
-                                display="default"
-                                onChange={onChangeFrom}
-                            /> */}
+
                         </TouchableOpacity>
 
                         <View style={{ marginLeft: '1%' }}></View>
