@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
-StatusBar, Dimensions, ActivityIndicator} from 'react-native';
+import {
+    View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
+    StatusBar, Dimensions, ActivityIndicator
+} from 'react-native';
 import styles from './styles';
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -8,6 +10,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
 import { leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
+import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation, route }) {
 
@@ -43,7 +46,10 @@ export default function AddContact({ navigation, route }) {
     const [isFocus1, setIsFocus1] = useState(false);
 
     const { width, height } = Dimensions.get('window');
+
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
+
     const loginData = useSelector(state => state.auth.data)
     const leadData = useSelector(state => state.leads.newLead)
     const leadOwner = useSelector(state => state.leads.leadOwner)
@@ -193,11 +199,12 @@ export default function AddContact({ navigation, route }) {
 
 
 
-    const [leadOwnerData, setleadOwnerData] = useState()
-// console.log('leadOwnerData...........',leadOwnerData.map((item,index)=>
-//         [{lable : item.user.avatar ,value : item.user.avatar }))
+    const [leadOwnerData, setleadOwnerData] = useState([])
+    const [F23, setF23] = useState([])
+    // console.log('leadOwnerData...........',leadOwnerData.map((item,index)=>
+    //         [{lable : item.user.avatar ,value : item.user.avatar }))
     useEffect(() => {
-        if (loginData) {
+        if (loginData || isFocused) {
             if (loginData.status == "success") {
                 dispatch(leadAction.LeadOwnerList(
                     loginData.data.uid,
@@ -207,13 +214,41 @@ export default function AddContact({ navigation, route }) {
                 ));
             }
         }
-    }, [loginData])
+    }, [loginData, isFocused])
 
+    console.log('leadOwner..................', leadOwnerData)
+
+    // useEffect(() => {
+    //     if (leadOwnerData !== []) {
+    //         Object.keys(leadOwnerData).map(el => {
+    //             console.log('key', el);
+    //             leadOwnerData[el].map(sub_el =>
+    //                 setF23([sub_el]),
+    //                 console.log([sub_el]),
+
+    //             );
+    //         })
+    //     }
+    //     else {
+    //         console.log('lease condition ')
+    //     }
+    // }, [leadOwnerData])
 
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
-                setleadOwnerData(leadOwner.data )
+                let userData = leadOwner.data && leadOwner.data.map((ld) => {
+                    let user = { label: ld.user.name, value: ld.user.id }
+                    if (userData !== undefined) {
+                        setleadOwnerData(userData)
+                    }
+                    return user;
+                })
+                console.log('setLeadOwner....................', userData)
+                // console.log('setLeadOwner....................',leadOwner.data.map((item,index)=>
+                // [{lable : item.user.name  ,value: item.user.id}]))
+                // setleadOwnerData(leadOwner.data ? leadOwner.data.map((item, index) =>
+                //     [{ label: item.user.name, value: item.user.id }]) : [{ label: 'no service', value: "no service " }])
             }
             else if (leadOwner.status == "failed") {
                 // Alert.alert(leadData.message)
@@ -320,6 +355,10 @@ export default function AddContact({ navigation, route }) {
                             campaign: campaign,
                         }
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
+                        setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
+                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(''), setCountry(''),
+                            setZipCode(''), setdescription(''), setcampaign('')
                     }
                     setIsLodding(true)
                 }
@@ -427,7 +466,7 @@ export default function AddContact({ navigation, route }) {
                             {show && (
                                 <DateTimePicker
                                     testID="dateTimePicker"
-                                    style={{ paddingVertical: '5%', width: '50%',color:'red' }}
+                                    style={{ paddingVertical: '5%', width: '50%', color: 'red' }}
                                     // is24Hour={true}
                                     value={date}
                                     mode={mode}
@@ -453,46 +492,6 @@ export default function AddContact({ navigation, route }) {
                             }
                         </View>
                     </TouchableOpacity>
-
-                    {/* <TouchableOpacity
-                        onPress={showDatepicker} >
-                        <View style={Platform.OS == 'ios' ?
-                            styles.inputFields2 : [styles.inputFields2, { paddingVertical: '2%' }]}>
-                            <Image style={[styles.icon, {
-                                height: 25, width: '6%', marginLeft: '2%', marginTop: '2%'
-                            }]}
-                                source={require('../../images/DOB.png')}
-                            />
-                            
-                            
-                        </View>
-                    </TouchableOpacity> */}
-
-                    {/* <TouchableOpacity
-                        style={{
-                            borderWidth: 1,
-                            borderColor: '#C3C7E5',
-                            borderRadius: 10,
-                            // marginHorizontal: '3%',
-                            paddingVertical: 5,
-                            marginTop: '2%'
-                        }}
-                        onPress={showDatepicker} >
-                        <Image style={[styles.icon, {
-                            height: 25, width: '6%', marginLeft: '4%', marginTop: '1%'
-                        }]}
-                            source={require('../../images/DOB.png')}
-                        />
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            style={{ width: '50%', marginTop: '-8%' }}
-                            value={date}
-                            mode={mode}
-                            display="default"
-                            onChange={onChangeFrom}
-                        />
-                    </TouchableOpacity> */}
-
                     <View style={{ marginTop: '2%' }}>
                         {/* {renderLabel()} */}
 
@@ -813,14 +812,14 @@ export default function AddContact({ navigation, route }) {
                     </View>
 
 
-                  
 
-                
 
-{IsLodding == true ?
-                    <ActivityIndicator size="small" color="#0000ff" />
-                    :
-                    <View />}
+
+
+                    {IsLodding == true ?
+                        <ActivityIndicator size="small" color="#0000ff" />
+                        :
+                        <View />}
 
 
                     <TouchableOpacity style={[styles.button, { marginLeft: '2%', marginRight: '2%' }]}

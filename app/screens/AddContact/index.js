@@ -154,9 +154,13 @@ export default function AddContact({ navigation }) {
   useEffect(() => {
     if (Data) {
       if (Data.status == "success") {
-        console.log("sucess..........", Data.message)
+        // console.log("sucess..........", Data.message)
         setIsLodding(false)
-        setModalVisible2(!modalVisible2)
+        setfname(''), setlname(''), setAddress(''), settitle(''), setemail(''), setAemail(''), setgender(''),
+          setphone(''), setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''),
+          setIndustry(''), setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''),
+          setState(''), setCountry(''), setZipCode(''),
+          setModalVisible2(!modalVisible2)
         dispatch(addcontactManuallyAction.clearResponse())
       }
       else if (Data.status == "failed") {

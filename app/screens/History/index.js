@@ -114,7 +114,7 @@ export default function lead_manager({ navigation }) {
   useEffect(() => {
     if (historyData) {
       if (historyData.status == "200") {
-        console.log("sucess..........", historyData.data)
+        // console.log("sucess..........", historyData.data)
         setHistory([historyData.data])
         setIsLodding(false)
         //   Alert.alert(historyData.message)

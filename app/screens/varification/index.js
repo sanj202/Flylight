@@ -66,15 +66,13 @@ export default function Varification({ navigation, route }) {
     // }
   }, [resendOtpData])
 
-  const login = () => {
+  const Register = () => {
     if (value == "") {
       Alert.alert("Enter OTP")
     }
     else {
       setIsLodding(true)
       dispatch(varificationAction.varification(value, state));
-      // navigation.navigate("Varification")
-      // navigation.navigate('DashBoard');
     }
   }
 
@@ -174,7 +172,7 @@ export default function Varification({ navigation, route }) {
           <View />
         }
 
-        <TouchableOpacity style={styles.button} onPress={() => login()}>
+        <TouchableOpacity style={styles.button} onPress={() => Register()}>
           <Text style={styles.textButton}>Verify & Proceed</Text>
         </TouchableOpacity>
       </View>

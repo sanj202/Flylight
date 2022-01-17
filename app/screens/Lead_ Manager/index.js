@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator,
-  TextInput, Picker, FlatList, Image, Button, ScrollView,
+  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList, Image, Button, ScrollView,
   Modal, Alert, Pressable, StatusBar, Dimensions, Platform
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -10,11 +9,12 @@ import styles from './styles'
 import Header from '../../component/header/index'
 import DocumentPicker from 'react-native-document-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { leadAction, opportunityAction } from '../../redux/Actions/index'
+import { leadAction, opportunityAction, leadmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function lead_manager({ navigation, route }) {
+
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
   const [modalVisible2, setModalVisible2] = useState(false);
 
@@ -22,9 +22,6 @@ export default function lead_manager({ navigation, route }) {
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [text, settext] = useState(true)
-
-  const [followDate, setFollowDate] = useState(true)
-  const [followDates, setFollowDates] = useState(true)
 
   const [dates, setDates] = useState(new Date());
   const [modes, setModes] = useState('date');
@@ -36,14 +33,12 @@ export default function lead_manager({ navigation, route }) {
     setShow(Platform.OS === 'ios');
     settext(false)
     setDate(currentDate)
-    let formattedDate = moment(currentDate).format('YYYY-MM-DD');
   };
   const showMode = (currentMode) => {
     setShow(!show);
     setMode(currentMode);
   };
   const showDatepicker = () => {
-    setFollowDate(false)
     showMode('date');
   };
 
@@ -59,13 +54,8 @@ export default function lead_manager({ navigation, route }) {
     setModes(currentModes);
   };
   const showDatepickers = () => {
-    setFollowDates(false)
     showModes('date');
   };
-
-
-
-
 
   const DeleteFunction = () => {
     setModalVisible2(!modalVisible2)
@@ -73,15 +63,6 @@ export default function lead_manager({ navigation, route }) {
   const checkValue = (value) => {
     setisService(value)
   }
-
-
-
-
-
-
-
-
-
 
   // const [LeadFile, setLeadFile] = useState('');
   const [newLeadAray, setnewLeadAray] = useState([])
@@ -182,42 +163,38 @@ export default function lead_manager({ navigation, route }) {
 
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
+
   const loginData = useSelector(state => state.auth.data)
-  const leadList = useSelector(state => state.leads.getLead)
   const importLead = useSelector(state => state.leads.importLead)
-  const opportunityList = useSelector(state => state.opportunitys.getOpportunity)
   const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
+
+  const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
 
   useEffect(() => {
     if (loginData || isFocused) {
       if (loginData.status == "success") {
-        dispatch(leadAction.leadList(
-          loginData.data.token,
-          loginData.data.uid,
-          loginData.data.cProfile.toString(),
-          loginData.data.org_uid,
-        ));
-        dispatch(opportunityAction.OpportunityList(
-          loginData.data.token,
-          loginData.data.uid,
-          loginData.data.cProfile.toString(),
-          loginData.data.org_uid,
-        ));
+        const data = {
+          uid: loginData.data.uid,
+          profile_id: loginData.data.cProfile.toString(),
+          org_uid: loginData.data.org_uid,
+        }
+        dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
         setIsLodding(true)
       }
     }
   }, [loginData, isFocused])
 
-
   useEffect(() => {
-    if (leadList) {
-      if (leadList.status == "200") {
-        setLead(leadList.data)
+    if (Lead_OpportunityList) {
+      if (Lead_OpportunityList.status == "200") {
+        setLead(Lead_OpportunityList.data.lead)
+        setOpportunity(Lead_OpportunityList.data.opportunity)
+        setAllList([...Lead_OpportunityList.data.lead, Lead_OpportunityList.data.opportunity]);
         CombineArrayData()
         setIsLodding(false)
-        dispatch(leadAction.clearResponse())
+        dispatch(leadmanagerAction.clearResponse())
       }
-      else if (leadList.status == "failed") {
+      else if (Lead_OpportunityList.status == "failed") {
         setIsLodding(false)
       }
       else {
@@ -225,30 +202,12 @@ export default function lead_manager({ navigation, route }) {
       }
     }
     else {
-
     }
-  }, [leadList])
+  }, [Lead_OpportunityList])
 
-  useEffect(() => {
-    if (opportunityList) {
-      if (opportunityList.status == "200") {
-        // console.log("sucess..........", opportunityList.data)
-        setOpportunity(opportunityList.data)
-        CombineArrayData()
-        setIsLodding(false)
-        dispatch(opportunityAction.clearResponse())
-      }
-      else if (opportunityList.status == "failed") {
-        setIsLodding(false)
-      }
-      else {
-        setIsLodding(false)
-      }
-    }
-    else {
-
-    }
-  }, [opportunityList])
+  const CombineArrayData = () => {
+    setAllList([...Lead, ...Opportunity]);
+  }
 
   useEffect(() => {
     if (importLead) {
@@ -256,7 +215,6 @@ export default function lead_manager({ navigation, route }) {
         Alert.alert(importLead.message)
         CombineArrayData()
         setIsLodding(false)
-        // dispatch(opportunityAction.clearResponse())
       }
       else if (importLead.status == "failed") {
       }
@@ -265,7 +223,6 @@ export default function lead_manager({ navigation, route }) {
       }
     }
     else {
-
     }
   }, [importLead])
 
@@ -288,16 +245,9 @@ export default function lead_manager({ navigation, route }) {
     }
   }, [importOpportunity])
 
-  const CombineArrayData = () => {
-
-    setAllList([...Lead, ...Opportunity]);
-  }
 
   const AllView = ({ item }) => {
     return (
-      // <TouchableOpacity
-      // // onPress={() => navigation.navigate('ContactsTwo')}
-      // >
       <View style={styles.listData}>
         <View style={{ backgroundColor: '', justifyContent: 'center', }}>
           <Image
@@ -310,7 +260,6 @@ export default function lead_manager({ navigation, route }) {
             fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
             fontFamily: 'Roboto'
           }}>{item.first_name} {item.last_name}</Text>
-
           <View style={{ flexDirection: 'row', }}>
             <Text
               style={{
@@ -347,7 +296,7 @@ export default function lead_manager({ navigation, route }) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Edit_Lead', { title: 'Edit Lead', Edata: item })}
+            // onPress={() => navigation.navigate('Edit_Lead', { title: 'Edit Lead', Edata: item })}
             >
               <Image
                 style={{ height: 22, width: 22, marginRight: '2%' }}
@@ -379,15 +328,11 @@ export default function lead_manager({ navigation, route }) {
           }}>Call Pending</Text>
         </View>
       </View>
-      // </TouchableOpacity>
     );
   }
 
   const LeadView = ({ item }) => {
     return (
-      // <TouchableOpacity
-      // // onPress={() => navigation.navigate('ContactsTwo')}
-      // >
       <View style={styles.listData}>
         <View style={{ backgroundColor: '', justifyContent: 'center', }}>
           <Image
@@ -457,15 +402,11 @@ export default function lead_manager({ navigation, route }) {
           }}>Call Pending</Text>
         </View>
       </View>
-      // </TouchableOpacity>
     );
   }
 
   const OpportunityVIew = ({ item }) => {
     return (
-      // <TouchableOpacity
-      // // onPress={() => navigation.navigate('ContactsTwo')}
-      // >
       <View style={styles.listData}>
         <View style={{ backgroundColor: '', justifyContent: 'center', }}>
           <Image
@@ -532,28 +473,13 @@ export default function lead_manager({ navigation, route }) {
           }}>Call Pending</Text>
         </View>
       </View>
-      // </TouchableOpacity>
     );
   }
 
   return (
     <View
-      style={{
-        flex: 1, backgroundColor: '#FAFAFC',
-        width: width, height: height,
-      }}
+      style={{ flex: 1, backgroundColor: '#FAFAFC', width: width, height: height, }}
     >
-      <StatusBar
-        barStyle="dark-content"
-        // dark-content, light-content and default
-        hidden={false}
-        //To hide statusBar
-        backgroundColor="#2B6EF2"
-        //Background color of statusBar only works for Android
-        translucent={false}
-        //allowing light, but not detailed shapes
-        networkActivityIndicatorVisible={true}
-      />
       <Header
         style={{ height: "16%" }}
         onPressLeft={() => {
@@ -566,87 +492,52 @@ export default function lead_manager({ navigation, route }) {
         }}
       />
       <View
-        style={{
-          marginHorizontal: '7%',
-          marginTop: '-4%',
-          backgroundColor: '#fff',
-          // height: '4.5%',
-          borderRadius: 20,
-          flexDirection: 'row',
-          justifyContent: 'space-between'
-        }}>
-
+        style={{marginHorizontal: '7%', marginTop: '-4%', backgroundColor: '#fff', borderRadius: 20,
+          flexDirection: 'row', justifyContent: 'space-between'}}
+      >
         {isService == 'All' ?
-          <TouchableOpacity style={{
-            backgroundColor: '#4F46BA',
-            borderRadius: 20,
-            width: '30%',
-            paddingVertical: 1.5,
-          }}
+          <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
             onPress={() => checkValue("All")}
           >
-            <Text style={{ color: '#FFF', padding: 5, textAlign: 'center' }}>All</Text>
+            <Text style={[styles.btnText, { color: '#FFF' }]}>All</Text>
           </TouchableOpacity>
           :
-          <TouchableOpacity style={{
-            borderRadius: 20,
-            width: '30%',
-            paddingVertical: 1.5,
-          }}
+          <TouchableOpacity style={styles.btn}
             onPress={() => checkValue("All")}
           >
-            <Text style={{ padding: 5, color: 'black', textAlign: 'center' }}>All</Text>
+            <Text style={[styles.btnText, { color: 'black' }]}>All</Text>
           </TouchableOpacity>
         }
 
         {isService == 'Lead' ?
-          <TouchableOpacity style={{
-            backgroundColor: '#4F46BA',
-            borderRadius: 20, width: '30%', paddingVertical: 1.5,
-          }}
+          <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
             onPress={() => checkValue("Lead")}
           >
-            <Text style={{ color: '#FFF', padding: 5, textAlign: 'center' }}>Lead</Text>
+            <Text style={[styles.btnText, { color: '#FFF' }]}>Lead</Text>
           </TouchableOpacity>
           :
-          <TouchableOpacity style={{
-            borderRadius: 20,
-            width: '30%',
-            paddingVertical: 1.5,
-          }}
+          <TouchableOpacity style={styles.btn}
             onPress={() => checkValue("Lead")}
           >
-            <Text style={{ padding: 5, color: 'black', textAlign: 'center' }}>Lead</Text>
+            <Text style={[styles.btnText, { color: 'black' }]}>Lead</Text>
           </TouchableOpacity>
         }
 
         {isService == 'Opportunity' ?
-
-          <TouchableOpacity style={{
-            backgroundColor: '#4F46BA',
-            borderRadius: 20, width: '30%', paddingVertical: 1.5,
-          }}
+          <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
             onPress={() => checkValue("Opportunity")}
           >
-            <Text style={{ color: '#FFF', padding: 5, textAlign: 'center' }}>Opportunity</Text>
+            <Text style={[styles.btnText, { color: '#FFF' }]}>Opportunity</Text>
           </TouchableOpacity>
           :
-          <TouchableOpacity style={{
-            borderRadius: 20,
-            width: '30%',
-            paddingVertical: 1.5,
-          }}
+          <TouchableOpacity style={styles.btn}
             onPress={() => checkValue("Opportunity")}
           >
-            <Text style={{ padding: 5, color: 'black', textAlign: 'center' }}>Opportunity</Text>
+            <Text style={[styles.btnText, { color: 'black' }]}>Opportunity</Text>
           </TouchableOpacity>
         }
       </View>
 
-      {/* ------------------------------------------------------------------ */}
-
-      {/* <View> */}
-      {/* </View> */}
       {
         isService == "All" ?
 
@@ -750,13 +641,10 @@ export default function lead_manager({ navigation, route }) {
                   />
                   :
                   <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-
-
               </View>
             }
             <View style={{ marginTop: '2%' }}></View>
           </View>
-
           :
           <View />
       }
@@ -806,12 +694,8 @@ export default function lead_manager({ navigation, route }) {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={{ width: '48%' }}
-                onPress={showDatepickers}>
-
+              <TouchableOpacity style={{ width: '48%' }} onPress={showDatepickers}>
                 <View style={styles.pickers}>
-
                   <Image
                     style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
                     source={require('../../images/pikerCalander.png')}

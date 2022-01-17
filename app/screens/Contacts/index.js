@@ -1,14 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
-         ActivityIndicator,RefreshControl,Platform,ScrollView} from 'react-native';
+import {
+    Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
+    ActivityIndicator, Linking, Platform, ScrollView,
+} from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
 import { BottomSheet, Button, ListItem } from 'react-native-elements';
 import Header from '../../component/header/index'
 import { contactListAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import {useIsFocused} from "@react-navigation/core"
+import { useIsFocused } from "@react-navigation/core"
 import moment from 'moment';
 
 export default function Contacts({ navigation }) {
@@ -28,20 +30,28 @@ export default function Contacts({ navigation }) {
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
 
-    // useEffect(() => {
-    //     fetch('https://jsonplaceholder.typicode.com/posts')
-    //         .then((response) => response.json())
-    //         .then((responseJson) => {
-    //             setFilteredDataSource(responseJson);
-    //             setMasterDataSource(responseJson);
-    //         })
-    //         .catch((error) => {
-    //             console.error(error);
-    //         });
-    // }, []);
+    const call = (mobileNo) => {
+        console.log("+++++++++callNumber ", mobileNo);
+        let phoneNumber = mobileNo;
+        if (Platform.OS !== "android") {
+            phoneNumber = `telprompt:${mobileNo}`;
+        } else {
+            phoneNumber = `tel:${mobileNo}`;
+        }
+        Linking.canOpenURL(phoneNumber)
+            .then(supported => {
+                if (!supported) {
+                    Alert.alert("Number is not available");
+                } else {
+                    return Linking.openURL(phoneNumber);
+                }
+            })
+            .catch(err => console.log(err));
+    };
+
 
     useEffect(() => {
-    if (loginData || isFocused) {
+        if (loginData || isFocused) {
             if (loginData.status == "success") {
                 setIsLodding(true)
                 dispatch(contactListAction.contactList(
@@ -52,12 +62,12 @@ export default function Contacts({ navigation }) {
                 ));
             }
         }
-    }, [loginData ,isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-               
+
                 setFilteredDataSource(contactData.data)
                 setMasterDataSource(contactData.data)
 
@@ -126,6 +136,8 @@ export default function Contacts({ navigation }) {
         setIsVisible(true)
     }
 
+    console.log("filteredDataSource..",filteredDataSource)
+
     const ContactView = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => navigation.navigate('ContactsTwo')} >
@@ -141,10 +153,14 @@ export default function Contacts({ navigation }) {
                                     <Image style={{ height: 40, width: 40 }}
                                         source={require('../../images/Group.png')} />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => newFunction()} >
+                                <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => call(item.phone)} >
                                     <Image style={{ height: 40, width: 40, }}
                                         source={require('../../images/GroupCall.png')} />
                                 </TouchableOpacity>
+                                {/* <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => newFunction()} >
+                                    <Image style={{ height: 40, width: 40, }}
+                                        source={require('../../images/GroupCall.png')} />
+                                </TouchableOpacity> */}
                             </View>
                         </View>
                     </View>
@@ -217,12 +233,6 @@ export default function Contacts({ navigation }) {
                     />
                 </View>
             </View>
-            {/* <ScrollView refreshControl={
-      <RefreshControl
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-      />
-    }> */}
 
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
@@ -234,7 +244,7 @@ export default function Contacts({ navigation }) {
                     renderItem={ContactView}
                 />
             }
-            {/* </ScrollView> */}
+     
             <View style={{ height: '3%' }}></View>
             <BottomSheet
                 modalProps={{
@@ -244,10 +254,10 @@ export default function Contacts({ navigation }) {
                 }}
                 isVisible={isVisible}>
                 <View style={
-                    Platform.OS == 'ios' ? 
-                    { width: width, height: height / 6 }
-                    :
-                    { width: width, height: height / 5.1 }
+                    Platform.OS == 'ios' ?
+                        { width: width, height: height / 6 }
+                        :
+                        { width: width, height: height / 5.1 }
                 }>
                     <View style={styles.headerView2}>
                         <TouchableOpacity

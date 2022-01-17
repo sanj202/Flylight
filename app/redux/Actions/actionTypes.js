@@ -66,22 +66,6 @@ export const Edit_Contact = 'Edit_Contact'
 export const Edit_Contact_Suceess = 'Edit_Contact_Suceess'
 export const Edit_Contact_Clear = 'Edit_Contact_Clear'
 
-//Lead manager Lead
-export const Import_Lead = "Import_Lead"
-export const Add_Edit_Lead = "Add_Edit_Lead"
-export const Get_Lead = 'Get_Lead'
-export const Lead_CLEAR = 'Lead_CLEAR'
-
-//LeadOwnerList
-export const LeadOwner = "LeadOwner"
-export const LeadOwner_Success = "LeadOwner_Success"
-export const LeadOwner_Clear = 'LeadOwner_Clear'
-
-//Lead manager Opportunity
-export const Import_Opportunity = "Import_Opportunity"
-export const Add_Edit_Opportunity = "Add_Edit_Opportunity"
-export const Get_Opportunity = 'Get_Opportunity'
-export const Opportunity_CLEAR = 'Opportunity_CLEAR'
 
 //Tesk manager (TO-Do)
 
@@ -109,7 +93,7 @@ export const Get_Report = 'Get_Report'
 export const Report_Clear = 'Report_Clear'
 
 
-//Action manager
+//Action manager ----------------
 
 //Add-Edit Action
 export const Add_Edit_Action = "Add_Edit_Action"
@@ -141,3 +125,39 @@ export const Action_Delete_Clear = 'Action_Delete_Clear'
 export const Get_Status_Delete = "Get_Status_Delete"
 export const Status_Delete_Success = "Status_Delete_Success"
 export const Status_Delete_Clear = 'Status_Delete_Clear'
+
+
+
+//Lead manager ------------------------------
+export const Get_Lead_Opportunity = "Get_Lead_Opportunity"
+export const Lead_Opportunity_Success = "Lead_Opportunity_Success"
+export const Lead_Opportunity_Clear = 'Lead_Opportunity_Clear'
+
+
+//Lead manager Lead
+export const Import_Lead = "Import_Lead"
+
+//Lead manager Opportunity
+export const Import_Opportunity = "Import_Opportunity"
+
+
+// Add_Edit_Lead
+export const Add_Edit_Lead = "Add_Edit_Lead"
+export const Add_Edit_Lead_Success = "Add_Edit_Lead_Success"
+export const Add_Edit_Lead_Clear= "Add_Edit_Lead_Clear"
+
+// Add_Edit_Opportunity
+export const Add_Edit_Opportunity = "Add_Edit_Opportunity"
+export const Add_Edit_Opportunity_Success = "Add_Edit_Opportunity_Success"
+export const Add_Edit_Opportunity_Clear= "Add_Edit_Opportunity_Clear"
+
+
+
+//LeadOwnerList
+export const LeadOwner = "LeadOwner"
+export const LeadOwner_Success = "LeadOwner_Success"
+export const LeadOwner_Clear = 'LeadOwner_Clear'
+
+
+
+

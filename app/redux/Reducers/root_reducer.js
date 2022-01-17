@@ -21,6 +21,7 @@ import taskmanagerReducer from './taskmanagerReducer'
 import historyRaducer from './historyRaducer'
 import reportReducer from './reportReducer'
 import actionmanagerReducer from './actionmanagerReducer'
+import leadmanagerReducer from './leadmanagerReducer'
 
 export default combineReducers({
     //   auth: AuthReducer,
@@ -40,6 +41,7 @@ export default combineReducers({
     leads:leadRaducer,
     opportunitys:OpportunityReducer,
     taskmanager:taskmanagerReducer,
+    leadmanager:leadmanagerReducer,
     history:historyRaducer,
     report:reportReducer,
     actionmanager:actionmanagerReducer,

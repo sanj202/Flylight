@@ -19,6 +19,7 @@ import * as reportAction from './reportAction'
 import * as historyAction from './historyAction'
 import * as actionmanagerAction from './actionmanagerAction'
 import * as editContactAction from './editContactAction'
+import * as leadmanagerAction from './leadmanagerAction'
 
 
 export {
@@ -37,6 +38,7 @@ export {
     contactListAction,
     leadAction,
     opportunityAction,
+    leadmanagerAction,
     taskmanagerAction,
     historyAction,
     reportAction,

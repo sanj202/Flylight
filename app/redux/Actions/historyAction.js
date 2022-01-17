@@ -55,7 +55,7 @@ export const historyList = (token, uid, profile_id, org_id ,org_uid) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("History.......::::::::::::::::", responseData)
+                console.log("History.......::::::::::::::::", responseData)
                 dispatch({ type: History_Success, payload: responseData })
             })
             .catch((error) => {

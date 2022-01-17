@@ -25,7 +25,7 @@ export const EditContact = (data ,Token) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log("Edit_Contact::::::::::::::::", responseData)
+                // console.log("Edit_Contact::::::::::::::::", responseData)
                 dispatch({ type: Edit_Contact_Suceess, payload: responseData })
             })
             .catch((error) => {

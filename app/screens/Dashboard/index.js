@@ -41,7 +41,7 @@ export default function Dashboard({ navigation, route, props }) {
   const dashboardData = useSelector(state => state.dashboard.data)
 
 
-  console.log('loginData.................', loginData)
+  // console.log('loginData.................', loginData)
   const widthAndHeight = 160
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
@@ -209,7 +209,13 @@ export default function Dashboard({ navigation, route, props }) {
               </Card>
             </Pressable >
           </View>
-
+          <ScrollView refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              color='#0000ff'
+              onRefresh={onRefresh}
+            />
+          }>
           <View
             style={[styles.reView, { marginTop: 0 }]}>
             <Pressable
@@ -234,13 +240,7 @@ export default function Dashboard({ navigation, route, props }) {
             </Pressable >
           </View>
 
-          <ScrollView refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              color='#0000ff'
-              onRefresh={onRefresh}
-            />
-          }>
+         
 
             <View
               style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
@@ -409,7 +409,7 @@ export default function Dashboard({ navigation, route, props }) {
                 </View>
               </View>
             </Card>
-
+            </ScrollView>
             <FlatList
               data={DATA}
 
@@ -465,7 +465,7 @@ export default function Dashboard({ navigation, route, props }) {
               keyExtractor={(item) => item.title}
             />
 
-          </ScrollView>
+        
         </View>
       }
       <Modal

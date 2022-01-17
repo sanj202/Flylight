@@ -1,32 +1,38 @@
-import { Import_Opportunity, Add_Edit_Opportunity, Get_Opportunity, Opportunity_CLEAR } from '../Actions/actionTypes';
+import {
+    Import_Opportunity,
+    Add_Edit_Opportunity, Add_Edit_Opportunity_Success, Add_Edit_Opportunity_Clear
+} from '../Actions/actionTypes';
 
 const initialState = {
     newOpportunity: [],
     getOpportunity: [],
-    ImportOpportunity:[]
+    ImportOpportunity: []
 };
 const OpportunityR = (state = initialState, action) => {
     switch (action.type) {
         case Add_Edit_Opportunity:
             return {
                 ...state,
-                newOpportunity: action.payload
             };
-        case Get_Opportunity:
+        case Add_Edit_Opportunity_Success:
             return {
                 ...state,
-                getOpportunity: action.payload
+                newOpportunity: action.payload
             };
+        case Add_Edit_Opportunity_Clear:
+            return {
+                ...state,
+                newOpportunity: []
+            };
+
+
+
         case Import_Opportunity:
             return {
                 ...state,
                 ImportOpportunity: action.payload
             };
-        case Opportunity_CLEAR:
-            // console.log("callllll............")
-            return {
-                newOpportunity: []
-            }
+            
         default:
             return state;
     }

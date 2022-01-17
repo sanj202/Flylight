@@ -8,8 +8,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     borderColor: '#DBDBDB',
-    marginHorizontal:'3%',
-    marginVertical:'1%',
+    marginHorizontal: '3%',
+    marginVertical: '1%',
     flexDirection: 'row',
     // justifyContent: 'space-between',
   },
@@ -68,16 +68,16 @@ const styles = StyleSheet.create({
     borderRadius: 10
   },
 
-    pickers: {
-      flexDirection: 'row',
-      justifyContent: 'flex-start',
-      borderWidth: 1,
-      borderColor:'#E8EAF5',
-      padding: 10,
-      paddingLeft: 15,
-      paddingRight: 50,
-      borderRadius: 10
-    },
+  pickers: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    borderWidth: 1,
+    borderColor: '#E8EAF5',
+    padding: 10,
+    paddingLeft: 15,
+    paddingRight: 50,
+    borderRadius: 10
+  },
 
 
   //  -------------------------------------------------------
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // alignItems: "center",
     // marginTop: 22
-    margin:'10%',
-    marginTop:'0%'
+    margin: '10%',
+    marginTop: '0%'
   },
   modalView3: {
     // margin: 20,
@@ -133,9 +133,11 @@ const styles = StyleSheet.create({
   modalText3: {
     marginBottom: 15,
     fontSize: 21,
-    color:'#000000',
+    color: '#000000',
     textAlign: "center"
-  }
+  },
+  btn: { borderRadius: 20, width: '30%', paddingVertical: 1.5, },
+  btnText:{padding: 5, textAlign: 'center'},
 });
 
 export default styles

@@ -1,13 +1,10 @@
 import {
     Import_Lead,
-    Add_Edit_Lead,
-    LeadOwner, LeadOwner_Success, LeadOwner_Clear,
-    Get_Lead, Lead_CLEAR
-} from '../Actions/actionTypes';
+    Add_Edit_Lead, Add_Edit_Lead_Success, Add_Edit_Lead_Clear,
+    LeadOwner, LeadOwner_Success, LeadOwner_Clear} from '../Actions/actionTypes';
 
 const initialState = {
     newLead: [],
-    getLead: [],
     importLead: [],
     leadOwner: [],
 };
@@ -16,26 +13,20 @@ const LeadR = (state = initialState, action) => {
         case Add_Edit_Lead:
             return {
                 ...state,
+            };
+        case Add_Edit_Lead_Success:
+            return {
+                ...state,
                 newLead: action.payload
             };
-        case Get_Lead:
+        case Add_Edit_Lead_Clear:
             return {
                 ...state,
-                getLead: action.payload
-            };
-        case Import_Lead:
-            return {
-                ...state,
-                importLead: action.payload
-            };
-        case Lead_CLEAR:
-            // console.log("callllll............")
-            return {
                 newLead: []
-            }
+            };
         case LeadOwner:
             return {
-               ...state
+                ...state
             }
         case LeadOwner_Success:
             return {
@@ -45,6 +36,19 @@ const LeadR = (state = initialState, action) => {
             return {
                 leadOwner: []
             }
+
+
+
+
+
+        case Import_Lead:
+            return {
+                ...state,
+                importLead: action.payload
+            };
+
+
+
         default:
             return state;
     }

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
+import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -18,24 +16,12 @@ export default function action_manager({ navigation }) {
     const [modalVisible2, setModalVisible2] = useState(false);
     const [modalVisible3, setModalVisible3] = useState(false);
     const [modalVisible4, setModalVisible4] = useState(false);
-
     const [IsLodding, setIsLodding] = useState(false)
 
-    const DeleteFunction = (value) => {
-        setModalVisible2(!modalVisible2)
-    }
-
-
-
-    const EditFunction = (value) => {
-        // console.log("calll.............................")
-        setIsVisible(true)
-    }
-
     const checkValue = (value) => {
-        // console.log("data,......................", A)
         setisService(value)
     }
+
     const [newAction, setnewAction] = useState()
     const [newStatus, setnewStatus] = useState()
     const [EditingValue, setEditingValue] = useState()
@@ -48,16 +34,17 @@ export default function action_manager({ navigation }) {
 
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
+
     const loginData = useSelector(state => state.auth.data)
+
     const addActionData = useSelector(state => state.actionmanager.addAction)
-    const actionList = useSelector(state => state.actionmanager.actionlist)
     const addStatusData = useSelector(state => state.actionmanager.addStatus)
+
+    const actionList = useSelector(state => state.actionmanager.actionlist)
     const statusList = useSelector(state => state.actionmanager.statuslist)
+
     const deletestatus = useSelector(state => state.actionmanager.deleteStatus)
     const deleteaction = useSelector(state => state.actionmanager.deleteAction)
-
-
-    console.log('deletre..........................', deleteaction, deletestatus)
 
     useEffect(() => {
         if (loginData || isFocused) {
@@ -117,7 +104,6 @@ export default function action_manager({ navigation }) {
             }
         }
         else {
-
         }
     }, [statusList])
 
@@ -142,7 +128,6 @@ export default function action_manager({ navigation }) {
                         orgId: loginData.data.user.org_id.toString(),
                         status: newStatus,
                         org_uid: loginData.data.org_uid,
-                        // action_id: EditingId
                     }
                     dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
                 }
@@ -210,8 +195,7 @@ export default function action_manager({ navigation }) {
         }
     }, [addStatusData])
 
-    const EditActionFunction = (value) => {
-        console.log("Status function............", value)
+    const EditDataFunction = (value) => {
         settype(value.text)
         setEditingId(value.Id)
         setEditingValue(value.status)
@@ -234,8 +218,7 @@ export default function action_manager({ navigation }) {
                     dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
                 }
                 else {
-
-                    console.log("satsu........................edit")
+                    // console.log("satsu........................edit")
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
@@ -249,7 +232,6 @@ export default function action_manager({ navigation }) {
                 setIsLodding(true)
             }
         }
-
         // setModalVisible4(!modalVisible4)
 
         // if (value == 'Status') {
@@ -263,11 +245,10 @@ export default function action_manager({ navigation }) {
     }
 
     const deleteData = (value) => {
-        setIsVisible(!isVisible)
+        console.log("delete function start .....")
         if (loginData) {
             if (loginData.status == "success") {
-
-                if (value.type == "Action") {
+                if (value.type == "Delete_Action") {
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
@@ -278,7 +259,7 @@ export default function action_manager({ navigation }) {
                     }
                     dispatch(actionmanagerAction.delete_Action(data, loginData.data.token));
                 }
-                else {
+                else if (value.type == "Delete_status") {
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
@@ -289,13 +270,12 @@ export default function action_manager({ navigation }) {
                     }
                     dispatch(actionmanagerAction.delete_Status(data, loginData.data.token));
                 }
+                else {
+                }
                 setIsLodding(true)
             }
         }
-
-
         // setModalVisible4(!modalVisible4)
-
         // if (value == 'Status') {
         //     setModalVisible(!modalVisible)
         //     setModalVisible4(!modalVisible4)
@@ -306,13 +286,61 @@ export default function action_manager({ navigation }) {
         // }
     }
 
+    useEffect(() => {
+        if (deleteaction) {
+            if (deleteaction.status == "200") {
+                Alert.alert(deleteaction.message)
+                setIsLodding(false)
+                dispatch(actionmanagerAction.clearDeleteActionResponse())
+                Get_ActionStatus()
+            }
+            else if (deleteaction.status == "failed") {
+                setIsLodding(false)
+                Alert.alert(leadList.message)
+            }
+            else if (deleteaction.status == "fail") {
+                setIsLodding(false)
+                Alert.alert(deleteaction.message)
+            }
+            else {
+                setIsLodding(false)
+            }
+        }
+        else {
+        }
+    }, [deleteaction])
+
+    useEffect(() => {
+        if (deletestatus) {
+            if (deletestatus.status == "200") {
+                Alert.alert(deletestatus.message)
+                setIsLodding(false)
+                dispatch(actionmanagerAction.clearDeleteStatusResponse())
+                Get_ActionStatus()
+            }
+            else if (deletestatus.status == "failed") {
+                setIsLodding(false)
+                Alert.alert(leadList.message)
+            }
+            else if (deletestatus.status == "fail") {
+                setIsLodding(false)
+                Alert.alert(deletestatus.message)
+            }
+            else {
+                setIsLodding(false)
+            }
+        }
+        else {
+        }
+    }, [deletestatus])
+
     const StatusView = ({ item }) => {
         return (
             <View style={[styles.listData, { marginTop: '1%' }]}>
                 <Text style={{ marginTop: '2%', fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 13 }}> {item.status} </Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity
-                        onPress={() => EditActionFunction({ text: 'Status', Id: item.id, status: item.status })}
+                        onPress={() => EditDataFunction({ text: 'Status', Id: item.id, status: item.status })}
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', marginRight: '3%' }}
@@ -320,7 +348,7 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                    // onPress={() => deleteData({ type: 'status', id: item.id })}
+                        onPress={() => deleteData({ type: 'Delete_status', id: item.id })}
                     // onPress={() => setModalVisible2(true)}
                     >
                         <Image
@@ -328,20 +356,18 @@ export default function action_manager({ navigation }) {
                             source={require('../../images/deleteCall.png')}
                         />
                     </TouchableOpacity>
-
                 </View>
             </View>
         )
     }
 
     const ActionView = ({ item }) => {
-
         return (
             <View style={[styles.listData, { marginTop: '1%' }]}>
                 <Text style={{ marginTop: '2%', fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 13 }}> {item.action} </Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity
-                        onPress={() => EditActionFunction({ text: 'Action', Id: item.id, status: item.action })}
+                        onPress={() => EditDataFunction({ text: 'Action', Id: item.id, status: item.action })}
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', marginRight: '3%' }}
@@ -349,9 +375,8 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                    // onPress={() => setModalVisible2(true)}
-                    // onPress={() => deleteData({ type: 'Action', id: item.id })}
-
+                        // onPress={() => setModalVisible2(true)}
+                        onPress={() => deleteData({ type: 'Delete_Action', id: item.id })}
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', }}
@@ -362,7 +387,6 @@ export default function action_manager({ navigation }) {
             </View>
         )
     }
-
     return (
         <View style={styles.container}>
             <Header
@@ -389,7 +413,6 @@ export default function action_manager({ navigation }) {
                     height: 35,
 
                 }}>
-
                 {isService == 'Action' ?
                     <TouchableOpacity style={{
                         backgroundColor: '#4F46BA',
@@ -407,16 +430,13 @@ export default function action_manager({ navigation }) {
                         <Text style={{ padding: 5, color: 'black', padding: 10, }}>Action</Text>
                     </TouchableOpacity>
                 }
-
                 {isService == 'Status' ?
                     <TouchableOpacity style={{
                         backgroundColor: '#4F46BA',
                         borderRadius: 20, paddingLeft: 20, paddingRight: 20, paddding: 10,
                     }}
-
                         onPress={() => checkValue("Status")}
                     >
-
                         <Text style={{ color: '#FFF', padding: 10, }}>Status</Text>
                     </TouchableOpacity>
                     :
@@ -427,17 +447,10 @@ export default function action_manager({ navigation }) {
                         <Text style={{ padding: 5, color: 'black', padding: 10, }}>Status</Text>
                     </TouchableOpacity>
                 }
-
-
-
-
             </View>
-
-
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
-
                 <View>
                     {
                         isService == "Status" ?
@@ -447,7 +460,6 @@ export default function action_manager({ navigation }) {
                                         <View style={[styles.listData1, { paddingBottom: "10%" }]}>
                                             <Text style={{ marginLeft: '3%', fontSize: 19, fontWeight: 'bold', color: '#2D2D2D', paddingTop: '1%', padding: '2%' }}>Add Status</Text>
                                             <View style={styles.listData}>
-
                                                 <Image
                                                     style={
                                                         Platform.OS == 'ios' ?
@@ -465,9 +477,6 @@ export default function action_manager({ navigation }) {
 
                                             </View>
                                         </View>
-
-
-
                                         <TouchableOpacity
                                             onPress={() => AddActionFunction("Status")}
                                             style={styles.buttonClose3}
@@ -476,7 +485,6 @@ export default function action_manager({ navigation }) {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-
                                 <View style={{ marginTop: '10%' }}>
                                     <View style={[styles.listData1]}>
                                         <Text style={{
@@ -499,7 +507,6 @@ export default function action_manager({ navigation }) {
                                             :
                                             <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
                                         }
-
                                     </View>
                                 </View>
 
@@ -507,7 +514,6 @@ export default function action_manager({ navigation }) {
                             :
                             <View />
                     }
-
                     {
                         isService == "Action" ?
                             <View style={{ marginLeft: '3%', marginRight: '3%' }}>
@@ -531,7 +537,6 @@ export default function action_manager({ navigation }) {
                                                 />
                                             </View>
                                         </View>
-
                                         <TouchableOpacity
                                             onPress={() => AddActionFunction("Action")}
                                             style={styles.buttonClose3}
@@ -554,7 +559,6 @@ export default function action_manager({ navigation }) {
                                                 keyExtractor={(item, index) => index.toString()}
                                                 renderItem={ActionView}
                                             />
-
                                             :
                                             <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
                                         }
@@ -564,7 +568,6 @@ export default function action_manager({ navigation }) {
                             :
                             <View />
                     }
-
                 </View>
             }
 
@@ -616,7 +619,7 @@ export default function action_manager({ navigation }) {
                     <View style={styles.modalView3}>
                         <TouchableOpacity
                             style={{ alignSelf: 'flex-end' }}
-                            onPress={() => DeleteFunction()}
+                            // onPress={() => DeleteFunction()}
                         >
                             <Image
                                 style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
@@ -635,7 +638,8 @@ export default function action_manager({ navigation }) {
                                 paddingRight: 30, paddingLeft: 30,
                                 paddingTop: 5, paddingBottom: 5, marginTop: '1%',
                             }]}
-                            onPress={() => DeleteFunction()}>
+                            // onPress={() => DeleteFunction()}
+                            >
                             <Text style={{ fontSize: 21, color: '#FFFFFF', textAlign: 'center', padding: 5, paddingLeft: 20, paddingRight: 20 }}>OK</Text>
                         </Pressable>
                     </View>
