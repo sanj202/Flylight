@@ -38,14 +38,13 @@ export default function Dashboard({ navigation, route, props }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
+  const registerData = useSelector(state => state.varify.otp)
   const dashboardData = useSelector(state => state.dashboard.data)
 
 
-  // console.log('loginData.................', loginData)
   const widthAndHeight = 160
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
-
   const DATA = [
     {
       title: 'Meeting With Mr. Grorge',
@@ -113,8 +112,12 @@ export default function Dashboard({ navigation, route, props }) {
       navigation.navigate("addTab")
   }
 
+  console.log('sdfbsdfsdfjs...........',loginData)
+  console.log('sdfbsdfsdfjs...........',registerData)
+
   useEffect(() => {
-    if (loginData || isFocused) {
+    console.log('inUseEffect ................',loginData,registerData)
+    if (loginData || registerData && isFocused) {
       if (loginData.status == "success") {
         dispatch(dashboardAction.dashboard(
           loginData.data.uid,
@@ -122,20 +125,39 @@ export default function Dashboard({ navigation, route, props }) {
           loginData.data.cProfile.toString(),
           loginData.data.token
         ));
-        console.log('dashborad calll/.....................')
+      }
+      else if (registerData.status == "success") {
+        dispatch(dashboardAction.dashboard(
+          registerData.data.uid,
+          registerData.data.org_uid,
+          registerData.data.cProfile.toString(),
+          registerData.data.token
+        ));
       }
     }
     Get_Data()
-  }, [loginData, isFocused])
+  }, [loginData,registerData, isFocused])
 
   const Get_Data = () => {
     setIsLodding(true)
-    dispatch(dashboardAction.dashboard(
-      loginData.data.uid,
-      loginData.data.org_uid,
-      loginData.data.cProfile.toString(),
-      loginData.data.token
-    ));
+    if (loginData || registerData ) {
+      if (loginData.status == "success") {
+        dispatch(dashboardAction.dashboard(
+          loginData.data.uid,
+          loginData.data.org_uid,
+          loginData.data.cProfile.toString(),
+          loginData.data.token
+        ));
+      }
+      else if (registerData.status == "success") {
+        dispatch(dashboardAction.dashboard(
+          registerData.data.uid,
+          registerData.data.org_uid,
+          registerData.data.cProfile.toString(),
+          registerData.data.token
+        ));
+      }
+    }
   }
 
   useEffect(() => {
@@ -164,7 +186,6 @@ export default function Dashboard({ navigation, route, props }) {
   return (
     <View style={styles.container}
     >
-
       <Header
         style={Platform.OS == 'ios' ?
           { height: "18%" } : { height: "16%" }}
@@ -216,31 +237,31 @@ export default function Dashboard({ navigation, route, props }) {
               onRefresh={onRefresh}
             />
           }>
-          <View
-            style={[styles.reView, { marginTop: 0 }]}>
-            <Pressable
-              style={{ width: '49%' }}
-            // onPress={() => navigation.navigate('lead_manager')}
-            >
-              <Card
-                style={[styles.cardBox]} >
-                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
-                <Text style={styles.counter}>{Taccounts}</Text>
-              </Card>
-            </Pressable >
-            <Pressable
-              style={{ width: '49%' }}
-              onPress={() => navigation.navigate('AddContact')}
-            >
-              <Card
-                style={[styles.cardBox2]}>
-                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
-                <Text style={styles.counter2}>{Tcontacts}</Text>
-              </Card>
-            </Pressable >
-          </View>
+            <View
+              style={[styles.reView, { marginTop: 0 }]}>
+              <Pressable
+                style={{ width: '49%' }}
+              // onPress={() => navigation.navigate('lead_manager')}
+              >
+                <Card
+                  style={[styles.cardBox]} >
+                  <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
+                  <Text style={styles.counter}>{Taccounts}</Text>
+                </Card>
+              </Pressable >
+              <Pressable
+                style={{ width: '49%' }}
+                onPress={() => navigation.navigate('AddContact')}
+              >
+                <Card
+                  style={[styles.cardBox2]}>
+                  <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
+                  <Text style={styles.counter2}>{Tcontacts}</Text>
+                </Card>
+              </Pressable >
+            </View>
 
-         
+
 
             <View
               style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
@@ -409,63 +430,63 @@ export default function Dashboard({ navigation, route, props }) {
                 </View>
               </View>
             </Card>
-            </ScrollView>
-            <FlatList
-              data={DATA}
+          </ScrollView>
+          <FlatList
+            data={DATA}
 
-              renderItem={({ item, index }) => (
-                <View style={{
-                  // marginTop: '2.5%'
-                }}>
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate('Task_Manager')}
-                  >
-                    <View style={styles.listData}>
-                      <View style={{ flexDirection: 'row', }}>
-                        {
-                          item.image == '1' ?
-                            <Image
-                              style={{ height: 48, width: 48, marginTop: '2%' }}
-                              // source={require('../../images/message.png')}
-                              // source={require('../../images/call.png')}
-                              source={require('../../images/blue_bell.png')}
-                            /> : <View />}
-                        {item.image == '2' ?
+            renderItem={({ item, index }) => (
+              <View style={{
+                // marginTop: '2.5%'
+              }}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Task_Manager')}
+                >
+                  <View style={styles.listData}>
+                    <View style={{ flexDirection: 'row', }}>
+                      {
+                        item.image == '1' ?
                           <Image
                             style={{ height: 48, width: 48, marginTop: '2%' }}
                             // source={require('../../images/message.png')}
-                            source={require('../../images/call.png')}
-                          // source={require('../../images/blue_bell.png')}
+                            // source={require('../../images/call.png')}
+                            source={require('../../images/blue_bell.png')}
                           /> : <View />}
-                        {item.image == '3' ?
-                          <Image
-                            style={{ height: 48, width: 48, marginTop: '2%' }}
-                            source={require('../../images/message.png')}
-                          // source={require('../../images/call.png')}
-                          // source={require('../../images/blue_bell.png')}
-                          /> : <View />
-                        }
-
-                        {/* <View style={{ marginLeft: '-10%', marginTop: '3%' }}> */}
-                        <View style={{ marginTop: '4%', marginLeft: '6%' }}>
-                          <Text style={{ fontSize: 14, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.title}</Text>
-                          <Text style={{ fontSize: 13, fontFamily: 'ROboto', color: '#0F0F0F' }}>{item.subtitle}</Text>
-                        </View>
-                      </View>
-                      <View style={{ marginTop: '5%' }}>
+                      {item.image == '2' ?
                         <Image
-                          style={{ height: 21, width: 21, marginRight: '2%' }}
-                          source={require('../../images/arrow.png')}
-                        />
+                          style={{ height: 48, width: 48, marginTop: '2%' }}
+                          // source={require('../../images/message.png')}
+                          source={require('../../images/call.png')}
+                        // source={require('../../images/blue_bell.png')}
+                        /> : <View />}
+                      {item.image == '3' ?
+                        <Image
+                          style={{ height: 48, width: 48, marginTop: '2%' }}
+                          source={require('../../images/message.png')}
+                        // source={require('../../images/call.png')}
+                        // source={require('../../images/blue_bell.png')}
+                        /> : <View />
+                      }
+
+                      {/* <View style={{ marginLeft: '-10%', marginTop: '3%' }}> */}
+                      <View style={{ marginTop: '4%', marginLeft: '6%' }}>
+                        <Text style={{ fontSize: 14, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.title}</Text>
+                        <Text style={{ fontSize: 13, fontFamily: 'ROboto', color: '#0F0F0F' }}>{item.subtitle}</Text>
                       </View>
                     </View>
-                  </TouchableOpacity>
-                </View>
-              )}
-              keyExtractor={(item) => item.title}
-            />
+                    <View style={{ marginTop: '5%' }}>
+                      <Image
+                        style={{ height: 21, width: 21, marginRight: '2%' }}
+                        source={require('../../images/arrow.png')}
+                      />
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+            keyExtractor={(item) => item.title}
+          />
 
-        
+
         </View>
       }
       <Modal

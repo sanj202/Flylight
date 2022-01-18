@@ -8,7 +8,7 @@ import rootReducer from './Reducers/root_reducer'
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['auth'],
+  whitelist: ['auth','varify'],
   // isLogedIn: ''
 };
 

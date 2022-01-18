@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
-    ActivityIndicator, Linking, Platform, ScrollView,
+    ActivityIndicator, Linking, Platform, ScrollView, Alert
 } from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
@@ -20,7 +20,6 @@ export default function Contacts({ navigation }) {
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const contactData = useSelector(state => state.contactList.contacts)
-
     const [EditcontactId, setEditConatctId] = useState([])
     const [isVisible, setIsVisible] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
@@ -31,7 +30,6 @@ export default function Contacts({ navigation }) {
     const [masterDataSource, setMasterDataSource] = useState([]);
 
     const call = (mobileNo) => {
-        console.log("+++++++++callNumber ", mobileNo);
         let phoneNumber = mobileNo;
         if (Platform.OS !== "android") {
             phoneNumber = `telprompt:${mobileNo}`;
@@ -136,7 +134,7 @@ export default function Contacts({ navigation }) {
         setIsVisible(true)
     }
 
-    console.log("filteredDataSource..",filteredDataSource)
+    console.log("filteredDataSource..", filteredDataSource)
 
     const ContactView = ({ item }) => {
         return (
@@ -244,7 +242,7 @@ export default function Contacts({ navigation }) {
                     renderItem={ContactView}
                 />
             }
-     
+
             <View style={{ height: '3%' }}></View>
             <BottomSheet
                 modalProps={{

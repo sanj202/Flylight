@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,
-    Image, Alert, StatusBar, SafeAreaView, Dimensions, Platform,ActivityIndicator
+    Image, Alert, StatusBar, SafeAreaView, Dimensions, Platform, ActivityIndicator
 } from 'react-native';
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -16,20 +16,22 @@ export default function Register({ navigation }) {
     const [Org, setOrg] = useState("")
     const [Password, setPassword] = useState("")
     const [Cpassword, setCpassword] = useState("")
-    const [IsLodding,setIsLodding]= useState(false)
+    const [IsLodding, setIsLodding] = useState(false)
     const dispatch = useDispatch()
     const registerData = useSelector(state => state.register.data)
 
     useEffect(() => {
         if (registerData) {
             if (registerData.status == "success") {
-                // console.log('sucess..............', registerData.data.uid)
                 setName(""), setEmail(""), setPhone("")
                 setOrg(""), setPassword(""), setCpassword("")
                 setIsLodding(false)
-                navigation.navigate("Varification", {uid: registerData.data.uid})
+                dispatch(registerAction.clearResponse())
+                navigation.navigate("Varification", { uid: registerData.data.uid })
             }
             else if (registerData.status == "failed") {
+                setIsLodding(false)
+                dispatch(registerAction.clearResponse())
                 Alert.alert(registerData.message)
             }
         }
@@ -71,10 +73,7 @@ export default function Register({ navigation }) {
     }
 
     return (
-        //     <SafeAreaView style={styles.container} >
-        //  <StatusBar>
         <View style={styles.container}>
-
             <StatusBar
                 barStyle="dark-content"
                 // dark-content, light-content and default
@@ -86,15 +85,10 @@ export default function Register({ navigation }) {
                 //allowing light, but not detailed shapes
                 networkActivityIndicatorVisible={true}
             />
-            {/* <SafeAreaView style={{ width: width, height: height }}> */}
-            {/* <SafeAreaView> */}
             <LinearGradient colors={['#2B6EF2', '#8DB3FF', '#8DB3FF']}
                 style={{
-                    // flex: 1,
                     borderBottomLeftRadius: 20,
                     borderBottomRightRadius: 20,
-                    // height: "8%",
-                    // width: "100%",
                 }}
             >
                 <View
@@ -112,12 +106,8 @@ export default function Register({ navigation }) {
                     }}></Text>
                 </View>
             </LinearGradient>
-            {/* </SafeAreaView> */}
-
             <ScrollView
                 style={styles.boxView}>
-
-                {/* <Text style={styles.title}>Welcome!</Text> */}
                 <Text style={{
                     margin: '3%', marginTop: '2%',
                     marginBottom: '-1%', color: '#2F394E',
@@ -127,13 +117,13 @@ export default function Register({ navigation }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                        style={ Platform.OS == 'ios' ? [styles.icon, {
+                        style={Platform.OS == 'ios' ? [styles.icon, {
                             height: 22, width: 21,
                             margin: '3%', marginLeft: '2%'
                         }] : [styles.icon, {
                             height: 22, width: 21,
                             margin: '3%', marginLeft: '2%'
-                        }] }
+                        }]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
@@ -152,15 +142,15 @@ export default function Register({ navigation }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                            style={ Platform.OS == 'ios' ? 
+                        style={Platform.OS == 'ios' ?
                             [styles.icon, {
-                            height: 18, width: '7%',
-                            marginRight: '2.5%', margin: '3%', marginLeft: '2.5%'
-                        }] :
-                        [styles.icon, {
-                            height: 18, width: '7%',
-                            marginRight: '2.5%',marginTop:'5%', margin: '3%', marginLeft: '2.5%'
-                        }]}
+                                height: 18, width: '7%',
+                                marginRight: '2.5%', margin: '3%', marginLeft: '2.5%'
+                            }] :
+                            [styles.icon, {
+                                height: 18, width: '7%',
+                                marginRight: '2.5%', marginTop: '5%', margin: '3%', marginLeft: '2.5%'
+                            }]}
                         source={require('../../images/mail.png')}
                     />
                     <TextInput
@@ -179,14 +169,14 @@ export default function Register({ navigation }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                       style={ Platform.OS == 'ios' ? [styles.icon,{
+                        style={Platform.OS == 'ios' ? [styles.icon, {
                             height: 26, width: '4.5%',
                             margin: '2%', marginRight: '4%', marginLeft: '3%'
-                        }]:
-                        [styles.icon,{
-                            height: 26, width: '5.6%',
-                            marginTop: '3.2%', marginRight: '4%', marginLeft: '3%'
-                        }] }
+                        }] :
+                            [styles.icon, {
+                                height: 26, width: '5.6%',
+                                marginTop: '3.2%', marginRight: '4%', marginLeft: '3%'
+                            }]}
                         source={require('../../images/mobile.png')}
                     />
                     <TextInput
@@ -207,14 +197,14 @@ export default function Register({ navigation }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                     style={ Platform.OS == 'ios' ? [styles.icon, {
+                        style={Platform.OS == 'ios' ? [styles.icon, {
                             height: 24, width: 24,
                             margin: '2%'
                         }]
-                    :[styles.icon, {
-                        height: 24, width: 24,
-                        margin: '2%',marginTop:'3.5%'
-                    }]}
+                            : [styles.icon, {
+                                height: 24, width: 24,
+                                margin: '2%', marginTop: '3.5%'
+                            }]}
                         source={require('../../images/globe.png')}
                     />
                     <TextInput
@@ -232,14 +222,14 @@ export default function Register({ navigation }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                          style={ Platform.OS == 'ios' ? [styles.icon, {
+                        style={Platform.OS == 'ios' ? [styles.icon, {
                             height: 22, width: 21,
                             margin: '2.5%'
                         }] :
-                        [styles.icon, {
-                            height: 22, width: 21,
-                            margin: '2.5%',marginTop:'3.5%'
-                        }]}
+                            [styles.icon, {
+                                height: 22, width: 21,
+                                margin: '2.5%', marginTop: '3.5%'
+                            }]}
                         source={require('../../images/icon-password.png')}
                     />
                     <TextInput
@@ -257,14 +247,14 @@ export default function Register({ navigation }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                      style={ Platform.OS == 'ios' ? [styles.icon, {
-                        height: 22, width: 21,
-                        margin: '2.5%'
-                    }] :
-                    [styles.icon, {
-                        height: 22, width: 21,
-                        margin: '2.5%',marginTop:'3.5%'
-                    }]}
+                        style={Platform.OS == 'ios' ? [styles.icon, {
+                            height: 22, width: 21,
+                            margin: '2.5%'
+                        }] :
+                            [styles.icon, {
+                                height: 22, width: 21,
+                                margin: '2.5%', marginTop: '3.5%'
+                            }]}
                         source={require('../../images/icon-password.png')}
                     />
                     <TextInput
@@ -275,11 +265,11 @@ export default function Register({ navigation }) {
                     />
                 </View>
 
-                {IsLodding == true ? 
-          <ActivityIndicator size="small" color="#0000ff" />
-          :
-          <View />
-}
+                {IsLodding == true ?
+                    <ActivityIndicator size="small" color="#0000ff" />
+                    :
+                    <View />
+                }
 
                 <TouchableOpacity style={styles.button} onPress={() => RegisterFunction()}>
                     <Text style={styles.textButton}>Sign Up</Text>

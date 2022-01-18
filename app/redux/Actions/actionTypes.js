@@ -15,6 +15,9 @@ export const GET_OTP = 'GET_OTP';
 //Verify OTP
 
 export const VERIFY_OTP = 'VERIFY_OTP';
+export const VERIFY_OTP_SUCCESS = 'VERIFY_OTP_SUCCESS';
+export const VERIFY_OTP_CLEAR = 'VERIFY_OTP_CLEAR';
+
 export const FVERIFY_OTP = 'FVERIFY_OTP';
 
 //Forgot Password 

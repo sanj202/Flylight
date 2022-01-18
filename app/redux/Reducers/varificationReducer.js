@@ -1,4 +1,4 @@
-import { REGISTER,LOGIN, VERIFY_OTP ,GET_OTP } from '../Actions/actionTypes';
+import {VERIFY_OTP, VERIFY_OTP_SUCCESS, VERIFY_OTP_CLEAR } from '../Actions/actionTypes';
 
 const initialState = {
     otp: [],
@@ -8,7 +8,16 @@ const varificationR = (state = initialState, action) => {
         case VERIFY_OTP:
             return {
                 ...state,
-                otp: action.payload
+            };
+            case VERIFY_OTP_SUCCESS:
+                return {
+                    ...state,
+                    otp: action.payload
+                };
+        case VERIFY_OTP_CLEAR:
+            return {
+                ...state,
+                otp: []
             };
         default:
             return state;

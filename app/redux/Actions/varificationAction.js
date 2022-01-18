@@ -1,32 +1,25 @@
 
-import { VERIFY_OTP, LOGIN_CLEAR, REGISTER, } from './actionTypes';
+import { VERIFY_OTP,VERIFY_OTP_CLEAR,VERIFY_OTP_SUCCESS } from './actionTypes';
 import BaseUrl from '../../../const'
 
 export const varification = (otp, uid) => {
-    // console.log(" credentails................./.",     otp,uid)
-
     return (dispatch) => {
         dispatch({ type: VERIFY_OTP })
-        // {BaseUrl}//api/mobile/register
-
         fetch(`${BaseUrl}/v1/verifyotp`,
             {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
-                    // 'Content-Type': "application/x-www-form-urlencoded",
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     otp: otp,
                     uid: uid
                 }),
-
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("api response data ::::::::::::::::", responseData)
-                dispatch({ type: VERIFY_OTP, payload: responseData })
+                dispatch({ type: VERIFY_OTP_SUCCESS, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -39,7 +32,7 @@ export const varification = (otp, uid) => {
 
 export const clearResponse = () => {
     return {
-        type: LOGIN_CLEAR,
+        type: VERIFY_OTP_CLEAR,
     };
 };
 

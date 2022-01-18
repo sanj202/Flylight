@@ -47,30 +47,32 @@ export default function Login({ navigation, route, props }) {
       if (loginData.status == "success") {
         setEmail("")
         setPassword("")
-        // AsyncStorage.removeItem('uid')
-        // AsyncStorage.removeItem('cProfile')
-        // AsyncStorage.removeItem('org_uid')
-        // AsyncStorage.removeItem('token')
-        // AsyncStorage.removeItem('user_id')
-        // AsyncStorage.removeItem('org_id')
-
         // AsyncStorage.setItem('uid', loginData.data.uid)
         // AsyncStorage.setItem('cProfile', loginData.data.cProfile.toString())
         // AsyncStorage.setItem('org_uid', loginData.data.org_uid)
         // AsyncStorage.setItem('token', loginData.data.token)
         // AsyncStorage.setItem('user_id', loginData.data.user.id.toString())
         // AsyncStorage.setItem('org_id', loginData.data.user.org_id.toString())
-        // Alert.alert("loginsuccesfull")
-        console.log("redirect..........")
+
         setIsLodding(false)
-        navigation.navigate("MainStack")
+        if (loginData.data.token){
+          navigation.navigate("MainStack")
+        }
+        else{
+          console.log('something wrong')
+        }
+        // dispatch(authAction.clearResponse())
+        // navigation.navigate("MainStack")
         // dispatch(authAction.clearResponse())
       }
       else if (loginData.status == "failed") {
         setIsLodding(false)
+        dispatch(authAction.clearResponse())
         Alert.alert(loginData.message)                                                                                //otherwise alert show 
       }
       else {
+        setIsLodding(false)
+        // Alert.alert('something wrong') 
       }
     }
   }, [loginData])
