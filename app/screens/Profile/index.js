@@ -7,7 +7,7 @@ import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { profileAction } from '../../redux/Actions';
+import { profileAction, authAction, varificationAction } from '../../redux/Actions';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation }) {
@@ -19,20 +19,30 @@ export default function AddContact({ navigation }) {
     const isFocused = useIsFocused();
     const profileData = useSelector(state => state.profile.userDetail)
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
 
     useEffect(() => {
-        if (loginData || isFocused) {
+        if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
+                setIsLodding(true)
                 dispatch(profileAction.profile(
                     loginData.data.uid,
                     loginData.data.org_uid,
                     loginData.data.cProfile.toString(),
                     loginData.data.token
                 ));
+            }
+            else if (registerData.status == "success") {
                 setIsLodding(true)
+                dispatch(profileAction.profile(
+                    registerData.data.uid,
+                    registerData.data.org_uid,
+                    registerData.data.cProfile.toString(),
+                    registerData.data.token
+                ));
             }
         }
-    }, [loginData , isFocused])
+    }, [loginData, registerData, isFocused])
 
     useEffect(() => {
         if (profileData) {
@@ -54,9 +64,17 @@ export default function AddContact({ navigation }) {
     }, [profileData])
 
     const LogoutSession = () => {
-        navigation.navigate('Logout')
+        if (loginData.status == "success") {
+            dispatch(authAction.clearResponse())
+        }
+        else if (registerData.status == "success") {
+            dispatch(varificationAction.clearResponse())
+        }
+        else {
+        }
+        // navigation.navigate('Logout')
     };
-    
+
     return (
         <View style={{ flex: 1, width: width, height: height }}>
             <StatusBar
@@ -196,8 +214,8 @@ export default function AddContact({ navigation }) {
                         />
                         <Text style={{ fontSize: 13, fontWeight: 'bold', color: '#000000', fontFamily: 'Roboto' }}>{user.state ? user.street + ',' + user.city + ',' + user.state + ',' + user.country + ',' + user.zip : ''}</Text>
                     </View>
-                    <TouchableOpacity style={styles.button} 
-                    // onPress={() => LogoutSession()}
+                    <TouchableOpacity style={styles.button}
+                        onPress={() => LogoutSession()}
                     >
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <Text style={styles.textButton}>Logout</Text>

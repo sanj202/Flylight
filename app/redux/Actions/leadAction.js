@@ -2,6 +2,7 @@
 import { 
     Import_Lead,
      Add_Edit_Lead,Add_Edit_Lead_Success,Add_Edit_Lead_Clear,
+     Delete_Lead,Delete_Lead_Success,Delete_Lead_Clear,
      LeadOwner,LeadOwner_Success,LeadOwner_Clear } from './actionTypes';
 import BaseUrl from '../../../const'
 
@@ -21,6 +22,30 @@ export const addLaed = (data, token) => {
             .then(response => response.json())
             .then(responseData => {
                 dispatch({ type: Add_Edit_Lead_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const deleteLead = (data,token,) => {
+    return (dispatch) => {
+        dispatch({ type: Delete_Lead })
+        fetch(`${BaseUrl}/v1/delete-lead`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                console.log("Delete_LeadDelete_Lead................",responseData)
+                dispatch({ type: Delete_Lead_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -55,7 +80,10 @@ export const LeadOwnerList = (uid ,org_uid, profile_id,token,) => {
     }
 };
 
-export const importLead = (res, token, cProfile, org_id) => {
+
+
+export const importLead = (data, token) => {
+    // console.log("org....................................",data)
     return (dispatch) => {
         dispatch({ type: Import_Lead })
         fetch(`${BaseUrl}/v1/import-lead`,
@@ -66,15 +94,12 @@ export const importLead = (res, token, cProfile, org_id) => {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
                 },
-                body: JSON.stringify({
-                    CSVFILE: res,
-                    orgid: org_id,
-                    profile_id: cProfile
-                }),
+                body: JSON.stringify(data),
             })
             .then(response => response.json())
             .then(responseData => {
-                dispatch({ type: Import_Lead, payload: responseData })
+                // console.log("import Lead Action file ...............",responseData)
+                // dispatch({ type: Import_Lead, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -86,6 +111,7 @@ export const clearResponse = () => {
     return {
         type:Add_Edit_Lead_Clear,
         type:LeadOwner_Clear,
+        type:Delete_Lead_Clear
     };
 };
 

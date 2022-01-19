@@ -12,7 +12,6 @@ export default function Report({ navigation }) {
     const data = [
         { label: 'My List  ', value: '+ My List' },
         { label: 'Sales List', value: 'Sales List' },
-        // { label: '+ Add List', value: '+ Add List' },
     ];
 
     const [value, setValue] = useState(null);
@@ -23,10 +22,12 @@ export default function Report({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const reportData = useSelector(state => state.report.getReportList)
 
     useEffect(() => {
-        if (loginData || isFocused) {
+        if (loginData || registerData && isFocused) {
+
             if (loginData.status == "success") {
                 dispatch(reportAction.reportList(
                     loginData.data.token,
@@ -36,8 +37,17 @@ export default function Report({ navigation }) {
                     loginData.data.org_uid,
                 ));
             }
+            else if (registerData.status == "success") {
+                dispatch(reportAction.reportList(
+                registerData.data.token,
+                registerData.data.uid,
+                registerData.data.cProfile.toString(),
+                registerData.data.org_id.toString(),
+                registerData.data.org_uid
+                ));
+            }
         }
-    }, [loginData, isFocused])
+    }, [loginData,registerData, isFocused])
 
     useEffect(() => {
         if (reportData) {
@@ -64,9 +74,7 @@ export default function Report({ navigation }) {
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <Header
-                // style={{ height: "10%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
                     navigation.goBack()
                 }}
                 title='Reports'
@@ -74,9 +82,7 @@ export default function Report({ navigation }) {
                     navigation.navigate('Notification')
                 }}
             />
-
             <View style={styles.container3}>
-
                 <Text style={{ color: '#000000', paddingBottom: '2%', fontSize: 20 }}>Select Campaign</Text>
                 <View style={{ flexDirection: 'row' }}>
                     <Dropdown
@@ -109,8 +115,6 @@ export default function Report({ navigation }) {
                             </View>
                         )}
                     />
-
-
                     <TouchableOpacity style={[styles.button,]}
                     // onPress={() => Search(value)}
                     >
@@ -122,7 +126,6 @@ export default function Report({ navigation }) {
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
-
                 <ScrollView>
                     <Card style={styles.card}>
                         <TouchableOpacity>

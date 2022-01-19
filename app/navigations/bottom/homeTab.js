@@ -172,6 +172,7 @@ function HomeTabs() {
         name="Edit_Lead"
         component={Edit_Lead}
         options={{
+          tabBarHideOnKeyboard : true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -181,6 +182,7 @@ function HomeTabs() {
         name="Edit_Opportunity"
         component={Edit_Opportunity}
         options={{
+          tabBarHideOnKeyboard : true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -235,6 +237,7 @@ function HomeTabs() {
         name="History_Feedback"
         component={History_Feedback}
         options={{
+          tabBarHideOnKeyboard : true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}

@@ -88,12 +88,11 @@ export default function lead_manager({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const taskList = useSelector(state => state.taskmanager.getList)
 
-    // console.log("taskList................", taskList)
-
     useEffect(() => {
-        if (loginData || isFocused) {
+        if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
                 dispatch(taskmanagerAction.TaskList(
                     loginData.data.token,
@@ -102,25 +101,26 @@ export default function lead_manager({ navigation }) {
                     loginData.data.user.org_id.toString()
                 ));
             }
+            else if (registerData.status == "success") {
+                dispatch(taskmanagerAction.TaskList(
+                    registerData.data.token,
+                    registerData.data.uid,
+                    registerData.data.cProfile.toString(),
+                    registerData.data.org_id.toString()
+                ));
+            }
             setIsLodding(true)
         }
-    }, [loginData, isFocused])
+    }, [loginData, registerData, isFocused])
 
-
-    //   console.log("taskList.....................",taskList)
     useEffect(() => {
         if (taskList) {
             if (taskList.status == "200") {
                 setallTask(taskList.data)
                 setIsLodding(false)
-                // dispatch(leadAction.clearResponse())
-                //   Alert.alert(taskList.message)
             }
             else if (taskList.status == "failed") {
-
                 setIsLodding(false)
-                // Alert.alert(leadList.message)
-                // console.log("sucess..failed........")
             }
             else if (taskList.status == "fail") {
 
@@ -137,14 +137,9 @@ export default function lead_manager({ navigation }) {
     }, [taskList])
 
 
-
-
-
-
     const AllView = ({ item }) => {
         return (
             <View style={{ marginTop: '1%' }}>
-
                 <View style={styles.listData}>
                     <View style={{ backgroundColor: '', justifyContent: 'center', }}>
                         <Image
@@ -213,7 +208,6 @@ export default function lead_manager({ navigation }) {
 
     return (
         <View style={styles.container}>
-
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
@@ -225,7 +219,6 @@ export default function lead_manager({ navigation }) {
                     navigation.navigate('Notification')
                 }}
             />
-
             <View
                 style={{
                     flexDirection: 'row',
@@ -238,7 +231,6 @@ export default function lead_manager({ navigation }) {
                     flexDirection: 'row',
                     justifyContent: 'space-between'
                 }}>
-
                 {isService == 'All' ?
                     <TouchableOpacity style={{
                         backgroundColor: '#4F46BA',
@@ -249,7 +241,6 @@ export default function lead_manager({ navigation }) {
 
                         onPress={() => checkValue("All")}
                     >
-
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>All</Text>
                     </TouchableOpacity>
                     :
@@ -291,9 +282,6 @@ export default function lead_manager({ navigation }) {
                     </TouchableOpacity>
                 }
 
-
-
-
                 {isService == 'Done' ?
 
                     <TouchableOpacity style={{
@@ -328,15 +316,14 @@ export default function lead_manager({ navigation }) {
                         <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                         :
                         <View>
-                         
-                         {allTask !==undefined && allTask.length > 0 ?
-                            <FlatList
-                                // style={{ height: height / 1.55 }}
-                                data={allTask}
-                                renderItem={AllView}
-                            />
-                            :
-                            <Text style={{fontSize:20,textAlign:'center',marginTop:'3%'}}>No data Found</Text> }
+                            {allTask !== undefined && allTask.length > 0 ?
+                                <FlatList
+                                    // style={{ height: height / 1.55 }}
+                                    data={allTask}
+                                    renderItem={AllView}
+                                />
+                                :
+                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
                         </View>
                     }
                 </View>

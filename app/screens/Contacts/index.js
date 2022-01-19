@@ -19,6 +19,7 @@ export default function Contacts({ navigation }) {
     const isFocused = useIsFocused();
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const contactData = useSelector(state => state.contactList.contacts)
     const [EditcontactId, setEditConatctId] = useState([])
     const [isVisible, setIsVisible] = useState(false);
@@ -49,7 +50,7 @@ export default function Contacts({ navigation }) {
 
 
     useEffect(() => {
-        if (loginData || isFocused) {
+        if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
                 setIsLodding(true)
                 dispatch(contactListAction.contactList(
@@ -59,8 +60,17 @@ export default function Contacts({ navigation }) {
                     loginData.data.org_uid,
                 ));
             }
+            else if (registerData.status == "success") {
+                setIsLodding(true)
+                dispatch(contactListAction.contactList(
+                    registerData.data.token,
+                    registerData.data.uid,
+                    registerData.data.cProfile.toString(),
+                    registerData.data.org_uid,
+                ));
+            }
         }
-    }, [loginData, isFocused])
+    }, [loginData, registerData, isFocused])
 
     useEffect(() => {
         if (contactData) {
@@ -133,8 +143,6 @@ export default function Contacts({ navigation }) {
         setEditConatctId(id)
         setIsVisible(true)
     }
-
-    console.log("filteredDataSource..", filteredDataSource)
 
     const ContactView = ({ item }) => {
         return (
@@ -214,8 +222,6 @@ export default function Contacts({ navigation }) {
                     navigation.navigate('Notification')
                 }}
             />
-
-
             <View>
                 <View style={styles.inputFields2}>
                     <Image
@@ -235,12 +241,18 @@ export default function Contacts({ navigation }) {
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
-                <FlatList
-                    data={filteredDataSource}
-                    keyExtractor={(item, index) => index.toString()}
-                    ItemSeparatorComponent={ItemSeparatorView}
-                    renderItem={ContactView}
-                />
+                <View>
+                    {filteredDataSource !== undefined && filteredDataSource.length > 0 ?
+                        <FlatList
+                            data={filteredDataSource}
+                            keyExtractor={(item, index) => index.toString()}
+                            ItemSeparatorComponent={ItemSeparatorView}
+                            renderItem={ContactView}
+                        />
+                        :
+                        <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+                    }
+                </View>
             }
 
             <View style={{ height: '3%' }}></View>

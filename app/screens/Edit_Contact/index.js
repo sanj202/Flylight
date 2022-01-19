@@ -48,6 +48,7 @@ export default function EditContact({ navigation, route }) {
 
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const Data = useSelector(state => state.ManuallyAddContact.EditedData)
 
     const [date, setDate] = useState(new Date());
@@ -118,40 +119,36 @@ export default function EditContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-            if (loginData) {
+            if (loginData || registerData) {
                 if (loginData.status == "success") {
+                    setIsLodding(true)
                     const data = {
                         profile_id: loginData.data.cProfile.toString(),
                         created_by: loginData.data.cProfile.toString(),       //profile id 
                         modified_by: loginData.data.cProfile.toString(),      //profile id 
                         org_uid: loginData.data.org_uid,
                         contact_id: route.params.Edata.id,
-                        first_name: fname,
-                        last_name: lname,
-                        title: title,
-                        email: email,
-                        email2: Aemail,
-                        dob: formateDate,
-                        gender: gender,
-                        phone: phone,
-                        phone2: Aphone,
-                        fax: fax,
-                        website: website,
-                        lead_source: LeadSource,
-                        lead_status: LeadStatus,
-                        industry: Industry,
-                        number_of_employee: employee,
-                        annual_revenue: revenue,
-                        company: companyName,
-                        address: Address,
-                        city: City,
-                        state: State,
-                        country: Country,
-                        zip: ZipCode,
+                        first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,dob: formateDate, gender: gender,
+                        phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,lead_status: LeadStatus,industry: Industry,
+                        phone: phone, number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,
+                        city: City,state: State,country: Country,zip: ZipCode,
                     }
-                    //   console.log("data....................",data)
                     dispatch(editContactAction.EditContact(data, loginData.data.token));
+                }
+                else if (registerData.status == "success") {
                     setIsLodding(true)
+                    const data = {
+                        profile_id: registerData.data.cProfile.toString(),
+                        created_by: registerData.data.cProfile.toString(),       //profile id 
+                        modified_by: registerData.data.cProfile.toString(),      //profile id 
+                        org_uid: registerData.data.org_uid,
+                        contact_id: route.params.Edata.id,
+                        first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,dob: formateDate, gender: gender,
+                        phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,lead_status: LeadStatus,industry: Industry,
+                        phone: phone, number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,
+                        city: City,state: State,country: Country,zip: ZipCode,
+                    }
+                    dispatch(editContactAction.EditContact(data, registerData.data.token));
                 }
             }
         }
@@ -176,19 +173,14 @@ export default function EditContact({ navigation, route }) {
             else{
                 setIsLodding(false)  
             }
-
         }
         else {
-
         }
     }, [Data])
 
-    // console.log('default...........................................',navigation)
     return (
         <View style={{ flex: 1 }}>
-          
             <Header
-                // style={{ height: "1%" }}
                 onPressLeft={() => {
                     //   navigation.openDrawer()
                     navigation.goBack()
@@ -201,33 +193,7 @@ export default function EditContact({ navigation, route }) {
 
             <ScrollView style={{ width: width, height: height }}>
                 <View style={{ margin: '5%' }}>
-
-                    {/* {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={mode}
-            // is24Hour={true}
-            display="compact"
-            onChange={onChangeFrom}
-          />
-        )}
-
-        <TouchableOpacity
-            onPress={showDatepicker}
-          >
-            <View style={styles.pickers}>
-              <Image
-                style={{ height: 22, width: 20, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/pikerCalander.png')}
-              />
-              <Text style={{ marginTop: '5%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-            </View>
-          </TouchableOpacity> */}
-
-
                     <View style={{ marginTop: '2%' }}>
-                        {/* {renderLabel()} */}
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
@@ -297,47 +263,6 @@ export default function EditContact({ navigation, route }) {
                             onChangeText={e3 => setlname(e3)}
                             placeholder="Last Name" />
                     </View>
-
-                    {/* <View style={styles.inputFields}>
-                        <Image
-                            style={styles.icon}
-                            source={require('../../images/DOB.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={dateB}
-                            onChangeText={e4 => setdateB(e4)}
-                            placeholder="Date of Birth" />
-                    </View> */}
-
-
-                    {/* <TouchableOpacity
-                        style={{
-                            borderWidth: 1,
-                            borderColor: '#C3C7E5',
-                            borderRadius: 10,
-                            // marginHorizontal: '3%',
-                            paddingVertical: 2,
-                            marginTop: '2%'
-                        }}
-                        onPress={showDatepicker} >
-                        <Image style={[styles.icon, {
-                            height: 25, width: '6%', marginLeft: '4%', marginTop: '2%'
-                        }]}
-                            source={require('../../images/DOB.png')}
-                        />
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            style={{ width: '50%', marginTop: '-11%' }}
-                            value={date}
-                            // moment(date).format("YYYY-MM-DD")
-                            mode={mode}
-                            // dateFormat=''
-                            // is24Hour={true}
-                            display="default"
-                            onChange={onChangeFrom}
-                        />
-                    </TouchableOpacity> */}
 
                     <TouchableOpacity
                         style={{
@@ -679,17 +604,7 @@ export default function EditContact({ navigation, route }) {
                             placeholder="Revenue" />
                     </View>
 
-                    {/* <View style={styles.inputFields}>
-            <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
-              source={require('../../images/info.png')}
-            />
-            <TextInput style={{ flex: 1 }} placeholder="More Info" />
-          </View> */}
-
                     <View style={{ marginTop: '2%' }}>
-                        {/* {renderLabel()} */}
-
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}

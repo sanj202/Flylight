@@ -36,6 +36,7 @@ export default function action_manager({ navigation }) {
     const isFocused = useIsFocused();
 
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
 
     const addActionData = useSelector(state => state.actionmanager.addAction)
     const addStatusData = useSelector(state => state.actionmanager.addStatus)
@@ -47,7 +48,7 @@ export default function action_manager({ navigation }) {
     const deleteaction = useSelector(state => state.actionmanager.deleteAction)
 
     useEffect(() => {
-        if (loginData || isFocused) {
+        if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
                 const data = {
                     uid: loginData.data.uid,
@@ -58,8 +59,19 @@ export default function action_manager({ navigation }) {
                 dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
                 setIsLodding(true)
             }
+            else if (registerData.status == "success") {
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                    org_uid: registerData.data.org_uid,
+                }
+                dispatch(actionmanagerAction.getAction(data, registerData.data.token));
+                dispatch(actionmanagerAction.getStatus(data, registerData.data.token));
+                setIsLodding(true)
+            }
         }
-    }, [loginData, isFocused])
+    }, [loginData,registerData, isFocused])
+
 
     useEffect(() => {
         if (actionList) {
@@ -108,18 +120,31 @@ export default function action_manager({ navigation }) {
     }, [statusList])
 
     const Get_ActionStatus = () => {
-        const data = {
-            uid: loginData.data.uid,
-            profile_id: loginData.data.cProfile.toString(),
-            org_uid: loginData.data.org_uid,
+        if (loginData.status == "success") {
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+            }
+            dispatch(actionmanagerAction.getAction(data, loginData.data.token));
+            dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
+            setIsLodding(true)
         }
-        dispatch(actionmanagerAction.getAction(data, loginData.data.token));
-        dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
+        else if (registerData.status == "success") {
+            const data = {
+                uid: registerData.data.uid,
+                profile_id: registerData.data.cProfile.toString(),
+                org_uid: registerData.data.org_uid,
+            }
+            dispatch(actionmanagerAction.getAction(data, registerData.data.token));
+            dispatch(actionmanagerAction.getStatus(data, registerData.data.token));
+            setIsLodding(true)
+        }
         setIsLodding(true)
     }
 
     const AddActionFunction = (text) => {
-        if (loginData) {
+        if (loginData || registerData ) {
             if (loginData.status == "success") {
                 if (text == "Status") {
                     const data = {
@@ -140,6 +165,28 @@ export default function action_manager({ navigation }) {
                         org_uid: loginData.data.org_uid,
                     }
                     dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token,));
+                }
+            }
+            else if (registerData.status == "success") {
+                if (text == "Status") {
+                    const data = {
+                        uid: registerData.data.uid,
+                        profile_id: registerData.data.cProfile.toString(),
+                        orgId: registerData.data.org_id.toString(),
+                        status: newStatus,
+                        org_uid: registerData.data.org_uid,
+                    }
+                    dispatch(actionmanagerAction.add_EditStatus(data, registerData.data.token));
+                }
+                else {
+                    const data = {
+                        uid: registerData.data.uid,
+                        profile_id: registerData.data.cProfile.toString(),
+                        orgId: registerData.data.org_id.toString(),
+                        action: newAction,
+                        org_uid: registerData.data.org_uid,
+                    }
+                    dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token,));
                 }
             }
             setIsLodding(true)
@@ -204,7 +251,7 @@ export default function action_manager({ navigation }) {
 
     const EditData = (value) => {
         setIsVisible(!isVisible)
-        if (loginData) {
+        if (loginData || registerData ) {
             if (loginData.status == "success") {
                 if (type == "Action") {
                     const data = {
@@ -231,6 +278,32 @@ export default function action_manager({ navigation }) {
                 }
                 setIsLodding(true)
             }
+            else if (registerData.status == "success") {
+                    if (type == "Action") {
+                        const data = {
+                            uid: registerData.data.uid,
+                            profile_id: registerData.data.cProfile.toString(),
+                            orgId: registerData.data.org_id.toString(),
+                            action: EditingValue,
+                            org_uid: registerData.data.org_uid,
+                            action_id: EditingId
+                        }
+                        dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token));
+                    }
+                    else {
+                        // console.log("satsu........................edit")
+                        const data = {
+                            uid: registerData.data.uid,
+                            profile_id: registerData.data.cProfile.toString(),
+                            orgId: registerData.data.org_id.toString(),
+                            status: EditingValue,
+                            org_uid: registerData.data.org_uid,
+                            status_id: EditingId
+                        }
+                        dispatch(actionmanagerAction.add_EditStatus(data, registerData.data.token));
+                    }
+                    setIsLodding(true)
+                }
         }
         // setModalVisible4(!modalVisible4)
 
@@ -245,8 +318,7 @@ export default function action_manager({ navigation }) {
     }
 
     const deleteData = (value) => {
-        console.log("delete function start .....")
-        if (loginData) {
+        if (loginData || registerData ) {
             if (loginData.status == "success") {
                 if (value.type == "Delete_Action") {
                     const data = {
@@ -274,7 +346,37 @@ export default function action_manager({ navigation }) {
                 }
                 setIsLodding(true)
             }
+            else if (registerData.status == "success") {
+                if (value.type == "Delete_Action") {
+                    const data = {
+                        uid: registerData.data.uid,
+                        profile_id: registerData.data.cProfile.toString(),
+                        orgId: registerData.data.org_id.toString(),
+                        action: EditingValue,
+                        org_uid: registerData.data.org_uid,
+                        action_id: value.id
+                    }
+                    dispatch(actionmanagerAction.delete_Action(data, registerData.data.token));
+                }
+                else if (value.type == "Delete_status") {
+                    const data = {
+                        uid: registerData.data.uid,
+                        profile_id: registerData.data.cProfile.toString(),
+                        orgId: registerData.data.org_id.toString(),
+                        status: EditingValue,
+                        org_uid: registerData.data.org_uid,
+                        status_id: value.id
+                    }
+                    dispatch(actionmanagerAction.delete_Status(data, registerData.data.token));
+                }
+                else {
+                }
+                setIsLodding(true)
+            }
         }
+
+
+
         // setModalVisible4(!modalVisible4)
         // if (value == 'Status') {
         //     setModalVisible(!modalVisible)

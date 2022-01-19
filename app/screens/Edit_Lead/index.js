@@ -13,7 +13,8 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation, route }) {
-
+    console.log("beack screen ..................",route.params.Edata)
+    
     const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
     const [isFocus3, setIsFocus3] = useState(false);
     const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
@@ -51,6 +52,7 @@ export default function AddContact({ navigation, route }) {
     const isFocused = useIsFocused();
 
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const leadData = useSelector(state => state.leads.newLead)
     const leadOwner = useSelector(state => state.leads.leadOwner)
 
@@ -285,7 +287,7 @@ export default function AddContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-            if (loginData) {
+            if (loginData || registerData ) {
                 if (loginData.status == "success") {
                     if (route.params.title == 'Edit Lead') {
                         const data = {
@@ -294,32 +296,11 @@ export default function AddContact({ navigation, route }) {
                             modified_by: loginData.data.cProfile.toString(),     //profile id 
                             org_uid: loginData.data.org_uid,
                             uid: loginData.data.uid,
-                            lead_id: route.params.Edata.id,
-                            first_name: fname,
-                            last_name: lname,
-                            title: title,
-                            email: email,
-                            email2: Aemail,
-                            dob: formateDate,
-                            gender: gender,
-                            phone: phone,
-                            phone2: Aphone,
-                            fax: fax,
-                            website: website,
-                            lead_source: LeadSource,
-                            lead_status: LeadStatus,
-                            industry: Industry,
-                            number_of_employee: employee,
-                            annual_revenue: revenue,
-                            company: companyName,
-                            address: Address,
-                            city: City,
-                            state: State,
-                            country: Country,
-                            zip: ZipCode,
-                            description: description,
-                            campaign: campaign,
-                        }
+                            lead_id: route.params.Edata.id,first_name: fname,last_name: lname,title: title,email: email,
+                            email2: Aemail,dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,
+                            lead_source: LeadSource,lead_status: LeadStatus,industry: Industry,number_of_employee: employee,
+                            annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,country: Country,
+                            zip: ZipCode,description: description,campaign: campaign,}
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
                     }
                     else {
@@ -328,37 +309,49 @@ export default function AddContact({ navigation, route }) {
                             created_by: loginData.data.cProfile.toString(),      //profile id 
                             modified_by: loginData.data.cProfile.toString(),     //profile id 
                             org_uid: loginData.data.org_uid,
-                            uid: loginData.data.uid,
-                            first_name: fname,
-                            last_name: lname,
-                            title: title,
-                            email: email,
-                            email2: Aemail,
-                            dob: formateDate,
-                            gender: gender,
-                            phone: phone,
-                            phone2: Aphone,
-                            fax: fax,
-                            website: website,
-                            lead_source: LeadSource,
-                            lead_status: LeadStatus,
-                            industry: Industry,
-                            number_of_employee: employee,
-                            annual_revenue: revenue,
-                            company: companyName,
-                            address: Address,
-                            city: City,
-                            state: State,
-                            country: Country,
-                            zip: ZipCode,
-                            description: description,
-                            campaign: campaign,
-                        }
+                            uid: loginData.data.uid,first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,
+                            dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
+                            lead_status: LeadStatus,industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,
+                            state: State,country: Country,zip: ZipCode,description: description,campaign: campaign,}
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
-                        setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
-                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(''), setCountry(''),
-                            setZipCode(''), setdescription(''), setcampaign('')
+                        // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+                        //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
+                        //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(''), setCountry(''),
+                        //     setZipCode(''), setdescription(''), setcampaign('')
+                    }
+                    setIsLodding(true)
+                }
+
+                else if (registerData.status == "success") {
+                    if (route.params.title == 'Edit Lead') {
+                        const data = {
+                            profile_id: registerData.data.cProfile.toString(),
+                            created_by: registerData.data.cProfile.toString(),      //profile id 
+                            modified_by: registerData.data.cProfile.toString(),     //profile id 
+                            org_uid: registerData.data.org_uid,
+                            uid: registerData.data.uid,
+                            lead_id: route.params.Edata.id,first_name: fname,last_name: lname,title: title,email: email,
+                            email2: Aemail,dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,
+                            lead_source: LeadSource,lead_status: LeadStatus,industry: Industry,number_of_employee: employee,
+                            annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,country: Country,
+                            zip: ZipCode,description: description,campaign: campaign,}
+                        dispatch(leadAction.addLaed(data, registerData.data.token,));
+                    }
+                    else {
+                        const data = {
+                            profile_id: registerData.data.cProfile.toString(),
+                            created_by: registerData.data.cProfile.toString(),      //profile id 
+                            modified_by: registerData.data.cProfile.toString(),     //profile id 
+                            org_uid: registerData.data.org_uid,
+                            uid: registerData.data.uid,first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,
+                            dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
+                            lead_status: LeadStatus,industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,
+                            state: State,country: Country,zip: ZipCode,description: description,campaign: campaign,}
+                        dispatch(leadAction.addLaed(data, registerData.data.token,));
+                        // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+                        //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
+                        //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(''), setCountry(''),
+                        //     setZipCode(''), setdescription(''), setcampaign('')
                     }
                     setIsLodding(true)
                 }
@@ -546,6 +539,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={phone}
+                            keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
                     </View>
@@ -561,6 +555,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={Aphone}
+                            keyboardType='numeric'
                             onChangeText={e6 => setAphone(e6)}
                             placeholder="Alternate Mobile Number"
                         />

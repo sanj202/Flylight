@@ -47,6 +47,7 @@ export default function AddContact({ navigation }) {
 
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
+  const registerData = useSelector(state => state.varify.otp)
   const Data = useSelector(state => state.ManuallyAddContact.data)
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
@@ -114,38 +115,34 @@ export default function AddContact({ navigation }) {
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
-      if (loginData) {
+      if (loginData || registerData) {
         if (loginData.status == "success") {
+          setIsLodding(true)
           const data = {
             profile_id: loginData.data.cProfile.toString(),
             created_by: loginData.data.cProfile.toString(),       //profile id 
             modified_by: loginData.data.cProfile.toString(),      //profile id 
             org_uid: loginData.data.org_uid,
-            first_name: fname,
-            last_name: lname,
-            title: title,
-            email: email,
-            email2: Aemail,
-            dob: formateDate,
-            gender: gender,
-            phone: phone,
-            phone2: Aphone,
-            fax: fax,
-            website: website,
-            lead_source: LeadSource,
-            lead_status: LeadStatus,
-            industry: Industry,
-            number_of_employee: employee,
-            annual_revenue: revenue,
-            company: companyName,
-            address: Address,
-            city: City,
-            state: State,
-            country: Country,
-            zip: ZipCode,
+            first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
+            phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
+            number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
+            state: State, country: Country, zip: ZipCode
           }
           dispatch(addcontactManuallyAction.M_addContact(data, loginData.data.token));
+        }
+        else if (registerData.status == "success") {
           setIsLodding(true)
+          const data = {
+            profile_id: registerData.data.cProfile.toString(),
+            created_by: registerData.data.cProfile.toString(),       //profile id 
+            modified_by: registerData.data.cProfile.toString(),      //profile id 
+            org_uid: registerData.data.org_uid,
+            first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
+            phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
+            number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
+            state: State, country: Country, zip: ZipCode
+          }
+          dispatch(addcontactManuallyAction.M_addContact(data, registerData.data.token));
         }
       }
     }
@@ -154,13 +151,12 @@ export default function AddContact({ navigation }) {
   useEffect(() => {
     if (Data) {
       if (Data.status == "success") {
-        // console.log("sucess..........", Data.message)
         setIsLodding(false)
         setfname(''), setlname(''), setAddress(''), settitle(''), setemail(''), setAemail(''), setgender(''),
           setphone(''), setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''),
           setIndustry(''), setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''),
-          setState(''), setCountry(''), setZipCode(''),
-          setModalVisible2(!modalVisible2)
+          setState(''), setCountry(''), setZipCode(''), setDate(new Date()), settext(true)
+        setModalVisible2(!modalVisible2)
         dispatch(addcontactManuallyAction.clearResponse())
       }
       else if (Data.status == "failed") {

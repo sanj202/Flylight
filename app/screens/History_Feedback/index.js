@@ -111,6 +111,7 @@ export default function AddContact({ navigation, route }) {
   const [IsLodding, setIsLodding] = useState(false)
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
+  const registerData = useSelector(state => state.varify.otp)
   const FeedbackData = useSelector(state => state.history.feedback)
 
   const AddFunction = () => {
@@ -126,23 +127,33 @@ export default function AddContact({ navigation, route }) {
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
       let formateTime = moment(time).format("hh:mm")
-      if (loginData) {
+      if (loginData || registerData) {
         if (loginData.status == "success") {
           const data = {
             uid: loginData.data.uid,
             profile_id: loginData.data.cProfile.toString(),
             org_id: loginData.data.user.org_id.toString(),
-            first_name: fname,
-            last_name: lname,
-            date: formateDate,
+            first_name: fname, last_name: lname, date: formateDate,
             // time: formateTime,
-            phone: phone,
-            state: State,
-            city: City,
-            description: description,
+            phone: phone, state: State, city: City, description: description,
             // feedback_id: "16"
           }
           dispatch(historyAction.AddEdit_feedback_History(loginData.data.token, data));
+          setIsLodding(true)
+        }
+
+
+        else if (registerData.status == "success") {
+          const data = {
+            uid: registerData.data.uid,
+            profile_id: registerData.data.cProfile.toString(),
+            org_id: registerData.data.org_id.toString(),
+            first_name: fname, last_name: lname, date: formateDate,
+            // time: formateTime,
+            phone: phone, state: State, city: City, description: description,
+            // feedback_id: "16"
+          }
+          dispatch(historyAction.AddEdit_feedback_History(registerData.data.token, data));
           setIsLodding(true)
         }
       }
@@ -177,17 +188,6 @@ export default function AddContact({ navigation, route }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar
-        barStyle="dark-content"
-        // dark-content, light-content and default
-        hidden={false}
-        //To hide statusBar
-        backgroundColor="#2B6EF2"
-        //Background color of statusBar only works for Android
-        translucent={false}
-        //allowing light, but not detailed shapes
-        networkActivityIndicatorVisible={true}
-      />
       <Header
         // style={{ height: "16%" }}
         onPressLeft={() => {
@@ -235,6 +235,7 @@ export default function AddContact({ navigation, route }) {
           <TextInput
             style={{ flex: 1 }}
             value={phone}
+            keyboardType='numeric'
             onChangeText={e5 => setphone(e5)}
             placeholder="Enter Mobile Number" />
         </View>

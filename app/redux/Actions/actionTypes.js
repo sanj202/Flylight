@@ -154,7 +154,15 @@ export const Add_Edit_Opportunity = "Add_Edit_Opportunity"
 export const Add_Edit_Opportunity_Success = "Add_Edit_Opportunity_Success"
 export const Add_Edit_Opportunity_Clear= "Add_Edit_Opportunity_Clear"
 
+//Delete Lead
+export const Delete_Lead = "Delete_Lead"
+export const Delete_Lead_Success = "Delete_Lead_Success"
+export const Delete_Lead_Clear = 'Delete_Lead_Clear'
 
+//Delete Opportunity
+export const Delete_Opportunity = "Delete_Opportunity"
+export const Delete_Opportunity_Success = "Delete_Opportunity_Success"
+export const Delete_Opportunity_Clear = 'Delete_Opportunity_Clear'
 
 //LeadOwnerList
 export const LeadOwner = "LeadOwner"

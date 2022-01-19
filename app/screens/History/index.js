@@ -94,10 +94,11 @@ export default function lead_manager({ navigation }) {
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
+  const registerData = useSelector(state => state.varify.otp)
   const historyData = useSelector(state => state.history.getHistoryList)
 
   useEffect(() => {
-    if (loginData || isFocused) {
+    if (loginData ||registerData && isFocused) {
       if (loginData.status == "success") {
         dispatch(historyAction.historyList(
           loginData.data.token,
@@ -108,21 +109,27 @@ export default function lead_manager({ navigation }) {
         ));
         setIsLodding(true)
       }
+      else if (registerData.status == "success") {
+        dispatch(historyAction.historyList(
+          registerData.data.token,
+          registerData.data.uid,
+          registerData.data.cProfile.toString(),
+          registerData.data.org_id.toString(),
+          registerData.data.org_uid, 
+        ));
+        setIsLodding(true)
+      }
     }
-  }, [loginData, isFocused])
+  }, [loginData,registerData, isFocused])
 
   useEffect(() => {
     if (historyData) {
       if (historyData.status == "200") {
-        // console.log("sucess..........", historyData.data)
         setHistory([historyData.data])
         setIsLodding(false)
-        //   Alert.alert(historyData.message)
       }
       else if (historyData.status == "failed") {
         setIsLodding(false)
-        // Alert.alert(leadList.message)
-        // console.log("sucess..failed........")
       }
       else if (historyData.status == "fail") {
         setIsLodding(false)
@@ -136,8 +143,6 @@ export default function lead_manager({ navigation }) {
 
     }
   }, [historyData])
-
-  // console.log("Hia...................",History)
 
   const HistoryView = ({ item }) => {
     // console.log("item.....HistoryView..............", item)

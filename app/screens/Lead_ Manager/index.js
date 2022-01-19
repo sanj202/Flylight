@@ -12,11 +12,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { leadAction, opportunityAction, leadmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
-
 export default function lead_manager({ navigation, route }) {
 
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
   const [modalVisible2, setModalVisible2] = useState(false);
+  const [askDelete, setaskDelete] = useState(false);
+  const [AllList, setAllList] = useState('')
+  const [Lead, setLead] = useState('')
+  const [Opportunity, setOpportunity] = useState('')
+  const [IsLodding, setIsLodding] = useState(false)
+  const { width, height } = Dimensions.get('window');
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
@@ -27,6 +32,16 @@ export default function lead_manager({ navigation, route }) {
   const [modes, setModes] = useState('date');
   const [shows, setShows] = useState(false);
   const [texts, settexts] = useState(true)
+
+  const dispatch = useDispatch()
+  const isFocused = useIsFocused();
+  const loginData = useSelector(state => state.auth.data)
+  const registerData = useSelector(state => state.varify.otp)
+  const importLead = useSelector(state => state.leads.importLead)
+  const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
+  const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
+  const deletelead = useSelector(state => state.leads.deleteLead)
+  const deleteopportunity = useSelector(state => state.opportunitys.deleteOpportunity)
 
   const onChangeFrom = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -42,7 +57,6 @@ export default function lead_manager({ navigation, route }) {
     showMode('date');
   };
 
-
   const onChangeTo = (event, selectedDates) => {
     const currentDates = selectedDates || dates;
     setShows(Platform.OS === 'ios');
@@ -57,139 +71,40 @@ export default function lead_manager({ navigation, route }) {
     showModes('date');
   };
 
-  const DeleteFunction = () => {
-    setModalVisible2(!modalVisible2)
-  }
   const checkValue = (value) => {
     setisService(value)
   }
 
-  // const [LeadFile, setLeadFile] = useState('');
-  const [newLeadAray, setnewLeadAray] = useState([])
-
-  const selectLeadFile = async () => {
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      console.log('resLead : ' + JSON.stringify(res));
-      // console.log('URI : ' + res.uri);
-      // console.log('Type : ' + res.type);
-      // console.log('File Name : ' + res.name);
-      // console.log('File Size : ' + res.size);
-      // setLeadFile(res);
-      StoreLeadData(res)
-
-      AsyncStorage.getItem('token', (err, token) => {
-        if (token !== null) {
-          AsyncStorage.getItem('cProfile', (err, cProfile) => {
-            if (cProfile !== null) {
-              AsyncStorage.getItem('org_id', (err, org_id) => {
-                if (org_id !== null) {
-                  dispatch(leadAction.importLead(res, token, cProfile, org_id));
-                }
-              })
-            }
-          })
-        }
-      })
-      // console.log("importLeadimportLeadimportLeadimportLead")
-
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-      } else {
-        alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
-      }
-    }
-  };
-  const StoreLeadData = (value) => {
-    let tem = value
-    setnewLeadAray([
-      // ...data
-      tem])
-  }
-
-  // const [opportunityFile, setopportunityFile] = useState('');
-  const [newAray, setnewAray] = useState([])
-
-  const selectOpportunityFile = async () => {
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      console.log('resOpportunity : ' + JSON.stringify(res));
-      // console.log('URI : ' + res.uri);
-      // console.log('Type : ' + res.type);
-      // console.log('File Name : ' + res.name);
-      // console.log('File Size : ' + res.size);
-      // setopportunityFile(res);
-      StoreData(res)
-
-      AsyncStorage.getItem('token', (err, token) => {
-        if (token !== null) {
-          AsyncStorage.getItem('cProfile', (err, cProfile) => {
-            if (cProfile !== null) {
-              AsyncStorage.getItem('org_id', (err, org_id) => {
-                if (org_id !== null) {
-                  dispatch(opportunityAction.importOpportunity(res, token, cProfile, org_id));
-                }
-              })
-            }
-          })
-        }
-      })
-
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-      } else {
-        alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
-      }
-    }
-  };
-  const StoreData = (value) => {
-    let tem = value
-    setnewAray([
-      // ...data
-      tem])
-  }
-
-  const [AllList, setAllList] = useState('')
-  const [Lead, setLead] = useState('')
-  const [Opportunity, setOpportunity] = useState('')
-  const [IsLodding, setIsLodding] = useState(false)
-  const { width, height } = Dimensions.get('window');
-
-  const dispatch = useDispatch()
-  const isFocused = useIsFocused();
-
-  const loginData = useSelector(state => state.auth.data)
-  const importLead = useSelector(state => state.leads.importLead)
-  const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
-
-  const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
-
   useEffect(() => {
-    if (loginData || isFocused) {
+    if (loginData || registerData && isFocused) {
       if (loginData.status == "success") {
+        setIsLodding(true)
         const data = {
           uid: loginData.data.uid,
           profile_id: loginData.data.cProfile.toString(),
           org_uid: loginData.data.org_uid,
         }
         dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
         setIsLodding(true)
+        const data = {
+          uid: registerData.data.uid,
+          profile_id: registerData.data.cProfile.toString(),
+          org_uid: registerData.data.org_uid,
+        }
+        dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
       }
     }
-  }, [loginData, isFocused])
+  }, [loginData, registerData, isFocused])
 
   useEffect(() => {
     if (Lead_OpportunityList) {
       if (Lead_OpportunityList.status == "200") {
+
         setLead(Lead_OpportunityList.data.lead)
         setOpportunity(Lead_OpportunityList.data.opportunity)
-        setAllList([...Lead_OpportunityList.data.lead, Lead_OpportunityList.data.opportunity]);
+        setAllList([...AllList, Lead_OpportunityList.data.lead, Lead_OpportunityList.data.opportunity]);
         CombineArrayData()
         setIsLodding(false)
         dispatch(leadmanagerAction.clearResponse())
@@ -207,6 +122,222 @@ export default function lead_manager({ navigation, route }) {
 
   const CombineArrayData = () => {
     setAllList([...Lead, ...Opportunity]);
+  }
+
+  const [tempId, settempId] = useState('')
+  const [tempType, settempType] = useState('')
+
+  const CencelFunction = () => {
+    settempType('')
+    settempId('')
+    setaskDelete(!askDelete)
+  }
+
+  const CheckDeleteFunction = (value) => {
+    settempId(value.id)
+    settempType(value.type)
+    setaskDelete(!askDelete)
+  }
+
+  const DeleteFunction = () => {
+    if (tempType == "Lead") {
+      if (loginData.status == "success") {
+        setaskDelete(!askDelete)
+        const data = {
+          uid: loginData.data.uid,
+          profile_id: loginData.data.cProfile.toString(),
+          org_uid: loginData.data.org_uid,
+          orgid: loginData.data.user.org_id.toString(),
+          lead_id: tempId
+        }
+        dispatch(leadAction.deleteLead(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        setaskDelete(!askDelete)
+        const data = {
+          uid: registerData.data.uid,
+          profile_id: registerData.data.cProfile.toString(),
+          org_uid: registerData.data.org_uid,
+          orgid: registerData.data.org_id.toString(),
+          lead_id: tempId
+        }
+        dispatch(leadAction.deleteLead(data, registerData.data.token));
+      }
+      setIsLodding(true)
+    }
+    else if (tempType == "Opportunity") {
+      if (loginData.status == "success") {
+        setaskDelete(!askDelete)
+        const data = {
+          uid: loginData.data.uid,
+          profile_id: loginData.data.cProfile.toString(),
+          org_uid: loginData.data.org_uid,
+          orgid: loginData.data.user.org_id.toString(),
+          Opportinity_id: tempId
+        }
+        dispatch(opportunityAction.deleteOpportunity(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        setaskDelete(!askDelete)
+        const data = {
+          uid: registerData.data.uid,
+          profile_id: registerData.data.cProfile.toString(),
+          org_uid: registerData.data.org_uid,
+          orgid: registerData.data.org_id.toString(),
+          Opportinity_id: tempId
+        }
+        dispatch(opportunityAction.deleteOpportunity(data, registerData.data.token));
+      }
+      setIsLodding(true)
+    }
+    else {
+    }
+  }
+
+  const Get_Data = () => {
+    if (loginData.status == "success") {
+      setIsLodding(true)
+      const data = {
+        uid: loginData.data.uid,
+        profile_id: loginData.data.cProfile.toString(),
+        org_uid: loginData.data.org_uid,
+      }
+      dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+    }
+    else if (registerData.status == "success") {
+      setIsLodding(true)
+      const data = {
+        uid: registerData.data.uid,
+        profile_id: registerData.data.cProfile.toString(),
+        org_uid: registerData.data.org_uid,
+      }
+      dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
+    }
+  }
+
+  useEffect(() => {
+    if (deletelead) {
+      if (deletelead.status == "200") {
+        setModalVisible2(!modalVisible2)
+      }
+      else if (deletelead.status == "failed") {
+      }
+      else if (deletelead.status == 'fail') {
+      }
+      setIsLodding(false)
+    }
+    else {
+    }
+  }, [deletelead])
+
+  useEffect(() => {
+    if (deleteopportunity) {
+      if (deleteopportunity.status == "200") {
+        setModalVisible2(!modalVisible2)
+      }
+      else if (deleteopportunity.status == "failed") {
+      }
+      else if (deleteopportunity.status == 'fail') {
+      }
+      setIsLodding(false)
+    }
+    else {
+    }
+  }, [deleteopportunity])
+
+  const DeleteSuccessFully = () => {
+    setModalVisible2(!modalVisible2)
+    dispatch(leadAction.clearResponse());
+    dispatch(opportunityAction.clearResponse());
+    Get_Data()
+  }
+
+  const [newLeadAray, setnewLeadAray] = useState([])
+  const selectLeadFile = async () => {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+      console.log('resLead : ' + JSON.stringify(res));
+      // console.log('URI : ' + res.uri);
+      // console.log('Type : ' + res.type);
+      // console.log('File Name : ' + res.name);
+      // console.log('File Size : ' + res.size);
+      // setLeadFile(res);
+      StoreLeadData(res)
+      if (loginData.status == "success") {
+        // setIsLodding(true)
+        var formdata = new FormData();
+        formdata.append('CSVFILE', res)
+        formdata.append('profile_id', loginData.data.cProfile.toString())
+        formdata.append('orgid', loginData.data.user.org_id.toString())
+        dispatch(leadAction.importLead(formdata, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        // setIsLodding(true)
+        const data = {
+          CSVFILE: res,
+          profile_id: registerData.data.cProfile.toString(),
+          orgid: registerData.data.org_id.toString(),
+        }
+        dispatch(leadAction.importLead(data, registerData.data.token));
+      }
+      console.log("res..................LEad ", res)
+      // console.log("importLeadimportLeadimportLeadimportLead")
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+      } else {
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
+  const StoreLeadData = (value) => {
+    let tem = value
+    setnewLeadAray([
+      // ...data
+      tem])
+  }
+
+  const [newAray, setnewAray] = useState([])
+  const selectOpportunityFile = async () => {
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+      console.log('resOpportunity : ' + JSON.stringify(res));
+      // console.log('URI : ' + res.uri);
+      // console.log('Type : ' + res.type);
+      // console.log('File Name : ' + res.name);
+      // console.log('File Size : ' + res.size);
+      // setopportunityFile(res);
+      StoreData(res)
+      AsyncStorage.getItem('token', (err, token) => {
+        if (token !== null) {
+          AsyncStorage.getItem('cProfile', (err, cProfile) => {
+            if (cProfile !== null) {
+              AsyncStorage.getItem('org_id', (err, org_id) => {
+                if (org_id !== null) {
+                  dispatch(opportunityAction.importOpportunity(res, token, cProfile, org_id));
+                }
+              })
+            }
+          })
+        }
+      })
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+      } else {
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
+  const StoreData = (value) => {
+    let tem = value
+    setnewAray([
+      // ...data
+      tem])
   }
 
   useEffect(() => {
@@ -244,6 +375,8 @@ export default function lead_manager({ navigation, route }) {
 
     }
   }, [importOpportunity])
+
+
 
 
   const AllView = ({ item }) => {
@@ -304,7 +437,7 @@ export default function lead_manager({ navigation, route }) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => DeleteFunction("All")}
+            // onPress={() => DeleteFunction("All")}
             >
               <Image
                 style={{ height: 22, width: 22, }}
@@ -378,7 +511,7 @@ export default function lead_manager({ navigation, route }) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => DeleteFunction("All")}
+              onPress={() => CheckDeleteFunction({ type: "Lead", id: item.id })}
             >
               <Image
                 style={{ height: 22, width: 22, }}
@@ -449,7 +582,7 @@ export default function lead_manager({ navigation, route }) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => DeleteFunction("All")}
+              onPress={() => CheckDeleteFunction({ type: "Opportunity", id: item.id })}
             >
               <Image
                 style={{ height: 22, width: 22, }}
@@ -492,8 +625,10 @@ export default function lead_manager({ navigation, route }) {
         }}
       />
       <View
-        style={{marginHorizontal: '7%', marginTop: '-4%', backgroundColor: '#fff', borderRadius: 20,
-          flexDirection: 'row', justifyContent: 'space-between'}}
+        style={{
+          marginHorizontal: '7%', marginTop: '-4%', backgroundColor: '#fff', borderRadius: 20,
+          flexDirection: 'row', justifyContent: 'space-between'
+        }}
       >
         {isService == 'All' ?
           <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
@@ -923,20 +1058,50 @@ export default function lead_manager({ navigation, route }) {
           <View />
       }
 
+      <Modal animationType="slide" transparent={true}
+        visible={askDelete}
+        onRequestClose={() => { setaskDelete(!askDelete); }}
+      >
+        <View style={styles.centeredView3}>
+          <View style={styles.modalView3}>
+            <Image
+              source={require('../../images/checkmark-circle.png')}
+              style={{ width: 38, height: 38, marginTop: '5%' }}
+            />
+            <Text style={styles.modalText3}>
+              Are you sure,you want to delete this {tempType} ?</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Pressable
+                style={[styles.button3, styles.buttonClose3]}
+
+
+                onPress={() => DeleteFunction()}
+              >
+                <Text style={styles.textStyle3}>YES</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.button3, styles.buttonClose3]}
+                onPress={() => CencelFunction()}
+              >
+                <Text style={styles.textStyle3}>NO</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible2}
-        onRequestClose={() => {
-          // Alert.alert("Modal has been closed.");
-          setModalVisible2(!modalVisible2);
-        }}
+        onRequestClose={() => { DeleteSuccessFully() }}
       >
         <View style={styles.centeredView3}>
           <View style={styles.modalView3}>
             <TouchableOpacity
               style={{ alignSelf: 'flex-end' }}
-              onPress={() => DeleteFunction()}
+              onPress={() => DeleteSuccessFully()}
             >
               <Image
                 style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
@@ -953,7 +1118,7 @@ export default function lead_manager({ navigation, route }) {
               style={[styles.button3, styles.buttonClose3]}
 
 
-              onPress={() => DeleteFunction()}
+              onPress={() => DeleteSuccessFully()}
             >
               <Text style={styles.textStyle3}>OK</Text>
             </Pressable>

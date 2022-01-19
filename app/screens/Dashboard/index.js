@@ -61,21 +61,6 @@ export default function Dashboard({ navigation, route, props }) {
       subtitle: 'Wed, 02 Sep, 14:00PM',
       image: '1'
     },
-    {
-      title: 'Meeting With Mr. Grorge2',
-      subtitle: 'Wed, 08 Sep, 14:00PM2',
-      image: '3'
-    },
-    {
-      title: 'Call XYZ lead2',
-      subtitle: 'Wed, 08 Sep, 14:00PM2',
-      image: '2'
-    },
-    {
-      title: 'Send Remainder to ABC lead2',
-      subtitle: 'Wed, 02 Sep, 14:00PM2',
-      image: '1'
-    },
   ];
 
   const chartConfig = {
@@ -111,14 +96,10 @@ export default function Dashboard({ navigation, route, props }) {
     setModalVisible3(!modalVisible3),
       navigation.navigate("addTab")
   }
-
-  console.log('sdfbsdfsdfjs...........',loginData)
-  console.log('sdfbsdfsdfjs...........',registerData)
-
   useEffect(() => {
-    console.log('inUseEffect ................',loginData,registerData)
     if (loginData || registerData && isFocused) {
       if (loginData.status == "success") {
+        console.log("login...useEffect...........")
         dispatch(dashboardAction.dashboard(
           loginData.data.uid,
           loginData.data.org_uid,
@@ -127,6 +108,7 @@ export default function Dashboard({ navigation, route, props }) {
         ));
       }
       else if (registerData.status == "success") {
+        console.log("register....useEffect..........")
         dispatch(dashboardAction.dashboard(
           registerData.data.uid,
           registerData.data.org_uid,
@@ -135,13 +117,14 @@ export default function Dashboard({ navigation, route, props }) {
         ));
       }
     }
-    Get_Data()
+    // Get_Data()
   }, [loginData,registerData, isFocused])
 
   const Get_Data = () => {
     setIsLodding(true)
     if (loginData || registerData ) {
       if (loginData.status == "success") {
+        console.log("login..............")
         dispatch(dashboardAction.dashboard(
           loginData.data.uid,
           loginData.data.org_uid,
@@ -150,6 +133,7 @@ export default function Dashboard({ navigation, route, props }) {
         ));
       }
       else if (registerData.status == "success") {
+        console.log("register..............")
         dispatch(dashboardAction.dashboard(
           registerData.data.uid,
           registerData.data.org_uid,
@@ -197,8 +181,6 @@ export default function Dashboard({ navigation, route, props }) {
           navigation.navigate('Notification')
         }}
       />
-
-
       {IsLodding == true ?
         <ActivityIndicator size="small" color="#0000ff" />
         :
@@ -230,13 +212,7 @@ export default function Dashboard({ navigation, route, props }) {
               </Card>
             </Pressable >
           </View>
-          <ScrollView refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              color='#0000ff'
-              onRefresh={onRefresh}
-            />
-          }>
+       
             <View
               style={[styles.reView, { marginTop: 0 }]}>
               <Pressable
@@ -262,7 +238,13 @@ export default function Dashboard({ navigation, route, props }) {
             </View>
 
 
-
+            <ScrollView refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              color='#0000ff'
+              onRefresh={onRefresh}
+            />
+          }>
             <View
               style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
               <TouchableOpacity style={{ marginRight: '5%' }}

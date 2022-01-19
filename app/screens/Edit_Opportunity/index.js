@@ -45,6 +45,7 @@ export default function AddContact({ navigation, route }) {
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const opportunityData = useSelector(state => state.opportunitys.newOpportunity)
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -180,9 +181,8 @@ export default function AddContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-            if (loginData) {
+            if (loginData || registerData ) {
                 if (loginData.status == "success") {
-
                     if (route.params.title == 'Edit Opportunity') {
 
                         const data = {
@@ -190,32 +190,11 @@ export default function AddContact({ navigation, route }) {
                             created_by: loginData.data.cProfile.toString(),      //profile id 
                             modified_by: loginData.data.cProfile.toString(),     //profile id 
                             org_uid: loginData.data.org_uid,
-                            uid: loginData.data.uid,
-                            opportunity_id: route.params.Edata.id,
-                            first_name: fname,
-                            last_name: lname,
-                            title: title,
-                            email: email,
-                            email2: Aemail,
-                            dob: formateDate,
-                            gender: gender,
-                            phone: phone,
-                            phone2: Aphone,
-                            fax: fax,
-                            website: website,
-                            lead_source: LeadSource,
-                            lead_status: LeadStatus,
-                            industry: Industry,
-                            number_of_employee: employee,
-                            annual_revenue: revenue,
-                            company: companyName,
-                            address: Address,
-                            city: City,
-                            state: State,
-                            country: Country,
-                            zip: ZipCode,
-                            description: description,
-                            campaign: campaign,
+                            uid: loginData.data.uid,opportunity_id: route.params.Edata.id,
+                            first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,dob: formateDate,
+                            gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
+                            industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,
+                            country: Country,lead_status: LeadStatus,zip: ZipCode,description: description,campaign: campaign,
                         }
                         dispatch(opportunityAction.addOpportunity(data, loginData.data.token,));
                     }
@@ -226,33 +205,43 @@ export default function AddContact({ navigation, route }) {
                             modified_by: loginData.data.cProfile.toString(),    //profile id 
                             org_uid: loginData.data.org_uid,
                             uid: loginData.data.uid,
-                            first_name: fname,
-                            last_name: lname,
-                            title: title,
-                            email: email,
-                            email2: Aemail,
-                            dob: formateDate,
-                            gender: gender,
-                            phone: phone,
-                            phone2: Aphone,
-                            fax: fax,
-                            website: website,
-                            lead_source: LeadSource,
-                            lead_status: LeadStatus,
-                            industry: Industry,
-                            number_of_employee: employee,
-                            annual_revenue: revenue,
-                            company: companyName,
-                            address: Address,
-                            city: City,
-                            state: State,
-                            country: Country,
-                            zip: ZipCode,
-                            description: description,
-                            campaign: campaign,
+                            first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,dob: formateDate,
+                            gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
+                            industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,
+                            country: Country,lead_status: LeadStatus,zip: ZipCode,description: description,campaign: campaign,
                         }
-                        // console.log("data....................", data)
                         dispatch(opportunityAction.addOpportunity(data, loginData.data.token,));
+                    }
+                    setIsLodding(true)
+                }
+                else if (registerData.status == "success") {
+                    if (route.params.title == 'Edit Opportunity') {
+                        const data = {
+                            profile_id: registerData.data.cProfile.toString(),
+                            created_by: registerData.data.cProfile.toString(),      //profile id 
+                            modified_by: registerData.data.cProfile.toString(),     //profile id 
+                            org_uid: registerData.data.org_uid,
+                            uid: registerData.data.uid,opportunity_id: route.params.Edata.id,
+                            first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,dob: formateDate,
+                            gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
+                            industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,
+                            country: Country,lead_status: LeadStatus,zip: ZipCode,description: description,campaign: campaign,
+                        }
+                        dispatch(opportunityAction.addOpportunity(data, registerData.data.token,));
+                    }
+                    else {
+                        const data = {
+                            profile_id: registerData.data.cProfile.toString(),
+                            created_by: registerData.data.cProfile.toString(),      //profile id 
+                            modified_by: registerData.data.cProfile.toString(),    //profile id 
+                            org_uid: registerData.data.org_uid,
+                            uid: registerData.data.uid,
+                            first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,dob: formateDate,
+                            gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
+                            industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,
+                            country: Country,lead_status: LeadStatus,zip: ZipCode,description: description,campaign: campaign,
+                        }
+                        dispatch(opportunityAction.addOpportunity(data, registerData.data.token,));
                     }
                     setIsLodding(true)
                 }
@@ -353,56 +342,6 @@ export default function AddContact({ navigation, route }) {
                             onChangeText={e3 => setlname(e3)}
                             placeholder="Last Name" />
                     </View>
-
-                    {/* {show && (
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            value={date}
-                            mode={mode}
-                            // is24Hour={true}
-                            display="compact"
-                            onChange={onChangeFrom}
-                        />
-                    )} */}
-                    {/* <View style={styles.inputFields}>
-                        <Image
-                            style={styles.icon}
-                            source={require('../../images/DOB.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={dateB}
-                            onChangeText={e4 => setdateB(e4)}
-                            placeholder="Date of Birth" />
-                    </View> */}
-
-                    {/* <TouchableOpacity
-                        style={{
-                            borderWidth: 1,
-                            borderColor: '#C3C7E5',
-                            borderRadius: 10,
-                            // marginHorizontal: '3%',
-                            paddingVertical: 5,
-                            marginTop: '2%'
-                        }}
-                        onPress={showDatepicker} >
-                        <Image style={[styles.icon, {
-                            height: 25, width: '6%', marginLeft: '4%', marginTop: '1%'
-                        }]}
-                            source={require('../../images/DOB.png')}
-                        />
-                        <DateTimePicker
-                            testID="dateTimePicker"
-                            style={{ width: '50%', marginTop: '-8%' }}
-                            value={date}
-                            // moment(date).format("YYYY-MM-DD")
-                            mode={mode}
-                            // dateFormat=''
-                            // is24Hour={true}
-                            display="default"
-                            onChange={onChangeFrom}
-                        />
-                    </TouchableOpacity> */}
 
 <TouchableOpacity
                         style={{

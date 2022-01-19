@@ -6,13 +6,30 @@ import {
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import styles from './styles'
-
+import { useDispatch, useSelector, connect } from 'react-redux';
+import { profileAction, authAction, varificationAction } from '../../redux/Actions';
+import { useIsFocused } from "@react-navigation/core"
 
 
 export default function SideMenu({ navigation }) {
 
+    const dispatch = useDispatch()
+    const isFocused = useIsFocused();
+    const loginData = useSelector(state => state.auth.data)
+    const registerData = useSelector(state => state.varify.otp)
     const { width, height } = Dimensions.get('window');
-    // const window = useWindowDimensions();
+
+    const LogoutSession = () => {
+        if (loginData.status == "success") {
+            dispatch(authAction.clearResponse())
+        }
+        else if (registerData.status == "success") {
+            dispatch(varificationAction.clearResponse())
+        }
+        else {
+        }
+        // navigation.navigate('Logout')
+    };
 
     return (
         <View style={{ flex: 1, }}>
@@ -31,10 +48,11 @@ export default function SideMenu({ navigation }) {
             <View >
                 <ImageBackground
                     source={require('../../images/drawerImage.png')}
-                    style={{ 
+                    style={{
                         height: height / 4.5,
                         //  width: width / 1.48 ,
-                         resizeMode: "contain",}}
+                        resizeMode: "contain",
+                    }}
                 >
                     <TouchableOpacity
                         onPress={() => navigation.closeDrawer()}
@@ -230,7 +248,7 @@ export default function SideMenu({ navigation }) {
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
-                        // onPress={() => navigation.navigate("Logout")}
+                        onPress={() => LogoutSession()}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
