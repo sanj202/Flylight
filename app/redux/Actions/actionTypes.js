@@ -174,6 +174,17 @@ export const LeadOwner = "LeadOwner"
 export const LeadOwner_Success = "LeadOwner_Success"
 export const LeadOwner_Clear = 'LeadOwner_Clear'
 
+//LeadStatus
+export const LeadStatus = "LeadStatus"
+export const LeadStatus_Success = "LeadStatus_Success"
+export const LeadStatus_Clear = 'LeadStatus_Clear'
+
+//Get Compaign
+export const Campaign = "Campaign"
+export const Campaign_Success = "Campaign_Success"
+export const Campaign_Clear = 'Campaign_Clear'
+
+
 
 
 

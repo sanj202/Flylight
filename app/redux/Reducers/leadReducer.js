@@ -2,7 +2,9 @@ import {
     Import_Lead,
     Delete_Lead, Delete_Lead_Success, Delete_Lead_Clear,
     Add_Edit_Lead, Add_Edit_Lead_Success, Add_Edit_Lead_Clear,
-    LeadOwner, LeadOwner_Success, LeadOwner_Clear
+    LeadOwner, LeadOwner_Success, LeadOwner_Clear,
+    Campaign, Campaign_Success, Campaign_Clear,
+    leadstatus, LeadStatus_Success, LeadStatus_Clear, LeadStatus
 } from '../Actions/actionTypes';
 
 const initialState = {
@@ -10,6 +12,8 @@ const initialState = {
     importLead: [],
     leadOwner: [],
     deleteLead: [],
+    campaign: [],
+    leadstatus: []
 };
 const LeadR = (state = initialState, action) => {
     switch (action.type) {
@@ -38,6 +42,31 @@ const LeadR = (state = initialState, action) => {
         case LeadOwner_Clear:
             return {
                 leadOwner: []
+            }
+        case LeadStatus:
+            return {
+                ...state
+            }
+        case LeadStatus_Success:
+            return {
+                leadstatus: action.payload
+            }
+        case LeadStatus_Clear:
+            return {
+                leadstatus: []
+            }
+        case Campaign:
+            return {
+                ...state
+            }
+        case Campaign_Success:
+            return {
+                campaign: action.payload
+
+            }
+        case Campaign_Clear:
+            return {
+                campaign: []
             }
         case Delete_Lead:
             return {

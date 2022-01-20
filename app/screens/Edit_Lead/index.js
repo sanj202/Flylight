@@ -11,18 +11,18 @@ import Header from '../../component/header/index'
 import { leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
+import { Campaign } from '../../redux/Actions/actionTypes';
+import { set } from 'react-native-reanimated';
 
 export default function AddContact({ navigation, route }) {
-    console.log("beack screen ..................",route.params.Edata)
-    
+
     const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
-    const [isFocus3, setIsFocus3] = useState(false);
+    const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
     const [fname, setfname] = useState(route.params.Edata ? route.params.Edata.first_name : "")
     const [lname, setlname] = useState(route.params.Edata ? route.params.Edata.last_name : "")
-    const [dateB, setdateB] = useState(route.params.Edata ? route.params.Edata.dob : "")
     const [gender, setgender] = useState(route.params.Edata ? route.params.Edata.gender : null);
-    const [isFocus, setIsFocus] = useState(false);
+    const [isFocus2, setIsFocus2] = useState(false);
     const [phone, setphone] = useState(route.params.Edata ? route.params.Edata.phone : "")
     const [Aphone, setAphone] = useState(route.params.Edata ? route.params.Edata.phone2 : "")
     const [email, setemail] = useState(route.params.Edata ? route.params.Edata.email : "")
@@ -37,15 +37,18 @@ export default function AddContact({ navigation, route }) {
     const [ZipCode, setZipCode] = useState(route.params.Edata ? route.params.Edata.zip : "")
     const [LeadSource, setLeadSource] = useState(route.params.Edata ? route.params.Edata.lead_source : "")
     const [LeadStatus, setLeadStatus] = useState(route.params.Edata ? route.params.Edata.lead_status : null);
-    const [isFocus2, setIsFocus2] = useState(false);
+    const [isFocus3, setIsFocus3] = useState(false);
     const [Industry, setIndustry] = useState(route.params.Edata ? route.params.Edata.industry : "")
     const [employee, setemployee] = useState(route.params.Edata ? route.params.Edata.number_of_employee : "")
     const [revenue, setrevenue] = useState(route.params.Edata ? route.params.Edata.annual_revenue : "")
     const [campaign, setcampaign] = useState(route.params.Edata ? route.params.Edata.campaign : null);
+    const [isFocus4, setIsFocus4] = useState(false);
     const [description, setdescription] = useState(route.params.Edata ? route.params.Edata.campaign : null);
     const [IsLodding, setIsLodding] = useState(false)
-    const [isFocus1, setIsFocus1] = useState(false);
 
+    const [leadOwnerData, setleadOwnerData] = useState([])
+    const [leadstatusData, setleadstatusData] = useState([])
+    const [campaignData, setcampaignData] = useState([])
     const { width, height } = Dimensions.get('window');
 
     const dispatch = useDispatch()
@@ -55,61 +58,14 @@ export default function AddContact({ navigation, route }) {
     const registerData = useSelector(state => state.varify.otp)
     const leadData = useSelector(state => state.leads.newLead)
     const leadOwner = useSelector(state => state.leads.leadOwner)
-
-    const [selectedValue, setSelectedValue] = useState('');
-    const [selectedValue1, setSelectedValue1] = useState('');
-    const [selectedValue2, setSelectedValue2] = useState('');
-
-
+    const campaignList = useSelector(state => state.leads.campaign)
+    const leadstatusList = useSelector(state => state.leads.leadstatus)
 
     const [modalVisible, setModalVisible] = useState(false);
-
-    const [value, setValue] = useState(null);
-    // const [isFocus, setIsFocus] = useState(false);
-
-    const [value1, setValue1] = useState(null);
-    // const [isFocus1, setIsFocus1] = useState(false);
-
-    const [value2, setValue2] = useState(null);
-    // const [isFocus2, setIsFocus2] = useState(false);
-
-    const [value3, setValue3] = useState(null);
-    // const [isFocus3, setIsFocus3] = useState(false);
-
-    const [value4, setValue4] = useState(null);
-    const [isFocus4, setIsFocus4] = useState(false);
-
-
 
     const data = [
         { label: 'Male', value: 'Male' },
         { label: 'Female', value: 'Female' },
-    ];
-
-    const data1 = [
-        { label: 'Lead', value: 'Lead' },
-        { label: 'Lead2', value: 'Lead2' },
-        { label: 'Lead3', value: 'Lead3' },
-    ];
-
-
-    const data2 = [
-        { label: 'Select list ', value: 'Select list' },
-        { label: 'Select list2', value: 'Select list2' },
-        { label: 'Select list3', value: 'Select list3' },
-    ];
-
-    const data3 = [
-        { label: 'Holi ', value: 'Holi' },
-        { label: 'Holi2', value: 'Holi2' },
-        { label: 'Holi3', value: 'Holi3' },
-    ];
-
-
-    const data4 = [
-        { label: 'Transfer Lead  ', value: 'Transfer Lead' },
-        { label: 'Transfer Lead list2', value: 'Transfer Lead list2' },
-        { label: 'Transfer Lead list3', value: 'Transfer Lead list3' },
     ];
 
     const [dates, setDates] = useState(new Date());
@@ -124,20 +80,14 @@ export default function AddContact({ navigation, route }) {
     const [modes1, setModes1] = useState('date');
     const [shows1, setShows1] = useState(false);
 
-
-
-
-
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, settext] = useState(true)
 
-
     const onChangeFrom = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
-
         setDate(currentDate)
         // let formattedDate = moment(currentDate).format('YYYY-MM-DD');
     };
@@ -200,71 +150,81 @@ export default function AddContact({ navigation, route }) {
     };
 
 
-
-    const [leadOwnerData, setleadOwnerData] = useState([])
-    const [F23, setF23] = useState([])
-    // console.log('leadOwnerData...........',leadOwnerData.map((item,index)=>
-    //         [{lable : item.user.avatar ,value : item.user.avatar }))
     useEffect(() => {
-        if (loginData || isFocused) {
+        if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
-                dispatch(leadAction.LeadOwnerList(
-                    loginData.data.uid,
-                    loginData.data.org_uid,
-                    loginData.data.cProfile.toString(),
-                    loginData.data.token
-                ));
+                const data = {
+                    uid: loginData.data.uid,
+                    org_uid: loginData.data.org_uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                }
+                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+                dispatch(leadAction.CampaignList(data, loginData.data.token));
+                dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+            }
+            else if (registerData.status == "success") {
+                const data = {
+                    profile_id: registerData.data.cProfile.toString(),
+                    org_uid: registerData.data.org_uid,
+                    uid: registerData.data.uid
+                }
+                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+                dispatch(leadAction.CampaignList(data, registerData.data.token));
+                dispatch(leadAction.LeadStatusList(data, registerData.data.token));
             }
         }
-    }, [loginData, isFocused])
-
-    console.log('leadOwner..................', leadOwnerData)
-
-    // useEffect(() => {
-    //     if (leadOwnerData !== []) {
-    //         Object.keys(leadOwnerData).map(el => {
-    //             console.log('key', el);
-    //             leadOwnerData[el].map(sub_el =>
-    //                 setF23([sub_el]),
-    //                 console.log([sub_el]),
-
-    //             );
-    //         })
-    //     }
-    //     else {
-    //         console.log('lease condition ')
-    //     }
-    // }, [leadOwnerData])
+    }, [loginData,registerData, isFocused])
 
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
                     let user = { label: ld.user.name, value: ld.user.id }
-                    if (userData !== undefined) {
-                        setleadOwnerData(userData)
+                    if (user !== undefined) {
+                        setleadOwnerData([user])
                     }
                     return user;
                 })
-                console.log('setLeadOwner....................', userData)
-                // console.log('setLeadOwner....................',leadOwner.data.map((item,index)=>
-                // [{lable : item.user.name  ,value: item.user.id}]))
-                // setleadOwnerData(leadOwner.data ? leadOwner.data.map((item, index) =>
-                //     [{ label: item.user.name, value: item.user.id }]) : [{ label: 'no service', value: "no service " }])
             }
             else if (leadOwner.status == "failed") {
-                // Alert.alert(leadData.message)
-                // dispatch(leadAction.clearResponse());
             }
             else if (leadOwner.status == "fail") {
-                // Alert.alert(leadData.message)
-                // dispatch(leadAction.clearResponse());
             }
         }
         else {
-
         }
     }, [leadOwner])
+
+    useEffect(() => {
+        if (campaignList) {
+            if (campaignList.status == "200") {
+                setcampaignData([{ lable: 'None', value: '0' }])
+            }
+            else if (campaignList.status == "failed") {
+            }
+            else if (campaignList.status == "fail") {
+            }
+        }
+        else {
+        }
+    }, [campaignList])
+
+
+    useEffect(() => {
+        if (leadstatusList) {
+            if (leadstatusList.status == "200") {
+                setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
+                    item ? { label: item.name, value: item.id } : { lable: 'None', value: '0' }))
+            }
+            else if (leadstatusList.status == "failed") {
+            }
+            else if (leadstatusList.status == "fail") {
+            }
+        }
+        else {
+        }
+    }, [leadstatusList])
+
 
     const AddLeadFuction = () => {
         if (title == "") {
@@ -287,7 +247,7 @@ export default function AddContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-            if (loginData || registerData ) {
+            if (loginData || registerData) {
                 if (loginData.status == "success") {
                     if (route.params.title == 'Edit Lead') {
                         const data = {
@@ -296,11 +256,12 @@ export default function AddContact({ navigation, route }) {
                             modified_by: loginData.data.cProfile.toString(),     //profile id 
                             org_uid: loginData.data.org_uid,
                             uid: loginData.data.uid,
-                            lead_id: route.params.Edata.id,first_name: fname,last_name: lname,title: title,email: email,
-                            email2: Aemail,dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,
-                            lead_source: LeadSource,lead_status: LeadStatus,industry: Industry,number_of_employee: employee,
-                            annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,country: Country,
-                            zip: ZipCode,description: description,campaign: campaign,}
+                            lead_id: route.params.Edata.id, first_name: fname, last_name: lname, title: title, email: email,
+                            email2: Aemail, dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website,
+                            lead_source: LeadSource, lead_status: LeadStatus, industry: Industry, number_of_employee: employee,
+                            annual_revenue: revenue, company: companyName, address: Address, city: City, state: State, country: Country,
+                            zip: ZipCode, description: description, campaign: campaign,
+                        }
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
                     }
                     else {
@@ -309,10 +270,11 @@ export default function AddContact({ navigation, route }) {
                             created_by: loginData.data.cProfile.toString(),      //profile id 
                             modified_by: loginData.data.cProfile.toString(),     //profile id 
                             org_uid: loginData.data.org_uid,
-                            uid: loginData.data.uid,first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,
-                            dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
-                            lead_status: LeadStatus,industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,
-                            state: State,country: Country,zip: ZipCode,description: description,campaign: campaign,}
+                            uid: loginData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
+                            dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
+                            lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
+                            state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
+                        }
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
                         // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
                         //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
@@ -330,11 +292,12 @@ export default function AddContact({ navigation, route }) {
                             modified_by: registerData.data.cProfile.toString(),     //profile id 
                             org_uid: registerData.data.org_uid,
                             uid: registerData.data.uid,
-                            lead_id: route.params.Edata.id,first_name: fname,last_name: lname,title: title,email: email,
-                            email2: Aemail,dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,
-                            lead_source: LeadSource,lead_status: LeadStatus,industry: Industry,number_of_employee: employee,
-                            annual_revenue: revenue,company: companyName,address: Address,city: City,state: State,country: Country,
-                            zip: ZipCode,description: description,campaign: campaign,}
+                            lead_id: route.params.Edata.id, first_name: fname, last_name: lname, title: title, email: email,
+                            email2: Aemail, dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website,
+                            lead_source: LeadSource, lead_status: LeadStatus, industry: Industry, number_of_employee: employee,
+                            annual_revenue: revenue, company: companyName, address: Address, city: City, state: State, country: Country,
+                            zip: ZipCode, description: description, campaign: campaign,
+                        }
                         dispatch(leadAction.addLaed(data, registerData.data.token,));
                     }
                     else {
@@ -343,10 +306,11 @@ export default function AddContact({ navigation, route }) {
                             created_by: registerData.data.cProfile.toString(),      //profile id 
                             modified_by: registerData.data.cProfile.toString(),     //profile id 
                             org_uid: registerData.data.org_uid,
-                            uid: registerData.data.uid,first_name: fname,last_name: lname,title: title,email: email,email2: Aemail,
-                            dob: formateDate,gender: gender,phone: phone,phone2: Aphone,fax: fax,website: website,lead_source: LeadSource,
-                            lead_status: LeadStatus,industry: Industry,number_of_employee: employee,annual_revenue: revenue,company: companyName,address: Address,city: City,
-                            state: State,country: Country,zip: ZipCode,description: description,campaign: campaign,}
+                            uid: registerData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
+                            dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
+                            lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
+                            state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
+                        }
                         dispatch(leadAction.addLaed(data, registerData.data.token,));
                         // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
                         //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
@@ -403,6 +367,35 @@ export default function AddContact({ navigation, route }) {
 
             <ScrollView style={{ width: width, height: height }}>
                 <View style={{ margin: '3%', marginTop: '2%' }}>
+
+                    <View style={{ marginTop: '2%' }}>
+                        <Dropdown
+                            style={styles.dropdown3}
+                            placeholderStyle={styles.placeholderStyle3}
+                            selectedTextStyle={styles.selectedTextStyle3}
+                            iconStyle={styles.iconStyle3}
+                            data={leadOwnerData}
+                            maxHeight={60}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={!isFocus ? 'Lead Owner' : '...'}
+                            value={LeadOwner}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                                setLeadOwner(item.value);
+                                setIsFocus(false);
+                            }}
+                            renderLeftIcon={() => (
+                                <View>
+                                    <Image
+                                        style={[styles.icon, { height: 26, width: 20 }]}
+                                        source={require('../../images/list.png')}
+                                    />
+                                </View>
+                            )}
+                        />
+                    </View>
 
                     <View style={styles.inputFields}>
                         <Image
@@ -486,48 +479,33 @@ export default function AddContact({ navigation, route }) {
                         </View>
                     </TouchableOpacity>
                     <View style={{ marginTop: '2%' }}>
-                        {/* {renderLabel()} */}
-
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
-                            // inputSearchStyle={styles.inputSearchStyle3}
                             iconStyle={styles.iconStyle3}
-                            // containerStyle={{ 
-                            //   backgroundColor: 'red', 
-                            //   }}
-                            // activeColor='yellow'
                             data={data}
-                            // search
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus ? 'Select Gender' : '...'}
-                            // searchPlaceholder="Search..."
+                            placeholder={!isFocus2 ? 'Select Gender' : '...'}
                             value={gender}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
+                            onFocus={() => setIsFocus2(true)}
+                            onBlur={() => setIsFocus2(false)}
                             onChange={item => {
                                 setgender(item.value);
-                                setIsFocus(false);
+                                setIsFocus2(false);
                             }}
                             renderLeftIcon={() => (
-
                                 <View>
                                     <Image
-                                        style={[styles.icon, {
-
-                                            height: 22,
-                                            width: 22
-                                        }]}
+                                        style={[styles.icon, { height: 22, width: 22 }]}
                                         source={require('../../images/transgender.png')}
                                     />
                                 </View>
                             )}
                         />
                     </View>
-
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
@@ -717,24 +695,20 @@ export default function AddContact({ navigation, route }) {
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
-                            // inputSearchStyle={styles.inputSearchStyle3}
                             iconStyle={styles.iconStyle3}
-                            data={data2}
-                            // search
-                            maxHeight={100}
+                            data={leadstatusData}
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus2 ? '  Lead Status' : '...'}
-                            // searchPlaceholder="Search..."
+                            placeholder={!isFocus3 ? '  Lead Status' : '...'}
                             value={LeadStatus}
-                            onFocus={() => setIsFocus2(true)}
-                            onBlur={() => setIsFocus2(false)}
+                            onFocus={() => setIsFocus3(true)}
+                            onBlur={() => setIsFocus3(false)}
                             onChange={item => {
                                 setLeadStatus(item.value);
-                                setIsFocus2(false);
+                                setIsFocus3(false);
                             }}
                             renderLeftIcon={() => (
-
                                 <View>
                                     <Image
                                         style={[styles.icon, { height: 18, width: 25, marginRight: '-0.5%', marginTop: '5%' }]}
@@ -795,7 +769,7 @@ export default function AddContact({ navigation, route }) {
                             placeholder="Description" />
                     </View>
 
-                    <View style={styles.inputFields}>
+                    {/* <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, { height: 26, width: '5%', marginLeft: '2.5%' }]}
                             source={require('../../images/list.png')}
@@ -805,6 +779,35 @@ export default function AddContact({ navigation, route }) {
                             value={campaign}
                             onChangeText={e20 => setcampaign(e20)}
                             placeholder="Campaign" />
+                    </View> */}
+
+                    <View style={{ marginTop: '2%' }}>
+                        <Dropdown
+                            style={styles.dropdown3}
+                            placeholderStyle={styles.placeholderStyle3}
+                            selectedTextStyle={styles.selectedTextStyle3}
+                            iconStyle={styles.iconStyle3}
+                            data={campaignData}
+                            maxHeight={60}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={!isFocus4 ? 'Campaign' : '...'}
+                            value={campaign}
+                            onFocus={() => setIsFocus4(true)}
+                            onBlur={() => setIsFocus4(false)}
+                            onChange={item => {
+                                setcampaign(item.value);
+                                setIsFocus4(false);
+                            }}
+                            renderLeftIcon={() => (
+                                <View>
+                                    <Image
+                                        style={[styles.icon, { height: 26, width: 20 }]}
+                                        source={require('../../images/list.png')}
+                                    />
+                                </View>
+                            )}
+                        />
                     </View>
 
 

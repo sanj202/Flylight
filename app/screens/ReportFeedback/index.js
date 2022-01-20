@@ -628,7 +628,7 @@ export default function AddContact({ navigation, route }) {
           </View>
 
           <TouchableOpacity style={styles.button}
-            onPress={() => AddFunction()}
+            // onPress={() => AddFunction()}
           >
             <Text style={[styles.textButton, { fontWeight: 'bold' }]}>SUBMIT</Text>
           </TouchableOpacity>

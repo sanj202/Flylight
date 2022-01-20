@@ -248,6 +248,33 @@ export default function SideMenu({ navigation }) {
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
+                        onPress={() => navigation.navigate('ReportFeedback')}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Image
+                                style={[styles.image2, {
+                                    marginTop: '1.5%',
+                                    marginRight: '3%', height: 15.19, width: 18.56
+                                }]}
+                                source={require('../../images/action.png')}
+                            />
+                            <View style={styles.menus}>
+                                <Text style={styles.items}>
+                                Report Feedback
+                                </Text>
+
+                                <Image
+                                    style={[styles.image3, { marginLeft: '28%' }]}
+                                    source={require('../../images/next.png')}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.menusTop}>
+
+                    <TouchableOpacity
                         onPress={() => LogoutSession()}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
