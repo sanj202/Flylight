@@ -210,6 +210,7 @@ function HomeTabs() {
         name="Action_Manager"
         component={Action_Manager}
         options={{
+          tabBarHideOnKeyboard : true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -273,6 +274,7 @@ function HomeTabs() {
         name='EditProfile'
         component={EditProfile}
         options={{
+          tabBarHideOnKeyboard : true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}

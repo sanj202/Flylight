@@ -195,7 +195,43 @@ const styles = StyleSheet.create({
         fontSize: 21,
         color: '#000000',
         textAlign: "center"
-    }
+    },
+    askModel: {
+        marginHorizontal: '5%',
+        marginTop: '80%',
+        backgroundColor: "white",
+        borderRadius: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      askTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        backgroundColor: '#3373F3',
+        color: 'white',
+        textAlign: "center",
+        paddingVertical: '3%'
+      },
+      askSubtitle: {
+        margin: '5%',
+        fontSize: 21,
+        color: '#000000',
+        textAlign: "center"
+      },
+      askBtn: {
+        paddingVertical: '2%',
+        borderRadius: 10,
+        backgroundColor: "#2196F3",
+      },
+      askBtnText: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 20,
+      }
 });
 
 export default styles

@@ -246,10 +246,10 @@ export default function lead_manager({ navigation, route }) {
   }, [deleteopportunity])
 
   const DeleteSuccessFully = () => {
-    setModalVisible2(!modalVisible2)
     dispatch(leadAction.clearResponse());
     dispatch(opportunityAction.clearResponse());
     Get_Data()
+    setModalVisible2(!modalVisible2)
   }
 
   const [newLeadAray, setnewLeadAray] = useState([])
@@ -1058,35 +1058,28 @@ export default function lead_manager({ navigation, route }) {
           <View />
       }
 
-      <Modal animationType="slide" transparent={true}
-        visible={askDelete}
-        onRequestClose={() => { setaskDelete(!askDelete); }}
-      >
-        <View style={styles.centeredView3}>
-          <View style={styles.modalView3}>
-            <Image
-              source={require('../../images/checkmark-circle.png')}
-              style={{ width: 38, height: 38, marginTop: '5%' }}
-            />
-            <Text style={styles.modalText3}>
-              Are you sure,you want to delete this {tempType} ?</Text>
-            <View style={{ flexDirection: 'row' }}>
-              <Pressable
-                style={[styles.button3, styles.buttonClose3]}
-
-
-                onPress={() => DeleteFunction()}
-              >
-                <Text style={styles.textStyle3}>YES</Text>
-              </Pressable>
-              <Pressable
-                style={[styles.button3, styles.buttonClose3]}
-                onPress={() => CencelFunction()}
-              >
-                <Text style={styles.textStyle3}>NO</Text>
-              </Pressable>
-            </View>
+      <Modal animationType="slide" transparent={true} visible={askDelete}
+        onRequestClose={() => { setaskDelete(!askDelete); }}>
+        <View style={styles.askModel}>
+          <Text style={styles.askTitle}> Are you sure ?</Text>
+          <Text style={styles.askSubtitle}>
+            you want to delete this{'\n'}{tempType} ?</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Pressable
+              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+              onPress={() => DeleteFunction()}
+            >
+              <Text style={styles.askBtnText}>YES</Text>
+            </Pressable>
+            <View style={{ margin: '5%' }} />
+            <Pressable
+              style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+              onPress={() => CencelFunction()}
+            >
+              <Text style={styles.askBtnText}>NO</Text>
+            </Pressable>
           </View>
+          <View style={{ margin: '2%' }} />
         </View>
       </Modal>
 

@@ -146,7 +146,7 @@ export default function Contacts({ navigation }) {
 
     const ContactView = ({ item }) => {
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('ContactsTwo')} >
+            // <TouchableOpacity onPress={() => navigation.navigate('ContactsTwo')} >
                 <View style={styles.listData} >
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '2%' }}>
                         <View>
@@ -183,7 +183,7 @@ export default function Contacts({ navigation }) {
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            // </TouchableOpacity>
         );
     }
 

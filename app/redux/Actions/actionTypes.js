@@ -48,6 +48,11 @@ export const Edit_Profile = 'Edit_Profile'
 export const Edit_Profile_Suceess = 'Edit_Profile_Suceess'
 export const Edit_Profile_Clear = 'Edit_Profile_Clear'
 
+//Edit ProfileImage
+export const Edit_ProfileImage = 'Edit_ProfileImage'
+export const Edit_ProfileImage_Suceess = 'Edit_ProfileImage_Suceess'
+export const Edit_ProfileImage_Clear = 'Edit_ProfileImage_Clear'
+
 
 //Add Contact 
 export const Add_Contact_Manually = 'Add_Contact_Manually'

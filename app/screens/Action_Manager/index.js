@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
+import {
+    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
+} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -70,7 +72,7 @@ export default function action_manager({ navigation }) {
                 setIsLodding(true)
             }
         }
-    }, [loginData,registerData, isFocused])
+    }, [loginData, registerData, isFocused])
 
 
     useEffect(() => {
@@ -144,7 +146,7 @@ export default function action_manager({ navigation }) {
     }
 
     const AddActionFunction = (text) => {
-        if (loginData || registerData ) {
+        if (loginData || registerData) {
             if (loginData.status == "success") {
                 if (text == "Status") {
                     const data = {
@@ -249,9 +251,8 @@ export default function action_manager({ navigation }) {
         setIsVisible(!isVisible)
     }
 
-    const EditData = (value) => {
+    const EditData = () => {
         setIsVisible(!isVisible)
-        if (loginData || registerData ) {
             if (loginData.status == "success") {
                 if (type == "Action") {
                     const data = {
@@ -279,31 +280,30 @@ export default function action_manager({ navigation }) {
                 setIsLodding(true)
             }
             else if (registerData.status == "success") {
-                    if (type == "Action") {
-                        const data = {
-                            uid: registerData.data.uid,
-                            profile_id: registerData.data.cProfile.toString(),
-                            orgId: registerData.data.org_id.toString(),
-                            action: EditingValue,
-                            org_uid: registerData.data.org_uid,
-                            action_id: EditingId
-                        }
-                        dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token));
+                if (type == "Action") {
+                    const data = {
+                        uid: registerData.data.uid,
+                        profile_id: registerData.data.cProfile.toString(),
+                        orgId: registerData.data.org_id.toString(),
+                        action: EditingValue,
+                        org_uid: registerData.data.org_uid,
+                        action_id: EditingId
                     }
-                    else {
-                        // console.log("satsu........................edit")
-                        const data = {
-                            uid: registerData.data.uid,
-                            profile_id: registerData.data.cProfile.toString(),
-                            orgId: registerData.data.org_id.toString(),
-                            status: EditingValue,
-                            org_uid: registerData.data.org_uid,
-                            status_id: EditingId
-                        }
-                        dispatch(actionmanagerAction.add_EditStatus(data, registerData.data.token));
-                    }
-                    setIsLodding(true)
+                    dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token));
                 }
+                else {
+                    // console.log("satsu........................edit")
+                    const data = {
+                        uid: registerData.data.uid,
+                        profile_id: registerData.data.cProfile.toString(),
+                        orgId: registerData.data.org_id.toString(),
+                        status: EditingValue,
+                        org_uid: registerData.data.org_uid,
+                        status_id: EditingId
+                    }
+                    dispatch(actionmanagerAction.add_EditStatus(data, registerData.data.token));
+                }
+                setIsLodding(true)
         }
         // setModalVisible4(!modalVisible4)
 
@@ -317,66 +317,78 @@ export default function action_manager({ navigation }) {
         // }
     }
 
-    const deleteData = (value) => {
-        if (loginData || registerData ) {
-            if (loginData.status == "success") {
-                if (value.type == "Delete_Action") {
-                    const data = {
-                        uid: loginData.data.uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                        orgId: loginData.data.user.org_id.toString(),
-                        action: EditingValue,
-                        org_uid: loginData.data.org_uid,
-                        action_id: value.id
-                    }
-                    dispatch(actionmanagerAction.delete_Action(data, loginData.data.token));
+    const [askDelete, setaskDelete] = useState(false);
+    const [tempId, settempId] = useState('')
+    const [tempType, settempType] = useState('')
+
+    const CencelFunction = () => {
+        settempType('')
+        settempId('')
+        setaskDelete(!askDelete)
+    }
+
+    const CheckDeleteFunction = (value) => {
+        settempId(value.id)
+        settempType(value.type)
+        setaskDelete(!askDelete)
+    }
+
+    const deleteData = () => {
+        if (loginData.status == "success") {
+            if (tempType == "Action") {
+                setaskDelete(!askDelete)
+
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    orgId: loginData.data.user.org_id.toString(),
+                    org_uid: loginData.data.org_uid,
+                    action_id: tempId
                 }
-                else if (value.type == "Delete_status") {
-                    const data = {
-                        uid: loginData.data.uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                        orgId: loginData.data.user.org_id.toString(),
-                        status: EditingValue,
-                        org_uid: loginData.data.org_uid,
-                        status_id: value.id
-                    }
-                    dispatch(actionmanagerAction.delete_Status(data, loginData.data.token));
-                }
-                else {
-                }
-                setIsLodding(true)
+                dispatch(actionmanagerAction.delete_Action(data, loginData.data.token));
             }
-            else if (registerData.status == "success") {
-                if (value.type == "Delete_Action") {
-                    const data = {
-                        uid: registerData.data.uid,
-                        profile_id: registerData.data.cProfile.toString(),
-                        orgId: registerData.data.org_id.toString(),
-                        action: EditingValue,
-                        org_uid: registerData.data.org_uid,
-                        action_id: value.id
-                    }
-                    dispatch(actionmanagerAction.delete_Action(data, registerData.data.token));
+            else if (tempType == "status") {
+                setaskDelete(!askDelete)
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    orgId: loginData.data.user.org_id.toString(),
+                    org_uid: loginData.data.org_uid,
+                    status_id: tempId
                 }
-                else if (value.type == "Delete_status") {
-                    const data = {
-                        uid: registerData.data.uid,
-                        profile_id: registerData.data.cProfile.toString(),
-                        orgId: registerData.data.org_id.toString(),
-                        status: EditingValue,
-                        org_uid: registerData.data.org_uid,
-                        status_id: value.id
-                    }
-                    dispatch(actionmanagerAction.delete_Status(data, registerData.data.token));
-                }
-                else {
-                }
-                setIsLodding(true)
+                dispatch(actionmanagerAction.delete_Status(data, loginData.data.token));
             }
+            else {
+            }
+            setIsLodding(true)
         }
-
-
-
+        else if (registerData.status == "success") {
+            if (tempType == "Action") {
+                setaskDelete(!askDelete)
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                    orgId: registerData.data.org_id.toString(),
+                    org_uid: registerData.data.org_uid,
+                    action_id: tempId
+                }
+                dispatch(actionmanagerAction.delete_Action(data, registerData.data.token));
+            }
+            else if (tempType == "status") {
+                setaskDelete(!askDelete)
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                    orgId: registerData.data.org_id.toString(),
+                    org_uid: registerData.data.org_uid,
+                    status_id: tempId
+                }
+                dispatch(actionmanagerAction.delete_Status(data, registerData.data.token));
+            }
+            else {
+            }
+            setIsLodding(true)
+        }
         // setModalVisible4(!modalVisible4)
         // if (value == 'Status') {
         //     setModalVisible(!modalVisible)
@@ -450,8 +462,9 @@ export default function action_manager({ navigation }) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => deleteData({ type: 'Delete_status', id: item.id })}
+                        onPress={() => CheckDeleteFunction({ type: 'status', id: item.id })}
                     // onPress={() => setModalVisible2(true)}
+
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', }}
@@ -478,7 +491,7 @@ export default function action_manager({ navigation }) {
                     </TouchableOpacity>
                     <TouchableOpacity
                         // onPress={() => setModalVisible2(true)}
-                        onPress={() => deleteData({ type: 'Delete_Action', id: item.id })}
+                        onPress={() => CheckDeleteFunction({ type: 'Action', id: item.id })}
                     >
                         <Image
                             style={{ height: 25, width: 25, marginTop: '8%', }}
@@ -675,18 +688,14 @@ export default function action_manager({ navigation }) {
 
             <BottomSheet
                 modalProps={{
-                    animationType: 'fade',
-                    hardwareAccelerated: true,
-                    onRequestClose: () => {
-                        setIsVisible(false);
-                    },
-                }}
-                isVisible={isVisible}>
+                    animationType: 'fade', hardwareAccelerated: true,
+                    onRequestClose: () => { setIsVisible(false); }
+                }} isVisible={isVisible}>
                 <View style={{ backgroundColor: '#fff', padding: '5%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
                     <Text style={styles.modalText3}>Edit {isService} Manager</Text>
                     <View style={styles.listDataModal}>
                         <Image
-                            style={[styles.icon, { height: 24, width: 26, marginTop: '5%', marginLeft: '2%' }]}
+                            style={[styles.icon, { height: 24, width: 26, marginTop: '4%', marginHorizontal:'1.5%' }]}
                             source={require('../../images/statusnet.png')}
                         />
                         <TextInput
@@ -703,8 +712,32 @@ export default function action_manager({ navigation }) {
                         <Text style={[styles.textStyle3]}>Update</Text>
                     </Pressable>
                 </View>
-
             </BottomSheet>
+
+
+            <Modal animationType="slide" transparent={true} visible={askDelete}
+                onRequestClose={() => { setaskDelete(!askDelete); }}>
+                <View style={styles.askModel}>
+                    <Text style={styles.askTitle}> Are you sure ?</Text>
+                    <Text style={styles.askSubtitle}>
+                        you want to delete this{'\n'}{tempType} ?</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Pressable
+                            style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+                            onPress={() => deleteData()}>
+                            <Text style={styles.askBtnText}>YES</Text>
+                        </Pressable>
+                        <View style={{ margin: '5%' }} />
+                        <Pressable
+                            style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+                            onPress={() => CencelFunction()}>
+                            <Text style={styles.askBtnText}>NO</Text>
+                        </Pressable>
+                    </View>
+                    <View style={{ margin: '2%' }} />
+                </View>
+            </Modal>
+
 
 
             <Modal
@@ -721,7 +754,7 @@ export default function action_manager({ navigation }) {
                     <View style={styles.modalView3}>
                         <TouchableOpacity
                             style={{ alignSelf: 'flex-end' }}
-                            // onPress={() => DeleteFunction()}
+                        // onPress={() => DeleteFunction()}
                         >
                             <Image
                                 style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
@@ -740,8 +773,8 @@ export default function action_manager({ navigation }) {
                                 paddingRight: 30, paddingLeft: 30,
                                 paddingTop: 5, paddingBottom: 5, marginTop: '1%',
                             }]}
-                            // onPress={() => DeleteFunction()}
-                            >
+                        // onPress={() => DeleteFunction()}
+                        >
                             <Text style={{ fontSize: 21, color: '#FFFFFF', textAlign: 'center', padding: 5, paddingLeft: 20, paddingRight: 20 }}>OK</Text>
                         </Pressable>
                     </View>

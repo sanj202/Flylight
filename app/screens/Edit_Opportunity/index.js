@@ -444,6 +444,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={phone}
+                            keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
                     </View>
@@ -459,6 +460,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={Aphone}
+                            keyboardType='numeric'
                             onChangeText={e6 => setAphone(e6)}
                             placeholder="Alternate Mobile Number"
                         />
@@ -596,6 +598,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={ZipCode}
+                            keyboardType='numeric'
                             onChangeText={e16 => setZipCode(e16)}
                             placeholder="Zip Code " />
                     </View>

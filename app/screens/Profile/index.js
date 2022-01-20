@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { profileAction, authAction, varificationAction } from '../../redux/Actions';
 import { useIsFocused } from "@react-navigation/core"
+import DocumentPicker from 'react-native-document-picker';
 
 export default function AddContact({ navigation }) {
 
@@ -25,21 +26,21 @@ export default function AddContact({ navigation }) {
         if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
                 setIsLodding(true)
-                dispatch(profileAction.profile(
-                    loginData.data.uid,
-                    loginData.data.org_uid,
-                    loginData.data.cProfile.toString(),
-                    loginData.data.token
-                ));
+                const data = {
+                    uid: loginData.data.uid,
+                    org_uid: loginData.data.org_uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                }
+                dispatch(profileAction.profile(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 setIsLodding(true)
-                dispatch(profileAction.profile(
-                    registerData.data.uid,
-                    registerData.data.org_uid,
-                    registerData.data.cProfile.toString(),
-                    registerData.data.token
-                ));
+                const data = {
+                    uid: registerData.data.uid,
+                    org_uid: registerData.data.org_uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                }
+                dispatch(profileAction.profile(data, registerData.data.token));
             }
         }
     }, [loginData, registerData, isFocused])
@@ -47,8 +48,8 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (profileData) {
             if (profileData.status == "200") {
-                setIsLodding(false)
                 setUser(profileData.data.user)
+                setIsLodding(false)
                 dispatch(profileAction.clearResponse())
             }
             else if (profileData == '') {
@@ -63,6 +64,65 @@ export default function AddContact({ navigation }) {
         }
     }, [profileData])
 
+
+    const [newLeadAray, setnewLeadAray] = useState('')
+    const selectLeadFile = async () => {
+        try {
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.images]});
+
+            console.log('resPic : ' + JSON.stringify(res));
+            console.log('URI : ' + res.uri);
+            console.log('Type : ' + res.type);
+            console.log('File Name : ' + res.name);
+            console.log('File Size : ' + res.size);
+
+
+       console.log("Url.....................................",JSON.stringify(res.uri))
+
+            // var photo = {
+            //     uri: this.state.picturePath, // CameralRoll Url
+            //     type: 'image/jpeg',
+            //     name: 'photo.jpg',
+            // };
+
+            StoreLeadData(res)
+            // console.log("res................Profile pick ", res)
+            if (loginData.status == "success") {
+                // setIsLodding(true)
+                var formdata = new FormData();
+                formdata.append('userAvatar', res)
+                 
+
+                // dispatch(profileAction.updateAvatar(formdata, loginData.data.uid, loginData.data.token));
+            }
+            else if (registerData.status == "success") {
+                // setIsLodding(true)
+                const data = {
+                    CSVFILE: res,
+                    profile_id: registerData.data.cProfile.toString(),
+                    orgid: registerData.data.org_id.toString(),
+                }
+                dispatch(profileAction.updateAvatar(data, registerData.data.token));
+            }
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+            } else {
+                alert('Unknown Error: ' + JSON.stringify(err));
+                throw err;
+            }
+        }
+    };
+
+    // console.log("image/................................", newLeadAray)
+
+    const StoreLeadData = (value) => {
+        let tem = value
+        setnewLeadAray([
+            // ...data
+            tem])
+    }
+
     const LogoutSession = () => {
         if (loginData.status == "success") {
             dispatch(authAction.clearResponse())
@@ -72,20 +132,15 @@ export default function AddContact({ navigation }) {
         }
         else {
         }
-        // navigation.navigate('Logout')
     };
 
     return (
         <View style={{ flex: 1, width: width, height: height }}>
             <StatusBar
                 barStyle="dark-content"
-                // dark-content, light-content and default
                 hidden={false}
-                //To hide statusBar
                 backgroundColor="#2B6EF2"
-                //Background color of statusBar only works for Android
                 translucent={false}
-                //allowing light, but not detailed shapes
                 networkActivityIndicatorVisible={true}
             />
 
@@ -156,18 +211,34 @@ export default function AddContact({ navigation }) {
                 width: 128, height: 128, borderRadius: 80, alignSelf: 'center'
             }}>
                 {user.avatar ?
-                    <Image
-                        // source={require('../../images/avtar.jpg')}
-                        // source={{ uri: user.avatar }}
-                        source={require('../../images/avtar.jpg')}
-                        style={{ height: 121, width: 121, borderRadius: 80, marginTop: '2.5%', alignSelf: 'center' }}
-                    />
+                    <View style={{ flexDirection: 'row' }}>
+                        {/* <Text>{user.avatar}</Text> */}
+                        <Image
+                            // source={require('../../images/avtar.jpg')}
+                            source={{ uri: ` 'http://3.23.113.168/admin/public/uploads/';/avatar/${user.avatar}` }}
+                            // source={require('../../images/avtar.jpg')}
+                            style={{
+                                height: 121, width: 121, borderRadius: 80,
+                                marginTop: '2.5%',
+                                alignSelf: 'center'
+                            }}
+                        />
+                        <TouchableOpacity
+                            onPress={() => selectLeadFile()} >
+                            <Text>Edit-Picture</Text>
+                        </TouchableOpacity>
+                    </View>
                     :
-                    <Image
-                        source={require('../../images/avtar.jpg')}
-                        // source={{ uri: user.avatar }}
-                        style={{ height: 121, width: 121, borderRadius: 80, marginTop: '2.5%', alignSelf: 'center' }}
-                    />
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image
+                            source={require('../../images/avtar.jpg')}
+                            // source={{ uri: user.avatar }}
+                            style={{ height: 121, width: 121, borderRadius: 80, marginTop: '2.5%', alignSelf: 'center' }}
+                        />
+                        <TouchableOpacity>
+                            <Text>Edit-Picture</Text>
+                        </TouchableOpacity>
+                    </View>
                 }
                 <Text style={{
                     marginTop: '5%',
