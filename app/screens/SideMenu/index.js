@@ -3,7 +3,7 @@ import {
     Dimensions, View, Text, SafeAreaView, Image,
     useWindowDimensions, ImageBackground, StatusBar
 } from 'react-native'
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import styles from './styles'
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -91,7 +91,7 @@ export default function SideMenu({ navigation }) {
             </View>
 
 
-            <View style={{ marginLeft: '3%', marginRight: '3%' }}>
+            <ScrollView style={{ marginLeft: '3%', marginRight: '3%' }}>
 
                 <View style={styles.menusTop}>
 
@@ -178,6 +178,33 @@ export default function SideMenu({ navigation }) {
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
+                        onPress={() => navigation.navigate('Staff_Members')}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Image
+                                style={[styles.image2, {
+                                    marginRight: '4%',
+                                    height: 18, width: 15.75
+                                }]}
+                                source={require('../../images/Lead.png')}
+                            />
+                            <View style={styles.menus}>
+                                <Text style={styles.items}>
+                                    Staff Members
+                                </Text>
+
+                                <Image
+                                    style={[styles.image3, { marginLeft: '28%' }]}
+                                    source={require('../../images/next.png')}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.menusTop}>
+
+                    <TouchableOpacity
                         onPress={() => navigation.navigate('History')}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
@@ -245,32 +272,7 @@ export default function SideMenu({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.menusTop}>
 
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('ReportFeedback')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, {
-                                    marginTop: '1.5%',
-                                    marginRight: '3%', height: 15.19, width: 18.56
-                                }]}
-                                source={require('../../images/action.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                Report Feedback
-                                </Text>
-
-                                <Image
-                                    style={[styles.image3, { marginLeft: '28%' }]}
-                                    source={require('../../images/next.png')}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
 
                 <View style={styles.menusTop}>
 
@@ -296,10 +298,7 @@ export default function SideMenu({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-            </View>
-
-
-
+            </ScrollView>
         </View>
     );
 }

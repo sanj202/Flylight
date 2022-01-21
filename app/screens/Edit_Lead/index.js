@@ -16,6 +16,9 @@ import { set } from 'react-native-reanimated';
 
 export default function AddContact({ navigation, route }) {
 
+    console.log("route data...................",route.params.Edata)
+    
+
     const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
     const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
@@ -32,7 +35,8 @@ export default function AddContact({ navigation, route }) {
     const [fax, setfax] = useState(route.params.Edata ? route.params.Edata.fax : "")
     const [Address, setAddress] = useState(route.params.Edata ? route.params.Edata.address : "")
     const [City, setCity] = useState(route.params.Edata ? route.params.Edata.city : "")
-    const [State, setState] = useState(route.params.Edata ? route.params.Edata.state : "")
+    const [State, setState] = useState(route.params.Edata ? route.params.Edata.state : null)
+    const [isFocus5, setIsFocus5] = useState(false);
     const [Country, setCountry] = useState(route.params.Edata ? route.params.Edata.country : "")
     const [ZipCode, setZipCode] = useState(route.params.Edata ? route.params.Edata.zip : "")
     const [LeadSource, setLeadSource] = useState(route.params.Edata ? route.params.Edata.lead_source : "")
@@ -49,6 +53,7 @@ export default function AddContact({ navigation, route }) {
     const [leadOwnerData, setleadOwnerData] = useState([])
     const [leadstatusData, setleadstatusData] = useState([])
     const [campaignData, setcampaignData] = useState([])
+    const [stateData, setstateData] = useState([])
     const { width, height } = Dimensions.get('window');
 
     const dispatch = useDispatch()
@@ -60,6 +65,8 @@ export default function AddContact({ navigation, route }) {
     const leadOwner = useSelector(state => state.leads.leadOwner)
     const campaignList = useSelector(state => state.leads.campaign)
     const leadstatusList = useSelector(state => state.leads.leadstatus)
+    const stateList = useSelector(state => state.leads.states)
+    const ZipList =  useSelector(state => state.leads.ByZip) 
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -89,14 +96,12 @@ export default function AddContact({ navigation, route }) {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate)
-        // let formattedDate = moment(currentDate).format('YYYY-MM-DD');
     };
     const showMode = (currentMode) => {
         setShow(!show);
         setMode(currentMode);
     };
     const showDatepicker = () => {
-        // setFollowDate(false)
         settext(false)
         showMode('date');
     };
@@ -161,6 +166,7 @@ export default function AddContact({ navigation, route }) {
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
                 dispatch(leadAction.CampaignList(data, loginData.data.token));
                 dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+                dispatch(leadAction.StateList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 const data = {
@@ -171,9 +177,33 @@ export default function AddContact({ navigation, route }) {
                 dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
                 dispatch(leadAction.CampaignList(data, registerData.data.token));
                 dispatch(leadAction.LeadStatusList(data, registerData.data.token));
+                dispatch(leadAction.StateList(data, registerData.data.token));
             }
         }
-    }, [loginData,registerData, isFocused])
+    }, [loginData, registerData, isFocused])
+
+    useEffect(() => {
+        if (ZipCode) {
+            if (ZipCode.length == 6) {
+                if (loginData.status == "success") {
+                    const data = {
+                        uid: loginData.data.uid,
+                        zipcode: ZipCode}
+                    dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
+                }
+                else if (registerData.status == "success") {
+                    const data = {
+                        uid: registerData.data.uid,
+                        zipcode: ZipCode}
+                    dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
+                }
+            }
+            else {
+            }
+        }
+        else {
+        }
+    }, [ZipCode])
 
     useEffect(() => {
         if (leadOwner) {
@@ -214,7 +244,7 @@ export default function AddContact({ navigation, route }) {
         if (leadstatusList) {
             if (leadstatusList.status == "200") {
                 setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
-                    item ? { label: item.name, value: item.id } :  { label: 'None', value: 'None' }))
+                    item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' }))
             }
             else if (leadstatusList.status == "failed") {
             }
@@ -224,6 +254,34 @@ export default function AddContact({ navigation, route }) {
         else {
         }
     }, [leadstatusList])
+
+    useEffect(() => {
+        if (stateList) {
+            setstateData(stateList.states && stateList.states.map((item, index) =>
+                item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
+        }
+        else {
+        }
+    }, [stateList])
+
+    useEffect(() => {
+        if (ZipList) {
+            if (ZipList.status == "success") {
+                setState(ZipList.data.State)
+                setCity(ZipList.data.City)
+            }
+            else if (ZipList.status == "failed") {
+                setState(null)
+                setCity('')
+            }
+            else if (ZipList.status == "fail") {
+                setState(null)
+                setCity('')
+            }
+        }
+        else {
+        }
+    }, [ZipList])
 
 
     const AddLeadFuction = () => {
@@ -276,10 +334,10 @@ export default function AddContact({ navigation, route }) {
                             state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
                         }
                         dispatch(leadAction.addLaed(data, loginData.data.token,));
-                        // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                        //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
-                        //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(''), setCountry(''),
-                        //     setZipCode(''), setdescription(''), setcampaign('')
+                        setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+                            setZipCode(''), setdescription(''), setcampaign(null)
                     }
                     setIsLodding(true)
                 }
@@ -312,10 +370,10 @@ export default function AddContact({ navigation, route }) {
                             state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
                         }
                         dispatch(leadAction.addLaed(data, registerData.data.token,));
-                        // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                        //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(''), setIndustry(''),
-                        //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(''), setCountry(''),
-                        //     setZipCode(''), setdescription(''), setcampaign('')
+                        setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+                            setZipCode(''), setdescription(''), setcampaign(null)
                     }
                     setIsLodding(true)
                 }
@@ -616,37 +674,46 @@ export default function AddContact({ navigation, route }) {
                             placeholder="Address" />
                     </View>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View style={[styles.inputFields, { width: '49%' }]}>
-                            <Image
-                                style={[styles.icon, {
-                                    height: 29, width: '9%',
-                                    marginRight: '4%', marginLeft: '8%'
-                                }]}
-                                source={require('../../images/city.png')}
-                            />
-                            <TextInput
-                                style={{ width: '80%' }}
-                                value={City}
-                                onChangeText={e13 => setCity(e13)}
-                                placeholder="City" />
-                        </View>
+                    <View style={{ marginTop: '2%' }}>
+                        <Dropdown
+                            style={styles.dropdown3}
+                            placeholderStyle={styles.placeholderStyle3}
+                            selectedTextStyle={styles.selectedTextStyle3}
+                            iconStyle={styles.iconStyle3}
+                            data={stateData}
+                            maxHeight={160}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={!isFocus5 ? 'State' : '...'}
+                            value={State}
+                            onFocus={() => setIsFocus5(true)}
+                            onBlur={() => setIsFocus5(false)}
+                            onChange={item => {
+                                console.log("value of ............",item)
+                                setState(item.value);
+                                setIsFocus5(false);
+                            }}
+                            renderLeftIcon={() => (
+                                <View>
+                                    <Image
+                                        style={[styles.icon, { height: 22, width: 22 }]}
+                                        source={require('../../images/state.png')}
+                                    />
+                                </View>
+                            )}
+                        />
+                    </View>
 
-                        <View
-                            style={[styles.inputFields, { marginLeft: '2%', marginRight: '5%', width: '49%' }]}>
-                            <Image
-                                style={[styles.icon, {
-                                    height: 25, width: '15%',
-                                    marginRight: '4%'
-                                }]}
-                                source={require('../../images/state.png')}
-                            />
-                            <TextInput
-                                style={{ width: '80%' }}
-                                value={State}
-                                onChangeText={e14 => setState(e14)}
-                                placeholder="State" />
-                        </View>
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
+                            source={require('../../images/city.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={City}
+                            onChangeText={e13 => setCity(e13)}
+                            placeholder="City" />
                     </View>
 
                     <View style={styles.inputFields}>
@@ -670,6 +737,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={ZipCode}
+                            maxLength={6}
                             keyboardType='numeric'
                             onChangeText={e16 => setZipCode(e16)}
                             placeholder="Zip Code " />

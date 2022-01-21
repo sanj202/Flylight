@@ -184,6 +184,16 @@ export const Campaign = "Campaign"
 export const Campaign_Success = "Campaign_Success"
 export const Campaign_Clear = 'Campaign_Clear'
 
+//get state 
+export const All_State = "All_State"
+export const All_State_Success = "All_State_Success"
+export const All_State_Clear = 'All_State_Clear'
+
+//get state 
+export const ZipData = "ZipData"
+export const ZipData_Success = "ZipData_Success"
+export const ZipData_Clear = 'ZipData_Clear'
+
 
 
 

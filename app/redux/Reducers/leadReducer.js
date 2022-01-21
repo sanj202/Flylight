@@ -4,7 +4,9 @@ import {
     Add_Edit_Lead, Add_Edit_Lead_Success, Add_Edit_Lead_Clear,
     LeadOwner, LeadOwner_Success, LeadOwner_Clear,
     Campaign, Campaign_Success, Campaign_Clear,
-    leadstatus, LeadStatus_Success, LeadStatus_Clear, LeadStatus
+    LeadStatus, LeadStatus_Success, LeadStatus_Clear,
+    All_State, All_State_Success, All_State_Clear,
+    ZipData, ZipData_Success, ZipData_Clear
 } from '../Actions/actionTypes';
 
 const initialState = {
@@ -13,7 +15,9 @@ const initialState = {
     leadOwner: [],
     deleteLead: [],
     campaign: [],
-    leadstatus: []
+    leadstatus: [],
+    states: [],
+    ByZip: []
 };
 const LeadR = (state = initialState, action) => {
     switch (action.type) {
@@ -80,6 +84,34 @@ const LeadR = (state = initialState, action) => {
         case Delete_Lead_Clear:
             return {
                 deleteLead: []
+            }
+
+        case All_State:
+            return {
+                ...state
+            }
+        case All_State_Success:
+            return {
+                ...state,
+                states: action.payload
+            }
+        case All_State_Clear:
+            return {
+                states: []
+            }
+
+        case ZipData:
+            return {
+                ...state
+            }
+        case ZipData_Success:
+            return {
+                ...state,
+                ByZip:action.payload
+            }
+        case ZipData_Clear:
+            return {
+                ByZip: []
             }
 
 

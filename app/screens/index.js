@@ -29,6 +29,7 @@ export { default as History } from '../screens/History'
 export { default as HistoryOne } from '../screens/HistoryOne'
 export { default as History_Feedback } from '../screens/History_Feedback'
 export {default as Splash} from '../screens/Splash'
+export {default as Staff_Members} from '../screens/Staff_Members'
 //stack screens
 
 // export { default as HomeStack } from '../navigations/bottomStacksScreens/homeStack'

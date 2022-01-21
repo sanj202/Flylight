@@ -101,7 +101,6 @@ export default function lead_manager({ navigation, route }) {
   useEffect(() => {
     if (Lead_OpportunityList) {
       if (Lead_OpportunityList.status == "200") {
-
         setLead(Lead_OpportunityList.data.lead)
         setOpportunity(Lead_OpportunityList.data.opportunity)
         setAllList([...AllList, Lead_OpportunityList.data.lead, Lead_OpportunityList.data.opportunity]);
