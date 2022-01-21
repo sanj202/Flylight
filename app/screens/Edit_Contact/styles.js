@@ -11,17 +11,17 @@ const styles = StyleSheet.create({
   },
   inputFields: {
     flexDirection: 'row',
-    borderWidth: 1,
-    padding: 3,
+    borderWidth: 0.5,
     borderColor: '#C3C7E5',
     borderRadius: 10,
-    marginTop: '2%',
+    marginTop: '3%',
+    height: 45
   },
   icon: {
     height: 22,
     width: '5%',
-    margin:'2%',
-    marginTop:'1%'
+    margin: '2%',
+    marginTop: '1%'
   },
   button: {
     backgroundColor: '#3373F3',
@@ -40,6 +40,13 @@ const styles = StyleSheet.create({
     height: 28
   },
 
+  icon: {
+    height: 20,
+    width: 18,
+    marginRight: '2%',
+    marginTop: '3%',
+    marginLeft: '2%'
+  },
   // ---------------------------------------------
 
   headerView2: {
@@ -51,14 +58,14 @@ const styles = StyleSheet.create({
   },
   headerView3: {
     paddingTop: '2%',
-  
+
   },
   title3: {
     textAlign: 'center',
     fontSize: 21,
     marginTop: '3%',
     fontWeight: 'bold',
-    color:'#000000'
+    color: '#000000'
   },
   btn3: {
     marginTop: '5%',
@@ -94,44 +101,43 @@ const styles = StyleSheet.create({
   container3: {
     backgroundColor: 'white',
     padding: 16,
-},
-dropdown3: {
-    height: 45,
+  },
+  dropdown3: {
+    height: 50,
     borderColor: '#C3C7E5',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderRadius: 10,
     paddingHorizontal: 8,
-},
-icon3: {
+  },
+  icon3: {
     marginRight: 5,
-},
-label3: {
-    // position: 'absolute',
+  },
+  label3: {
     backgroundColor: 'white',
     left: 22,
     top: 8,
     zIndex: 999,
     paddingHorizontal: 8,
     fontSize: 14,
-},
-placeholderStyle3: {
+  },
+  placeholderStyle3: {
     fontSize: 13,
-    color:'#B9BAC8',
-    fontFamily:'Roboto'
-},
-selectedTextStyle3: {
+    color: '#B9BAC8',
+    fontFamily: 'Roboto'
+  },
+  selectedTextStyle3: {
     fontSize: 13,
-    color:'#B9BAC8',
-    fontFamily:'Roboto'
-},
-iconStyle3: {
+    color: '#B9BAC8',
+    fontFamily: 'Roboto'
+  },
+  iconStyle3: {
     width: 20,
     height: 20,
-},
-inputSearchStyle3: {
+  },
+  inputSearchStyle3: {
     height: 40,
     fontSize: 16,
-},
+  },
 });
 
 export default styles

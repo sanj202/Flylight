@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-  Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
-} from 'react-native';
+import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+  Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper';
 import Header from '../../component/header';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import { addcontactManuallyAction } from '../../redux/Actions/index'
+import { addcontactManuallyAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
+import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation }) {
 
@@ -45,9 +44,17 @@ export default function AddContact({ navigation }) {
   const [IsLodding, setIsLodding] = useState(false)
   const { width, height } = Dimensions.get('window');
 
+  const [leadOwnerData, setleadOwnerData] = useState([])
+  const [leadstatusData, setleadstatusData] = useState([])
+  const [campaignData, setcampaignData] = useState([])
+
   const dispatch = useDispatch()
+  const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
   const registerData = useSelector(state => state.varify.otp)
+  const leadOwner = useSelector(state => state.leads.leadOwner)
+  const campaignList = useSelector(state => state.leads.campaign)
+  const leadstatusList = useSelector(state => state.leads.leadstatus)
   const Data = useSelector(state => state.ManuallyAddContact.data)
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
@@ -64,34 +71,95 @@ export default function AddContact({ navigation }) {
     setMode(currentMode);
   };
   const showDatepicker = () => {
-    // setFollowDate(false)
     settext(false)
     showMode('date');
   };
-
 
   const data = [
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
   ];
-  const data1 = [
-    { label: '  Select a Campagin', value: '  Select a Campagin' },
-    { label: '  Select a Campagin 2', value: '  Select a Campagin 2' },
-  ];
-  const data2 = [
-    { label: 'Lead Status ', value: 'Lead Status' },
-    { label: 'Lead status2', value: 'Lead Status2' },
-  ];
-  const data3 = [
-    { label: 'Lead Owner ', value: 'Lead Owner' },
-    { label: 'Lead Owner 2', value: 'Lead Owner 2' },
-  ];
-
+  
   const AddFunction = () => {
     setModalVisible2(!modalVisible2)
     dispatch(addcontactManuallyAction.clearResponse());
     navigation.navigate("AddContact")
   };
+
+  useEffect(() => {
+    if (loginData || registerData && isFocused) {
+      if (loginData.status == "success") {
+        const data = {
+          uid: loginData.data.uid,
+          org_uid: loginData.data.org_uid,
+          profile_id: loginData.data.cProfile.toString(),
+        }
+        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+        dispatch(leadAction.CampaignList(data, loginData.data.token));
+        dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        const data = {
+          profile_id: registerData.data.cProfile.toString(),
+          org_uid: registerData.data.org_uid,
+          uid: registerData.data.uid
+        }
+        dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+        dispatch(leadAction.CampaignList(data, registerData.data.token));
+        dispatch(leadAction.LeadStatusList(data, registerData.data.token));
+      }
+    }
+  }, [loginData, registerData, isFocused])
+
+  useEffect(() => {
+    if (leadOwner) {
+      if (leadOwner.status == "200") {
+        let userData = leadOwner.data && leadOwner.data.map((ld) => {
+          let user = { label: ld.user.name, value: ld.user.id }
+          if (user !== undefined) {
+            setleadOwnerData([user])
+          }
+          return user;
+        })
+      }
+      else if (leadOwner.status == "failed") {
+      }
+      else if (leadOwner.status == "fail") {
+      }
+    }
+    else {
+    }
+  }, [leadOwner])
+
+  useEffect(() => {
+    if (campaignList) {
+      if (campaignList.status == "200") {
+        setcampaignData([{ label: 'None', value: 'None' },])
+      }
+      else if (campaignList.status == "failed") {
+      }
+      else if (campaignList.status == "fail") {
+      }
+    }
+    else {
+    }
+  }, [campaignList])
+
+
+  useEffect(() => {
+    if (leadstatusList) {
+      if (leadstatusList.status == "200") {
+        setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
+          item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' }))
+      }
+      else if (leadstatusList.status == "failed") {
+      }
+      else if (leadstatusList.status == "fail") {
+      }
+    }
+    else {
+    }
+  }, [leadstatusList])
 
 
   const AddContactFuction = () => {
@@ -190,22 +258,19 @@ export default function AddContact({ navigation }) {
       />
 
       <ScrollView style={{ width: width, height: height }}>
+
         <View style={{ margin: '5%' }}>
           <View style={{ marginTop: '2%' }}>
-            {/* {renderLabel()} */}
             <Dropdown
               style={styles.dropdown3}
               placeholderStyle={styles.placeholderStyle3}
               selectedTextStyle={styles.selectedTextStyle3}
-              // inputSearchStyle={styles.inputSearchStyle3}
               iconStyle={styles.iconStyle3}
-              data={data3}
-              // search
+              data={leadOwnerData}
               maxHeight={100}
               labelField="label"
               valueField="value"
               placeholder={!isFocus3 ? ' Lead Owner' : '...'}
-              // searchPlaceholder="Search..."
               value={LeadOwner}
               onFocus={() => setIsFocus3(true)}
               onBlur={() => setIsFocus3(false)}
@@ -216,11 +281,7 @@ export default function AddContact({ navigation }) {
               renderLeftIcon={() => (
                 <View>
                   <Image
-                    style={[styles.icon, {
-
-                      height: 22, width: 17.50,
-                    }]}
-                    // source={require('../../images/list.png')}
+                    style={styles.icon}
                     source={require('../../images/user.png')}
                   />
                 </View>
@@ -229,7 +290,9 @@ export default function AddContact({ navigation }) {
           </View>
           <View style={styles.inputFields}>
             <Image
-              style={styles.icon}
+              style={[styles.icon, {
+                height: 20, width: 18,
+              }]}
               source={require('../../images/user.png')}
             />
             <TextInput
@@ -315,19 +378,12 @@ export default function AddContact({ navigation }) {
               style={styles.dropdown3}
               placeholderStyle={styles.placeholderStyle3}
               selectedTextStyle={styles.selectedTextStyle3}
-              // inputSearchStyle={styles.inputSearchStyle3}
               iconStyle={styles.iconStyle3}
-              // containerStyle={{ 
-              //   backgroundColor: 'red', 
-              //   }}
-              // activeColor='yellow'
               data={data}
-              // search
               maxHeight={100}
               labelField="label"
               valueField="value"
               placeholder={!isFocus ? 'Select Gender' : '...'}
-              // searchPlaceholder="Search..."
               value={gender}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
@@ -336,14 +392,9 @@ export default function AddContact({ navigation }) {
                 setIsFocus(false);
               }}
               renderLeftIcon={() => (
-
                 <View>
                   <Image
-                    style={[styles.icon, {
-
-                      height: 22,
-                      width: 22
-                    }]}
+                    style={[styles.icon, { height: 22, width: 22 }]}
                     source={require('../../images/transgender.png')}
                   />
                 </View>
@@ -353,10 +404,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, {
-                height: 28, width: '4.8%',
-                marginRight: '3.8%'
-              }]}
+              style={[styles.icon, { height: 28, width: '5.2%', marginRight: '3.8%' }]}
               source={require('../../images/mobile.png')}
             />
             <TextInput
@@ -369,10 +417,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, {
-                height: 28, width: '4.8%',
-                marginRight: '3.8%'
-              }]}
+              style={[styles.icon, { height: 28, width: '5.2%', marginRight: '3.8%' }]}
               source={require('../../images/mobile.png')}
             />
             <TextInput
@@ -387,8 +432,8 @@ export default function AddContact({ navigation }) {
           <View style={styles.inputFields}>
             <Image
               style={[styles.icon, {
-                height: 20, width: '7%',
-                marginTop: '2%', marginRight: '1.5%'
+                height: 18, width: '7%',
+                marginRight: '1.5%', marginTop: '4%'
               }]}
               source={require('../../images/mail.png')}
             />
@@ -402,8 +447,7 @@ export default function AddContact({ navigation }) {
           <View style={styles.inputFields}>
             <Image
               style={[styles.icon, {
-                height: 20, width: '7%',
-                marginTop: '2%', marginRight: '1.5%'
+                height: 18, width: '7%', marginRight: '1.5%', marginTop: '4%'
               }]}
               source={require('../../images/mail.png')}
             />
@@ -416,7 +460,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 22, width: '5%', marginTop: '1.5%', marginLeft: '2.5%' }]}
+              style={[styles.icon, { height: 23, width: '6%', marginLeft: '2.5%' }]}
               source={require('../../images/building.png')}
             />
             <TextInput
@@ -428,7 +472,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 22, width: '5%', marginTop: '1.5%', marginLeft: '2.5%' }]}
+              style={[styles.icon, { height: 23, width: '6%', marginLeft: '2.5%' }]}
               source={require('../../images/building.png')}
             />
             <TextInput
@@ -440,7 +484,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 22, width: '5%', marginTop: '1.5%', marginLeft: '2.5%' }]}
+              style={[styles.icon, { height: 23, width: '6%', marginLeft: '2.5%' }]}
               source={require('../../images/building.png')}
             />
             <TextInput
@@ -452,7 +496,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 25, width: '5.5%', marginTop: '1%', marginRight: '3%' }]}
+              style={[styles.icon, { height: 26, width: '6%', marginRight: '3%' }]}
               source={require('../../images/address.png')}
             />
             <TextInput
@@ -467,7 +511,7 @@ export default function AddContact({ navigation }) {
               <Image
                 style={[styles.icon, {
                   height: 28, width: '10%',
-                  marginRight: '4%', marginTop: '3%', marginLeft: '8%'
+                  marginRight: '4%', marginTop: '4%', marginLeft: '8%'
                 }]}
                 source={require('../../images/city.png')}
               />
@@ -497,8 +541,8 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
-              source={require('../../images/info.png')}
+              style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
+              source={require('../../images/globe.png')}
             />
             <TextInput
               style={{ flex: 1 }}
@@ -510,7 +554,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
+              style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
               source={require('../../images/info.png')}
             />
             <TextInput
@@ -522,8 +566,8 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
-              source={require('../../images/info.png')}
+              style={[styles.icon, { height: 19, width: 25, }]}
+              source={require('../../images/leadDetail.png')}
             />
             <TextInput
               style={{ flex: 1 }}
@@ -533,21 +577,16 @@ export default function AddContact({ navigation }) {
           </View>
 
           <View style={{ marginTop: '2%' }}>
-            {/* {renderLabel()} */}
-
             <Dropdown
               style={styles.dropdown3}
               placeholderStyle={styles.placeholderStyle3}
               selectedTextStyle={styles.selectedTextStyle3}
-              // inputSearchStyle={styles.inputSearchStyle3}
               iconStyle={styles.iconStyle3}
-              data={data2}
-              // search
-              maxHeight={100}
+              data={leadstatusData}
+              maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder={!isFocus2 ? '  Lead Status' : '...'}
-              // searchPlaceholder="Search..."
               value={LeadStatus}
               onFocus={() => setIsFocus2(true)}
               onBlur={() => setIsFocus2(false)}
@@ -556,7 +595,6 @@ export default function AddContact({ navigation }) {
                 setIsFocus2(false);
               }}
               renderLeftIcon={() => (
-
                 <View>
                   <Image
                     style={[styles.icon, { height: 18, width: 25, marginRight: '-0.5%', marginTop: '5%' }]}
@@ -569,8 +607,8 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
-              source={require('../../images/info.png')}
+              style={[styles.icon, { height: 23, width: '6%', marginLeft: '2.5%' }]}
+              source={require('../../images/building.png')}
             />
             <TextInput
               style={{ flex: 1 }}
@@ -581,7 +619,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
+              style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
               source={require('../../images/info.png')}
             />
             <TextInput
@@ -594,7 +632,7 @@ export default function AddContact({ navigation }) {
 
           <View style={styles.inputFields}>
             <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
+              style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
               source={require('../../images/info.png')}
             />
             <TextInput
@@ -605,31 +643,17 @@ export default function AddContact({ navigation }) {
               placeholder="Revenue" />
           </View>
 
-          {/* <View style={styles.inputFields}>
-            <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '2%' }]}
-              source={require('../../images/info.png')}
-            />
-            <TextInput style={{ flex: 1 }} placeholder="More Info" />
-          </View> */}
-
           <View style={{ marginTop: '2%' }}>
-            {/* {renderLabel()} */}
-
             <Dropdown
               style={styles.dropdown3}
               placeholderStyle={styles.placeholderStyle3}
               selectedTextStyle={styles.selectedTextStyle3}
-              // inputSearchStyle={styles.inputSearchStyle3}
               iconStyle={styles.iconStyle3}
-
-              data={data1}
-              // search
-              maxHeight={100}
+              data={campaignData}
+              maxHeight={60}
               labelField="label"
               valueField="value"
               placeholder={!isFocus1 ? '  Select a Campagin' : '...'}
-              // searchPlaceholder="Search..."
               value={Campagin}
               onFocus={() => setIsFocus1(true)}
               onBlur={() => setIsFocus1(false)}
@@ -638,13 +662,9 @@ export default function AddContact({ navigation }) {
                 setIsFocus1(false);
               }}
               renderLeftIcon={() => (
-
                 <View>
                   <Image
-                    style={[styles.icon, {
-                      marginRight: '-0.05%',
-                      height: 28, width: 20, marginTop: '2%'
-                    }]}
+                    style={[styles.icon, { height: 26, width: 20 }]}
                     source={require('../../images/list.png')}
                   />
                 </View>

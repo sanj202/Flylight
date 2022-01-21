@@ -198,7 +198,7 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "200") {
-                setcampaignData([{ lable: 'None', value: '0' }])
+                setcampaignData([{ label: 'None', value: 'None' }])
             }
             else if (campaignList.status == "failed") {
             }
@@ -214,7 +214,7 @@ export default function AddContact({ navigation, route }) {
         if (leadstatusList) {
             if (leadstatusList.status == "200") {
                 setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
-                    item ? { label: item.name, value: item.id } : { lable: 'None', value: '0' }))
+                    item ? { label: item.name, value: item.id } :  { label: 'None', value: 'None' }))
             }
             else if (leadstatusList.status == "failed") {
             }
@@ -417,7 +417,6 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={fname}
-                            // clearButtonMode="always"
                             onChangeText={e2 => setfname(e2)}
                             placeholder="First Name" />
                     </View>
@@ -769,18 +768,6 @@ export default function AddContact({ navigation, route }) {
                             placeholder="Description" />
                     </View>
 
-                    {/* <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 26, width: '5%', marginLeft: '2.5%' }]}
-                            source={require('../../images/list.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={campaign}
-                            onChangeText={e20 => setcampaign(e20)}
-                            placeholder="Campaign" />
-                    </View> */}
-
                     <View style={{ marginTop: '2%' }}>
                         <Dropdown
                             style={styles.dropdown3}
@@ -864,11 +851,6 @@ export default function AddContact({ navigation, route }) {
                             </View>
                         </View>
                     </Modal>
-                    {/* <Pressable
-                    style={[styles.button2, styles.buttonOpen]}
-                >
-                    <Text style={styles.textStyle}>Show Modal</Text>
-                </Pressable> */}
                 </View>
 
             </ScrollView>
