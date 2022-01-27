@@ -174,7 +174,7 @@ export const Get_By_ZipCodeList = (data, token,) => {
 
 
 export const importLead = (data, token) => {
-    // console.log("org....................................",data)
+    console.log("org....................................", data)
     return (dispatch) => {
         dispatch({ type: Import_Lead })
         fetch(`${BaseUrl}/v1/import-lead`,
@@ -182,14 +182,19 @@ export const importLead = (data, token) => {
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                    // // 'Content-Type': 'application/json',
+                    // 'Content-Type': "text/comma-separated-values",
+                    // "Content-Type": "form-data",
                     'Authorization': 'Bearer ' + token,
                 },
-                body: JSON.stringify(data),
+                body:
+                // (data)
+                 JSON.stringify(data),
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("import Lead Action file ...............",responseData)
+                console.log("import Lead Action file ...............", responseData)
                 // dispatch({ type: Import_Lead, payload: responseData })
             })
             .catch((error) => {

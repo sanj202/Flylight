@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     askModel: {
-        marginHorizontal: '5%',
+        marginHorizontal: '2%',
         marginTop: '40%',
         backgroundColor: "white",
         borderRadius: 20,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     },
     askSubtitle: {
         fontSize: 15,
-        color: '#000000',
+        color: 'red',
         textAlign: "center"
     },
     askBtn: {

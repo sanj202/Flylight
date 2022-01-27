@@ -16,10 +16,10 @@ import { set } from 'react-native-reanimated';
 
 export default function AddContact({ navigation, route }) {
 
-    console.log("route data...................",route.params.Edata)
+    // console.log("route data...................",route.params)
     
 
-    const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
+    const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
     const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
     const [fname, setfname] = useState(route.params.Edata ? route.params.Edata.first_name : "")
@@ -75,18 +75,6 @@ export default function AddContact({ navigation, route }) {
         { label: 'Female', value: 'Female' },
     ];
 
-    const [dates, setDates] = useState(new Date());
-    const [modes, setModes] = useState('date');
-    const [shows, setShows] = useState(false);
-
-    const [date1, setDate1] = useState(new Date());
-    const [mode1, setMode1] = useState('date');
-    const [show1, setShow1] = useState(false);
-
-    const [dates1, setDates1] = useState(new Date());
-    const [modes1, setModes1] = useState('date');
-    const [shows1, setShows1] = useState(false);
-
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -105,55 +93,6 @@ export default function AddContact({ navigation, route }) {
         settext(false)
         showMode('date');
     };
-
-
-    const onChangeTo = (event, selectedDates) => {
-        const currentDates = selectedDates || dates;
-        setShows(Platform.OS === 'ios');
-        setDates(currentDates);
-    };
-
-    const showModes = (currentModes) => {
-        setShows(true);
-        setModes(currentModes);
-    };
-
-    const showDatepickers = () => {
-        showModes('time');
-    };
-
-
-    const onChangeFrom1 = (event, selectedDate1) => {
-        const currentDate1 = selectedDate1 || date1;
-        setShow1(Platform.OS === 'ios');
-        setDate1(currentDate1);
-    };
-
-    const showMode1 = (currentMode1) => {
-        setShow1(true);
-        setMode1(currentMode1);
-    };
-
-    const showDatepicker1 = () => {
-        showMode1('date');
-    };
-
-
-    const onChangeTo1 = (event, selectedDates1) => {
-        const currentDates1 = selectedDates1 || dates1;
-        setShows1(Platform.OS === 'ios');
-        setDates1(currentDates1);
-    };
-
-    const showModes1 = (currentModes1) => {
-        setShows1(true);
-        setModes1(currentModes1);
-    };
-
-    const showDatepickers1 = () => {
-        showModes1('time');
-    };
-
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
@@ -257,6 +196,7 @@ export default function AddContact({ navigation, route }) {
 
     useEffect(() => {
         if (stateList) {
+            // console.log("state........................",stateList)
             setstateData(stateList.states && stateList.states.map((item, index) =>
                 item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
         }
@@ -266,6 +206,7 @@ export default function AddContact({ navigation, route }) {
 
     useEffect(() => {
         if (ZipList) {
+            // console.log("dsamn...........",ZipList)
             if (ZipList.status == "success") {
                 setState(ZipList.data.State)
                 setCity(ZipList.data.City)
@@ -674,6 +615,32 @@ export default function AddContact({ navigation, route }) {
                             placeholder="Address" />
                     </View>
 
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 23, width: 23, }]}
+                            source={require('../../images/info.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={ZipCode}
+                            maxLength={6}
+                            keyboardType='numeric'
+                            onChangeText={e16 => setZipCode(e16)}
+                            placeholder="Zip Code " />
+                    </View>
+
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
+                            source={require('../../images/city.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={City}
+                            onChangeText={e13 => setCity(e13)}
+                            placeholder="City" />
+                    </View>
+
                     <View style={{ marginTop: '2%' }}>
                         <Dropdown
                             style={styles.dropdown3}
@@ -706,18 +673,6 @@ export default function AddContact({ navigation, route }) {
 
                     <View style={styles.inputFields}>
                         <Image
-                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
-                            source={require('../../images/city.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={City}
-                            onChangeText={e13 => setCity(e13)}
-                            placeholder="City" />
-                    </View>
-
-                    <View style={styles.inputFields}>
-                        <Image
                             style={[styles.icon, { height: 23, width: 23, }]}
                             source={require('../../images/globe.png')}
                         />
@@ -726,21 +681,6 @@ export default function AddContact({ navigation, route }) {
                             value={Country}
                             onChangeText={e15 => setCountry(e15)}
                             placeholder="Country" />
-                    </View>
-
-
-                    <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 23, width: 23, }]}
-                            source={require('../../images/info.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={ZipCode}
-                            maxLength={6}
-                            keyboardType='numeric'
-                            onChangeText={e16 => setZipCode(e16)}
-                            placeholder="Zip Code " />
                     </View>
 
                     <View style={styles.inputFields}>

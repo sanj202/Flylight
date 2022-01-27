@@ -71,31 +71,26 @@ export default function AddContact({ navigation }) {
             const res = await DocumentPicker.pick({
                 type: [DocumentPicker.types.images]
             });
+            // console.log('resPic : ' + JSON.stringify(res));
+            // console.log('URI : ' + res.uri);
+            // console.log('Type : ' + res.type);
+            // console.log('File Name : ' + res.name);
+            // console.log('File Size : ' + res.size);
 
-            console.log('resPic : ' + JSON.stringify(res));
-            console.log('URI : ' + res.uri);
-            console.log('Type : ' + res.type);
-            console.log('File Name : ' + res.name);
-            console.log('File Size : ' + res.size);
-
-
-            console.log("Url.....................................", JSON.stringify(res.uri))
-
-            // var photo = {
-            //     uri: this.state.picturePath, // CameralRoll Url
-            //     type: 'image/jpeg',
-            //     name: 'photo.jpg',
-            // };
+            var photo = {
+                uri: res.map((item, index) => item.uri),
+                type: res.map((item, index) => item.type),
+                name: res.map((item, index) => item.name),
+            };
 
             StoreLeadData(res)
             // console.log("res................Profile pick ", res)
             if (loginData.status == "success") {
                 // setIsLodding(true)
                 var formdata = new FormData();
-                formdata.append('userAvatar', res)
-
-
-                // dispatch(profileAction.updateAvatar(formdata, loginData.data.uid, loginData.data.token));
+                formdata.append('userAvatar', JSON.stringify(photo))
+                formdata.append('uid', loginData.data.uid)
+                dispatch(profileAction.updateAvatar(formdata, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 // setIsLodding(true)
@@ -213,21 +208,20 @@ export default function AddContact({ navigation }) {
             }}>
                 {user.avatar ?
                     // <View style={{ flexDirection: 'row' }}>
-                    // {/* <Text>{user.avatar}</Text> */}
-                    <Image
-                        // source={require('../../images/avtar.jpg')}
-                        // source={{ uri: ` 'http://3.23.113.168/admin/public/uploads/';/avatar/${user.avatar}` }}
-                        source={require('../../images/avtar.jpg')}
-                        style={{
-                            height: 121, width: 121, borderRadius: 80,
-                            marginTop: '2.5%',
-                            alignSelf: 'center'
-                        }}
-                    />
-                    // {/* <TouchableOpacity
-                    //     onPress={() => selectLeadFile()} >
-                    //     <Text>Edit-Picture</Text>
-                    // </TouchableOpacity> */}
+                        <Image
+                            // source={{ uri: user.avatar }}
+                            // source={{ uri: ` 'http://3.23.113.168/admin/public/uploads/';/avatar/${user.avatar}` }}
+                            source={require('../../images/avtar.jpg')}
+                            style={{
+                                height: 121, width: 121, borderRadius: 80,
+                                marginTop: '2.5%',
+                                alignSelf: 'center'
+                            }}
+                        />
+                    //     <TouchableOpacity
+                    //         onPress={() => selectLeadFile()} >
+                    //         <Text>Edit-Picture</Text>
+                    //     </TouchableOpacity>
                     // </View>
                     :
                     // <View style={{ flexDirection: 'row' }}>

@@ -22,6 +22,7 @@ import historyRaducer from './historyRaducer'
 import reportReducer from './reportReducer'
 import actionmanagerReducer from './actionmanagerReducer'
 import leadmanagerReducer from './leadmanagerReducer'
+import StaffMemberReducer from "./staffMemberReducer";
 
 export default combineReducers({
     //   auth: AuthReducer,
@@ -45,4 +46,5 @@ export default combineReducers({
     history:historyRaducer,
     report:reportReducer,
     actionmanager:actionmanagerReducer,
+    staffMember: StaffMemberReducer,
 });

@@ -31,22 +31,22 @@ export const profile = (data, Token,) => {
     }
 };
 
-export const updateAvatar = (formdata , data, Token,) => {
-    console.log("av..............................",formdata,data)
+export const updateAvatar = (formdata , Token,) => {
+    console.log("av..............................",formdata)
     return (dispatch) => {
         dispatch({ type: Edit_ProfileImage })
-        fetch(`${BaseUrl}/v1/getUser`,
+        fetch(`${BaseUrl}/v1/updateAvatar`,
             {
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     // 'Content-Type': "application/x-www-form-urlencoded",
-                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + Token,
                 },
-
-                body: JSON.stringify(formdata,data),
-
+                // body: JSON.stringify(formdata,data),
+                body: formdata,
             })
             .then(response => response.json())
             .then(responseData => {

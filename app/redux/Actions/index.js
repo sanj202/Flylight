@@ -20,6 +20,7 @@ import * as historyAction from './historyAction'
 import * as actionmanagerAction from './actionmanagerAction'
 import * as editContactAction from './editContactAction'
 import * as leadmanagerAction from './leadmanagerAction'
+import * as staffMemberAction from './staffMemberAction'
 
 
 export {
@@ -44,4 +45,5 @@ export {
     reportAction,
     actionmanagerAction,
     editContactAction,
+    staffMemberAction
 };

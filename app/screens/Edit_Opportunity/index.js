@@ -14,7 +14,7 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation, route }) {
 
-    const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
+    const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
     const [isFocus3, setIsFocus3] = useState(false);
     const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
     const [fname, setfname] = useState(route.params.Edata ? route.params.Edata.first_name : "")
@@ -693,6 +693,31 @@ export default function AddContact({ navigation, route }) {
                             placeholder="Address" />
                     </View>
 
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
+                            source={require('../../images/info.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={ZipCode}
+                            keyboardType='numeric'
+                            onChangeText={e16 => setZipCode(e16)}
+                            placeholder="Zip Code " />
+                    </View>
+
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
+                            source={require('../../images/city.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={City}
+                            onChangeText={e13 => setCity(e13)}
+                            placeholder="City" />
+                    </View>
+
                     <View style={{ marginTop: '2%' }}>
                         <Dropdown
                             style={styles.dropdown3}
@@ -725,51 +750,6 @@ export default function AddContact({ navigation, route }) {
 
                     <View style={styles.inputFields}>
                         <Image
-                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
-                            source={require('../../images/city.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={City}
-                            onChangeText={e13 => setCity(e13)}
-                            placeholder="City" />
-                    </View>
-
-                    {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <View style={[styles.inputFields, { width: '49%' }]}>
-                            <Image
-                                style={[styles.icon, {
-                                    height: 28, width: '10%',
-                                    marginRight: '4%', marginTop: '4%', marginLeft: '8%'
-                                }]}
-                                source={require('../../images/city.png')}
-                            />
-                            <TextInput
-                                style={{ width: '80%' }}
-                                value={City}
-                                onChangeText={e13 => setCity(e13)}
-                                placeholder="City" />
-                        </View>
-
-                        <View
-                            style={[styles.inputFields, { marginLeft: '2%', marginRight: '5%', width: '49%' }]}>
-                            <Image
-                                style={[styles.icon, {
-                                    height: 25, width: '15%',
-                                    marginTop: '2.5%', marginRight: '4%'
-                                }]}
-                                source={require('../../images/state.png')}
-                            />
-                            <TextInput
-                                style={{ width: '80%' }}
-                                value={State}
-                                onChangeText={e14 => setState(e14)}
-                                placeholder="State" />
-                        </View>
-                    </View> */}
-
-                    <View style={styles.inputFields}>
-                        <Image
                             style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
                             source={require('../../images/globe.png')}
                         />
@@ -781,18 +761,7 @@ export default function AddContact({ navigation, route }) {
                     </View>
 
 
-                    <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
-                            source={require('../../images/info.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={ZipCode}
-                            keyboardType='numeric'
-                            onChangeText={e16 => setZipCode(e16)}
-                            placeholder="Zip Code " />
-                    </View>
+                  
 
                     <View style={styles.inputFields}>
                         <Image

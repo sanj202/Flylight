@@ -194,6 +194,16 @@ export const ZipData = "ZipData"
 export const ZipData_Success = "ZipData_Success"
 export const ZipData_Clear = 'ZipData_Clear'
 
+//get state 
+export const Get_Staff_Members = "Get_Staff_Members"
+export const Staff_Members_Success = "Staff_Members_Success"
+export const Staff_Members_Clear = 'Staff_Members_Clear'
+
+//get state 
+export const Invite_Member = "Invite_Member"
+export const Invite_Member_Success = "Invite_Member_Success"
+export const Invite_Member_Clear = 'Invite_Member_Clear'
+
 
 
 
