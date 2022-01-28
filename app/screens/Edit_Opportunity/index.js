@@ -319,6 +319,9 @@ export default function AddContact({ navigation, route }) {
         else if (phone == "") {
             Alert.alert(" Enter phone Number ")
         }
+        else if (Aphone == "") {
+            Alert.alert(" Enter Alternative phone Number ")
+          }
         else if (email == "") {
             Alert.alert(" Enter Email Id")
         }
@@ -597,6 +600,7 @@ export default function AddContact({ navigation, route }) {
                             style={{ flex: 1 }}
                             value={phone}
                             keyboardType='numeric'
+                            maxLength={14}
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
                     </View>
@@ -610,6 +614,7 @@ export default function AddContact({ navigation, route }) {
                             style={{ flex: 1 }}
                             value={Aphone}
                             keyboardType='numeric'
+                            maxLength={14}
                             onChangeText={e6 => setAphone(e6)}
                             placeholder="Alternate Mobile Number"
                         />

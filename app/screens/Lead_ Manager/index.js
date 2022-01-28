@@ -982,7 +982,7 @@ export default function lead_manager({ navigation, route }) {
                   borderRadius: 20,
                   padding: 5
                 }}
-                onPress={() => selectLeadFile()}
+                // onPress={() => selectLeadFile()}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
               </TouchableOpacity>

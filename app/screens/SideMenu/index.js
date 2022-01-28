@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     Dimensions, View, Text, SafeAreaView, Image,
     useWindowDimensions, ImageBackground, StatusBar
@@ -13,11 +13,61 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function SideMenu({ navigation }) {
 
+    const [user, setUser] = useState('');
+    const [IsLodding, setIsLodding] = useState(false)
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
+    const profileData = useSelector(state => state.profile.userDetail)
     const { width, height } = Dimensions.get('window');
+
+
+    // console.log("loginData....................", loginData.data.user)
+
+
+
+    useEffect(() => {
+        if (loginData || registerData && isFocused) {
+            if (loginData.status == "success") {
+                setIsLodding(true)
+                const data = {
+                    uid: loginData.data.uid,
+                    org_uid: loginData.data.org_uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                }
+                dispatch(profileAction.profile(data, loginData.data.token));
+            }
+            else if (registerData.status == "success") {
+                setIsLodding(true)
+                const data = {
+                    uid: registerData.data.uid,
+                    org_uid: registerData.data.org_uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                }
+                dispatch(profileAction.profile(data, registerData.data.token));
+            }
+        }
+    }, [loginData, registerData, isFocused])
+
+    useEffect(() => {
+        if (profileData) {
+            if (profileData.status == "200") {
+                setUser(profileData.data.user)
+                setIsLodding(false)
+                dispatch(profileAction.clearResponse())
+            }
+            else if (profileData == '') {
+                setIsLodding(false)
+            }
+            else {
+                setIsLodding(false)
+                Alert.alert(profileData.message)
+            }
+        }
+        else {
+        }
+    }, [profileData])
 
     const LogoutSession = () => {
         if (loginData.status == "success") {
@@ -81,9 +131,9 @@ export default function SideMenu({ navigation }) {
                                 <Title style={{
                                     fontSize: 18, fontFamily: 'Roboto',
                                     fontWeight: 'bold', color: '#FFFFFF'
-                                }}>Marcel Dalima</Title>
+                                }}>{user.name ? user.name : ''}</Title>
                                 <Paragraph
-                                    style={{ marginTop: '-5%', fontSize: 13, fontFamily: 'Roboto', fontWeight: 'normal', color: '#FFFFFF' }}>+91 1234567890</Paragraph>
+                                    style={{ marginTop: '-5%', fontSize: 13, fontFamily: 'Roboto', fontWeight: 'normal', color: '#FFFFFF' }}>+91 {user.phone ? user.phone : ''}</Paragraph>
                             </Card.Content>
                         </View>
                     </View>

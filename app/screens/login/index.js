@@ -55,10 +55,10 @@ export default function Login({ navigation, route, props }) {
         // AsyncStorage.setItem('org_id', loginData.data.user.org_id.toString())
 
         setIsLodding(false)
-        if (loginData.data.token){
+        if (loginData.data.token) {
           navigation.navigate("MainStack")
         }
-        else{
+        else {
           console.log('something wrong')
         }
         // dispatch(authAction.clearResponse())
@@ -148,12 +148,7 @@ export default function Login({ navigation, route, props }) {
       </LinearGradient>
       <View
         style={styles.boxView}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("MainStack")}
-        >
-          <Text style={styles.title}>Welcome Back !</Text>
-        </TouchableOpacity>
-
+        <Text style={styles.title}>Welcome Back !</Text>
         <Text style={{ margin: '3%', marginBottom: '-1%', color: '#2F394E', fontFamily: 'Roboto', marginTop: '-2%', fontSize: 15 }}>Mobile number /Email </Text>
 
         <View style={styles.inputFields2}>
@@ -202,14 +197,14 @@ export default function Login({ navigation, route, props }) {
             <Image
               style={
                 Platform.OS == 'ios' ? [styles.icon, {
-                height: 18, width: 20,
-                marginTop: '5.5%', marginRight: '5%'
-              }]
-            :
-            [styles.icon, {
-              height: 18, width: 20,
-              marginTop: '25%', marginRight: '5%'
-            }]}
+                  height: 18, width: 20,
+                  marginTop: '5.5%', marginRight: '5%'
+                }]
+                  :
+                  [styles.icon, {
+                    height: 18, width: 20,
+                    marginTop: '25%', marginRight: '5%'
+                  }]}
               source={require('../../images/private.png')}
             />
           </TouchableOpacity>

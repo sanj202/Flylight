@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-  Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform} from 'react-native';
+import {
+  ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+  Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
+} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper';
@@ -58,7 +60,7 @@ export default function AddContact({ navigation }) {
   const campaignList = useSelector(state => state.leads.campaign)
   const leadstatusList = useSelector(state => state.leads.leadstatus)
   const stateList = useSelector(state => state.leads.states)
-  const ZipList =  useSelector(state => state.leads.ByZip) 
+  const ZipList = useSelector(state => state.leads.ByZip)
 
   const Data = useSelector(state => state.ManuallyAddContact.data)
   const [date, setDate] = useState(new Date());
@@ -84,7 +86,7 @@ export default function AddContact({ navigation }) {
     { label: 'Male', value: 'Male' },
     { label: 'Female', value: 'Female' },
   ];
-  
+
   const AddFunction = () => {
     setModalVisible2(!modalVisible2)
     dispatch(addcontactManuallyAction.clearResponse());
@@ -120,54 +122,56 @@ export default function AddContact({ navigation }) {
 
   useEffect(() => {
     if (ZipCode) {
-        if (ZipCode.length == 6) {
-            if (loginData.status == "success") {
-                const data = {
-                    uid: loginData.data.uid,
-                    zipcode: ZipCode}
-                dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    uid: registerData.data.uid,
-                    zipcode: ZipCode}
-                dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
-            }
+      if (ZipCode.length == 6) {
+        if (loginData.status == "success") {
+          const data = {
+            uid: loginData.data.uid,
+            zipcode: ZipCode
+          }
+          dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
         }
-        else {
+        else if (registerData.status == "success") {
+          const data = {
+            uid: registerData.data.uid,
+            zipcode: ZipCode
+          }
+          dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
         }
+      }
+      else {
+      }
     }
     else {
     }
-}, [ZipCode])
+  }, [ZipCode])
 
-useEffect(() => {
-  if (stateList) {
+  useEffect(() => {
+    if (stateList) {
       setstateData(stateList.states && stateList.states.map((item, index) =>
-          item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
-  }
-  else {
-  }
-}, [stateList])
+        item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
+    }
+    else {
+    }
+  }, [stateList])
 
-useEffect(() => {
-  if (ZipList) {
+  useEffect(() => {
+    if (ZipList) {
       if (ZipList.status == "success") {
-          setState(ZipList.data.State)
-          setCity(ZipList.data.City)
+        setState(ZipList.data.State)
+        setCity(ZipList.data.City)
       }
       else if (ZipList.status == "failed") {
-          setState(null)
-          setCity('')
+        setState(null)
+        setCity('')
       }
       else if (ZipList.status == "fail") {
-          setState(null)
-          setCity('')
+        setState(null)
+        setCity('')
       }
-  }
-  else {
-  }
-}, [ZipList])
+    }
+    else {
+    }
+  }, [ZipList])
 
   useEffect(() => {
     if (leadOwner) {
@@ -235,6 +239,9 @@ useEffect(() => {
     }
     else if (phone == "") {
       Alert.alert(" Enter phone Number ")
+    }
+    else if (Aphone == "") {
+      Alert.alert(" Enter Alternative phone Number ")
     }
     else if (email == "") {
       Alert.alert(" Enter Email Id")
@@ -469,6 +476,7 @@ useEffect(() => {
               style={{ flex: 1 }}
               value={phone}
               keyboardType='numeric'
+              maxLength={14}
               onChangeText={e5 => setphone(e5)}
               placeholder="Enter Mobile Number" />
           </View>
@@ -482,6 +490,7 @@ useEffect(() => {
               style={{ flex: 1 }}
               value={Aphone}
               keyboardType='numeric'
+              maxLength={14}
               onChangeText={e6 => setAphone(e6)}
               placeholder="Alternate Mobile Number"
             />
@@ -564,61 +573,6 @@ useEffect(() => {
               placeholder="Address" />
           </View>
 
-          <View style={{ marginTop: '2%' }}>
-                        <Dropdown
-                            style={styles.dropdown3}
-                            placeholderStyle={styles.placeholderStyle3}
-                            selectedTextStyle={styles.selectedTextStyle3}
-                            iconStyle={styles.iconStyle3}
-                            data={stateData}
-                            maxHeight={160}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={!isFocus5 ? 'State' : '...'}
-                            value={State}
-                            onFocus={() => setIsFocus5(true)}
-                            onBlur={() => setIsFocus5(false)}
-                            onChange={item => {
-                                console.log("value of ............",item)
-                                setState(item.value);
-                                setIsFocus5(false);
-                            }}
-                            renderLeftIcon={() => (
-                                <View>
-                                    <Image
-                                        style={[styles.icon, { height: 22, width: 22 }]}
-                                        source={require('../../images/state.png')}
-                                    />
-                                </View>
-                            )}
-                        />
-                    </View>
-
-                    <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
-                            source={require('../../images/city.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={City}
-                            onChangeText={e13 => setCity(e13)}
-                            placeholder="City" />
-                    </View>
-
-          <View style={styles.inputFields}>
-            <Image
-              style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
-              source={require('../../images/globe.png')}
-            />
-            <TextInput
-              style={{ flex: 1 }}
-              value={Country}
-              onChangeText={e15 => setCountry(e15)}
-              placeholder="Country" />
-          </View>
-
-
           <View style={styles.inputFields}>
             <Image
               style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
@@ -630,6 +584,62 @@ useEffect(() => {
               keyboardType='numeric'
               onChangeText={e16 => setZipCode(e16)}
               placeholder="Zip Code " />
+          </View>
+
+          <View style={styles.inputFields}>
+            <Image
+              style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
+              source={require('../../images/city.png')}
+            />
+            <TextInput
+              style={{ flex: 1 }}
+              value={City}
+              onChangeText={e13 => setCity(e13)}
+              placeholder="City" />
+          </View>
+
+          <View style={{ marginTop: '2%' }}>
+            <Dropdown
+              style={styles.dropdown3}
+              placeholderStyle={styles.placeholderStyle3}
+              selectedTextStyle={styles.selectedTextStyle3}
+              iconStyle={styles.iconStyle3}
+              data={stateData}
+              maxHeight={160}
+              labelField="label"
+              valueField="value"
+              placeholder={!isFocus5 ? 'State' : '...'}
+              value={State}
+              onFocus={() => setIsFocus5(true)}
+              onBlur={() => setIsFocus5(false)}
+              onChange={item => {
+                console.log("value of ............", item)
+                setState(item.value);
+                setIsFocus5(false);
+              }}
+              renderLeftIcon={() => (
+                <View>
+                  <Image
+                    style={[styles.icon, { height: 22, width: 22 }]}
+                    source={require('../../images/state.png')}
+                  />
+                </View>
+              )}
+            />
+          </View>
+
+
+
+          <View style={styles.inputFields}>
+            <Image
+              style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
+              source={require('../../images/globe.png')}
+            />
+            <TextInput
+              style={{ flex: 1 }}
+              value={Country}
+              onChangeText={e15 => setCountry(e15)}
+              placeholder="Country" />
           </View>
 
           <View style={styles.inputFields}>

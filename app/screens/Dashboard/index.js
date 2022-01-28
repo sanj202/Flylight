@@ -98,31 +98,19 @@ export default function Dashboard({ navigation, route, props }) {
   }
   useEffect(() => {
     if (loginData || registerData && isFocused) {
-      if (loginData.status == "success") {
-        console.log("login...useEffect...........")
-        dispatch(dashboardAction.dashboard(
-          loginData.data.uid,
-          loginData.data.org_uid,
-          loginData.data.cProfile.toString(),
-          loginData.data.token
-        ));
-      }
-      else if (registerData.status == "success") {
-        console.log("register....useEffect..........")
-        dispatch(dashboardAction.dashboard(
-          registerData.data.uid,
-          registerData.data.org_uid,
-          registerData.data.cProfile.toString(),
-          registerData.data.token
-        ));
-      }
+      Get_Data()
     }
-    // Get_Data()
-  }, [loginData,registerData, isFocused])
+  }, [loginData, registerData, isFocused])
+
+  // useEffect(() => {
+  //   console.log("lengtegbsdbn/...............",Tcontacts.length)
+  //   // if (Tcontacts.length )
+  //   setModalVisible2(true)
+  // }, []);
 
   const Get_Data = () => {
     setIsLodding(true)
-    if (loginData || registerData ) {
+    if (loginData || registerData) {
       if (loginData.status == "success") {
         console.log("login..............")
         dispatch(dashboardAction.dashboard(
@@ -152,9 +140,9 @@ export default function Dashboard({ navigation, route, props }) {
         setTaccounts(dashboardData.data.total_accounts)
         setTcontacts(dashboardData.data.total_contacts)
         setTleads(dashboardData.data.total_leads)
-        if (dashboardData.data.total_contacts == []) {
-          setModalVisible2(true)
-        }
+        // if (dashboardData.data.total_contacts == []) {
+        //   setModalVisible2(true)
+        // }
         dispatch(dashboardAction.clearResponse())
       }
       else if (dashboardData == '') {                                                                               //otherwise alert show 
@@ -212,33 +200,33 @@ export default function Dashboard({ navigation, route, props }) {
               </Card>
             </Pressable >
           </View>
-       
-            <View
-              style={[styles.reView, { marginTop: 0 }]}>
-              <Pressable
-                style={{ width: '49%' }}
-              // onPress={() => navigation.navigate('lead_manager')}
-              >
-                <Card
-                  style={[styles.cardBox]} >
-                  <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
-                  <Text style={styles.counter}>{Taccounts}</Text>
-                </Card>
-              </Pressable >
-              <Pressable
-                style={{ width: '49%' }}
-                onPress={() => navigation.navigate('AddContact')}
-              >
-                <Card
-                  style={[styles.cardBox2]}>
-                  <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
-                  <Text style={styles.counter2}>{Tcontacts}</Text>
-                </Card>
-              </Pressable >
-            </View>
+
+          <View
+            style={[styles.reView, { marginTop: 0 }]}>
+            <Pressable
+              style={{ width: '49%' }}
+            // onPress={() => navigation.navigate('lead_manager')}
+            >
+              <Card
+                style={[styles.cardBox]} >
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
+                <Text style={styles.counter}>{Taccounts}</Text>
+              </Card>
+            </Pressable >
+            <Pressable
+              style={{ width: '49%' }}
+              onPress={() => navigation.navigate('AddContact')}
+            >
+              <Card
+                style={[styles.cardBox2]}>
+                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
+                <Text style={styles.counter2}>{Tcontacts}</Text>
+              </Card>
+            </Pressable >
+          </View>
 
 
-            <ScrollView refreshControl={
+          <ScrollView refreshControl={
             <RefreshControl
               refreshing={refreshing}
               color='#0000ff'

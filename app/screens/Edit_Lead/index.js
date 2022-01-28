@@ -17,7 +17,7 @@ import { set } from 'react-native-reanimated';
 export default function AddContact({ navigation, route }) {
 
     // console.log("route data...................",route.params)
-    
+
 
     const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
     const [isFocus, setIsFocus] = useState(false);
@@ -66,7 +66,7 @@ export default function AddContact({ navigation, route }) {
     const campaignList = useSelector(state => state.leads.campaign)
     const leadstatusList = useSelector(state => state.leads.leadstatus)
     const stateList = useSelector(state => state.leads.states)
-    const ZipList =  useSelector(state => state.leads.ByZip) 
+    const ZipList = useSelector(state => state.leads.ByZip)
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -100,7 +100,7 @@ export default function AddContact({ navigation, route }) {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
+                    profile_id: LeadOwner ? LeadOwner : loginData.data.cProfile.toString(),
                 }
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
                 dispatch(leadAction.CampaignList(data, loginData.data.token));
@@ -127,13 +127,15 @@ export default function AddContact({ navigation, route }) {
                 if (loginData.status == "success") {
                     const data = {
                         uid: loginData.data.uid,
-                        zipcode: ZipCode}
+                        zipcode: ZipCode
+                    }
                     dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
                 }
                 else if (registerData.status == "success") {
                     const data = {
                         uid: registerData.data.uid,
-                        zipcode: ZipCode}
+                        zipcode: ZipCode
+                    }
                     dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
                 }
             }
@@ -148,12 +150,10 @@ export default function AddContact({ navigation, route }) {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.user.id }
-                    if (user !== undefined) {
-                        setleadOwnerData([user])
-                    }
+                    let user = { label: ld.user.name, value: ld.id }
                     return user;
                 })
+                setleadOwnerData(userData ? userData : [{ label: 'None', value: 'None' }])
             }
             else if (leadOwner.status == "failed") {
             }
@@ -240,6 +240,9 @@ export default function AddContact({ navigation, route }) {
         }
         else if (phone == "") {
             Alert.alert(" Enter phone Number ")
+        }
+        else if (Aphone == "") {
+            Alert.alert(" Enter Alternative phone Number ")
         }
         else if (email == "") {
             Alert.alert(" Enter Email Id")
@@ -374,7 +377,7 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={leadOwnerData}
-                            maxHeight={60}
+                            maxHeight={80}
                             labelField="label"
                             valueField="value"
                             placeholder={!isFocus ? 'Lead Owner' : '...'}
@@ -515,6 +518,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={phone}
+                            maxLength={14}
                             keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
@@ -531,6 +535,7 @@ export default function AddContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={Aphone}
+                            maxLength={14}
                             keyboardType='numeric'
                             onChangeText={e6 => setAphone(e6)}
                             placeholder="Alternate Mobile Number"
@@ -656,7 +661,7 @@ export default function AddContact({ navigation, route }) {
                             onFocus={() => setIsFocus5(true)}
                             onBlur={() => setIsFocus5(false)}
                             onChange={item => {
-                                console.log("value of ............",item)
+                                console.log("value of ............", item)
                                 setState(item.value);
                                 setIsFocus5(false);
                             }}

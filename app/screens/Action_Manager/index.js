@@ -51,32 +51,14 @@ export default function action_manager({ navigation }) {
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
-                const data = {
-                    uid: loginData.data.uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                    org_uid: loginData.data.org_uid,
-                }
-                dispatch(actionmanagerAction.getAction(data, loginData.data.token));
-                dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
-                setIsLodding(true)
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    uid: registerData.data.uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                }
-                dispatch(actionmanagerAction.getAction(data, registerData.data.token));
-                dispatch(actionmanagerAction.getStatus(data, registerData.data.token));
-                setIsLodding(true)
-            }
+            Get_ActionStatus()
         }
     }, [loginData, registerData, isFocused])
 
 
     useEffect(() => {
         if (actionList) {
+            console.log('Get_ActionStatusGet_ActionStatus............',actionList)
             if (actionList.status == "200") {
                 setallAction(actionList.data)
                 setIsLodding(false)

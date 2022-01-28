@@ -61,7 +61,7 @@ export default function EditContact({ navigation, route }) {
     const campaignList = useSelector(state => state.leads.campaign)
     const leadstatusList = useSelector(state => state.leads.leadstatus)
     const stateList = useSelector(state => state.leads.states)
-  const ZipList =  useSelector(state => state.leads.ByZip) 
+    const ZipList = useSelector(state => state.leads.ByZip)
 
     const Data = useSelector(state => state.ManuallyAddContact.EditedData)
 
@@ -126,13 +126,15 @@ export default function EditContact({ navigation, route }) {
                 if (loginData.status == "success") {
                     const data = {
                         uid: loginData.data.uid,
-                        zipcode: ZipCode}
+                        zipcode: ZipCode
+                    }
                     dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
                 }
                 else if (registerData.status == "success") {
                     const data = {
                         uid: registerData.data.uid,
-                        zipcode: ZipCode}
+                        zipcode: ZipCode
+                    }
                     dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
                 }
             }
@@ -142,33 +144,33 @@ export default function EditContact({ navigation, route }) {
         else {
         }
     }, [ZipCode])
-    
+
     useEffect(() => {
-      if (stateList) {
-          setstateData(stateList.states && stateList.states.map((item, index) =>
-              item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
-      }
-      else {
-      }
+        if (stateList) {
+            setstateData(stateList.states && stateList.states.map((item, index) =>
+                item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
+        }
+        else {
+        }
     }, [stateList])
-    
+
     useEffect(() => {
-      if (ZipList) {
-          if (ZipList.status == "success") {
-              setState(ZipList.data.State)
-              setCity(ZipList.data.City)
-          }
-          else if (ZipList.status == "failed") {
-              setState(null)
-              setCity('')
-          }
-          else if (ZipList.status == "fail") {
-              setState(null)
-              setCity('')
-          }
-      }
-      else {
-      }
+        if (ZipList) {
+            if (ZipList.status == "success") {
+                setState(ZipList.data.State)
+                setCity(ZipList.data.City)
+            }
+            else if (ZipList.status == "failed") {
+                setState(null)
+                setCity('')
+            }
+            else if (ZipList.status == "fail") {
+                setState(null)
+                setCity('')
+            }
+        }
+        else {
+        }
     }, [ZipList])
 
     useEffect(() => {
@@ -236,6 +238,9 @@ export default function EditContact({ navigation, route }) {
         }
         else if (phone == "") {
             Alert.alert(" Enter phone Number ")
+        }
+        else if (Aphone == "") {
+            Alert.alert(" Enter Alternative phone Number ")
         }
         else if (email == "") {
             Alert.alert(" Enter Email Id")
@@ -468,6 +473,8 @@ export default function EditContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={phone}
+                            maxLength={14}
+                            keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
                     </View>
@@ -480,6 +487,8 @@ export default function EditContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={Aphone}
+                            maxLength={14}
+                            keyboardType='numeric'
                             onChangeText={e6 => setAphone(e6)}
                             placeholder="Alternate Mobile Number"
                         />
@@ -563,6 +572,30 @@ export default function EditContact({ navigation, route }) {
                             placeholder="Address" />
                     </View>
 
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
+                            source={require('../../images/info.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={ZipCode}
+                            onChangeText={e16 => setZipCode(e16)}
+                            placeholder="Zip Code " />
+                    </View>
+
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
+                            source={require('../../images/city.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={City}
+                            onChangeText={e13 => setCity(e13)}
+                            placeholder="City" />
+                    </View>
+
                     <View style={{ marginTop: '2%' }}>
                         <Dropdown
                             style={styles.dropdown3}
@@ -578,7 +611,7 @@ export default function EditContact({ navigation, route }) {
                             onFocus={() => setIsFocus5(true)}
                             onBlur={() => setIsFocus5(false)}
                             onChange={item => {
-                                console.log("value of ............",item)
+                                console.log("value of ............", item)
                                 setState(item.value);
                                 setIsFocus5(false);
                             }}
@@ -593,17 +626,7 @@ export default function EditContact({ navigation, route }) {
                         />
                     </View>
 
-                    <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
-                            source={require('../../images/city.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={City}
-                            onChangeText={e13 => setCity(e13)}
-                            placeholder="City" />
-                    </View>
+
 
                     <View style={styles.inputFields}>
                         <Image
@@ -618,17 +641,7 @@ export default function EditContact({ navigation, route }) {
                     </View>
 
 
-                    <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, { height: 23, width: 23, marginTop: '3%' }]}
-                            source={require('../../images/info.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={ZipCode}
-                            onChangeText={e16 => setZipCode(e16)}
-                            placeholder="Zip Code " />
-                    </View>
+
 
                     <View style={styles.inputFields}>
                         <Image
