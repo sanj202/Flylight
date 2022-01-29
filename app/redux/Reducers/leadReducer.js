@@ -1,5 +1,5 @@
 import {
-    Import_Lead,
+    Import_Lead, Import_Lead_Success, Import_Lead_Clear, Import_Lead_Error,
     Delete_Lead, Delete_Lead_Success, Delete_Lead_Clear,
     Add_Edit_Lead, Add_Edit_Lead_Success, Add_Edit_Lead_Clear,
     LeadOwner, LeadOwner_Success, LeadOwner_Clear,
@@ -107,24 +107,31 @@ const LeadR = (state = initialState, action) => {
         case ZipData_Success:
             return {
                 ...state,
-                ByZip:action.payload
+                ByZip: action.payload
             }
         case ZipData_Clear:
             return {
                 ByZip: []
             }
 
-
-
-
-
         case Import_Lead:
+            return {
+                ...state,
+            };
+        case Import_Lead_Success:
             return {
                 ...state,
                 importLead: action.payload
             };
-
-
+        case Import_Lead_Error:
+            return {
+                importLead: 'error'
+            };
+        case Import_Lead_Clear:
+            return {
+                ...state,
+                importLead: []
+            };
 
         default:
             return state;

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
+import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -31,7 +29,6 @@ export default function action_manager({ navigation }) {
     const [type, settype] = useState()
     const [allAction, setallAction] = useState()
     const [allStatus, setallStatus] = useState()
-
     const { width, height } = Dimensions.get('window');
 
     const dispatch = useDispatch()
@@ -58,7 +55,6 @@ export default function action_manager({ navigation }) {
 
     useEffect(() => {
         if (actionList) {
-            console.log('Get_ActionStatusGet_ActionStatus............',actionList)
             if (actionList.status == "200") {
                 setallAction(actionList.data)
                 setIsLodding(false)
@@ -248,7 +244,6 @@ export default function action_manager({ navigation }) {
                     dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
                 }
                 else {
-                    // console.log("satsu........................edit")
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
@@ -274,7 +269,6 @@ export default function action_manager({ navigation }) {
                     dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token));
                 }
                 else {
-                    // console.log("satsu........................edit")
                     const data = {
                         uid: registerData.data.uid,
                         profile_id: registerData.data.cProfile.toString(),
@@ -319,7 +313,6 @@ export default function action_manager({ navigation }) {
         if (loginData.status == "success") {
             if (tempType == "Action") {
                 setaskDelete(!askDelete)
-
                 const data = {
                     uid: loginData.data.uid,
                     profile_id: loginData.data.cProfile.toString(),

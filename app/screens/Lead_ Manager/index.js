@@ -13,16 +13,19 @@ import { leadAction, opportunityAction, leadmanagerAction } from '../../redux/Ac
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 import { lead_OpprtunityList } from '../../redux/Actions/leadmanagerAction';
-import axios from 'axios';
+//import axios from 'axios';
 export default function lead_manager({ navigation, route }) {
 
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
   const [modalVisible2, setModalVisible2] = useState(false);
   const [askDelete, setaskDelete] = useState(false);
+  const [ImportFiles, setImportFiles] = useState(false)
+  const [SelectedFile, setSelectedFile] = useState('')
   const [AllList, setAllList] = useState('')
   const [Lead, setLead] = useState('')
   const [Opportunity, setOpportunity] = useState('')
   const [IsLodding, setIsLodding] = useState(false)
+  const [IsULodding, setIsULodding] = useState(false)
   const { width, height } = Dimensions.get('window');
   // const axios = require('axios');
   const [date, setDate] = useState(new Date());
@@ -238,188 +241,98 @@ export default function lead_manager({ navigation, route }) {
 
 
   const [singleFile, setSingleFile] = useState(null);
+  const [tempUploadingType, settempUploadingType] = useState()
 
-  const selectLeadFile = async () => {
+  const OpenFilePicker = async () => {
     try {
-      const res = await DocumentPicker.pick({
+      const results = await DocumentPicker.pickMultiple({
         type: [DocumentPicker.types.allFiles],
-        // There can me more options as well
-        // DocumentPicker.types.allFiles
-        // DocumentPicker.types.images
-        // DocumentPicker.types.plainText
-        // DocumentPicker.types.audio
-        // DocumentPicker.types.pdf
       });
-      console.log('res : ' + JSON.stringify(res));
-
-      setSingleFile(res);
-      var formData = new FormData();
-
-      let data = {
-        profile_id: loginData.data.cProfile.toString(),
-        orgid: loginData.data.user.org_id.toString()
-      }
-
-      // {
-      //   uri: res.map((item, index) => item.uri),
-      //   type: res.map((item, index) => item.type),
-      //   name: res.map((item, index) => item.name),
-      //   // size: res.map((item, index) => item.size),
-      // }
-
-      formData.append('csvfile', res);
-      formData.append('profile_id', loginData.data.cProfile);
-      formData.append('orgid',loginData.data.user.org_id);
-
-      axios({
-        url: 'http://3.23.113.168/admin/public/api/mobile/v1/import-lead',
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          // 'Content-Type': 'multipart/form-data',
-          authorization: 'Bearer ' + loginData.data.token,
-        },
-        data:formData
-      })
-        .then(response => {
-          var responseData = response
-          console.log("responseData:::::::::::::::::::", responseData)
-        })
-        .catch(e => {
-          console.log("errorrrrrr::::::::::::::::::::", e);
-        });
-
+      setSingleFile(results)
+      setSelectedFile(results.map((item, index) => item.name))
     } catch (err) {
-      setSingleFile(null);
-      // Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
-        // If user canceled the document selection
-        alert('Canceled');
+        console.log('Canceled');
       } else {
-        // For Unknown Error
-        alert('Unknown Error: ' + JSON.stringify(err));
+        console.log('Unknown Error: ' + JSON.stringify(err));
         throw err;
       }
     }
-  };
-
-
-  const [newLeadAray, setnewLeadAray] = useState([])
-
-  // const selectLeadFile222 = async () => {
-  //   try {
-  //     const res = await DocumentPicker.pick({
-  //       type: [DocumentPicker.types.allFiles],
-  //     });
-  //     console.log('resLead : ' + JSON.stringify(res));
-  //     // console.log('URI : ' + res.uri);
-  //     // console.log('Type : ' + res.type);
-  //     // console.log('File Name : ' + res.name);
-  //     // console.log('File Size : ' + res.size);
-
-  //     StoreLeadData(res)
-
-  //     console.log("res.................", res)
-
-  //     var file = {
-  //       uri: res.map((item, index) => item.uri),
-  //       type: res.map((item, index) => item.type),
-  //       name: res.map((item, index) => item.name),
-  //       // size: res.map((item, index) => item.size),
-  //     };
-
-  //     // console.log("datta..........................>>>>>>", file)
-  //     if (loginData.status == "success") {
-  //       // setIsLodding(true)
-  //       // console.log("datta...........LoginDaat...............>>>>>>", res)
-  //       var formdata = new FormData();
-  //       formdata.append('CSVFILE', file,)
-  //       formdata.append('profile_id', loginData.data.cProfile.toString())
-  //       formdata.append('orgid', loginData.data.user.org_id.toString())
-
-  //       dispatch(leadAction.importLead(formdata, loginData.data.token));
-  //     }
-  //     else if (registerData.status == "success") {
-  //       // setIsLodding(true)
-
-  //       formdata = new FormData();
-  //       formdata.append('CSVFILE', file)
-  //       formdata.append('profile_id', registerData.data.cProfile.toString())
-  //       formdata.append('orgid', registerData.data.org_id.toString())
-
-  //       dispatch(leadAction.importLead(formdata, registerData.data.token));
-  //     }
-
-  //   } catch (err) {
-  //     if (DocumentPicker.isCancel(err)) {
-  //     } else {
-  //       alert('Unknown Error: ' + JSON.stringify(err));
-  //       throw err;
-  //     }
-  //   }
-  // };
-
-  const StoreLeadData = (value) => {
-    let tem = value
-    setnewLeadAray([
-      // ...data
-      tem])
   }
 
+  const CheckImportType = (value) => {
+    setSelectedFile('choose-file')
+    setImportFiles(!ImportFiles)
+    settempUploadingType(value)
+  }
 
-  const [newAray, setnewAray] = useState([])
-  const selectOpportunityFile = async () => {
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
-      });
-      console.log('resOpportunity : ' + JSON.stringify(res));
-      // console.log('URI : ' + res.uri);
-      // console.log('Type : ' + res.type);
-      // console.log('File Name : ' + res.name);
-      // console.log('File Size : ' + res.size);
-      // setopportunityFile(res);
-      StoreData(res)
-      AsyncStorage.getItem('token', (err, token) => {
-        if (token !== null) {
-          AsyncStorage.getItem('cProfile', (err, cProfile) => {
-            if (cProfile !== null) {
-              AsyncStorage.getItem('org_id', (err, org_id) => {
-                if (org_id !== null) {
-                  dispatch(opportunityAction.importOpportunity(res, token, cProfile, org_id));
-                }
-              })
-            }
-          })
-        }
-      })
-    } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-      } else {
-        alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
+  const UploadFile = (value) => {
+    let file = {
+      name: singleFile[0].name,
+      type: singleFile[0].type,
+      uri: singleFile[0].uri,
+      size: singleFile[0].size
+    }
+    if (loginData.status == "success") {
+      if (tempUploadingType == 'Opportunity') {
+        const formdata = new FormData;
+        formdata.append('CSVFILE', file);
+        formdata.append('profile_id', loginData.data.cProfile);
+        formdata.append('orgid', loginData.data.user.org_id);
+        dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
+        setIsULodding(true)
+      }
+      else {
+        const formdata = new FormData;
+        formdata.append('CSVFILE', file);
+        formdata.append('profile_id', loginData.data.cProfile);
+        formdata.append('orgid', loginData.data.user.org_id);
+        dispatch(leadAction.importLead(formdata, loginData.data.token));
+        setIsULodding(true)
       }
     }
-  };
-  const StoreData = (value) => {
-    let tem = value
-    setnewAray([
-      // ...data
-      tem])
+    else if (registerData.status == "success") {
+      if (tempUploadingType == 'Opportunity') {
+        const formdata = new FormData;
+        formdata.append('CSVFILE', file);
+        formdata.append('profile_id', registerData.data.cProfile);
+        formdata.append('orgid', registerData.data.org_id);
+        dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
+        setIsULodding(true)
+      }
+      else {
+        const formdata = new FormData;
+        formdata.append('CSVFILE', file);
+        formdata.append('profile_id', registerData.data.cProfile);
+        formdata.append('orgid', registerData.data.org_id);
+        dispatch(leadAction.importLead(formdata, loginData.data.token));
+        setIsULodding(true)
+      }
+    }
+
+  }
+
+  const UploadFileCancel = (value) => {
+    setImportFiles(!ImportFiles)
+    setSelectedFile('')
+    settempUploadingType('')
+    setIsULodding(false)
   }
 
   useEffect(() => {
     if (importLead) {
+      setIsULodding(false)
       if (importLead.status == "success") {
+        // CombineArrayData()
+        Get_Data()
+        setImportFiles(!ImportFiles)
         Alert.alert(importLead.message)
-        CombineArrayData()
-        setIsLodding(false)
+        dispatch(leadAction.clearImportLeadResponse())
       }
-      else if (importLead.status == "failed") {
+      else if (importLead == "error") {
+        UploadFile()
       }
-      else if (importLead.status == 'fail') {
-        Alert.alert(importLead.message)
-      }
+      else { }
     }
     else {
     }
@@ -427,25 +340,23 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (importOpportunity) {
+      setIsULodding(false)
       if (importOpportunity.status == "success") {
         Alert.alert(importOpportunity.message)
-        CombineArrayData()
-        setIsLodding(false)
+        // CombineArrayData()
+        Get_Data()
+        setImportFiles(!ImportFiles)
         // dispatch(opportunityAction.clearResponse())
       }
-      else if (importOpportunity.status == "failed") {
+      else if (importOpportunity == "error") {
+        UploadFile()
       }
-      else if (importOpportunity.status == 'fail') {
-        Alert.alert(importOpportunity.message)
-      }
+      else { }
     }
     else {
 
     }
   }, [importOpportunity])
-
-
-
 
   const AllView = ({ item }) => {
     return (
@@ -864,7 +775,7 @@ export default function lead_manager({ navigation, route }) {
               <View>
                 {AllList !== undefined && AllList.length > 0 ?
                   <FlatList
-                    style={{ height: height / 1.55 }}
+                    style={{ height: "78%" }}
                     data={AllList}
                     renderItem={AllView}
                   />
@@ -983,6 +894,7 @@ export default function lead_manager({ navigation, route }) {
                   padding: 5
                 }}
                 // onPress={() => selectLeadFile()}
+                onPress={() => CheckImportType("lead")}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
               </TouchableOpacity>
@@ -1010,8 +922,7 @@ export default function lead_manager({ navigation, route }) {
               <View>
                 {Lead !== undefined && Lead.length > 0 ?
                   <FlatList
-                    style={{ height: height / 1.7 }}
-
+                    style={{ height: "78%" }}
                     data={Lead}
                     renderItem={LeadView}
                   />
@@ -1134,7 +1045,8 @@ export default function lead_manager({ navigation, route }) {
                   borderRadius: 20,
                   padding: 5
                 }}
-              // onPress={() => selectOpportunityFile()}
+                // onPress={() => selectOpportunityFile()}
+                onPress={() => CheckImportType("Opportunity")}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
               </TouchableOpacity>
@@ -1148,7 +1060,7 @@ export default function lead_manager({ navigation, route }) {
               <View>
                 {Opportunity !== undefined && Opportunity.length > 0 ?
                   <FlatList
-                    style={{ height: height / 1.7 }}
+                    style={{ height: "78%" }}
                     data={Opportunity}
                     renderItem={OpportunityVIew}
                   />
@@ -1223,6 +1135,42 @@ export default function lead_manager({ navigation, route }) {
               <Text style={styles.textStyle3}>OK</Text>
             </Pressable>
           </View>
+        </View>
+      </Modal>
+
+
+      <Modal animationType="slide" transparent={true} visible={ImportFiles}
+        onRequestClose={() => { setImportFiles(!ImportFiles); }}>
+        <View style={styles.askModel}>
+          <Text style={styles.askTitle}>Import File </Text>
+          {/* <Text style={styles.askSubtitle}>
+            Please Select Only .CSV files </Text> */}
+          <TouchableOpacity
+            onPress={() => OpenFilePicker()}
+            style={{ borderWidth: 1, padding: 5, marginVertical: '10%', marginHorizontal: '15%' }}>
+            <Text>{SelectedFile}</Text>
+          </TouchableOpacity>
+
+          {IsULodding == true ?
+            <ActivityIndicator size="large" color="#0000ff" />
+            :
+            <View />}
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Pressable
+              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+              onPress={() => UploadFile()}
+            >
+              <Text style={styles.askBtnText}>YES</Text>
+            </Pressable>
+            <View style={{ margin: '5%' }} />
+            <Pressable
+              style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+              onPress={() => UploadFileCancel()}
+            >
+              <Text style={styles.askBtnText}>NO</Text>
+            </Pressable>
+          </View>
+          <View style={{ margin: '2%' }} />
         </View>
       </Modal>
 

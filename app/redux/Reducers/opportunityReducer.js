@@ -1,5 +1,5 @@
 import {
-    Import_Opportunity,
+    Import_Opportunity,Import_Opportunity_Success,Import_Opportunity_Clear,Import_Opportunity_Error,
     Add_Edit_Opportunity, Add_Edit_Opportunity_Success, Add_Edit_Opportunity_Clear,
     Delete_Opportunity, Delete_Opportunity_Success, Delete_Opportunity_Clear
 } from '../Actions/actionTypes';
@@ -42,13 +42,24 @@ const OpportunityR = (state = initialState, action) => {
                 deleteOpportunity: []
             };
 
-
         case Import_Opportunity:
+            return {
+                ...state,
+            };
+        case Import_Opportunity_Success:
             return {
                 ...state,
                 ImportOpportunity: action.payload
             };
-
+        case Import_Opportunity_Error:
+            return {
+                ImportOpportunity: 'error'
+            };
+        case Import_Opportunity_Clear:
+            return {
+                ...state,
+                ImportOpportunity: []
+            };
         default:
             return state;
     }

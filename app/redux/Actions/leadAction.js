@@ -1,6 +1,6 @@
 
 import {
-    Import_Lead,
+    Import_Lead, Import_Lead_Success, Import_Lead_Clear, Import_Lead_Error,
     Add_Edit_Lead, Add_Edit_Lead_Success, Add_Edit_Lead_Clear,
     Delete_Lead, Delete_Lead_Success, Delete_Lead_Clear,
     LeadOwner, LeadOwner_Success, LeadOwner_Clear,
@@ -9,6 +9,7 @@ import {
     All_State, All_State_Success, All_State_Clear, ZipData, ZipData_Success, ZipData_Clear
 } from './actionTypes';
 import BaseUrl from '../../../const'
+import axios from 'axios';
 
 export const addLaed = (data, token) => {
     return (dispatch) => {
@@ -174,7 +175,6 @@ export const Get_By_ZipCodeList = (data, token,) => {
 
 
 export const importLead = (data, token) => {
-    console.log("org....................................", data)
     return (dispatch) => {
         dispatch({ type: Import_Lead })
         fetch(`${BaseUrl}/v1/import-lead`,
@@ -183,22 +183,17 @@ export const importLead = (data, token) => {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'multipart/form-data',
-                    // // 'Content-Type': 'application/json',
-                    // 'Content-Type': "text/comma-separated-values",
-                    // "Content-Type": "form-data",
-                    'Authorization': 'Bearer ' + token,
+                    'Authorization': 'Bearer ' + token
                 },
-                body:
-                // (data)
-                 JSON.stringify(data),
+                body: data
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log("import Lead Action file ...............", responseData)
-                // dispatch({ type: Import_Lead, payload: responseData })
+                dispatch({ type: Import_Lead_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
+                dispatch({ type: Import_Lead_Error, payload: error })
             })
     }
 };
@@ -207,12 +202,19 @@ export const clearResponse = () => {
     return {
         type: Add_Edit_Lead_Clear,
         type: LeadOwner_Clear,
-        type: Delete_Lead_Clear,
         type: Campaign_Clear,
         type: LeadStatus_Clear,
         type: All_State_Clear,
         type: ZipData_Clear,
     };
+};
+
+export const clearDeleteLeadResponse = () => {
+    return { type: Delete_Lead_Clear, };
+};
+
+export const clearImportLeadResponse = () => {
+    return { type: Import_Lead_Clear };
 };
 
 

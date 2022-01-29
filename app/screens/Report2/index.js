@@ -4,7 +4,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper'
 import styles from "./styles";
 import Header from '../../component/header'
-import { reportAction } from '../../redux/Actions/index'
+import { reportAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
@@ -14,21 +14,33 @@ export default function Report({ navigation }) {
         { label: 'Sales List', value: 'Sales List' },
     ];
 
+
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
     const [IsLodding, setIsLodding] = useState(true)
     // const { width, height } = Dimensions.get('window');
+
     const [Report, setReport] = useState()
+    const [campaignData, setcampaignData] = useState([])
+
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
     const reportData = useSelector(state => state.report.getReportList)
+    const campaignList = useSelector(state => state.leads.campaign)
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
 
             if (loginData.status == "success") {
+
+                const data = {
+                    uid: loginData.data.uid,
+                    org_uid: loginData.data.org_uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                }
+
                 dispatch(reportAction.reportList(
                     loginData.data.token,
                     loginData.data.uid,
@@ -36,18 +48,27 @@ export default function Report({ navigation }) {
                     loginData.data.user.org_id.toString(),
                     loginData.data.org_uid,
                 ));
+                dispatch(leadAction.CampaignList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
+
+                const data = {
+                    profile_id: registerData.data.cProfile.toString(),
+                    org_uid: registerData.data.org_uid,
+                    uid: registerData.data.uid
+                }
+
                 dispatch(reportAction.reportList(
-                registerData.data.token,
-                registerData.data.uid,
-                registerData.data.cProfile.toString(),
-                registerData.data.org_id.toString(),
-                registerData.data.org_uid
+                    registerData.data.token,
+                    registerData.data.uid,
+                    registerData.data.cProfile.toString(),
+                    registerData.data.org_id.toString(),
+                    registerData.data.org_uid
                 ));
+                dispatch(leadAction.CampaignList(data, registerData.data.token));
             }
         }
-    }, [loginData,registerData, isFocused])
+    }, [loginData, registerData, isFocused])
 
     useEffect(() => {
         if (reportData) {
@@ -71,6 +92,21 @@ export default function Report({ navigation }) {
         }
     }, [reportData])
 
+    useEffect(() => {
+        if (campaignList) {
+            if (campaignList.status == "200") {
+                setcampaignData([{ label: 'None', value: 'None' }])
+            }
+            else if (campaignList.status == "failed") {
+            }
+            else if (campaignList.status == "fail") {
+            }
+        }
+        else {
+        }
+    }, [campaignList])
+
+
     return (
         <View style={{ flex: 1, backgroundColor: '#fff' }}>
             <Header
@@ -91,7 +127,7 @@ export default function Report({ navigation }) {
                         selectedTextStyle={styles.selectedTextStyle3}
                         // inputSearchStyle={styles.inputSearchStyle3}
                         iconStyle={styles.iconStyle3}
-                        data={data}
+                        data={campaignData}
                         // search
                         maxHeight={120}
                         labelField="label"

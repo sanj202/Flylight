@@ -30,9 +30,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#3373F3',
     borderRadius: 10,
-    margin: '5%',
-    marginLeft: '0%',
-    marginRight: '0%'
+    marginVertical: '2%'
   },
   textButton: {
     padding: 10,
@@ -42,6 +40,26 @@ const styles = StyleSheet.create({
   image2: {
     width: 35,
     height: 35
+  },
+  textValues: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#000000',
+    fontFamily: 'Roboto'
+  },
+  dropdown: {
+    height: 45,
+    borderColor: '#C3C7E5',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    marginVertical: '1%'
+  },
+  selectedTextStyle: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#000000',
+    fontFamily: 'Roboto'
   },
 });
 

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
-    Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
+import {
+    Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
+    Modal, Alert, Pressable, StatusBar, Dimensions
+} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header/index'
-import { taskmanagerAction, staffMemberAction } from '../../redux/Actions/index'
+import { taskmanagerAction, staffMemberAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
+import moment from 'moment';
 
 export default function lead_manager({ navigation }) {
 
@@ -32,6 +35,7 @@ export default function lead_manager({ navigation }) {
 
 
     const [allTask, setallTask] = useState()
+    const [leadOwnerData, setleadOwnerData] = useState('')
     const [IsLodding, setIsLodding] = useState(false)
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
@@ -40,6 +44,29 @@ export default function lead_manager({ navigation }) {
     const registerData = useSelector(state => state.varify.otp)
     const taskList = useSelector(state => state.taskmanager.getList)
     const inviteResponse = useSelector(state => state.staffMember.inviteData)
+    const leadOwner = useSelector(state => state.leads.leadOwner)
+
+
+    useEffect(() => {
+        if (loginData || registerData && isFocused) {
+            if (loginData.status == "success") {
+                const data = {
+                    uid: loginData.data.uid,
+                    org_uid: loginData.data.org_uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                }
+                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+            }
+            else if (registerData.status == "success") {
+                const data = {
+                    profile_id: registerData.data.cProfile.toString(),
+                    org_uid: registerData.data.org_uid,
+                    uid: registerData.data.uid
+                }
+                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+            }
+        }
+    }, [loginData, registerData, isFocused])
 
 
 
@@ -87,6 +114,20 @@ export default function lead_manager({ navigation }) {
 
         }
     }, [taskList])
+
+    useEffect(() => {
+        if (leadOwner) {
+            if (leadOwner.status == "200") {
+                setleadOwnerData(leadOwner.data.map((item, index) => item.user))
+            }
+            else if (leadOwner.status == "failed") {
+            }
+            else if (leadOwner.status == "fail") {
+            }
+        }
+        else {
+        }
+    }, [leadOwner])
 
     useEffect(() => {
         if (inviteResponse) {
@@ -152,6 +193,79 @@ export default function lead_manager({ navigation }) {
         }
     }
 
+    const UserLisView = ({ item }) => {
+        return (
+            <View style={styles.listData}>
+                <View>
+                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
+                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Mobile </Text>
+                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Email  </Text>
+                </View>
+                <View style={{ marginLeft: '2%' ,width:'58%'}}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.phone}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.email}</Text>
+                </View>
+                <View style={{ marginLeft: '2%'}}>
+                <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('MM/DD/YYYY')},</Text>
+                <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("hh:mm")}</Text>
+                </View>
+            </View>)
+    }
+
+    const UserLisView123 = ({ item }) => {
+        return (
+            <View style={styles.listData}>
+                <Image
+                    style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
+                    source={require('../../images/profileCall.png')}
+                />
+                <View>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>{ }</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity>
+                            <Image
+                                style={{ height: 10, width: 10, marginTop: '8%', marginRight: '5%' }}
+                                source={require('../../images/material-call.png')}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <Image
+                    style={{ height: 10, width: 10, marginTop: '2%' }}
+                    source={require('../../images/material-call.png')}
+                />
+
+                <View style={{ flexDirection: 'column' }}>
+                    {/* <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text> */}
+                    {/* <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text> */}
+
+                    <TouchableOpacity
+                    // onPress={() => EditTask()}
+                    >
+                        <Image
+                            style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
+                            source={require('../../images/editCall.png')}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    // onPress={() => DeleteTask()}
+                    >
+                        <Image
+                            style={{ height: 22, width: 22, marginTop: '8%', }}
+                            source={require('../../images/deleteCall.png')}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+        )
+    }
+
     return (
         <View style={styles.container}>
             <Header
@@ -186,53 +300,14 @@ export default function lead_manager({ navigation }) {
                             </Text>
                         </TouchableOpacity>
 
-                        <View style={styles.listData}>
-                            <Image
-                                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                                source={require('../../images/profileCall.png')}
+                        {leadOwnerData ?
+                            <FlatList
+                                data={leadOwnerData}
+                                renderItem={UserLisView}
                             />
-                            <View>
-                                <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Johne Doe</Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>Meeting with Mr. George</Text>
-                                </View>
-                                <View style={{ flexDirection: 'row' }}>
-
-                                    <TouchableOpacity>
-                                        <Image
-                                            style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                            source={require('../../images/to-do.png')}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                    // onPress={() => EditTask()}
-                                    >
-                                        <Image
-                                            style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                            source={require('../../images/editCall.png')}
-                                        />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                    // onPress={() => DeleteTask()}
-                                    >
-                                        <Image
-                                            style={{ height: 22, width: 22, marginTop: '8%', }}
-                                            source={require('../../images/deleteCall.png')}
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <Image
-                                style={{ height: 10, width: 10, marginTop: '2%' }}
-                                source={require('../../images/material-call.png')}
-                            />
-
-                            <View style={{ flexDirection: 'column' }}>
-                                <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text>
-                                <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text>
-                            </View>
-                        </View>
+                            :
+                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+                        }
 
                     </View>}
 

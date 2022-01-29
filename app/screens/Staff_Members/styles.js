@@ -12,10 +12,9 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         borderColor: '#DBDBDB',
-        margin: '3%',
-        marginTop: '-0.5%',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        marginHorizontal:'3%',
+        marginVertical:'1%'
     },
     headerView: {
         backgroundColor: '#3373F3',

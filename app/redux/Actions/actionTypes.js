@@ -52,6 +52,7 @@ export const Edit_Profile_Clear = 'Edit_Profile_Clear'
 export const Edit_ProfileImage = 'Edit_ProfileImage'
 export const Edit_ProfileImage_Suceess = 'Edit_ProfileImage_Suceess'
 export const Edit_ProfileImage_Clear = 'Edit_ProfileImage_Clear'
+export const Edit_ProfileImage_Error = 'Edit_ProfileImage_Error'
 
 
 //Add Contact 
@@ -144,10 +145,15 @@ export const Lead_Opportunity_Clear = 'Lead_Opportunity_Clear'
 
 //Lead manager Lead
 export const Import_Lead = "Import_Lead"
+export const Import_Lead_Success = "Import_Lead_Success"
+export const Import_Lead_Clear = "Import_Lead_Clear"
+export const Import_Lead_Error = "Import_Lead_Error"
 
 //Lead manager Opportunity
 export const Import_Opportunity = "Import_Opportunity"
-
+export const Import_Opportunity_Success = "Import_Opportunity_Success"
+export const Import_Opportunity_Clear = "Import_Opportunity_Clear"
+export const Import_Opportunity_Error = "Import_Opportunity_Error"
 
 // Add_Edit_Lead
 export const Add_Edit_Lead = "Add_Edit_Lead"

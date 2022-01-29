@@ -109,7 +109,7 @@ export default function AddContact({ navigation, route }) {
             }
             else if (registerData.status == "success") {
                 const data = {
-                    profile_id: registerData.data.cProfile.toString(),
+                    profile_id: LeadOwner ? LeadOwner : registerData.data.cProfile.toString(),
                     org_uid: registerData.data.org_uid,
                     uid: registerData.data.uid
                 }
