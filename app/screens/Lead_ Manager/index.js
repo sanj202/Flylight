@@ -267,49 +267,55 @@ export default function lead_manager({ navigation, route }) {
   }
 
   const UploadFile = (value) => {
-    let file = {
-      name: singleFile[0].name,
-      type: singleFile[0].type,
-      uri: singleFile[0].uri,
-      size: singleFile[0].size
-    }
-    if (loginData.status == "success") {
-      if (tempUploadingType == 'Opportunity') {
-        const formdata = new FormData;
-        formdata.append('CSVFILE', file);
-        formdata.append('profile_id', loginData.data.cProfile);
-        formdata.append('orgid', loginData.data.user.org_id);
-        dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
-        setIsULodding(true)
-      }
-      else {
-        const formdata = new FormData;
-        formdata.append('CSVFILE', file);
-        formdata.append('profile_id', loginData.data.cProfile);
-        formdata.append('orgid', loginData.data.user.org_id);
-        dispatch(leadAction.importLead(formdata, loginData.data.token));
-        setIsULodding(true)
-      }
-    }
-    else if (registerData.status == "success") {
-      if (tempUploadingType == 'Opportunity') {
-        const formdata = new FormData;
-        formdata.append('CSVFILE', file);
-        formdata.append('profile_id', registerData.data.cProfile);
-        formdata.append('orgid', registerData.data.org_id);
-        dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
-        setIsULodding(true)
-      }
-      else {
-        const formdata = new FormData;
-        formdata.append('CSVFILE', file);
-        formdata.append('profile_id', registerData.data.cProfile);
-        formdata.append('orgid', registerData.data.org_id);
-        dispatch(leadAction.importLead(formdata, loginData.data.token));
-        setIsULodding(true)
-      }
-    }
 
+    if (singleFile == null) {
+      Alert.alert("Please Select File")
+    }
+    else {
+
+      let file = {
+        name: singleFile[0].name,
+        type: singleFile[0].type,
+        uri: singleFile[0].uri,
+        size: singleFile[0].size
+      }
+      if (loginData.status == "success") {
+        if (tempUploadingType == 'Opportunity') {
+          const formdata = new FormData;
+          formdata.append('CSVFILE', file);
+          formdata.append('profile_id', loginData.data.cProfile);
+          formdata.append('orgid', loginData.data.user.org_id);
+          dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
+          setIsULodding(true)
+        }
+        else {
+          const formdata = new FormData;
+          formdata.append('CSVFILE', file);
+          formdata.append('profile_id', loginData.data.cProfile);
+          formdata.append('orgid', loginData.data.user.org_id);
+          dispatch(leadAction.importLead(formdata, loginData.data.token));
+          setIsULodding(true)
+        }
+      }
+      else if (registerData.status == "success") {
+        if (tempUploadingType == 'Opportunity') {
+          const formdata = new FormData;
+          formdata.append('CSVFILE', file);
+          formdata.append('profile_id', registerData.data.cProfile);
+          formdata.append('orgid', registerData.data.org_id);
+          dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
+          setIsULodding(true)
+        }
+        else {
+          const formdata = new FormData;
+          formdata.append('CSVFILE', file);
+          formdata.append('profile_id', registerData.data.cProfile);
+          formdata.append('orgid', registerData.data.org_id);
+          dispatch(leadAction.importLead(formdata, loginData.data.token));
+          setIsULodding(true)
+        }
+      }
+    }
   }
 
   const UploadFileCancel = (value) => {
@@ -373,12 +379,15 @@ export default function lead_manager({ navigation, route }) {
             fontFamily: 'Roboto'
           }}>{item.first_name} {item.last_name}</Text>
           <View style={{ flexDirection: 'row', }}>
-            <Text
-              style={{
-                color: 'black', fontFamily: 'Roboto',
-                fontSize: 12, color: '#0F0F0F', flexShrink: 1
-              }}>
-              {item.company ? item.company : "not available"}</Text>
+            <View style={{ width: '35%', backgroundColor: '' }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: 'black', fontFamily: 'Roboto',
+                  fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                }}>
+                {item.company ? item.company : "not available"}</Text>
+            </View>
             {
               item.role == 'opportunity' ?
                 <View style={{
@@ -392,10 +401,10 @@ export default function lead_manager({ navigation, route }) {
                 <View
                   style={{
                     backgroundColor: '#F69708', borderRadius: 15,
-                    paddingHorizontal: 5, paddingVertical: 1, marginLeft: '2%',
+                    paddingHorizontal: 8, marginLeft: '2%',
                     borderWidth: 1, borderColor: '#F69708',
                   }}>
-                  <Text style={{ color: '#fff', fontSize: 14 }}>Lead</Text>
+                  <Text style={{ color: '#fff', fontSize: 12 }}>Lead</Text>
                 </View>
             }
 
@@ -485,19 +494,22 @@ export default function lead_manager({ navigation, route }) {
           }}>{item.first_name} {item.last_name}</Text>
 
           <View style={{ flexDirection: 'row', }}>
-            <Text
-              style={{
-                color: 'black', fontFamily: 'Roboto',
-                fontSize: 12, color: '#0F0F0F', flexShrink: 1
-              }}>
-              {item.company ? item.company : "not available"}</Text>
+            <View style={{ width: '35%', backgroundColor: '' }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: 'black', fontFamily: 'Roboto',
+                  fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                }}>
+                {item.company ? item.company : "not available"}</Text>
+            </View>
             <View
               style={{
                 backgroundColor: '#F69708', borderRadius: 15,
-                paddingHorizontal: 5, paddingVertical: 1, marginLeft: '2%',
+                paddingHorizontal: 8, marginLeft: '2%',
                 borderWidth: 1, borderColor: '#F69708',
               }}>
-              <Text style={{ color: '#fff', fontSize: 14 }}>Lead</Text>
+              <Text style={{ color: '#fff', fontSize: 12 }}>Lead</Text>
             </View>
           </View>
           <View style={{ flexDirection: 'row', }}>
@@ -558,10 +570,15 @@ export default function lead_manager({ navigation, route }) {
             fontFamily: 'Roboto'
           }}>{item.first_name} {item.last_name}</Text>
           <View style={{ flexDirection: 'row', }}>
-            <Text style={{
-              color: 'black', fontFamily: 'Roboto',
-              fontSize: 12, color: '#0F0F0F', flexShrink: 1
-            }}>{item.company ? item.company : "not available"}</Text>
+            <View style={{ width: '35%', backgroundColor: '' }}>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: 'black', fontFamily: 'Roboto',
+                  fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                }}>
+                {item.company ? item.company : "not available"}</Text>
+            </View>
             <View style={{
               backgroundColor: '#07DE00', borderRadius: 15,
               paddingHorizontal: 5, paddingVertical: 1, marginLeft: '2%',
@@ -1147,7 +1164,7 @@ export default function lead_manager({ navigation, route }) {
             Please Select Only .CSV files </Text> */}
           <TouchableOpacity
             onPress={() => OpenFilePicker()}
-            style={{ borderWidth: 1, padding: 5, marginVertical: '10%', marginHorizontal: '15%' }}>
+            style={{ borderWidth: 1, borderRadius: 10, padding: 8, marginVertical: '10%', marginHorizontal: '15%' }}>
             <Text>{SelectedFile}</Text>
           </TouchableOpacity>
 

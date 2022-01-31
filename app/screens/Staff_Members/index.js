@@ -201,14 +201,14 @@ export default function lead_manager({ navigation }) {
                     <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Mobile </Text>
                     <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Email  </Text>
                 </View>
-                <View style={{ marginLeft: '2%' ,width:'58%'}}>
+                <View style={{ marginLeft: '2%', width: '58%' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.phone}</Text>
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.email}</Text>
                 </View>
-                <View style={{ marginLeft: '2%'}}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('MM/DD/YYYY')},</Text>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("hh:mm")}</Text>
+                <View style={{ marginLeft: '-12%' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('MMMM Do YYYY')},</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("h:mm A")}</Text>
                 </View>
             </View>)
     }

@@ -213,7 +213,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#3373F3',
         color: 'white',
         textAlign: "center",
-        paddingVertical: '3%'
+        paddingVertical: '3%',
+        borderTopLeftRadius:20,
+        borderTopRightRadius:20
       },
       askSubtitle: {
         margin: '5%',
