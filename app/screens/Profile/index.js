@@ -38,7 +38,7 @@ export default function AddContact({ navigation }) {
         }
     }, [loginData, registerData, isFocused])
 
-   const getProfile=()=>{
+    const getProfile = () => {
         if (loginData.status == "success") {
             setIsLodding(true)
             const data = {
@@ -237,18 +237,14 @@ export default function AddContact({ navigation }) {
                         <View style={{ flexDirection: 'row' }}>
                             <Image
                                 // source={require('../../images/avtar.jpg')}
-                                source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' +user.avatar }}
+                                source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
                                 style={{
                                     height: 96, width: 96, borderRadius: 45,
                                     marginTop: '3%', marginLeft: '4%',
                                     alignSelf: 'center'
                                 }}
                             />
-                            <TouchableOpacity
-                                onPress={() => UploadAvtar()}
-                            >
-                                <Text style={{ color: '#fff' }}>edit</Text>
-                            </TouchableOpacity>
+
                         </View>
                         :
                         <View style={{ flexDirection: 'row' }}>
@@ -267,6 +263,15 @@ export default function AddContact({ navigation }) {
                             </TouchableOpacity>
                         </View>
                     }
+                    <TouchableOpacity
+                        onPress={() => UploadAvtar()}
+                    >
+                        <Image
+                            style={{ height: 22, width: 22,backgroundColor:'#FFF',borderRadius:10, marginRight: '2%' ,marginTop:'-25 %'}}
+                            source={require('../../images/edit_Profile.png')}
+                        />
+                    </TouchableOpacity>
+
                     <Text style={{
                         marginTop: '5%',
                         marginBottom: '2%', textAlign: 'center',

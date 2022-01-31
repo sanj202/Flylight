@@ -65,7 +65,7 @@ import BaseUrl from '../../../const'
 
 
 
-export const TaskList = (token, uid, profile_id, org_id) => {
+export const TaskList = (data,token,) => {
     // console.log(" credentails..................",token,uid,profile_id,org_id )
     return (dispatch) => {
         dispatch({ type: Get_Todo })
@@ -79,11 +79,7 @@ export const TaskList = (token, uid, profile_id, org_id) => {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
                 },
-                body: JSON.stringify({
-                    uid:uid,
-                    profile_id: profile_id,
-                    orgId : org_id
-                }),
+                body: JSON.stringify(data),
             })
             .then(response => response.json())
             .then(responseData => {

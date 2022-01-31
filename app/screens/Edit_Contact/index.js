@@ -580,6 +580,7 @@ export default function EditContact({ navigation, route }) {
                         <TextInput
                             style={{ flex: 1 }}
                             value={ZipCode}
+                            keyboardType='numeric'
                             onChangeText={e16 => setZipCode(e16)}
                             placeholder="Zip Code " />
                     </View>

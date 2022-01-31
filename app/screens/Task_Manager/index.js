@@ -94,20 +94,21 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
-                dispatch(taskmanagerAction.TaskList(
-                    loginData.data.token,
-                    loginData.data.uid,
-                    loginData.data.cProfile.toString(),
-                    loginData.data.user.org_id.toString()
-                ));
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    org_uid: loginData.data.org_uid,
+                  }
+
+                dispatch(taskmanagerAction.TaskList(data ,loginData.data.token));
             }
             else if (registerData.status == "success") {
-                dispatch(taskmanagerAction.TaskList(
-                    registerData.data.token,
-                    registerData.data.uid,
-                    registerData.data.cProfile.toString(),
-                    registerData.data.org_id.toString()
-                ));
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                    org_uid: registerData.data.org_uid,
+                  }
+                dispatch(taskmanagerAction.TaskList(data,registerData.data.token))
             }
             setIsLodding(true)
         }
@@ -115,6 +116,7 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (taskList) {
+            console.log("tasklist...........",taskList.data)
             if (taskList.status == "200") {
                 setallTask(taskList.data)
                 setIsLodding(false)
@@ -138,6 +140,7 @@ export default function lead_manager({ navigation }) {
 
 
     const AllView = ({ item }) => {
+        console.log("alltask veiw...................",item.related_to)
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
@@ -151,7 +154,7 @@ export default function lead_manager({ navigation }) {
                         <Text style={{
                             fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
                             fontFamily: 'Roboto'
-                        }}>User Name</Text>
+                        }}>{item.profile ? item.profile.user.name :''}</Text>
 
                         <View style={{ flexDirection: 'row', }}>
                             <Text
@@ -159,7 +162,7 @@ export default function lead_manager({ navigation }) {
                                     color: 'black', fontFamily: 'Roboto',
                                     fontSize: 12, color: '#0F0F0F', flexShrink: 1
                                 }}>
-                                Meeting with Mr. {item.description}</Text>
+                                Meeting with Mr. {item.related_to}</Text>
 
                         </View>
                         <View style={{ flexDirection: 'row', marginTop: '1%' }}>

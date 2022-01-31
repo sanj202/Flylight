@@ -123,9 +123,16 @@ export default function SideMenu({ navigation }) {
                         // marginTop: '2%'
                     }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                        {user.avatar ? 
                             <Avatar.Image
                                 size={100}
-                                source={require('../../images/avtar.jpg')} />
+                                // source={require('../../images/avtar.jpg')}
+                                source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
+                                 />
+                                :
+                                <Avatar.Image
+                                size={100}
+                                source={require('../../images/avtar.jpg')} /> }
 
                             <Card.Content style={{ marginTop: '10%', marginLeft: '-2%' }}>
                                 <Title style={{
