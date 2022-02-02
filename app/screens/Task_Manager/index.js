@@ -98,17 +98,17 @@ export default function lead_manager({ navigation }) {
                     uid: loginData.data.uid,
                     profile_id: loginData.data.cProfile.toString(),
                     org_uid: loginData.data.org_uid,
-                  }
+                }
 
-                dispatch(taskmanagerAction.TaskList(data ,loginData.data.token));
+                dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 const data = {
                     uid: registerData.data.uid,
                     profile_id: registerData.data.cProfile.toString(),
                     org_uid: registerData.data.org_uid,
-                  }
-                dispatch(taskmanagerAction.TaskList(data,registerData.data.token))
+                }
+                dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
             }
             setIsLodding(true)
         }
@@ -116,7 +116,7 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (taskList) {
-            console.log("tasklist...........",taskList.data)
+            console.log("tasklist...........", taskList.data)
             if (taskList.status == "200") {
                 setallTask(taskList.data)
                 setIsLodding(false)
@@ -139,56 +139,96 @@ export default function lead_manager({ navigation }) {
     }, [taskList])
 
 
+
+
     const AllView = ({ item }) => {
-        console.log("alltask veiw...................",item.related_to)
+        console.log("alltask veiw...................", item.profile)
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
                     <View style={{ backgroundColor: '', justifyContent: 'center', }}>
-                        <Image
-                            style={{ height: 48, width: 48, }}
-                            source={require('../../images/profileCall.png')}
-                        />
+                        {item.profile ?
+                            item.profile.user ?
+                                <Image
+
+                                    style={{ height: 48, width: 48, borderRadius: 24 }}
+                                    source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
+                                />
+                                : <Image
+
+                                    style={{ height: 48, width: 48, }}
+                                    source={require('../../images/profileCall.png')}
+                                />
+                            : ''}
                     </View>
                     <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
                         <Text style={{
                             fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
                             fontFamily: 'Roboto'
-                        }}>{item.profile ? item.profile.user.name :''}</Text>
+                        }}>{item.profile ? item.profile.user.name : ''}</Text>
 
                         <View style={{ flexDirection: 'row', }}>
+
+                            <View style={{ width: '45%', backgroundColor: '' }}>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        color: 'black', fontFamily: 'Roboto',
+                                        fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                                    }}>
+                                    {item.related_to ? item.related_to : "not available"}</Text>
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: '#F69708', borderRadius: 15,
+                                    paddingHorizontal: 8, marginLeft: '2%',
+                                    borderWidth: 1, borderColor: '#F69708',
+                                }}>
+                                <Text style={{ color: '#fff', fontSize: 12 }}>{item.task_for}</Text>
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'column', }}>
                             <Text
                                 style={{
                                     color: 'black', fontFamily: 'Roboto',
                                     fontSize: 12, color: '#0F0F0F', flexShrink: 1
                                 }}>
-                                Meeting with Mr. {item.related_to}</Text>
-
+                                {item.subject}</Text>
                         </View>
-                        <View style={{ flexDirection: 'row', marginTop: '1%' }}>
-                            <TouchableOpacity>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', marginTop: '10%' }}>
+                        {item.status == 'completed' ?
+                            < TouchableOpacity >
                                 <Image
                                     style={{ height: 22, width: 22, marginRight: '2%' }}
                                     source={require('../../images/okCall.png')}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => EditTask()}
-                            >
+                            :
+                            <TouchableOpacity>
                                 <Image
                                     style={{ height: 22, width: 22, marginRight: '2%' }}
-                                    source={require('../../images/editCall.png')}
+                                    source={require('../../images/to-do.png')}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => DeleteTask()}
-                            >
-                                <Image
-                                    style={{ height: 22, width: 22, }}
-                                    source={require('../../images/deleteCall.png')}
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        }
+                        <TouchableOpacity
+                            // onPress={() => EditTask()}
+                        >
+                            <Image
+                                style={{ height: 22, width: 22, marginRight: '2%' }}
+                                source={require('../../images/editCall.png')}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => DeleteTask()}
+                        >
+                            <Image
+                                style={{ height: 22, width: 22, }}
+                                source={require('../../images/deleteCall.png')}
+                            />
+                        </TouchableOpacity>
                     </View>
 
                     <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
@@ -200,11 +240,221 @@ export default function lead_manager({ navigation }) {
                             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
                         </View>
                         <Text style={{
-                            marginTop: '40%', textAlign: 'right',
+                            marginTop: '30%', textAlign: 'right',
                             color: 'black', fontSize: 11
                         }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text>
                     </View>
                 </View>
+            </View >
+        )
+    }
+
+    const DoneView = ({ item }) => {
+        return (
+            <View>
+                {item.status == 'completed' ?
+                    <View style={{ marginTop: '1%' }}>
+                        <View style={styles.listData}>
+                            <View style={{ backgroundColor: '', justifyContent: 'center', }}>
+                                {item.profile ?
+                                    item.profile.user ?
+                                        <Image
+                                            style={{ height: 48, width: 48, borderRadius: 24 }}
+                                            source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
+                                        />
+                                        : <Image
+                                            style={{ height: 48, width: 48, }}
+                                            source={require('../../images/profileCall.png')}
+                                        />
+                                    : ''}
+                            </View>
+                            <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
+                                <Text style={{
+                                    fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
+                                    fontFamily: 'Roboto'
+                                }}>{item.profile ? item.profile.user.name : ''}</Text>
+
+                                <View style={{ flexDirection: 'row', }}>
+
+                                    <View style={{ width: '45%', backgroundColor: '' }}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{
+                                                color: 'black', fontFamily: 'Roboto',
+                                                fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                                            }}>
+                                            {item.related_to ? item.related_to : "not available"}</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#F69708', borderRadius: 15,
+                                            paddingHorizontal: 8, marginLeft: '2%',
+                                            borderWidth: 1, borderColor: '#F69708',
+                                        }}>
+                                        <Text style={{ color: '#fff', fontSize: 12 }}>{item.task_for}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'column', }}>
+                                    <Text
+                                        style={{
+                                            color: 'black', fontFamily: 'Roboto',
+                                            fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                                        }}>
+                                        {item.subject}</Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: '10%' }}>
+                                <TouchableOpacity>
+                                    <Image
+                                        style={{ height: 22, width: 22, marginRight: '2%' }}
+                                        source={require('../../images/okCall.png')}
+                                    />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    // onPress={() => EditTask()}
+                                >
+                                    <Image
+                                        style={{ height: 22, width: 22, marginRight: '2%' }}
+                                        source={require('../../images/editCall.png')}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => DeleteTask()}
+                                >
+                                    <Image
+                                        style={{ height: 22, width: 22, }}
+                                        source={require('../../images/deleteCall.png')}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Image
+                                        style={{ height: 10, width: 10, marginRight: '2%' }}
+                                        source={require('../../images/material-call.png')}
+                                    />
+                                    <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
+                                </View>
+                                <Text style={{
+                                    marginTop: '30%', textAlign: 'right',
+                                    color: 'black', fontSize: 11
+                                }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text>
+                            </View>
+                        </View>
+                    </View >
+                    :
+                    <View>
+                    </View>
+                }
+            </View>
+        )
+    }
+
+    const TODOView = ({ item }) => {
+        return (
+            <View>
+                {item.status !== 'completed' ?
+                    <View style={{ marginTop: '1%' }}>
+                        <View style={styles.listData}>
+                            <View style={{ backgroundColor: '', justifyContent: 'center', }}>
+                                {item.profile ?
+                                    item.profile.user ?
+                                        <Image
+
+                                            style={{ height: 48, width: 48, borderRadius: 24 }}
+                                            source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
+                                        />
+                                        : <Image
+
+                                            style={{ height: 48, width: 48, }}
+                                            source={require('../../images/profileCall.png')}
+                                        />
+                                    : ''}
+                            </View>
+                            <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
+                                <Text style={{
+                                    fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
+                                    fontFamily: 'Roboto'
+                                }}>{item.profile ? item.profile.user.name : ''}</Text>
+
+                                <View style={{ flexDirection: 'row', }}>
+
+                                    <View style={{ width: '45%', backgroundColor: '' }}>
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{
+                                                color: 'black', fontFamily: 'Roboto',
+                                                fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                                            }}>
+                                            {item.related_to ? item.related_to : "not available"}</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: '#F69708', borderRadius: 15,
+                                            paddingHorizontal: 8, marginLeft: '2%',
+                                            borderWidth: 1, borderColor: '#F69708',
+                                        }}>
+                                        <Text style={{ color: '#fff', fontSize: 12 }}>{item.task_for}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'column', }}>
+                                    <Text
+                                        style={{
+                                            color: 'black', fontFamily: 'Roboto',
+                                            fontSize: 12, color: '#0F0F0F', flexShrink: 1
+                                        }}>
+                                        {item.subject}</Text>
+                                </View>
+                            </View>
+
+                            <View style={{ flexDirection: 'row', marginTop: '10%' }}>
+                                <TouchableOpacity>
+                                    <Image
+                                        style={{ height: 22, width: 22, marginRight: '2%' }}
+                                        source={require('../../images/to-do.png')}
+                                    />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    // onPress={() => EditTask()}
+                                >
+                                    <Image
+                                        style={{ height: 22, width: 22, marginRight: '2%' }}
+                                        source={require('../../images/editCall.png')}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => DeleteTask()}
+                                >
+                                    <Image
+                                        style={{ height: 22, width: 22, }}
+                                        source={require('../../images/deleteCall.png')}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+
+                            <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Image
+                                        style={{ height: 10, width: 10, marginRight: '2%' }}
+                                        source={require('../../images/material-call.png')}
+                                    />
+                                    <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
+                                </View>
+                                <Text style={{
+                                    marginTop: '30%', textAlign: 'right',
+                                    color: 'black', fontSize: 11
+                                }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text>
+                            </View>
+                        </View>
+                    </View >
+                    :
+                    <View>
+                    </View>
+                }
             </View>
         )
     }
@@ -334,314 +584,53 @@ export default function lead_manager({ navigation }) {
                 <View />
             }
 
-
-
-
-
-
-
             {
                 isService == "To-Do" ?
                     <View style={{ marginTop: '3%' }}>
-
-
-                        <View style={{ marginTop: '1%' }}>
-                            <View style={styles.listData}>
-                                <Image
-                                    style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                                    source={require('../../images/profileCall.png')}
-                                />
-                                <View>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Johne Doe</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>Meeting with Mr. George</Text>
-                                        {/* <Text style={{
-                                                color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                                                padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 12
-                                            }}>Lead</Text> */}
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-
-                                        <TouchableOpacity>
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/to-do.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => EditTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/editCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => DeleteTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', }}
-                                                source={require('../../images/deleteCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <Image
-                                    style={{ height: 10, width: 10, marginTop: '2%' }}
-                                    source={require('../../images/material-call.png')}
-                                />
-
-                                <View style={{ flexDirection: 'column' }}>
-                                    <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text>
-                                    <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text>
-                                </View>
+                        {IsLodding == true ?
+                            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                            :
+                            <View>
+                                {allTask !== undefined && allTask.length > 0 ?
+                                    <FlatList
+                                        // style={{ height: height / 1.55 }}
+                                        data={allTask}
+                                        renderItem={TODOView}
+                                    />
+                                    :
+                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
                             </View>
-                        </View>
-
-
-
-                        <View style={{ marginTop: '-1%' }}>
-                            <View style={styles.listData}>
-                                <Image
-                                    style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                                    source={require('../../images/profileCall.png')}
-                                />
-                                <View>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Johne Doe</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>Meeting with Mr. George</Text>
-                                        {/* <Text style={{
-                                                color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                                                padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 12
-                                            }}>Lead</Text> */}
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-
-                                        <TouchableOpacity>
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/to-do.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => EditTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/editCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => DeleteTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', }}
-                                                source={require('../../images/deleteCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <Image
-                                    style={{ height: 10, width: 10, marginTop: '2%' }}
-                                    source={require('../../images/material-call.png')}
-                                />
-
-                                <View style={{ flexDirection: 'column' }}>
-                                    <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text>
-                                    <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text>
-                                </View>
-                            </View>
-                        </View>
-
-
-                        <View style={{ marginTop: '-1%' }}>
-                            <View style={styles.listData}>
-                                <Image
-                                    style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                                    source={require('../../images/profileCall.png')}
-                                />
-                                <View>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Johne Doe</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>Meeting with Mr. George</Text>
-                                        {/* <Text style={{
-                                                color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                                                padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 12
-                                            }}>Lead</Text> */}
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-
-                                        <TouchableOpacity>
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/to-do.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => EditTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/editCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => DeleteTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', }}
-                                                source={require('../../images/deleteCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <Image
-                                    style={{ height: 10, width: 10, marginTop: '2%' }}
-                                    source={require('../../images/material-call.png')}
-                                />
-
-                                <View style={{ flexDirection: 'column' }}>
-                                    <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text>
-                                    <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text>
-                                </View>
-                            </View>
-                        </View>
-
-
-
-
+                        }
                     </View>
-
                     :
                     <View />
             }
 
             {
                 isService == "Done" ?
-                    <View style={{ marginTop: '3%' }}>
-
-                        <View style={{ marginTop: '1%' }}>
-                            <View style={styles.listData}>
-                                <Image
-                                    style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                                    source={require('../../images/profileCall.png')}
-                                />
-                                <View>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Johne Doe</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>Meeting with Mr. George</Text>
-                                        {/* <Text style={{
-                                                color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                                                padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 12
-                                            }}>Lead</Text> */}
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-
-                                        <TouchableOpacity>
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/okCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => EditTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/editCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => DeleteTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', }}
-                                                source={require('../../images/deleteCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <Image
-                                    style={{ height: 10, width: 10, marginTop: '2%' }}
-                                    source={require('../../images/material-call.png')}
-                                />
-
-                                <View style={{ flexDirection: 'column' }}>
-                                    <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text>
-                                    <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text>
-                                </View>
-                            </View>
-                        </View>
 
 
-                        <View style={{ marginTop: '-1%' }}>
-                            <View style={styles.listData}>
-                                <Image
-                                    style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                                    source={require('../../images/profileCall.png')}
-                                />
-                                <View>
-                                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Johne Doe</Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F' }}>Meeting with Mr. George</Text>
-                                        {/* <Text style={{
-                                                color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                                                padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 12
-                                            }}>Lead</Text> */}
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-
-                                        <TouchableOpacity>
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/okCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => EditTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', marginRight: '5%' }}
-                                                source={require('../../images/editCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            onPress={() => DeleteTask()}
-                                        >
-                                            <Image
-                                                style={{ height: 22, width: 22, marginTop: '8%', }}
-                                                source={require('../../images/deleteCall.png')}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-
-                                <Image
-                                    style={{ height: 10, width: 10, marginTop: '2%' }}
-                                    source={require('../../images/material-call.png')}
-                                />
-
-                                <View style={{ flexDirection: 'column' }}>
-                                    <Text style={{ marginTop: '4%', color: 'black', fontSize: 10 }}>+91 1234567890</Text>
-                                    <Text style={{ marginTop: '20%', textAlign: 'right', marginRight: '2%', color: 'black', fontSize: 11 }}>Wed, 08 Sep ,{'\n'}14:00PM</Text>
-                                </View>
-                            </View>
-                        </View>
-
-
-                    </View >
-
+                <View style={{ marginTop: '3%' }}>
+                {IsLodding == true ?
+                    <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                    :
+                    <View>
+                        {allTask !== undefined && allTask.length > 0 ?
+                            <FlatList
+                                // style={{ height: height / 1.55 }}
+                                data={allTask}
+                                renderItem={DoneView}
+                            />
+                            :
+                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+                    </View>
+                }
+            </View>
                     :
                     <View />
             }
 
             {/* ================================================== */}
-
-
 
             <BottomSheet modalProps={{
                 animationType: 'fade',
