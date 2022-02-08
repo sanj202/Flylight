@@ -155,7 +155,6 @@ export default function lead_manager({ navigation, route }) {
           uid: loginData.data.uid,
           profile_id: loginData.data.cProfile.toString(),
           org_uid: loginData.data.org_uid,
-          orgid: loginData.data.user.org_id.toString(),
           lead_id: tempId
         }
         dispatch(leadAction.deleteLead(data, loginData.data.token));
@@ -166,7 +165,6 @@ export default function lead_manager({ navigation, route }) {
           uid: registerData.data.uid,
           profile_id: registerData.data.cProfile.toString(),
           org_uid: registerData.data.org_uid,
-          orgid: registerData.data.org_id.toString(),
           lead_id: tempId
         }
         dispatch(leadAction.deleteLead(data, registerData.data.token));
@@ -180,7 +178,6 @@ export default function lead_manager({ navigation, route }) {
           uid: loginData.data.uid,
           profile_id: loginData.data.cProfile.toString(),
           org_uid: loginData.data.org_uid,
-          orgid: loginData.data.user.org_id.toString(),
           Opportinity_id: tempId
         }
         dispatch(opportunityAction.deleteOpportunity(data, loginData.data.token));
@@ -191,7 +188,6 @@ export default function lead_manager({ navigation, route }) {
           uid: registerData.data.uid,
           profile_id: registerData.data.cProfile.toString(),
           org_uid: registerData.data.org_uid,
-          orgid: registerData.data.org_id.toString(),
           Opportinity_id: tempId
         }
         dispatch(opportunityAction.deleteOpportunity(data, registerData.data.token));

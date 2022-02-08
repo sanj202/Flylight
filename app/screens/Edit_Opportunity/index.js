@@ -8,7 +8,7 @@ import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
-import { opportunityAction, leadAction } from '../../redux/Actions/index'
+import { opportunityAction, leadAction ,campaignAction} from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
@@ -183,7 +183,7 @@ export default function AddContact({ navigation, route }) {
                     profile_id: loginData.data.cProfile.toString(),
                 }
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-                dispatch(leadAction.CampaignList(data, loginData.data.token));
+               dispatch(campaignAction.CampaignList(data, loginData.data.token))
                 dispatch(leadAction.LeadStatusList(data, loginData.data.token));
                 dispatch(leadAction.StateList(data, loginData.data.token));
             }
@@ -194,7 +194,7 @@ export default function AddContact({ navigation, route }) {
                     uid: registerData.data.uid
                 }
                 dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-                dispatch(leadAction.CampaignList(data, registerData.data.token));
+               dispatch(campaignAction.CampaignList(data, loginData.data.token));
                 dispatch(leadAction.LeadStatusList(data, registerData.data.token));
                 dispatch(leadAction.StateList(data, registerData.data.token));
             }
@@ -275,7 +275,11 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "200") {
-                setcampaignData([{ label: 'None', value: 'None' },])
+                let campList = campaignList.data && campaignList.data.map((ld) => {
+                    let user = { label: ld.campaign_name, value: ld.id }
+                    return user;
+                })
+                setcampaignData(campList ?  campList : [{ label: 'None', value: 'None' }])
             }
             else if (campaignList.status == "failed") {
             }
@@ -867,7 +871,7 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={campaignData}
-                            maxHeight={60}
+                            maxHeight={100}
                             labelField="label"
                             valueField="value"
                             placeholder={!isFocus1 ? '  Select a Campagin' : '...'}

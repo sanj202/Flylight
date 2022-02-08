@@ -21,7 +21,7 @@ export const importOpportunity = (data, token) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log("data......................",responseData)
+                // console.log("data......................",responseData)
                 dispatch({ type: Import_Opportunity_Success, payload: responseData })
             })
             .catch((error) => {

@@ -130,7 +130,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
-                        orgId: loginData.data.user.org_id.toString(),
                         status: newStatus,
                         org_uid: loginData.data.org_uid,
                     }
@@ -140,7 +139,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
-                        orgId: loginData.data.user.org_id.toString(),
                         action: newAction,
                         org_uid: loginData.data.org_uid,
                     }
@@ -152,7 +150,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: registerData.data.uid,
                         profile_id: registerData.data.cProfile.toString(),
-                        orgId: registerData.data.org_id.toString(),
                         status: newStatus,
                         org_uid: registerData.data.org_uid,
                     }
@@ -162,7 +159,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: registerData.data.uid,
                         profile_id: registerData.data.cProfile.toString(),
-                        orgId: registerData.data.org_id.toString(),
                         action: newAction,
                         org_uid: registerData.data.org_uid,
                     }
@@ -236,7 +232,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
-                        orgId: loginData.data.user.org_id.toString(),
                         action: EditingValue,
                         org_uid: loginData.data.org_uid,
                         action_id: EditingId
@@ -247,7 +242,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
-                        orgId: loginData.data.user.org_id.toString(),
                         status: EditingValue,
                         org_uid: loginData.data.org_uid,
                         status_id: EditingId
@@ -261,7 +255,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: registerData.data.uid,
                         profile_id: registerData.data.cProfile.toString(),
-                        orgId: registerData.data.org_id.toString(),
                         action: EditingValue,
                         org_uid: registerData.data.org_uid,
                         action_id: EditingId
@@ -272,7 +265,6 @@ export default function action_manager({ navigation }) {
                     const data = {
                         uid: registerData.data.uid,
                         profile_id: registerData.data.cProfile.toString(),
-                        orgId: registerData.data.org_id.toString(),
                         status: EditingValue,
                         org_uid: registerData.data.org_uid,
                         status_id: EditingId
@@ -316,7 +308,6 @@ export default function action_manager({ navigation }) {
                 const data = {
                     uid: loginData.data.uid,
                     profile_id: loginData.data.cProfile.toString(),
-                    orgId: loginData.data.user.org_id.toString(),
                     org_uid: loginData.data.org_uid,
                     action_id: tempId
                 }
@@ -327,7 +318,6 @@ export default function action_manager({ navigation }) {
                 const data = {
                     uid: loginData.data.uid,
                     profile_id: loginData.data.cProfile.toString(),
-                    orgId: loginData.data.user.org_id.toString(),
                     org_uid: loginData.data.org_uid,
                     status_id: tempId
                 }
@@ -343,7 +333,6 @@ export default function action_manager({ navigation }) {
                 const data = {
                     uid: registerData.data.uid,
                     profile_id: registerData.data.cProfile.toString(),
-                    orgId: registerData.data.org_id.toString(),
                     org_uid: registerData.data.org_uid,
                     action_id: tempId
                 }
@@ -354,7 +343,6 @@ export default function action_manager({ navigation }) {
                 const data = {
                     uid: registerData.data.uid,
                     profile_id: registerData.data.cProfile.toString(),
-                    orgId: registerData.data.org_id.toString(),
                     org_uid: registerData.data.org_uid,
                     status_id: tempId
                 }

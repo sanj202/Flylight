@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-    Dimensions, View, Text, SafeAreaView, Image,
-    useWindowDimensions, ImageBackground, StatusBar
+    Alert, Dimensions, View, Text, SafeAreaView, Image, useWindowDimensions, ImageBackground, StatusBar
 } from 'react-native'
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
@@ -123,16 +122,16 @@ export default function SideMenu({ navigation }) {
                         // marginTop: '2%'
                     }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                        {user.avatar ? 
-                            <Avatar.Image
-                                size={100}
-                                // source={require('../../images/avtar.jpg')}
-                                source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
-                                 />
+                            {user.avatar ?
+                                <Avatar.Image
+                                    size={100}
+                                    // source={require('../../images/avtar.jpg')}
+                                    source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
+                                />
                                 :
                                 <Avatar.Image
-                                size={100}
-                                source={require('../../images/avtar.jpg')} /> }
+                                    size={100}
+                                    source={require('../../images/avtar.jpg')} />}
 
                             <Card.Content style={{ marginTop: '10%', marginLeft: '-2%' }}>
                                 <Title style={{
@@ -141,6 +140,12 @@ export default function SideMenu({ navigation }) {
                                 }}>{user.name ? user.name : ''}</Title>
                                 <Paragraph
                                     style={{ marginTop: '-5%', fontSize: 13, fontFamily: 'Roboto', fontWeight: 'normal', color: '#FFFFFF' }}>+91 {user.phone ? user.phone : ''}</Paragraph>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('Organization')}
+                                >
+                                    <Text
+                                        style={{ fontSize: 12, fontFamily: 'Roboto', fontWeight: 'normal', color: '#FFFFFF' }}>Switch Orginization</Text>
+                                </TouchableOpacity>
                             </Card.Content>
                         </View>
                     </View>
@@ -252,6 +257,31 @@ export default function SideMenu({ navigation }) {
 
                                 <Image
                                     style={[styles.image3, { marginLeft: '28%' }]}
+                                    source={require('../../images/next.png')}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+                
+                <View style={styles.menusTop}>
+
+                    <TouchableOpacity
+                    onPress={()=>navigation.navigate('Campaign')}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Image
+                                style={[styles.image2, { marginRight: '2%', width: 23.27, height: 23.27 }]}
+                                source={require('../../images/language.png')}
+                            />
+                            <View style={styles.menus}>
+                                <Text style={styles.items}>
+                                Campaigns
+                                </Text>
+
+                                <Image
+                                    style={[styles.image3, { marginLeft: '38%' }]}
                                     source={require('../../images/next.png')}
                                 />
                             </View>

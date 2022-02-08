@@ -4,7 +4,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper'
 import styles from "./styles";
 import Header from '../../component/header'
-import { reportAction, leadAction } from '../../redux/Actions/index'
+import { reportAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
@@ -34,38 +34,22 @@ export default function Report({ navigation }) {
         if (loginData || registerData && isFocused) {
 
             if (loginData.status == "success") {
-
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
+                    profile_id: loginData.data.cProfile,
                 }
-
-                dispatch(reportAction.reportList(
-                    loginData.data.token,
-                    loginData.data.uid,
-                    loginData.data.cProfile.toString(),
-                    loginData.data.user.org_id.toString(),
-                    loginData.data.org_uid,
-                ));
-                dispatch(leadAction.CampaignList(data, loginData.data.token));
+                dispatch(reportAction.reportList(data, loginData.data.token));
+               dispatch(campaignAction.CampaignList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
-
                 const data = {
-                    profile_id: registerData.data.cProfile.toString(),
+                    profile_id: registerData.data.cProfile,
                     org_uid: registerData.data.org_uid,
                     uid: registerData.data.uid
                 }
-
-                dispatch(reportAction.reportList(
-                    registerData.data.token,
-                    registerData.data.uid,
-                    registerData.data.cProfile.toString(),
-                    registerData.data.org_id.toString(),
-                    registerData.data.org_uid
-                ));
-                dispatch(leadAction.CampaignList(data, registerData.data.token));
+                dispatch(reportAction.reportList(data, registerData.data.token));
+               dispatch(campaignAction.CampaignList(data, registerData.data.token));
             }
         }
     }, [loginData, registerData, isFocused])
@@ -95,7 +79,11 @@ export default function Report({ navigation }) {
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "200") {
-                setcampaignData([{ label: 'None', value: 'None' }])
+              let campList = campaignList.data && campaignList.data.map((ld) => {
+                    let user = { label: ld.campaign_name, value: ld.id }
+                    return user;
+                })
+                setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
             }
             else if (campaignList.status == "failed") {
             }
@@ -129,7 +117,7 @@ export default function Report({ navigation }) {
                         iconStyle={styles.iconStyle3}
                         data={campaignData}
                         // search
-                        maxHeight={120}
+                        maxHeight={100}
                         labelField="label"
                         valueField="value"
                         placeholder={!isFocus ? 'Select Campaign' : '...'}

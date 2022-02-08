@@ -183,7 +183,7 @@ export default function AddContact({ navigation }) {
 
             <LinearGradient
                 colors={['#2D6FF2', '#2D6FF2', '#2D6FF2', '#8DB3FF',]}
-                style={{ borderBottomLeftRadius: 35, borderBottomRightRadius: 35, height: "18%" }}
+                style={{ borderBottomLeftRadius: 35, borderBottomRightRadius: 35, height: "20%" }}
             >
                 <SafeAreaView
                     style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '5%', marginTop: '5%' }}
@@ -234,7 +234,7 @@ export default function AddContact({ navigation }) {
                     width: 104, height: 104,
                     borderRadius: 52,
                     alignSelf: 'center',
-                    marginTop: '1%'
+                    marginTop: '5%'
                 }}>
                     {user.avatar ?
                         <View style={{ flexDirection: 'row' }}>
@@ -287,8 +287,8 @@ export default function AddContact({ navigation }) {
             {IsLodding == true ?
                 <ActivityIndicator size="large" color="#0000ff" />
                 :
-                <View style={{ marginHorizontal: '5%', marginVertical: '4%' }}>
-                    <Text style={{
+                <View style={{ marginHorizontal: '5%', marginVertical: '4%' ,marginTop:'15%'}}>
+                    {/* <Text style={{
                         fontSize: 12, color: '#000000',
                         fontFamily: 'Roboto', marginTop: '15%'
                     }}>Organization Name</Text>
@@ -317,7 +317,7 @@ export default function AddContact({ navigation }) {
                                 />
                             </View>
                         )}
-                    />
+                    /> */}
 
                     <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
                     <View style={styles.inputFields}>

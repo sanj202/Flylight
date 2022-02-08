@@ -98,29 +98,27 @@ export default function lead_manager({ navigation }) {
   const historyData = useSelector(state => state.history.getHistoryList)
 
   useEffect(() => {
-    if (loginData ||registerData && isFocused) {
+    if (loginData || registerData && isFocused) {
       if (loginData.status == "success") {
-        dispatch(historyAction.historyList(
-          loginData.data.token,
-          loginData.data.uid,
-          loginData.data.cProfile.toString(),
-          loginData.data.user.org_id.toString(),
-          loginData.data.org_uid, 
-        ));
+        var Data = {
+          uid: loginData.data.uid,
+          profile_id: loginData.data.cProfile,
+          org_uid: loginData.data.org_uid,
+        }
+        dispatch(historyAction.historyList(Data, loginData.data.token));
         setIsLodding(true)
       }
       else if (registerData.status == "success") {
-        dispatch(historyAction.historyList(
-          registerData.data.token,
-          registerData.data.uid,
-          registerData.data.cProfile.toString(),
-          registerData.data.org_id.toString(),
-          registerData.data.org_uid, 
-        ));
+        var Data = {
+          uid: registerData.data.uid,
+          profile_id: registerData.data.cProfile,
+          org_uid: registerData.data.org_uid,
+        }
+        dispatch(historyAction.historyList(Data, registerData.data.token));
         setIsLodding(true)
       }
     }
-  }, [loginData,registerData, isFocused])
+  }, [loginData, registerData, isFocused])
 
   useEffect(() => {
     if (historyData) {

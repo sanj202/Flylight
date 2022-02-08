@@ -1,5 +1,4 @@
-
-import { Get_Todo } from './actionTypes';
+import { Organization_List,Organization_List_Clear,Organization_List_Success } from './actionTypes';
 import BaseUrl from '../../../const'
 
 
@@ -65,12 +64,12 @@ import BaseUrl from '../../../const'
 
 
 
-export const TaskList = (data,token,) => {
-    // console.log(" credentails..................",token,uid,profile_id,change )
+export const OrganizationList = (data,token,) => {
+    // console.log(" credentails..................",data )
     return (dispatch) => {
-        dispatch({ type: Get_Todo })
+        dispatch({ type: Organization_List })
 
-        fetch(`${BaseUrl}/v1/task-list`,
+        fetch(`${BaseUrl}/v1/getOrganizationList`,
             {
                 method: "POST",
                 headers: {
@@ -83,8 +82,8 @@ export const TaskList = (data,token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("change TODO........::::::::::::::::", responseData)
-                dispatch({ type: Get_Todo, payload: responseData })
+                // console.log("change TODO........::::::::::::::::", responseData.data)
+                dispatch({ type: Organization_List_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -95,7 +94,7 @@ export const TaskList = (data,token,) => {
 
 export const clearResponse = () => {
     return {
-        type: Lead_CLEAR,
+        type: Organization_List_Clear,
     };
 };
 

@@ -32,6 +32,7 @@ export const profile = (data, Token,) => {
 };
 
 export const updateAvatar =  (data, token) => {
+    console.log("asndbf.......................",data)
     return (dispatch) => {
         dispatch({ type: Edit_ProfileImage })
         fetch(`${BaseUrl}/v1/updateAvatar`,
@@ -46,6 +47,7 @@ export const updateAvatar =  (data, token) => {
             })
             .then(response => response.json())
             .then(responseData => {
+                console.log("fjksdafj......................",responseData)
                 dispatch({ type:Edit_ProfileImage_Suceess, payload: responseData })
             })
             .catch((error) => {

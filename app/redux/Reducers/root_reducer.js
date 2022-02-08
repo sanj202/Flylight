@@ -23,6 +23,8 @@ import reportReducer from './reportReducer'
 import actionmanagerReducer from './actionmanagerReducer'
 import leadmanagerReducer from './leadmanagerReducer'
 import StaffMemberReducer from "./staffMemberReducer";
+import organizationReducer from "./organizationReducer"
+import campaignReducer from './campaignReducer'
 
 export default combineReducers({
     //   auth: AuthReducer,
@@ -47,4 +49,6 @@ export default combineReducers({
     report:reportReducer,
     actionmanager:actionmanagerReducer,
     staffMember: StaffMemberReducer,
+    organization:organizationReducer,
+    campaign:campaignReducer
 });

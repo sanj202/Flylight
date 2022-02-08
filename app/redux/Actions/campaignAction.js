@@ -1,13 +1,15 @@
 
-import { Get_History ,History_Success,History_Clear ,
-    History_Feedback,History_Feedback_Success,History_Feedback_Clear } from './actionTypes';
+import {
+    Campaign, Campaign_Clear, Campaign_Success,
+    Add_Edit_Campaign, Add_Edit_Campaign_Clear, Add_Edit_Campaign_Success
+} from './actionTypes';
 import BaseUrl from '../../../const'
 
-export const AddEdit_feedback_History = (token,data) => {
-    // console.log(" credentails..................", data)
+export const CampaignList = (data, token,) => {
+    // console.log("dskanfgsdfgjh.......................", data)
     return (dispatch) => {
-        dispatch({ type: History_Feedback })
-        fetch(`${BaseUrl}/v1/addedit-historyfeedback`,
+        dispatch({ type: Campaign })
+        fetch(`${BaseUrl}/v1/campaign-list`,
             {
                 method: "POST",
                 headers: {
@@ -19,53 +21,47 @@ export const AddEdit_feedback_History = (token,data) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("History_Feedback .........::::::::::::::::", responseData)
-                dispatch({ type: History_Feedback_Success, payload: responseData })
+                dispatch({ type: Campaign_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
             })
     }
 };
-
-export const clearHistoryFeedbackResponse = () => {
-    return {
-        type: History_Feedback_Clear,
-    };
-};
-
-export const historyList = (data,token,) => {
-    // console.log(" credentails..................",data)
-    return (dispatch) => {
-        dispatch({ type: Get_History })
-        fetch(`${BaseUrl}/v1/history`,
-            {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => response.json())
-            .then(responseData => {
-                // console.log("History.......::::::::::::::::", responseData)
-                dispatch({ type: History_Success, payload: responseData })
-            })
-            .catch((error) => {
-                console.log("error" + error);
-            })
-    }
-};
-
 
 export const clearResponse = () => {
     return {
-        type: History_Clear,
+        type: Campaign_Clear
     };
 };
 
+export const Add_EditCampaign = (data, token,) => {
+    // console.log("dskanfgsdfgjh.......................", data)
+    return (dispatch) => {
+        dispatch({ type: Add_Edit_Campaign })
+        fetch(`${BaseUrl}/v1/addedit-campaign`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                // console.log("responseData......................",responseData)
+                dispatch({ type: Add_Edit_Campaign_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
 
-
-
+export const AddEditclearResponse = () => {
+    return {
+        type: Add_Edit_Campaign_Clear
+    };
+};

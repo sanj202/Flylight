@@ -25,7 +25,10 @@ import {
   Notification,
   EditProfile,
   Staff_Members,
-  DashBoard
+  DashBoard,
+  Organization,
+  Campaign,
+  AddCampaign
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -52,7 +55,7 @@ function HomeTabs() {
         name="Home"
         component={TopTab}
         options={{
-         tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
@@ -69,7 +72,7 @@ function HomeTabs() {
         }} />
       <Tab.Screen name="Report" component={Report}
         options={{
-         tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
@@ -87,13 +90,13 @@ function HomeTabs() {
 
       <Tab.Screen name="addTab" component={AddContact}
         options={{
-         tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarLabelStyle: { color: '#2296E4' },
           title: 'addTab',
           tabBarIcon: ({ size, focused, color }) => {
             return (
               <View
-               style={Platform.OS == 'ios' ?
+                style={Platform.OS == 'ios' ?
                   { marginTop: '-4%' }
                   :
                   { marginTop: '-16%' }
@@ -106,7 +109,8 @@ function HomeTabs() {
                     style={styles.box}  >
                   </View>
                   <Image
-                    style={{ width: 48, height: 48, marginTop: '65%', marginHorizontal: '23%'
+                    style={{
+                      width: 48, height: 48, marginTop: '65%', marginHorizontal: '23%'
                       // alignItems: 'center', 
                     }}
                     source={require('../../images/Add.png')}
@@ -119,7 +123,7 @@ function HomeTabs() {
 
       < Tab.Screen name="AddContact" component={Contacts}
         options={{
-         tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
@@ -137,7 +141,7 @@ function HomeTabs() {
 
       < Tab.Screen name="Profile" component={Profile}
         options={{
-         tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarLabelStyle: {
             fontSize: 12, fontFamily: 'Roboto',
             paddingBottom: '5%', color: '#fff',
@@ -173,7 +177,7 @@ function HomeTabs() {
         name="Edit_Lead"
         component={Edit_Lead}
         options={{
-          tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -183,7 +187,7 @@ function HomeTabs() {
         name="Edit_Opportunity"
         component={Edit_Opportunity}
         options={{
-          tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -211,7 +215,7 @@ function HomeTabs() {
         name="Action_Manager"
         component={Action_Manager}
         options={{
-          tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -239,7 +243,7 @@ function HomeTabs() {
         name="History_Feedback"
         component={History_Feedback}
         options={{
-          tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -249,6 +253,34 @@ function HomeTabs() {
         name="Report2"
         component={Report2}
         options={{
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="Organization"
+        component={Organization}
+        options={{
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name="Campaign"
+        component={Campaign}
+        options={{
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name="AddCampaign"
+        component={AddCampaign}
+        
+        options={{
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
@@ -275,22 +307,22 @@ function HomeTabs() {
         name='EditProfile'
         component={EditProfile}
         options={{
-          tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
       />
-      
+
       <Tab.Screen
         name='Staff_Members'
         component={Staff_Members}
         options={{
-          tabBarHideOnKeyboard : true,
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
       />
-      
+
     </Tab.Navigator >
   );
 }

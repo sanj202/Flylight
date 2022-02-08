@@ -190,6 +190,11 @@ export const Campaign = "Campaign"
 export const Campaign_Success = "Campaign_Success"
 export const Campaign_Clear = 'Campaign_Clear'
 
+// Add_Edit_Campaign
+export const Add_Edit_Campaign = "Add_Edit_Campaign"
+export const Add_Edit_Campaign_Success = "Add_Edit_Campaign_Success"
+export const Add_Edit_Campaign_Clear= "Add_Edit_Campaign_Clear"
+
 //get state 
 export const All_State = "All_State"
 export const All_State_Success = "All_State_Success"
@@ -214,6 +219,11 @@ export const Invite_Member_Clear = 'Invite_Member_Clear'
 export const Update_Token = "Update_Token"
 export const Update_Token_Success = "Update_Token_Success"
 export const Update_Token_Clear = 'Update_Token_Clear'
+
+// Get Organization List
+export const Organization_List = "Organization_List"
+export const Organization_List_Success = "Organization_List_Success"
+export const Organization_List_Clear = 'Organization_List_Clear'
 
 
 

@@ -21,7 +21,8 @@ import * as actionmanagerAction from './actionmanagerAction'
 import * as editContactAction from './editContactAction'
 import * as leadmanagerAction from './leadmanagerAction'
 import * as staffMemberAction from './staffMemberAction'
-
+import * as organizationAction from './OrganizationAction'
+import * as campaignAction from './campaignAction'
 
 export {
     // authkeyAction,
@@ -45,5 +46,7 @@ export {
     reportAction,
     actionmanagerAction,
     editContactAction,
-    staffMemberAction
+    staffMemberAction,
+    organizationAction,
+    campaignAction
 };

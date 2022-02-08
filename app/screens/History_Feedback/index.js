@@ -131,8 +131,8 @@ export default function AddContact({ navigation, route }) {
         if (loginData.status == "success") {
           const data = {
             uid: loginData.data.uid,
-            profile_id: loginData.data.cProfile.toString(),
-            org_id: loginData.data.user.org_id.toString(),
+            profile_id: loginData.data.cProfile,
+            org_uid: loginData.data.org_uid,
             first_name: fname, last_name: lname, date: formateDate,
             // time: formateTime,
             phone: phone, state: State, city: City, description: description,
@@ -141,13 +141,11 @@ export default function AddContact({ navigation, route }) {
           dispatch(historyAction.AddEdit_feedback_History(loginData.data.token, data));
           setIsLodding(true)
         }
-
-
         else if (registerData.status == "success") {
           const data = {
             uid: registerData.data.uid,
-            profile_id: registerData.data.cProfile.toString(),
-            org_id: registerData.data.org_id.toString(),
+            profile_id: registerData.data.cProfile,
+            org_uid: registerData.data.org_uid,
             first_name: fname, last_name: lname, date: formateDate,
             // time: formateTime,
             phone: phone, state: State, city: City, description: description,

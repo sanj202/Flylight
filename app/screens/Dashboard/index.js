@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ActivityIndicator, Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
-  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert, RefreshControl
-} from 'react-native';
+import {ActivityIndicator, Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
+  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert, RefreshControl} from 'react-native';
 import { Card } from 'react-native-paper';
 import PieChart from 'react-native-pie-chart';
 import Header from "../../component/header/index";
@@ -43,7 +41,7 @@ export default function Dashboard({ navigation, route, props }) {
   const registerData = useSelector(state => state.varify.otp)
   const dashboardData = useSelector(state => state.dashboard.data)
   const TokenData = useSelector(state => state.dashboard.tokenData)
-  console.log('tokenData..........', TokenData)
+  // console.log('tokenData..........', TokenData)
   const widthAndHeight = 160
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
@@ -102,7 +100,7 @@ export default function Dashboard({ navigation, route, props }) {
   useEffect(() => {
     if (loginData || registerData) {
       AsyncStorage.getItem('fcmToken', (err, token) => {
-        console.log("fcm..........................",token)
+        // console.log("fcm..........................",token)
         if (token !== null) {
           if (loginData.status == "success") {
             dispatch(dashboardAction.UpdateToken(loginData.data.uid, token, loginData.data.token))
@@ -135,7 +133,7 @@ export default function Dashboard({ navigation, route, props }) {
         dispatch(dashboardAction.dashboard(
           loginData.data.uid,
           loginData.data.org_uid,
-          loginData.data.cProfile.toString(),
+          loginData.data.cProfile,
           loginData.data.token
         ));
       }
@@ -144,7 +142,7 @@ export default function Dashboard({ navigation, route, props }) {
         dispatch(dashboardAction.dashboard(
           registerData.data.uid,
           registerData.data.org_uid,
-          registerData.data.cProfile.toString(),
+          registerData.data.cProfile,
           registerData.data.token
         ));
       }

@@ -116,7 +116,7 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (taskList) {
-            console.log("tasklist...........", taskList.data)
+            console.log("tasklist...........", taskList)
             if (taskList.status == "200") {
                 setallTask(taskList.data)
                 setIsLodding(false)

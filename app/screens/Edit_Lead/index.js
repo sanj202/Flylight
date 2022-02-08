@@ -167,7 +167,11 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "200") {
-                setcampaignData([{ label: 'None', value: 'None' }])
+                let campList = campaignList.data && campaignList.data.map((ld) => {
+                    let user = { label: ld.campaign_name, value: ld.id }
+                    return user;
+                })
+                setcampaignData(campList ?  campList : [{ label: 'None', value: 'None' }])
             }
             else if (campaignList.status == "failed") {
             }
@@ -177,7 +181,6 @@ export default function AddContact({ navigation, route }) {
         else {
         }
     }, [campaignList])
-
 
     useEffect(() => {
         if (leadstatusList) {
@@ -788,7 +791,7 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={campaignData}
-                            maxHeight={60}
+                            maxHeight={100}
                             labelField="label"
                             valueField="value"
                             placeholder={!isFocus4 ? 'Campaign' : '...'}

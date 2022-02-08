@@ -171,7 +171,7 @@ export default function AddContact({ navigation, route }) {
           const data = {
             uid: loginData.data.uid,
             profile_id: loginData.data.cProfile.toString(),
-            org_id: loginData.data.user.org_id.toString(),
+            org_uid: loginData.data.org_uid,
             first_name: fname,
             last_name: lname,
             date: formateDate,

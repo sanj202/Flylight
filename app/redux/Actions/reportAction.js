@@ -3,8 +3,8 @@ import { Get_Report,Report_Clear } from './actionTypes';
 import BaseUrl from '../../../const'
 
 
-// export const importLead = (res, token, cProfile, org_id) => {
-//     // console.log(" credentails..................", res, token, cProfile, org_id)
+// export const importLead = (res, token, cProfile, change) => {
+//     // console.log(" credentails..................", res, token, cProfile, change)
 //     return (dispatch) => {
 //         dispatch({ type: Import_Lead })
 
@@ -20,7 +20,7 @@ import BaseUrl from '../../../const'
 //                 },
 //                 body: JSON.stringify({
 //                     CSVFILE: res,
-//                     orgid: org_id,
+//                     orgid: change,
 //                     profile_id: cProfile
 //                 }),
 //             })
@@ -65,8 +65,8 @@ import BaseUrl from '../../../const'
 
 
 
-export const reportList = (token, uid, profile_id, org_id,org_uid) => {
-    // console.log(" credentails..................",token,uid,profile_id,org_id )
+export const reportList = (data,token) => {
+    // console.log(" credentails..................",token,uid,profile_id,change )
     return (dispatch) => {
         dispatch({ type: Get_Report })
 
@@ -79,16 +79,11 @@ export const reportList = (token, uid, profile_id, org_id,org_uid) => {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
                 },
-                body: JSON.stringify({
-                    uid: uid,
-                    profile_id: profile_id,
-                    orgId : org_id,
-                    org_uid:org_uid
-                }),
+                body: JSON.stringify(data),
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("org_id TODO........::::::::::::::::", responseData)
+                // console.log("change TODO........::::::::::::::::", responseData)
                 dispatch({ type: Get_Report, payload: responseData })
             })
             .catch((error) => {
