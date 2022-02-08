@@ -210,6 +210,11 @@ export const Invite_Member = "Invite_Member"
 export const Invite_Member_Success = "Invite_Member_Success"
 export const Invite_Member_Clear = 'Invite_Member_Clear'
 
+//uPDATEtOKEN 
+export const Update_Token = "Update_Token"
+export const Update_Token_Success = "Update_Token_Success"
+export const Update_Token_Clear = 'Update_Token_Clear'
+
 
 
 

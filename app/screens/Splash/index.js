@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, Image, StyleSheet, Alert } from 'react-native'
 import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Splash() {
 
@@ -9,6 +10,7 @@ export default function Splash() {
         // (optional) Called when Token is generated (iOS and Android)
         onRegister: function (token) {
           console.log("TOKEN:", token);
+          AsyncStorage.setItem('fcmToken' ,JSON.stringify(token.token))
         },
       
         // (required) Called when a remote is received or opened, or local notification is opened
@@ -17,9 +19,10 @@ export default function Splash() {
           const body = notification.message;
           const title = notification.title;
           console.log("NOTIFICATION.....................:", body,title);
-          Alert.alert(title,body)
+          // Alert.alert(title,body)
           // process the notification
-      
+
+          PushNotification.localNotification(notification);
           // (required) Called when a remote is received or opened, or local notification is opened
           notification.finish(PushNotificationIOS.FetchResult.NoData);
         },
@@ -56,8 +59,21 @@ export default function Splash() {
          *     requestPermissions: Platform.OS === 'ios'
          */
         requestPermissions: true,
-        
+        senderID: "1747067040",
       });
+
+      PushNotification.createChannel(
+        {
+          channelId: "channel-id", // (required)
+          channelName: "My channel", // (required)
+          channelDescription: "A channel to categorise your notifications", // (optional) default: undefined.
+          playSound: false, // (optional) default: true
+          soundName: "default", // (optional) See `soundName` parameter of `localNotification` function
+          importance: 4, // (optional) default: 4. Int value of the Android notification importance
+          vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+        },
+        (created) => console.log(`createChannel returned '${created}'`) // (optional) callback returns whether the channel was created, false means it already existed.
+      );
 
     return (
         <View styles={{ marginTop: '45%' }}>

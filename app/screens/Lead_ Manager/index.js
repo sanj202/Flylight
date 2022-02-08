@@ -284,7 +284,7 @@ export default function lead_manager({ navigation, route }) {
           const formdata = new FormData;
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', loginData.data.cProfile);
-          formdata.append('orgid', loginData.data.user.org_id);
+          formdata.append('org_uid', loginData.data.org_uid);
           dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
           setIsULodding(true)
         }
@@ -292,7 +292,7 @@ export default function lead_manager({ navigation, route }) {
           const formdata = new FormData;
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', loginData.data.cProfile);
-          formdata.append('orgid', loginData.data.user.org_id);
+          formdata.append('org_uid', loginData.data.org_uid);
           dispatch(leadAction.importLead(formdata, loginData.data.token));
           setIsULodding(true)
         }
@@ -302,7 +302,7 @@ export default function lead_manager({ navigation, route }) {
           const formdata = new FormData;
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', registerData.data.cProfile);
-          formdata.append('orgid', registerData.data.org_id);
+          formdata.append('org_uid', registerData.data.org_uid);
           dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
           setIsULodding(true)
         }
@@ -310,7 +310,7 @@ export default function lead_manager({ navigation, route }) {
           const formdata = new FormData;
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', registerData.data.cProfile);
-          formdata.append('orgid', registerData.data.org_id);
+          formdata.append('org_uid', registerData.data.org_uid);
           dispatch(leadAction.importLead(formdata, loginData.data.token));
           setIsULodding(true)
         }
@@ -333,7 +333,7 @@ export default function lead_manager({ navigation, route }) {
         Get_Data()
         setImportFiles(!ImportFiles)
         Alert.alert(importLead.message)
-        dispatch(leadAction.clearImportLeadResponse())
+        // dispatch(leadAction.clearImportLeadResponse())
       }
       else if (importLead == "error") {
         UploadFile()
@@ -939,7 +939,7 @@ export default function lead_manager({ navigation, route }) {
               <View>
                 {Lead !== undefined && Lead.length > 0 ?
                   <FlatList
-                    style={{ height: "78%" }}
+                    style={{ height: "71%" }}
                     data={Lead}
                     renderItem={LeadView}
                   />
@@ -1077,7 +1077,7 @@ export default function lead_manager({ navigation, route }) {
               <View>
                 {Opportunity !== undefined && Opportunity.length > 0 ?
                   <FlatList
-                    style={{ height: "78%" }}
+                  style={{ height: "71%" }}
                     data={Opportunity}
                     renderItem={OpportunityVIew}
                   />
@@ -1101,18 +1101,19 @@ export default function lead_manager({ navigation, route }) {
           <Text style={styles.askSubtitle}>
             you want to delete this{'\n'}{tempType} ?</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Pressable
-              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
-              onPress={() => DeleteFunction()}
-            >
-              <Text style={styles.askBtnText}>YES</Text>
-            </Pressable>
-            <View style={{ margin: '5%' }} />
+
             <Pressable
               style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
               onPress={() => CencelFunction()}
             >
               <Text style={styles.askBtnText}>NO</Text>
+            </Pressable>
+            <View style={{ margin: '5%' }} />
+            <Pressable
+              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+              onPress={() => DeleteFunction()}
+            >
+              <Text style={styles.askBtnText}>YES</Text>
             </Pressable>
           </View>
           <View style={{ margin: '2%' }} />
@@ -1174,17 +1175,18 @@ export default function lead_manager({ navigation, route }) {
             <View />}
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Pressable
-              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
-              onPress={() => UploadFile()}
-            >
-              <Text style={styles.askBtnText}>YES</Text>
-            </Pressable>
-            <View style={{ margin: '5%' }} />
-            <Pressable
               style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
               onPress={() => UploadFileCancel()}
             >
               <Text style={styles.askBtnText}>NO</Text>
+            </Pressable>
+            <View style={{ margin: '5%' }} />
+
+            <Pressable
+              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+              onPress={() => UploadFile()}
+            >
+              <Text style={styles.askBtnText}>YES</Text>
             </Pressable>
           </View>
           <View style={{ margin: '2%' }} />

@@ -10,6 +10,8 @@ import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { dashboardAction } from '../../redux/Actions/index'
 import { useIsFocused } from "@react-navigation/core"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function Dashboard({ navigation, route, props }) {
 
@@ -40,8 +42,8 @@ export default function Dashboard({ navigation, route, props }) {
   const loginData = useSelector(state => state.auth.data)
   const registerData = useSelector(state => state.varify.otp)
   const dashboardData = useSelector(state => state.dashboard.data)
-
-
+  const TokenData = useSelector(state => state.dashboard.tokenData)
+  console.log('tokenData..........', TokenData)
   const widthAndHeight = 160
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
@@ -96,6 +98,23 @@ export default function Dashboard({ navigation, route, props }) {
     setModalVisible3(!modalVisible3),
       navigation.navigate("addTab")
   }
+
+  useEffect(() => {
+    if (loginData || registerData) {
+      AsyncStorage.getItem('fcmToken', (err, token) => {
+        console.log("fcm..........................",token)
+        if (token !== null) {
+          if (loginData.status == "success") {
+            dispatch(dashboardAction.UpdateToken(loginData.data.uid, token, loginData.data.token))
+          }
+          else if (registerData.status == "success") {
+            dispatch(dashboardAction.UpdateToken(registerData.data.uid, token, registerData.data.token))
+          }
+        }
+      })
+    }
+  }, [])
+
   useEffect(() => {
     if (loginData || registerData && isFocused) {
       Get_Data()
