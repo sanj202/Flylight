@@ -140,14 +140,9 @@ export default function AddContact({ navigation }) {
 
             else if (registerData.status == "success") {
                 setIsLodding(true)
-                // const data = {
-                //     CSVFILE: res,
-                //     profile_id: registerData.data.cProfile.toString(),
-                //     orgid: registerData.data.org_id.toString(),
-                // }
                 var formdata = new FormData();
                 formdata.append('userAvatar', photo)
-                formdata.append('uid', loginData.data.uid)
+                formdata.append('uid', registerData.data.uid)
                 dispatch(profileAction.updateAvatar(formdata, registerData.data.token));
             }
 

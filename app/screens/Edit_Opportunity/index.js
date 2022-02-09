@@ -8,7 +8,7 @@ import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
-import { opportunityAction, leadAction ,campaignAction} from '../../redux/Actions/index'
+import { opportunityAction, leadAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
@@ -45,7 +45,7 @@ export default function AddContact({ navigation, route }) {
     const [isFocus1, setIsFocus1] = useState(false);
     const [description, setdescription] = useState(route.params.Edata ? route.params.Edata.campaign : null);
     const [IsLodding, setIsLodding] = useState(false)
-  
+
 
     const { width, height } = Dimensions.get('window');
     const [leadOwnerData, setleadOwnerData] = useState([])
@@ -62,7 +62,7 @@ export default function AddContact({ navigation, route }) {
     const leadstatusList = useSelector(state => state.leads.leadstatus)
     const opportunityData = useSelector(state => state.opportunitys.newOpportunity)
     const stateList = useSelector(state => state.leads.states)
-    const ZipList =  useSelector(state => state.leads.ByZip) 
+    const ZipList = useSelector(state => state.leads.ByZip)
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -183,7 +183,7 @@ export default function AddContact({ navigation, route }) {
                     profile_id: loginData.data.cProfile.toString(),
                 }
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-               dispatch(campaignAction.CampaignList(data, loginData.data.token))
+                dispatch(campaignAction.CampaignList(data, loginData.data.token))
                 dispatch(leadAction.LeadStatusList(data, loginData.data.token));
                 dispatch(leadAction.StateList(data, loginData.data.token));
             }
@@ -194,7 +194,7 @@ export default function AddContact({ navigation, route }) {
                     uid: registerData.data.uid
                 }
                 dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-               dispatch(campaignAction.CampaignList(data, loginData.data.token));
+                dispatch(campaignAction.CampaignList(data, registerData.data.token));
                 dispatch(leadAction.LeadStatusList(data, registerData.data.token));
                 dispatch(leadAction.StateList(data, registerData.data.token));
             }
@@ -207,13 +207,15 @@ export default function AddContact({ navigation, route }) {
                 if (loginData.status == "success") {
                     const data = {
                         uid: loginData.data.uid,
-                        zipcode: ZipCode}
+                        zipcode: ZipCode
+                    }
                     dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
                 }
                 else if (registerData.status == "success") {
                     const data = {
                         uid: registerData.data.uid,
-                        zipcode: ZipCode}
+                        zipcode: ZipCode
+                    }
                     dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
                 }
             }
@@ -279,7 +281,7 @@ export default function AddContact({ navigation, route }) {
                     let user = { label: ld.campaign_name, value: ld.id }
                     return user;
                 })
-                setcampaignData(campList ?  campList : [{ label: 'None', value: 'None' }])
+                setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
             }
             else if (campaignList.status == "failed") {
             }
@@ -325,7 +327,7 @@ export default function AddContact({ navigation, route }) {
         }
         else if (Aphone == "") {
             Alert.alert(" Enter Alternative phone Number ")
-          }
+        }
         else if (email == "") {
             Alert.alert(" Enter Email Id")
         }
@@ -363,9 +365,9 @@ export default function AddContact({ navigation, route }) {
                         }
                         dispatch(opportunityAction.addOpportunity(data, loginData.data.token,));
                         setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                        setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-                        setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-                        setZipCode(''), setdescription(''), setcampaign(null)
+                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+                            setZipCode(''), setdescription(''), setcampaign(null)
                     }
                     setIsLodding(true)
                 }
@@ -742,7 +744,7 @@ export default function AddContact({ navigation, route }) {
                             onFocus={() => setIsFocus5(true)}
                             onBlur={() => setIsFocus5(false)}
                             onChange={item => {
-                                console.log("value of ............",item)
+                                console.log("value of ............", item)
                                 setState(item.value);
                                 setIsFocus5(false);
                             }}
@@ -770,7 +772,7 @@ export default function AddContact({ navigation, route }) {
                     </View>
 
 
-                  
+
 
                     <View style={styles.inputFields}>
                         <Image

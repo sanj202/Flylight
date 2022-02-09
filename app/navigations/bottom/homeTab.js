@@ -28,7 +28,8 @@ import {
   DashBoard,
   Organization,
   Campaign,
-  AddCampaign
+  AddCampaign,
+  EditCampaign
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -278,14 +279,21 @@ function HomeTabs() {
       <Tab.Screen
         name="AddCampaign"
         component={AddCampaign}
-        
         options={{
           tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
       />
-
+      <Tab.Screen
+        name="EditCampaign"
+        component={EditCampaign}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
       <Tab.Screen
         name='ContactsTwo'
         component={ContactsTwo}

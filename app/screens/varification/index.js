@@ -39,7 +39,7 @@ export default function Varification({ navigation, route }) {
       }
       else if (otpData.status == "failed") {
         setIsLodding(false)
-        dispatch(varificationAction.clearResponse())
+        // dispatch(varificationAction.clearResponse())
         Alert.alert(otpData.message)                                                                                //otherwise alert show 
       }
     }

@@ -60,6 +60,7 @@ export default function lead_manager({ navigation }) {
                 }
                 dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
             }
+            setIsLodding(true)
         }
     }, [loginData, registerData, isFocused])
 
@@ -67,11 +68,13 @@ export default function lead_manager({ navigation }) {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
+               
             }
             else if (leadOwner.status == "failed") {
             }
             else if (leadOwner.status == "fail") {
             }
+            setIsLodding(false)
         }
         else {
         }

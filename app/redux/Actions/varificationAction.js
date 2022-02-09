@@ -28,7 +28,19 @@ export const varification = (otp, uid) => {
 };
 
 
-
+export const SwitchOrg = (post, profileId, OrgUid) => {
+    // console.log('profileId, OrgUidprofileId, OrgUid',profileId, OrgUid)
+    return (dispatch) => {
+        let postData = post;
+        console.clear();
+        postData.data.cProfile = profileId;
+        postData.data.org_uid = OrgUid;
+        let responseData =
+            Object.assign({}, { ...postData })
+        console.log('responseDatta..........................',responseData)
+        dispatch({ type: VERIFY_OTP_SUCCESS, payload: responseData })
+    }
+};
 
 export const clearResponse = () => {
     return {

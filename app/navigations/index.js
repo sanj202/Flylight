@@ -10,6 +10,7 @@ const RootNavigation = () => {
     const IsLogin = useSelector(state => state.auth.data)
     const IsRegister = useSelector(state => state.varify.otp)
 
+    console.log("value of ....................",IsRegister)
     async function performload() {
         return new Promise(response => {
             setTimeout(() => { response("") }, 2000)

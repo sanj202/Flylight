@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
-  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert, RefreshControl} from 'react-native';
+import {
+  ActivityIndicator, Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
+  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert, RefreshControl
+} from 'react-native';
 import { Card } from 'react-native-paper';
 import PieChart from 'react-native-pie-chart';
 import Header from "../../component/header/index";
@@ -46,21 +48,21 @@ export default function Dashboard({ navigation, route, props }) {
   const series = [90, 30,]
   const sliceColor = ['#6191F3', '#FFBC04']
   const DATA = [
-    {
-      title: 'Meeting With Mr. Grorge',
-      subtitle: 'Wed, 08 Sep, 14:00PM',
-      image: '3'
-    },
+    // {
+    //   title: 'Meeting With Mr. Grorge',
+    //   subtitle: 'Wed, 08 Sep, 14:00PM',
+    //   image: '3'
+    // },
     {
       title: 'Call XYZ lead',
       subtitle: 'Wed, 08 Sep, 14:00PM',
       image: '2'
     },
-    {
-      title: 'Send Remainder to ABC lead',
-      subtitle: 'Wed, 02 Sep, 14:00PM',
-      image: '1'
-    },
+    // {
+    //   title: 'Send Remainder to ABC lead',
+    //   subtitle: 'Wed, 02 Sep, 14:00PM',
+    //   image: '1'
+    // },
   ];
 
   const chartConfig = {
@@ -189,9 +191,8 @@ export default function Dashboard({ navigation, route, props }) {
       {IsLodding == true ?
         <ActivityIndicator size="small" color="#0000ff" />
         :
-
         <View>
-          <View
+           <View
             style={styles.reView}>
             <Pressable
               style={{ width: '49%' }}
@@ -200,9 +201,9 @@ export default function Dashboard({ navigation, route, props }) {
               })}
             >
               <Card
-                style={[styles.cardBox]} >
-                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Opportunity</Text>
-                <Text style={styles.counter}>{Topportunitys}</Text>
+                style={[styles.cardBox,{borderColor: '#FE2EA4',}]} >
+                <Text style={styles.cardTitle}>Total Opportunity</Text>
+                <Text style={[styles.counter,{color: '#3072F2'}]}>{Topportunitys}</Text>
               </Card>
             </Pressable >
             <Pressable
@@ -211,38 +212,12 @@ export default function Dashboard({ navigation, route, props }) {
                 key: 'Lead'
               })}>
               <Card
-                style={[styles.cardBox2]}>
-                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Leads</Text>
-                <Text style={styles.counter2}>{Tleads}</Text>
+                style={[styles.cardBox,{ borderColor: '#3373F3'}]}>
+                 <Text style={styles.cardTitle}>Total Leads</Text>
+                <Text style={[styles.counter,{ color: '#FE2EA4',}]}>{Tleads}</Text>
               </Card>
             </Pressable >
           </View>
-
-          <View
-            style={[styles.reView, { marginTop: 0 }]}>
-            <Pressable
-              style={{ width: '49%' }}
-            // onPress={() => navigation.navigate('lead_manager')}
-            >
-              <Card
-                style={[styles.cardBox]} >
-                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000', }}>Total Accounts</Text>
-                <Text style={styles.counter}>{Taccounts}</Text>
-              </Card>
-            </Pressable >
-            <Pressable
-              style={{ width: '49%' }}
-              onPress={() => navigation.navigate('AddContact')}
-            >
-              <Card
-                style={[styles.cardBox2]}>
-                <Text style={{ fontFamily: 'Roboto', fontSize: 16, color: '#000000' }}>Total Contacts</Text>
-                <Text style={styles.counter2}>{Tcontacts}</Text>
-              </Card>
-            </Pressable >
-          </View>
-
-
           <ScrollView refreshControl={
             <RefreshControl
               refreshing={refreshing}
@@ -250,7 +225,30 @@ export default function Dashboard({ navigation, route, props }) {
               onRefresh={onRefresh}
             />
           }>
-            <View
+          <View
+            style={[styles.reView,{ marginTop: 0 }]}>
+            <Pressable
+              style={{ width: '49%' }}
+                  // onPress={() => navigation.navigate('lead_manager')}
+            >
+              <Card
+                style={[styles.cardBox,{borderColor: '#FE2EA4',}]} >
+                <Text style={styles.cardTitle}>Total Accounts</Text>
+                <Text style={[styles.counter,{color: '#3072F2'}]}>{Taccounts}</Text>
+              </Card>
+            </Pressable >
+            <Pressable
+              style={{ width: '49%' }}
+              onPress={() => navigation.navigate('AddContact')}>
+              <Card
+                style={[styles.cardBox,{ borderColor: '#3373F3'}]}>
+                 <Text style={styles.cardTitle}>Total Contacts</Text>
+                <Text style={[styles.counter,{ color: '#FE2EA4',}]}>{Tcontacts}</Text>
+              </Card>
+            </Pressable >
+          </View>
+
+          <View
               style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
               <TouchableOpacity style={{ marginRight: '5%' }}
                 onPress={() => checkValue("Opportunity")}
@@ -267,10 +265,9 @@ export default function Dashboard({ navigation, route, props }) {
                 }}>Leads</Text>
               </TouchableOpacity>
             </View>
-            {/* <ScrollView> */}
 
             <Card style={{ margin: '3%', padding: 5 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingTop: '3%', paddingBottom: '2%' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around',paddingVertical:'3%' }}>
 
                 <PieChart
                   widthAndHeight={widthAndHeight}
@@ -303,39 +300,18 @@ export default function Dashboard({ navigation, route, props }) {
                   {
                     Opportunity == "Today" ?
                       <TouchableOpacity
-                        style={{
-                          marginTop: '5%', marginLeft: '10%',
-                          borderRadius: 15, borderWidth: 1, width: '80%',
-                          backgroundColor: '#2450FF', borderColor: '#2450FF',
-                        }}
+                      style={[styles.opportunityBtn,{ backgroundColor: '#2450FF',borderColor: '#2450FF'}]}
                         onPress={() => checkStatusValue("Today")}
                       >
-                        <Text
-                          style={[styles.opportunityText,
-                          {
-                            color: 'white', fontSize: 14,
-                            fontFamily: 'Roboto',
-                          }
-                          ]}>
+                        <Text style={[styles.opportunityText,{color: 'white'}]}>
                           Today
                         </Text>
                       </TouchableOpacity>
                       : <TouchableOpacity
-                        style={{
-                          marginTop: '5%',
-                          marginLeft: '10%',
-                          borderRadius: 15,
-                          borderWidth: 1,
-                          width: '80%',
-                          backgroundColor: '#EBEBEB',
-                          borderColor: '#EBEBEB'
-                        }}
+                      style={[styles.opportunityBtn,{ backgroundColor: '#EBEBEB',borderColor: '#EBEBEB'}]}
                         onPress={() => checkStatusValue("Today")}
                       >
-                        <Text
-                          style={[styles.opportunityText,
-                          { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
-                          ]}>
+                        <Text style={[styles.opportunityText,{ color: '#6094F9'} ]}>
                           Today
                         </Text>
                       </TouchableOpacity>
@@ -344,72 +320,37 @@ export default function Dashboard({ navigation, route, props }) {
                   {
                     Opportunity == "7-Days" ?
                       <TouchableOpacity
-                        style={{
-                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                          borderWidth: 1, width: '80%',
-                          backgroundColor: '#2450FF',
-                          borderColor: '#2450FF',
-                        }}
+                      style={[styles.opportunityBtn,{ backgroundColor: '#2450FF',borderColor: '#2450FF'}]}
                         onPress={() => checkStatusValue("7-Days")}
                       >
-                        <Text
-                          style={[styles.opportunityText,
-                          { color: 'white', fontSize: 14, fontFamily: 'Roboto', }
-                          ]}>
+                        <Text style={[styles.opportunityText,{color: 'white'}]}>
                           7 Days
                         </Text>
                       </TouchableOpacity>
                       : <TouchableOpacity
-                        style={{
-                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                          borderWidth: 1, width: '80%',
-                          backgroundColor: '#EBEBEB',
-                          borderColor: '#EBEBEB'
-                        }}
+                      style={[styles.opportunityBtn,{ backgroundColor: '#EBEBEB',borderColor: '#EBEBEB'}]}
                         onPress={() => checkStatusValue("7-Days")}
                       >
-                        <Text
-                          style={[styles.opportunityText,
-                          { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
-                          ]}>
+                         <Text style={[styles.opportunityText,{ color: '#6094F9'} ]}>
                           7 Days
                         </Text>
                       </TouchableOpacity>
                   }
-
-
-
                   {
                     Opportunity == "30-Days" ?
                       <TouchableOpacity
-                        style={{
-                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                          borderWidth: 1, width: '80%',
-                          backgroundColor: '#2450FF',
-                          borderColor: '#2450FF',
-                        }}
+                      style={[styles.opportunityBtn,{ backgroundColor: '#2450FF',borderColor: '#2450FF'}]}
                         onPress={() => checkStatusValue("30-Days")}
                       >
-                        <Text
-                          style={[styles.opportunityText,
-                          { color: 'white', fontSize: 14, fontFamily: 'Roboto', }
-                          ]}>
+                         <Text style={[styles.opportunityText,{color: 'white'}]}>
                           30 Days
                         </Text>
                       </TouchableOpacity>
                       : <TouchableOpacity
                         onPress={() => checkStatusValue("30-Days")}
-                        style={{
-                          marginTop: '5%', marginLeft: '10%', borderRadius: 15,
-                          borderWidth: 1, width: '80%',
-                          backgroundColor: '#EBEBEB',
-                          borderColor: '#EBEBEB'
-                        }}
+                        style={[styles.opportunityBtn,{ backgroundColor: '#EBEBEB',borderColor: '#EBEBEB'}]}
                       >
-                        <Text
-                          style={[styles.opportunityText,
-                          { color: '#6094F9', fontSize: 14, fontFamily: 'Roboto', }
-                          ]}>
+                       <Text style={[styles.opportunityText,{ color: '#6094F9'} ]}>
                           30 Days
                         </Text>
                       </TouchableOpacity>
@@ -417,16 +358,13 @@ export default function Dashboard({ navigation, route, props }) {
                 </View>
               </View>
             </Card>
-          </ScrollView>
-          <FlatList
+            </ScrollView>
+            <FlatList
             data={DATA}
-
             renderItem={({ item, index }) => (
-              <View style={{
-                // marginTop: '2.5%'
-              }}>
+              <View >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Task_Manager')}
+                  // onPress={() => navigation.navigate('Task_Manager')}
                 >
                   <View style={styles.listData}>
                     <View style={{ flexDirection: 'row', }}>
@@ -472,17 +410,12 @@ export default function Dashboard({ navigation, route, props }) {
             )}
             keyExtractor={(item) => item.title}
           />
-
-
-        </View>
-      }
-      <Modal
+        </View>}
+        <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible2}
-        onRequestClose={() => {
-          setModalVisible2(!modalVisible2);
-        }}
+        onRequestClose={() => { setModalVisible2(!modalVisible2);}}
       >
         <View style={styles.centeredViewM}>
           <View style={styles.modalViewM}>
@@ -535,20 +468,14 @@ export default function Dashboard({ navigation, route, props }) {
           </View>
         </View>
       </Modal>
-
-
       <Modal
-
         animationType="slide"
         transparent={true}
         visible={modalVisible3}
-        onRequestClose={() => {
-          // Alert.alert("Modal has been closed.");
-          setModalVisible3(!modalVisible3);
-        }}
+        onRequestClose={() => {setModalVisible3(!modalVisible3);}}
       >
-        <Card style={[styles.headerViewA, { paddingBottom: '-5%', }]}>
-          <View style={styles.headerView2A}>
+        <Card style={[styles.centeredViewM2, { paddingBottom: '-5%', }]}>
+          <View style={{  paddingTop: '3%'}}>
             <TouchableOpacity
               onPress={() => setModalVisible3(!modalVisible3)}
             >
@@ -582,10 +509,7 @@ export default function Dashboard({ navigation, route, props }) {
 
           <View style={{ marginTop: '3%' }}>
             <TouchableOpacity
-              onPress={
-                () =>
-                  ContactUpload()
-              }
+              onPress={() =>ContactUpload() }
             >
               <View style={styles.listDataA}>
                 <Image
@@ -594,7 +518,6 @@ export default function Dashboard({ navigation, route, props }) {
                 />
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.btnTextA}>Upload contact file</Text>
-
                   <Image
                     style={[styles.navigateImgA, { marginLeft: '25%' }]}
                     source={require('../../images/navR.png')}
@@ -615,7 +538,6 @@ export default function Dashboard({ navigation, route, props }) {
                 />
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={styles.btnTextA}>Add manually</Text>
-
                   <Image
                     style={[styles.navigateImgA, { marginLeft: '37%' }]}
                     source={require('../../images/navR.png')}
@@ -626,8 +548,6 @@ export default function Dashboard({ navigation, route, props }) {
           </View>
         </Card>
       </Modal>
-
-
     </View>
   );
 }

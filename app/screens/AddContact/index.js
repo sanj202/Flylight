@@ -113,7 +113,7 @@ export default function AddContact({ navigation }) {
           uid: registerData.data.uid
         }
         dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-        dispatch(campaignAction.CampaignList(data, loginData.data.token));
+        dispatch(campaignAction.CampaignList(data, registerData.data.token));
         dispatch(leadAction.LeadStatusList(data, registerData.data.token));
         dispatch(leadAction.StateList(data, registerData.data.token));
       }

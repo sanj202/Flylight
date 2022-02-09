@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, TouchableOpacity, FlatList, Image, Button, ActivityIndicator, Dimensions} from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, Image, Button, ActivityIndicator, Dimensions } from 'react-native';
 import Header from '../../component/header/index'
 import { campaignAction, staffMemberAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -36,7 +36,7 @@ export default function Campaign({ navigation }) {
                     org_uid: registerData.data.org_uid,
                     uid: registerData.data.uid
                 }
-                dispatch(campaignAction.CampaignList(data, loginData.data.token));
+                dispatch(campaignAction.CampaignList(data, registerData.data.token));
             }
             setIsLodding(true)
         }
@@ -73,8 +73,30 @@ export default function Campaign({ navigation }) {
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_type}</Text>
                 </View>
                 <View style={{ marginLeft: '-12%' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('EditCampaign', {
+                                campData: item
+                            })}
+                        >
+                            <Image
+                                style={{ height: 22, width: 22,marginRight:'2%' }}
+                                source={require('../../images/editCall.png')}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            // onPress={() => navigation.navigate('EditCampaign', {
+                            //     campData: item
+                            // })}
+                        >
+                            <Image
+                                style={{ height: 22, width: 22, marginRight:'2%'}}
+                                source={require('../../images/deleteCall.png')}
+                            />
+                        </TouchableOpacity>
+                    </View>
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('MMMM Do YYYY')},</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("h:mm A")}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto',alignSelf:'flex-end',marginRight:'2%' }}>{moment(item.created_at).format("h:mm A")}</Text>
                 </View>
             </View>)
     }
@@ -115,9 +137,10 @@ export default function Campaign({ navigation }) {
                             </Text>
                         </TouchableOpacity>
 
-                        {CampaignData ?
+                        {CampaignData
+                            && CampaignData.length > 0 ?
                             <FlatList
-                            style={{ height: "84.5%" }}
+                                style={{ height: "84.5%" }}
                                 data={CampaignData}
                                 renderItem={CampaignView}
                             />

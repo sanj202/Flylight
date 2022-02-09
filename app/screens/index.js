@@ -33,6 +33,7 @@ export { default as Staff_Members } from '../screens/Staff_Members'
 export { default as Organization } from '../screens/Organization'
 export { default as Campaign } from '../screens/Campaign'
 export { default as AddCampaign } from '../screens/AddCampaign'
+export {default as EditCampaign } from '../screens/EditCampaign'
 
 //stack screens
 

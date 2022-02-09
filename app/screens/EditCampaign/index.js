@@ -12,25 +12,29 @@ import { addcontactManuallyAction, leadAction, campaignAction } from '../../redu
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
-export default function AddContact({ navigation }) {
-
+export default function EditCampaign({ navigation, route }) {
+    console.log("dsfffff....................", route.params.campData
+        // moment(route.params.campData.start_date).format(),new Date()
+    )
 
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)
     const [isFocus3, setIsFocus3] = useState(false);
-    const [campaignName, setcampaignName] = useState("")
-    const [Status, setStatus] = useState(null);
+    const [campaignName, setcampaignName] = useState(route.params.campData ? route.params.campData.campaign_name : "")
+    const [Status, setStatus] = useState(route.params.campData ? route.params.campData.status : null);
     const [isFocus, setIsFocus] = useState(false);
-    const [campaignType, setcampaignType] = useState("")
-    const [Description, setDescription] = useState("")
-    const [Revenue, setRevenue] = useState("")
-    const [BudgetedCost, setBudgetedCost] = useState("")
+    const [campaignType, setcampaignType] = useState(route.params.campData ? route.params.campData.campaign_type : "")
+    const [Description, setDescription] = useState(route.params.campData ? route.params.campData.description : "")
+    const [Revenue, setRevenue] = useState(route.params.campData ? route.params.campData.actual_cost : "")
+    const [BudgetedCost, setBudgetedCost] = useState(route.params.campData ? route.params.campData.budgeted_cost : "")
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false);
 
+    // const [startdate, setstartDate] = useState(route.params.campData ? route.params.campData.start_date : new Date());
     const [startdate, setstartDate] = useState(new Date());
     const [startmode, setstartMode] = useState('date');
     const [startshow, setstartShow] = useState(false);
+    // const [starttext, setstarttext] = useState(route.params.campData.start_date ? false : true)
     const [starttext, setstarttext] = useState(true)
 
     const onChangeStartDate = (event, selectedDate) => {
@@ -46,10 +50,11 @@ export default function AddContact({ navigation }) {
         setstarttext(false)
         setMode('date');
     };
-
+    // const [enddate, setendDate] = useState(route.params.campData ? route.params.campData.end_date : new Date());
     const [enddate, setendDate] = useState(new Date());
     const [endmode, setendMode] = useState('date');
     const [endshow, setendShow] = useState(false);
+    // const [endtext, setendtext] = useState(route.params.campData.end_date ? false : true)
     const [endtext, setendtext] = useState(true)
 
     const onChangeEndDate = (event, selectedDate) => {
@@ -122,9 +127,10 @@ export default function AddContact({ navigation }) {
 
     useEffect(() => {
         if (responseAdd_Edit) {
-            // console.log("dsfvghf.......................",responseAdd_Edit)
+          setIsLodding(false)
             if (responseAdd_Edit.status == "success") {
                 Alert.alert(responseAdd_Edit.message)
+                dispatch(campaignAction.AddEditclearResponse())
                 navigation.navigate('Campaign')
             }
             else if (responseAdd_Edit.status == "failed") {
@@ -157,14 +163,15 @@ export default function AddContact({ navigation }) {
                         uid: loginData.data.uid,
                         profile_id: loginData.data.cProfile.toString(),
                         org_uid: loginData.data.org_uid,
+                        campaign_id: route.params.campData.id,
                         campaign_name: campaignName,
                         campaign_status: Status,
                         campaign_type: campaignType,
                         expected_revenue: Revenue,
-                        budgeted_cost:BudgetedCost,
-                        description : Description,
-                        start_date:formateStartDate,
-                        end_date:formateEndDate
+                        budgeted_cost: BudgetedCost,
+                        description: Description,
+                        start_date: formateStartDate,
+                        end_date: formateEndDate
                     }
                     dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
                 }
@@ -174,14 +181,15 @@ export default function AddContact({ navigation }) {
                         uid: registerData.data.uid,
                         profile_id: registerData.data.cProfile,
                         org_uid: registerData.data.org_uid,
+                        campaign_id: route.params.campData.id,
                         campaign_name: campaignName,
                         campaign_status: Status,
                         campaign_type: campaignType,
                         expected_revenue: Revenue,
-                        budgeted_cost:BudgetedCost,
-                        description : Description,
-                        start_date:formateStartDate,
-                        end_date:formateEndDate
+                        budgeted_cost: BudgetedCost,
+                        description: Description,
+                        start_date: formateStartDate,
+                        end_date: formateEndDate
                     }
                     dispatch(campaignAction.Add_EditCampaign(data, registerData.data.token));
                 }
@@ -199,7 +207,7 @@ export default function AddContact({ navigation }) {
                     // navigation.openDrawer()
                     navigation.goBack()
                 }}
-                title='Add Campaign'
+                title='Edit Campaign'
                 onPressRight={() => {
                     navigation.navigate('Notification')
                 }}
@@ -307,6 +315,7 @@ export default function AddContact({ navigation }) {
                                     value={startdate}
                                     mode={startmode}
                                     display="default"
+                                    timeZoneOffsetInMinutes={60}
                                     onChange={onChangeStartDate}
                                 />
                             )}
@@ -445,7 +454,7 @@ export default function AddContact({ navigation }) {
                         // onPress={() => setModalVisible2(!modalVisible2)}
                         onPress={() => AddNewCampaign()}
                     >
-                        <Text style={[styles.textButton, { fontWeight: 'bold' }]}>ADD</Text>
+                        <Text style={[styles.textButton, { fontWeight: 'bold' }]}>UPDATE</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
