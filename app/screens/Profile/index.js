@@ -9,28 +9,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { profileAction, authAction, varificationAction } from '../../redux/Actions';
 import { useIsFocused } from "@react-navigation/core"
-import DocumentPicker from 'react-native-document-picker';
-import { Dropdown } from 'react-native-element-dropdown';
-import axios from 'axios';
+import ImagePicker from 'react-native-image-crop-picker';
+
 export default function AddContact({ navigation }) {
 
-    const [orgName, setorgName] = useState("ORG");
-    const [IsFocus, setIsFocus] = useState(false);
     const [user, setUser] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
     const { width, height } = Dimensions.get('window');
-    const dispatch = useDispatch()
 
+    const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const profileData = useSelector(state => state.profile.userDetail)
     const profileImage = useSelector(state => state.profile.userImage)
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
-
-    const data = [
-        { label: 'ORG', value: 'ORG' },
-        { label: 'ORG2', value: 'ORG2' },
-    ];
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
@@ -44,7 +36,7 @@ export default function AddContact({ navigation }) {
             const data = {
                 uid: loginData.data.uid,
                 org_uid: loginData.data.org_uid,
-                profile_id: loginData.data.cProfile.toString(),
+                profile_id: loginData.data.cProfile,
             }
             dispatch(profileAction.profile(data, loginData.data.token));
         }
@@ -53,7 +45,7 @@ export default function AddContact({ navigation }) {
             const data = {
                 uid: registerData.data.uid,
                 org_uid: registerData.data.org_uid,
-                profile_id: registerData.data.cProfile.toString(),
+                profile_id: registerData.data.cProfile,
             }
             dispatch(profileAction.profile(data, registerData.data.token));
         }
@@ -64,9 +56,6 @@ export default function AddContact({ navigation }) {
                 setUser(profileData.data.user)
                 setIsLodding(false)
                 dispatch(profileAction.clearResponse())
-            }
-            else if (profileData == '') {
-                setIsLodding(false)
             }
             else {
                 setIsLodding(false)
@@ -80,64 +69,44 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (profileImage) {
             if (profileImage.status == "success") {
-                Alert.alert(profileImage.message)
-                setIsLodding(false)
                 getProfile()
+                setIsLodding(false)
+                Alert.alert(profileImage.message)
                 dispatch(profileAction.clearprofileImageResponse())
             }
             else if (profileImage == "error") {
                 setIsLodding(false)
-                // Alert.alert('something Wrong try again')
+                console.log('error ..............', profileImage)
             }
-            else { }
+            else {
+                setIsLodding(false)
+            }
         }
         else {
         }
     }, [profileImage])
 
-    const [newAvtar, setnewAvtar] = useState('')
-    const UploadAvtar = async () => {
-        try {
-            const res = await DocumentPicker.pick({
-                type: [DocumentPicker.types.images]
-            });
-            setnewAvtar(res)
+    const UploadAvtar = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 400,
+            cropping: true
+        }).then(image => {
             let photo = {
-                uri: res[0].uri,
-                type: res[0].type,
-                name: res[0].name,
-                size: res[0].size,
+                uri: image.path,
+                type: image.mime,
+                name: 'photo',
+                size: image.size,
             };
+            // console.log("crop image........", photo);
 
             if (loginData.status == "success") {
                 setIsLodding(true)
                 var formdata = new FormData();
                 formdata.append('userAvatar', photo)
                 formdata.append('uid', loginData.data.uid)
-                // console.log("fromdata............................", formdata)
-                // axios({
-                //     url: 'http://3.23.113.168/admin/public/api/mobile/v1/updateAvatar',
-                //     method: 'POST',
-                //     data: data,
-                //     headers: {
-                //         // 'Accept': 'application/json',
-                //         'Content-Type': 'multipart/form-data',
-                //         'Authorization': 'Bearer ' + loginData.data.token
-                //     }
-                // })
-                //     .then((response) => JSON.stringify(response))
-                //         .then((responseData) => {
-                //             setIsLodding(false)
-                //             console.log("RESULTS HERE for CREATE TOUR api :", responseData)
-                //         })
-                //         .catch((error) => {
-                //             setIsLodding(false)
-                //             console.error(error);
-                //         })
                 dispatch(profileAction.updateAvatar(formdata, loginData.data.token));
             }
-
-
             else if (registerData.status == "success") {
                 setIsLodding(true)
                 var formdata = new FormData();
@@ -145,14 +114,7 @@ export default function AddContact({ navigation }) {
                 formdata.append('uid', registerData.data.uid)
                 dispatch(profileAction.updateAvatar(formdata, registerData.data.token));
             }
-
-        } catch (err) {
-            if (DocumentPicker.isCancel(err)) {
-            } else {
-                alert('Unknown Error: ' + JSON.stringify(err));
-                throw err;
-            }
-        }
+        });
     };
 
     const LogoutSession = () => {
@@ -265,7 +227,7 @@ export default function AddContact({ navigation }) {
                         onPress={() => UploadAvtar()}
                     >
                         <Image
-                            style={{ height: 22, width: 22,backgroundColor:'#FFF',borderRadius:10, marginRight: '2%' ,marginTop:'-25 %'}}
+                            style={{ height: 22, width: 22, backgroundColor: '#FFF', borderRadius: 10, marginRight: '2%', marginTop: '-25 %' }}
                             source={require('../../images/edit_Profile.png')}
                         />
                     </TouchableOpacity>
@@ -282,37 +244,7 @@ export default function AddContact({ navigation }) {
             {IsLodding == true ?
                 <ActivityIndicator size="large" color="#0000ff" />
                 :
-                <View style={{ marginHorizontal: '5%', marginVertical: '4%' ,marginTop:'15%'}}>
-                    {/* <Text style={{
-                        fontSize: 12, color: '#000000',
-                        fontFamily: 'Roboto', marginTop: '15%'
-                    }}>Organization Name</Text>
-
-                    <Dropdown
-                        style={styles.dropdown}
-                        placeholderStyle={styles.selectedTextStyle}
-                        selectedTextStyle={styles.selectedTextStyle}
-                        data={data}
-                        maxHeight={100}
-                        labelField="label"
-                        valueField="value"
-                        placeholder={!IsFocus ? 'Select Orgnization' : '...'}
-                        value={orgName}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        onChange={item => {
-                            setorgName(item.value);
-                            setIsFocus(false);
-                        }}
-                        renderLeftIcon={() => (
-                            <View>
-                                <Image
-                                    style={{ height: 22, width: 22, marginRight: '1.5%' }}
-                                    source={require('../../images/globe.png')}
-                                />
-                            </View>
-                        )}
-                    /> */}
+                <View style={{ marginHorizontal: '5%', marginVertical: '4%', marginTop: '15%' }}>
 
                     <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
                     <View style={styles.inputFields}>

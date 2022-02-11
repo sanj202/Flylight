@@ -300,7 +300,7 @@ export default function lead_manager({ navigation, route }) {
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', registerData.data.cProfile);
           formdata.append('org_uid', registerData.data.org_uid);
-          dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
+          dispatch(opportunityAction.importOpportunity(formdata, registerData.data.token));
           setIsULodding(true)
         }
         else {
@@ -308,7 +308,7 @@ export default function lead_manager({ navigation, route }) {
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', registerData.data.cProfile);
           formdata.append('org_uid', registerData.data.org_uid);
-          dispatch(leadAction.importLead(formdata, loginData.data.token));
+          dispatch(leadAction.importLead(formdata, registerData.data.token));
           setIsULodding(true)
         }
       }
