@@ -7,6 +7,7 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   Task_Manager,
+  AddTask,
   Action_Manager,
   ReportFeedback,
   Edit_Opportunity,
@@ -207,6 +208,16 @@ function HomeTabs() {
         name="Task_Manager"
         component={Task_Manager}
         options={{
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+      
+      <Tab.Screen
+        name="AddTask"
+        component={AddTask}
+        options={{
+          tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}

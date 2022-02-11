@@ -30,6 +30,7 @@ export default function lead_manager({ navigation }) {
         { label: 'Visitor', value: 3 },
     ];
     const [askDelete, setaskDelete] = useState(false);
+    const [askDelete1, setaskDelete1] = useState(false);
     const { width, height } = Dimensions.get('window');
     const [leadOwnerData, setleadOwnerData] = useState('')
     const [IsLodding, setIsLodding] = useState(false)
@@ -67,8 +68,9 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
+                console.log('leadOwner..........................', leadOwner)
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
-               
+
             }
             else if (leadOwner.status == "failed") {
             }
@@ -152,30 +154,73 @@ export default function lead_manager({ navigation }) {
 
     const UserLisView = ({ item }) => {
         return (
-            <View style={styles.listData}>
-                <View>
-                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
-                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Mobile </Text>
-                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Email  </Text>
+            <TouchableOpacity
+                onPress={() => Details(item)}
+            >
+                <View style={styles.listData}>
+                    <View>
+                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
+                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Mobile </Text>
+                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Email  </Text>
+                    </View>
+                    <View style={{ marginLeft: '2%', width: '58%' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.phone}</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.email}</Text>
+                    </View>
+                    <View style={{ marginLeft: '-18%' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('lll')}</Text>
+                        {/* <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("h:mm A")}</Text> */}
+                    </View>
                 </View>
-                <View style={{ marginLeft: '2%', width: '58%' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.phone}</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.email}</Text>
-                </View>
-                <View style={{ marginLeft: '-12%' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('MMMM Do YYYY')},</Text>
-                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("h:mm A")}</Text>
-                </View>
-            </View>)
+            </TouchableOpacity>)
     }
 
+    const [Objcet, setObjcet] = useState({
+        name: '',
+        organization: '',
+        dob: '',
+        phone: '',
+        email: '',
+        Address: '',
+        created_at: '',
+        updated_at: ''
+    })
+    const Details = (value) => {
+        console.log('staff.................................', value)
+        setObjcet({
+            name: value.name,
+            organization: value.organization,
+            dob: value.dob,
+            phone: value.phone,
+            email: value.email,
+            Address: (value.street ? value.street : '' + value.city ? value.city : '' + value.state ? value.state : '' + value.zip ? value.zip : ''),
+            created_at: value.created_at,
+            updated_at: value.updated_at
+        })
+        setaskDelete1(!askDelete1)
+    }
 
+    const DetailsCancel = () => {
+        setObjcet({
+            name: '',
+            organization: '',
+            dob: '',
+            phone: '',
+            email: '',
+            Address: '',
+            BudgetedCost: '',
+            Description: '',
+            created_at: '',
+            updated_at: ''
+        })
+        setaskDelete1(!askDelete1)
+    }
 
     return (
         <View style={styles.container}>
             <Header
-                style={{ height: "14%" }}
+                style={{ height: "16%" }}
                 onPressLeft={() => {
                     //   navigation.openDrawer()
                     navigation.goBack()
@@ -193,21 +238,24 @@ export default function lead_manager({ navigation }) {
                         <TouchableOpacity
                             onPress={() => setaskDelete(!askDelete)}
                             style={{
-                                backgroundColor: '#73f233',
-                                padding: 5,
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                paddingHorizontal: 10,
+                                paddingVertical: 2,
                                 alignSelf: 'flex-end',
                                 marginHorizontal: '5%',
-                                marginVertical: '2%',
-                                borderRadius: 5
+                                marginTop: '-12%',
+                                borderRadius: 15
                             }}
                         >
-                            <Text style={{ color: "#fff", fontSize: 16 }}>
-                                Add Members
+                            <Text style={{ color: "#fff", fontSize: 12 }}>
+                                +Add
                             </Text>
                         </TouchableOpacity>
 
                         {leadOwnerData ?
                             <FlatList
+                                style={{ height: "89%", marginTop: '5%' }}
                                 data={leadOwnerData}
                                 renderItem={UserLisView}
                             />
@@ -316,6 +364,45 @@ export default function lead_manager({ navigation }) {
                         >
                             <Text style={styles.askBtnText}>Send</Text>
                         </Pressable>
+                    </View>
+                </View>
+            </Modal>
+
+            <Modal animationType="slide" transparent={true} visible={askDelete1}
+                onRequestClose={() => { setaskDelete1(false); }}>
+                <View style={styles.askModel}>
+                    <Text style={styles.askTitle}> Staff Member Detail</Text>
+                    <TouchableOpacity
+                        style={styles.askTitleR}
+                        onPress={() => DetailsCancel()}
+                    >
+                        <Image
+                            style={{ height: 14, width: 14, }}
+                            source={require('../../images/cross.png')}
+                        />
+                    </TouchableOpacity>
+
+                    <View style={[styles.inputFields,{padding:10}]}>
+                        <View>
+                            <Text style={styles.DetailCampTitle}>Name </Text>
+                            <Text style={styles.DetailCampTitle}>Organization</Text>
+                            <Text style={styles.DetailCampTitle}>Dob</Text>
+                            <Text style={styles.DetailCampTitle}>Phone</Text>
+                            <Text style={styles.DetailCampTitle}>Email</Text>
+                            <Text style={styles.DetailCampTitle}>Address</Text>
+                            <Text style={styles.DetailCampTitle}>created Date</Text>
+                            <Text style={styles.DetailCampTitle}>updated Date</Text>
+                        </View>
+                        <View style={{ marginLeft: '3%', width: '70%' }}>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.name}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.organization}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.dob}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.phone}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.email}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.Address}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{moment(Objcet.created_at).format('lll')}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{moment(Objcet.updated_at).format('lll')}</Text>
+                        </View>
                     </View>
                 </View>
             </Modal>

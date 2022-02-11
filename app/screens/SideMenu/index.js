@@ -153,7 +153,7 @@ export default function SideMenu({ navigation }) {
             </View>
 
 
-            <ScrollView style={{ marginLeft: '3%', marginRight: '3%' }}>
+            <ScrollView style={{ marginHorizontal:'3%',marginBottom:'10%'}}>
 
                 <View style={styles.menusTop}>
 

@@ -2,7 +2,7 @@
 import { Contact_List ,Contact_List_Suceess ,Contact_Clear ,Record_Feedback,Record_Feedback_Sucess,Record_Feedback_Clear}  from './actionTypes';
 import BaseUrl from '../../../const'
 
-export const contactList = (token,uid,profile_id,org_uid) => {
+export const contactList = (data,token) => {
     // console.log(" credentails..................", token,uid,profile_id,org_uid )
     return (dispatch) => {
         dispatch({ type: Contact_List })
@@ -17,13 +17,7 @@ export const contactList = (token,uid,profile_id,org_uid) => {
                     'Authorization': 'Bearer ' + token,
                     // 'Authorization': uid,
                 },
-                body: JSON.stringify({
-                    // org_uid: org_uid,
-                    // profile_id: profile_id,
-                    uid: uid,
-                    profile_id : profile_id,
-                    org_uid : org_uid
-                }),
+                body: JSON.stringify(data),
             })
             .then(response => response.json())
             .then(responseData => {

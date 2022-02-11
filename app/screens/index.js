@@ -20,6 +20,7 @@ export { default as Report } from '../screens/Report/index';
 export { default as Notification } from '../screens/Notification/index'
 export { default as lead_manager } from '../screens/Lead_ Manager/index'
 export { default as Task_Manager } from '../screens/Task_Manager/index'
+export {default as AddTask} from '../screens/AddTask'
 export { default as All_Lead } from '../screens/All_Lead/index'
 export { default as Edit_Lead } from '../screens/Edit_Lead/index'
 export { default as Edit_Opportunity } from '../screens/Edit_Opportunity/index'

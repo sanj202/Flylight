@@ -516,17 +516,17 @@ export default function AddContact({ navigation, route }) {
 
                     <TouchableOpacity
                         style={{
-                            borderWidth: 1,
+                            borderWidth: 0.5,
                             borderColor: '#C3C7E5',
                             borderRadius: 10,
-                            // marginHorizontal: '3%',
-                            paddingVertical: 5,
+                            paddingVertical: 11,
                             marginTop: '2%'
                         }}
                         onPress={showDatepicker} >
                         <View style={{ flexDirection: 'row' }}>
                             <Image
-                                style={styles.icon}
+                              style={Platform.OS == 'ios' ?
+                              [styles.icon] : [styles.icon, { marginTop: '1%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {show && (
@@ -550,9 +550,9 @@ export default function AddContact({ navigation, route }) {
                                 :
                                 <View>
                                     {text == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of Birth</Text>
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of Birth</Text>
                                         :
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }

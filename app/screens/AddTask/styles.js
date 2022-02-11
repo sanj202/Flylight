@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   dropdown3: {
-    height: 45,
+    height: 50,
     borderColor: '#C3C7E5',
     borderWidth: 0.5,
     borderRadius: 10,
@@ -132,6 +132,50 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
+  askModel: {
+    marginHorizontal: '2%',
+    marginTop: '40%',
+    backgroundColor: "white",
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    height:'50%'
+  },
+  askTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor: '#3373F3',
+    color: 'white',
+    textAlign: "center",
+    paddingVertical: '3%'
+  },
+  askTitleR: {
+    margin: '5%',
+    marginRight: '3%',
+    marginTop: '-8%',
+    alignSelf: 'flex-end',
+    height: 14,
+    width: 14
+  },
+  askSubtitle: {
+    fontSize: 15,
+    color: 'red',
+    textAlign: "center"
+  },
+  askBtn: {
+    paddingVertical: '2%',
+    borderRadius: 10,
+    backgroundColor: "#2196F3",
+  },
+  askBtnText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20,
+  }
 });
 
 export default styles

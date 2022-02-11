@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#DBDBDB',
         flexDirection: 'row',
-        marginHorizontal:'3%',
-        marginVertical:'1%'
+        marginHorizontal: '3%',
+        marginVertical: '1%'
     },
     headerView: {
         backgroundColor: '#3373F3',
@@ -133,11 +133,12 @@ const styles = StyleSheet.create({
 
     inputFields: {
         flexDirection: 'row',
-        borderWidth: 1,
         borderColor: '#E8EAF5',
         borderRadius: 10,
-        margin: '3%',
-
+        borderWidth: 1,
+        marginHorizontal: '3%',
+        marginVertical:'4%',
+        padding: 10
     },
     icon: {
         height: 21,
@@ -280,7 +281,19 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 20,
-    }
+    },
+    askTitleR: {
+        margin: '5%',
+        marginRight: '3%',
+        marginTop: '-11.5%',
+        alignSelf: 'flex-end',
+        padding: 10
+    },
+    DetailCampTitle: {
+        fontSize: 14,
+        color: '#0F0F0F',
+        fontFamily: 'Roboto'
+    },
 });
 
 export default styles

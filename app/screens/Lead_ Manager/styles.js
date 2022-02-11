@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: "center",
     paddingVertical: '3%',
-    borderTopLeftRadius:20,
-    borderTopRightRadius:20
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
   },
   askSubtitle: {
     margin: '5%',
@@ -176,6 +176,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 20,
+  },
+  addNewBtn: {
+    borderColor: '#fff',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: '#2296E4',
+    borderRadius: 15
   }
 
 });

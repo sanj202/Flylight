@@ -257,6 +257,7 @@ export default function lead_manager({ navigation, route }) {
   }
 
   const CheckImportType = (value) => {
+    console.log("ffn.......................................,", SelectedFile)
     setSelectedFile('choose-file')
     setImportFiles(!ImportFiles)
     settempUploadingType(value)
@@ -327,8 +328,9 @@ export default function lead_manager({ navigation, route }) {
       if (importLead.status == "success") {
         // CombineArrayData()
         Get_Data()
-        setImportFiles(!ImportFiles)
+        setImportFiles(false)
         Alert.alert(importLead.message)
+        setSingleFile(null)
         // dispatch(leadAction.clearImportLeadResponse())
       }
       else if (importLead == "error") {
@@ -344,10 +346,11 @@ export default function lead_manager({ navigation, route }) {
     if (importOpportunity) {
       setIsULodding(false)
       if (importOpportunity.status == "success") {
-        Alert.alert(importOpportunity.message)
         // CombineArrayData()
         Get_Data()
-        setImportFiles(!ImportFiles)
+        setImportFiles(false)
+        Alert.alert(importOpportunity.message)
+        setSingleFile(null)
         // dispatch(opportunityAction.clearResponse())
       }
       else if (importOpportunity == "error") {
@@ -886,8 +889,26 @@ export default function lead_manager({ navigation, route }) {
               </TouchableOpacity>
             </View>
 
-            <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-around' }}>
+            <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
+
               <TouchableOpacity
+                onPress={() => navigation.navigate('Edit_Lead', { title: 'Add Lead' })}
+                style={styles.addNewBtn}
+              >
+                <Text style={{ color: "#fff", fontSize: 13 }}>
+                Add New Lead       
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => CheckImportType("lead")}
+                style={styles.addNewBtn}
+              >
+                <Text style={{ color: "#fff", fontSize: 13 }}>
+                  Import From Storage
+                </Text>
+              </TouchableOpacity>
+
+              {/* <TouchableOpacity
                 style={{
                   backgroundColor: '#00b300',
                   width: '47%',
@@ -910,7 +931,7 @@ export default function lead_manager({ navigation, route }) {
                 onPress={() => CheckImportType("lead")}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
             </View>
 
@@ -1038,8 +1059,24 @@ export default function lead_manager({ navigation, route }) {
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-around' }}>
+            <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
               <TouchableOpacity
+                onPress={() => navigation.navigate('Edit_Opportunity', { title: 'Add Opportunity' })}
+                style={styles.addNewBtn}
+              >
+                <Text style={{ color: "#fff", fontSize: 13 }}>
+                Add New Opportunity
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => CheckImportType("Opportunity")}
+                style={styles.addNewBtn}
+              >
+                <Text style={{ color: "#fff", fontSize: 13 }}>
+                  Import From Storage
+                </Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity
                 style={{
                   backgroundColor: '#00b300',
                   width: '47%',
@@ -1062,7 +1099,7 @@ export default function lead_manager({ navigation, route }) {
                 onPress={() => CheckImportType("Opportunity")}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
             </View>
             <View style={{ marginTop: '2%' }}></View>
@@ -1073,7 +1110,7 @@ export default function lead_manager({ navigation, route }) {
               <View>
                 {Opportunity !== undefined && Opportunity.length > 0 ?
                   <FlatList
-                  style={{ height: "71%" }}
+                    style={{ height: "71%" }}
                     data={Opportunity}
                     renderItem={OpportunityVIew}
                   />
@@ -1097,7 +1134,6 @@ export default function lead_manager({ navigation, route }) {
           <Text style={styles.askSubtitle}>
             you want to delete this{'\n'}{tempType} ?</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-
             <Pressable
               style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
               onPress={() => CencelFunction()}

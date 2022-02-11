@@ -87,7 +87,7 @@ export default function AddContact({ navigation }) {
             }
             else if (profileImage == "error") {
                 setIsLodding(false)
-                Alert.alert('something Wrong try again')
+                // Alert.alert('something Wrong try again')
             }
             else { }
         }

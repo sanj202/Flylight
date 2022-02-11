@@ -10,139 +10,269 @@ import { taskmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Dropdown } from 'react-native-element-dropdown';
 
 export default function lead_manager({ navigation }) {
+
+    const data = [
+        { label: 'Not Started', value: 'Not Started', },
+        { label: 'In Progress', value: 'In Progress' },
+        { label: 'Completed', value: 'Completed' },
+    ];
 
     const [isService, setisService] = useState('All');
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
-
+    const [askDelete, setaskDelete] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-
+    const [allTask, setallTask] = useState()
+    const [Status, setStatus] = useState(null);
+    const [isFocus, setIsFocus] = useState(false);
+    const [IsLodding, setIsLodding] = useState(false)
+    const [EIsLodding, setEIsLodding] = useState(false)
+    const [title, settitle] = useState('')
+    const { width, height } = Dimensions.get('window');
 
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, settext] = useState(true)
 
-    const [dates, setDates] = useState(new Date());
-    const [modes, setModes] = useState('time');
-    const [shows, setShows] = useState(false);
-    const [texts, settexts] = useState(true)
 
-    const onChangeFrom = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate);
-    };
-
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
-    };
-
-    const showDatepicker = () => {
-        settext(false)
-        showMode('date');
-    };
-
-
-    const onChangeTo = (event, selectedDates) => {
-        const currentDates = selectedDates || dates;
-        setShows(Platform.OS === 'ios');
-        setDates(currentDates);
-    };
-
-    const showModes = (currentModes) => {
-        setShows(true);
-        setModes(currentModes);
-    };
-
-    const showDatepickers = () => {
-        settexts(false)
-        showModes('time');
-    };
-
-
-    const EditTask = () => {
-        setIsVisible(true)
-        // setModalVisible(!modalVisible)
-        // ToastAndroid.show("Add Succesfully !", ToastAndroid.SHORT);
-        // navigation.navigate('lead_manager')
-    };
-
-    const DeleteTask = () => {
-        setModalVisible2(!modalVisible2)
-    }
-
-
-    const checkValue = (value) => {
-        // console.log("data,......................", A)
-        setisService(value)
-    }
-
-
-    const { width, height } = Dimensions.get('window');
-    const [allTask, setallTask] = useState()
-    const [IsLodding, setIsLodding] = useState(false)
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
     const taskList = useSelector(state => state.taskmanager.getList)
+    const deleteTask = useSelector(state => state.taskmanager.deleteTask)
+    const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
+
+    const onChangeFrom = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        settext(false)
+        setDate(currentDate)
+    };
+    const showMode = (currentMode) => {
+        setShow(!show);
+        setMode(currentMode);
+    };
+    const showDatepicker = () => {
+        showMode('date');
+    };
+
+    const checkValue = (value) => {
+        setisService(value)
+    }
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
-                const data = {
-                    uid: loginData.data.uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                    org_uid: loginData.data.org_uid,
-                }
+            Get_Data()
 
-                dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    uid: registerData.data.uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                }
-                dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
-            }
-            setIsLodding(true)
         }
     }, [loginData, registerData, isFocused])
 
+    const Get_Data = () => {
+        if (loginData.status == "success") {
+            setIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+            }
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
+
+        }
+        else if (registerData.status == "success") {
+            setIsLodding(true)
+            const data = {
+                uid: registerData.data.uid,
+                profile_id: registerData.data.cProfile.toString(),
+                org_uid: registerData.data.org_uid,
+            }
+            dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
+
+        }
+    }
+
     useEffect(() => {
         if (taskList) {
-            console.log("tasklist...........", taskList)
             if (taskList.status == "200") {
                 setallTask(taskList.data)
-                setIsLodding(false)
             }
             else if (taskList.status == "failed") {
-                setIsLodding(false)
             }
             else if (taskList.status == "fail") {
-
-                setIsLodding(false)
                 Alert.alert(taskList.message)
             }
             else {
-                setIsLodding(false)
             }
+            setIsLodding(false)
         }
         else {
-
         }
     }, [taskList])
 
+    const [temObject, settempObject] = useState('')
+    const CheckEditTask = (value) => {
+        console.log('values of .......................', moment(value.due_date).format("MMMM Do, YYYY H:mma"))
+        settitle(value.title)
+        if (value.due_date) {
+            // setDate(value.due_date.toISOString())
+            // setDate(value.due_date)
+            settext(false)
+        }
+        setStatus(value.status)
+        settempObject(value)
+        setIsVisible(true)
+    };
+
+    const EditFunction = (value) => {
+        if (title == "") {
+            Alert.alert(" Enter Title ")
+        }
+        else if (Status == null) {
+            Alert.alert(" Select Status")
+        }
+        else {
+            // setIsVisible(false)
+            let formateStartDate = moment(date).format("YYYY-MM-DD")
+            // console.log('..................................', Status)
+            if (loginData || registerData) {
+                if (loginData.status == "success") {
+                    setEIsLodding(true)
+                    const data = {
+                        uid: loginData.data.uid,
+                        org_uid: loginData.data.org_uid,
+                        profile_id: loginData.data.cProfile,
+                        created_by: loginData.data.cProfile,
+                        modified_by: loginData.data.cProfile,
+                        task_id: value.id ? value.id : '',
+                        title: title,
+                        task_for: value.task_for ? value.task_for : '',
+                        task_related_to: value.related_to ? value.related_to : '',
+                        task_related_to_id: value.what_id ? value.what_id : '',
+                        status: Status,
+                        priority: value.priority ? value.priority : '',
+                        description: value.description ? value.description : '',
+                        due_date: value.due_date ? moment(value.due_date).format("YYYY-MM-DD") : formateStartDate,
+                    }
+                    dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
+                }
+                else if (registerData.status == "success") {
+                    setEIsLodding(true)
+                    const data = {
+                        uid: registerData.data.uid,
+                        org_uid: registerData.data.org_uid,
+                        profile_id: registerData.data.cProfile,
+                        created_by: registerData.data.cProfile,
+                        modified_by: registerData.data.cProfile,
+                        task_id: value.id ? value.id : '',
+                        title: title,
+                        task_for: value.task_for ? value.task_for : '',
+                        task_related_to: value.related_to ? value.related_to : '',
+                        task_related_to_id: value.what_id ? value.what_id : '',
+                        status: Status,
+                        priority: value.Priority ? value.Priority : '',
+                        description: value.Description ? value.Description : '',
+                        due_date: value.updated_at ? moment(value.updated_at).format("YYYY-MM-DD") : formateStartDate,
+                    }
+                    dispatch(taskmanagerAction.Add_EditTask(data, registerData.data.token));
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (responseAdd_Edit) {
+            // console.log('one<><><><>>>>>>>>>>>>>>>>>', responseAdd_Edit)
+            if (responseAdd_Edit.status == "success") {
+                setIsVisible(false)
+                Alert.alert(responseAdd_Edit.message)
+                settitle('')
+                setDate(new Date())
+                settext(true)
+                setStatus(null)
+                settempObject("")
+                Get_Data()
+                dispatch(taskmanagerAction.clearResponse())
+            }
+            else if (responseAdd_Edit.status == "failed") {
+            }
+            else if (responseAdd_Edit.status == "fail") {
+                Alert.alert(responseAdd_Edit.message)
+                dispatch(taskmanagerAction.clearResponse())
+            }
+            setEIsLodding(false)
+        }
+        else {
+        }
+    }, [responseAdd_Edit])
 
 
+    const [tempId, settempId] = useState('')
+    const [tempType, settempType] = useState('')
+
+    const CencelFunction = () => {
+        settempType('')
+        settempId('')
+        setaskDelete(!askDelete)
+    }
+
+    const CheckDeleteFunction = (value) => {
+        settempId(value.id)
+        settempType(value.type)
+        setaskDelete(!askDelete)
+    }
+
+    const DeleteFunction = () => {
+        // console.log('API.................')
+        if (loginData.status == "success") {
+            setaskDelete(!askDelete)
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile,
+                org_uid: loginData.data.org_uid,
+                task_id: tempId
+            }
+            dispatch(taskmanagerAction.deleteTask(data, loginData.data.token));
+        }
+        else if (registerData.status == "success") {
+            setaskDelete(!askDelete)
+            const data = {
+                uid: registerData.data.uid,
+                profile_id: registerData.data.cProfile.toString(),
+                org_uid: registerData.data.org_uid,
+                task_id: tempId
+            }
+            dispatch(taskmanagerAction.deleteTask(data, registerData.data.token));
+        }
+        setIsLodding(true)
+    }
+
+    useEffect(() => {
+        if (deleteTask) {
+            if (deleteTask.status == "200") {
+                setModalVisible2(!modalVisible2)
+            }
+            else if (deleteTask.status == "failed") {
+            }
+            else if (deleteTask.status == 'fail') {
+            }
+            setIsLodding(false)
+        }
+        else {
+        }
+    }, [deleteTask])
+
+    const DeleteSuccessFully = () => {
+        dispatch(taskmanagerAction.clearResponse());
+        Get_Data()
+        setModalVisible2(!modalVisible2)
+    }
 
     const AllView = ({ item }) => {
-        console.log("alltask veiw...................", item.profile)
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
@@ -176,7 +306,7 @@ export default function lead_manager({ navigation }) {
                                         color: 'black', fontFamily: 'Roboto',
                                         fontSize: 12, color: '#0F0F0F', flexShrink: 1
                                     }}>
-                                    {item.related_to ? item.related_to : "not available"}</Text>
+                                    {item.title ? item.title : "not available"}</Text>
                             </View>
                             <View
                                 style={{
@@ -214,7 +344,7 @@ export default function lead_manager({ navigation }) {
                             </TouchableOpacity>
                         }
                         <TouchableOpacity
-                            // onPress={() => EditTask()}
+                            onPress={() => CheckEditTask(item)}
                         >
                             <Image
                                 style={{ height: 22, width: 22, marginRight: '2%' }}
@@ -222,7 +352,7 @@ export default function lead_manager({ navigation }) {
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => DeleteTask()}
+                            onPress={() => CheckDeleteFunction({ type: "Task", id: item.id })}
                         >
                             <Image
                                 style={{ height: 22, width: 22, }}
@@ -313,7 +443,7 @@ export default function lead_manager({ navigation }) {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    // onPress={() => EditTask()}
+                                // onPress={() => EditTask()}
                                 >
                                     <Image
                                         style={{ height: 22, width: 22, marginRight: '2%' }}
@@ -321,7 +451,7 @@ export default function lead_manager({ navigation }) {
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    onPress={() => DeleteTask()}
+                                // onPress={() => DeleteTask()}
                                 >
                                     <Image
                                         style={{ height: 22, width: 22, }}
@@ -419,7 +549,7 @@ export default function lead_manager({ navigation }) {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    // onPress={() => EditTask()}
+                                // onPress={() => EditTask()}
                                 >
                                     <Image
                                         style={{ height: 22, width: 22, marginRight: '2%' }}
@@ -427,7 +557,7 @@ export default function lead_manager({ navigation }) {
                                     />
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    onPress={() => DeleteTask()}
+                                // onPress={() => DeleteTask()}
                                 >
                                     <Image
                                         style={{ height: 22, width: 22, }}
@@ -485,25 +615,13 @@ export default function lead_manager({ navigation }) {
                     justifyContent: 'space-between'
                 }}>
                 {isService == 'All' ?
-                    <TouchableOpacity style={{
-                        backgroundColor: '#4F46BA',
-                        borderRadius: 20,
-                        width: '30%',
-                        paddding: 10,
-                    }}
-
+                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
                         onPress={() => checkValue("All")}
                     >
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>All</Text>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity style={{
-
-                        // backgroundColor: '#4F46BA',
-                        borderRadius: 20,
-                        width: '30%',
-                        paddding: 10,
-                    }}
+                    <TouchableOpacity style={[styles.headerBtn]}
                         onPress={() => checkValue("All")}
                     >
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>All</Text>
@@ -511,24 +629,13 @@ export default function lead_manager({ navigation }) {
                 }
 
                 {isService == 'To-Do' ?
-                    <TouchableOpacity style={{
-                        backgroundColor: '#4F46BA',
-                        borderRadius: 20,
-                        width: '30%',
-                        paddding: 10,
-                    }}
+                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
                         onPress={() => checkValue("To-Do")}
                     >
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>To-Do</Text>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity style={{
-
-                        // backgroundColor: '#4F46BA',
-                        borderRadius: 20,
-                        width: '30%',
-                        paddding: 10,
-                    }}
+                    <TouchableOpacity style={[styles.headerBtn]}
                         onPress={() => checkValue("To-Do")}
                     >
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>To-Do</Text>
@@ -537,24 +644,13 @@ export default function lead_manager({ navigation }) {
 
                 {isService == 'Done' ?
 
-                    <TouchableOpacity style={{
-                        backgroundColor: '#4F46BA',
-                        borderRadius: 20,
-                        width: '30%',
-                        paddding: 10,
-                    }}
+                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
                         onPress={() => checkValue("Done")}
                     >
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>Done</Text>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity style={{
-
-                        // backgroundColor: '#4F46BA',
-                        borderRadius: 20,
-                        width: '30%',
-                        paddding: 10,
-                    }}
+                    <TouchableOpacity style={[styles.headerBtn]}
                         onPress={() => checkValue("Done")}
                     >
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>Done</Text>
@@ -569,6 +665,24 @@ export default function lead_manager({ navigation }) {
                         <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                         :
                         <View>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('AddTask')}
+                                style={{
+                                    borderColor: '#fff',
+                                    borderWidth: 1,
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 2,
+                                    alignSelf: 'flex-end',
+                                    marginHorizontal: '5%',
+                                    backgroundColor: '#2296E4',
+                                    borderRadius: 15
+                                }}
+                            >
+                                <Text style={{ color: "#fff", fontSize: 13 }}>
+                                    +Add
+                                </Text>
+                            </TouchableOpacity>
+
                             {allTask !== undefined && allTask.length > 0 ?
                                 <FlatList
                                     // style={{ height: height / 1.55 }}
@@ -591,6 +705,23 @@ export default function lead_manager({ navigation }) {
                             <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                             :
                             <View>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('AddTask')}
+                                    style={{
+                                        borderColor: '#fff',
+                                        borderWidth: 1,
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 2,
+                                        alignSelf: 'flex-end',
+                                        marginHorizontal: '5%',
+                                        backgroundColor: '#2296E4',
+                                        borderRadius: 15
+                                    }}
+                                >
+                                    <Text style={{ color: "#fff", fontSize: 13 }}>
+                                        +Add
+                                    </Text>
+                                </TouchableOpacity>
                                 {allTask !== undefined && allTask.length > 0 ?
                                     <FlatList
                                         // style={{ height: height / 1.55 }}
@@ -610,22 +741,39 @@ export default function lead_manager({ navigation }) {
                 isService == "Done" ?
 
 
-                <View style={{ marginTop: '3%' }}>
-                {IsLodding == true ?
-                    <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                    :
-                    <View>
-                        {allTask !== undefined && allTask.length > 0 ?
-                            <FlatList
-                                // style={{ height: height / 1.55 }}
-                                data={allTask}
-                                renderItem={DoneView}
-                            />
+                    <View style={{ marginTop: '3%' }}>
+                        {IsLodding == true ?
+                            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                             :
-                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() => navigation.navigate('AddTask')}
+                                    style={{
+                                        borderColor: '#fff',
+                                        borderWidth: 1,
+                                        paddingHorizontal: 10,
+                                        paddingVertical: 2,
+                                        alignSelf: 'flex-end',
+                                        marginHorizontal: '5%',
+                                        backgroundColor: '#2296E4',
+                                        borderRadius: 15
+                                    }}
+                                >
+                                    <Text style={{ color: "#fff", fontSize: 13 }}>
+                                        +Add
+                                    </Text>
+                                </TouchableOpacity>
+                                {allTask !== undefined && allTask.length > 0 ?
+                                    <FlatList
+                                        // style={{ height: height / 1.55 }}
+                                        data={allTask}
+                                        renderItem={DoneView}
+                                    />
+                                    :
+                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+                            </View>
+                        }
                     </View>
-                }
-            </View>
                     :
                     <View />
             }
@@ -648,45 +796,88 @@ export default function lead_manager({ navigation }) {
                         <TextInput
                             placeholder="Meeting with Mr.George"
                             placeholderTextColor='#4A4A4A'
+                            value={title}
+                            onChangeText={e19 => settitle(e19)}
                             style={{ paddingRight: '20%', flex: 1, }}
                         />
                     </View>
 
-                    <View style={{ flexDirection: 'row', marginHorizontal: '1%' }}>
-                        <TouchableOpacity style={{ width: '45%', backgroundColor: '' }}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                        <TouchableOpacity
+                            style={{ marginLeft: '3%' }}
                             onPress={showDatepicker}
                         >
-                            <Image
-                                style={{ height: 32, width: "16%", }}
-                                source={require('../../images/pikerCalander.png')}
-                            />
-
+                            <View style={styles.pickers}>
+                                <Image
+                                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
+                                    source={require('../../images/pikerCalander.png')}
+                                />
+                                {show && (
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
+                                        value={date}
+                                        mode={mode}
+                                        // is24Hour={true}
+                                        display="default"
+                                        onChange={onChangeFrom}
+                                    />
+                                )
+                                }
+                                {Platform.OS == 'ios' ? <View>
+                                    {text == true ?
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', }}>From</Text>
+                                        :
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                    }
+                                </View>
+                                    :
+                                    <View>
+                                        {text == true ?
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', paddingRight: '15%' }}>From</Text>
+                                            :
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                        }
+                                    </View>
+                                }
+                            </View>
                         </TouchableOpacity>
 
-                        <View style={{ marginLeft: '1%' }}></View>
-
-                        <TouchableOpacity style={{ width: '45%', backgroundColor: '' }}
-                            onPress={showDatepickers}
-                        >
-                            <Image
-                                style={{ height: 30, width: "17%", }}
-                                source={require('../../images/clockIcon.png')}
-                            />
-                            {/* <DateTimePicker
-                                testID="dateTimePicker"
-                                style={{ backgroundColor: '', marginTop: '-18%' }}
-                                value={dates}
-                                mode={modes}
-                                // is24Hour={true}
-                                display="default"
-                                onChange={onChangeTo}
-                            /> */}
-                        </TouchableOpacity>
+                        <Dropdown
+                            style={styles.dropdown3}
+                            placeholderStyle={styles.placeholderStyle3}
+                            selectedTextStyle={styles.selectedTextStyle3}
+                            data={data}
+                            maxHeight={100}
+                            labelField="label"
+                            valueField="value"
+                            placeholder={!isFocus ? 'Status' : '...'}
+                            value={Status}
+                            onFocus={() => setIsFocus(true)}
+                            onBlur={() => setIsFocus(false)}
+                            onChange={item => {
+                                setStatus(item.value);
+                                setIsFocus(false);
+                            }}
+                            renderLeftIcon={() => (
+                                <Image
+                                    style={[styles.icon, { height: 22, width: 22 }]}
+                                    source={require('../../images/transgender.png')}
+                                />)}
+                        />
                     </View>
 
+                    {EIsLodding == true ?
+                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '5%' }} />
+                        :
+                        <View />
+                    }
+
                     <Pressable
-                        style={[styles.button2, styles.buttonClose]}
-                        onPress={() => setIsVisible(false)} >
+                        // style={[styles.button2, styles.buttonClose]}
+                        style={styles.updateBtn}
+                        onPress={() => EditFunction(temObject)} >
                         <Text style={styles.textStyle}>Update</Text>
                     </Pressable>
                 </View>
@@ -716,13 +907,40 @@ export default function lead_manager({ navigation }) {
                         <Text style={[styles.modalText3, { fontWeight: 'bold' }]} >Successfully{'\n'}Deleted</Text>
                         <Pressable
                             style={[styles.button3, styles.buttonClose3, { paddingLeft: '10%', paddingRight: '10%' }]}
-                            onPress={() => DeleteTask()}
+                            onPress={() => DeleteSuccessFully()}
                         >
                             <Text style={styles.textStyle3}>OK</Text>
                         </Pressable>
                     </View>
                 </View>
             </Modal>
+
+            <Modal animationType="slide" transparent={true} visible={askDelete}
+                onRequestClose={() => { setaskDelete(!askDelete); }}>
+                <View style={styles.askModel}>
+                    <Text style={styles.askTitle}> Are you sure ?</Text>
+                    <Text style={styles.askSubtitle}>
+                        you want to delete this{'\n'} Task ?</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+
+                        <Pressable
+                            style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+                            onPress={() => CencelFunction()}
+                        >
+                            <Text style={styles.askBtnText}>NO</Text>
+                        </Pressable>
+                        <View style={{ margin: '5%' }} />
+                        <Pressable
+                            style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+                            onPress={() => DeleteFunction()}
+                        >
+                            <Text style={styles.askBtnText}>YES</Text>
+                        </Pressable>
+                    </View>
+                    <View style={{ margin: '2%' }} />
+                </View>
+            </Modal>
+
         </View >
     );
 }

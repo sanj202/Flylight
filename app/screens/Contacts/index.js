@@ -53,21 +53,21 @@ export default function Contacts({ navigation }) {
         if (loginData || registerData && isFocused) {
             if (loginData.status == "success") {
                 setIsLodding(true)
-                dispatch(contactListAction.contactList(
-                    loginData.data.token,
-                    loginData.data.uid,
-                    loginData.data.cProfile.toString(),
-                    loginData.data.org_uid,
-                ));
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile,
+                    org_uid: loginData.data.org_uid,
+                }
+                dispatch(contactListAction.contactList(data,loginData.data.token));
             }
             else if (registerData.status == "success") {
                 setIsLodding(true)
-                dispatch(contactListAction.contactList(
-                    registerData.data.token,
-                    registerData.data.uid,
-                    registerData.data.cProfile.toString(),
-                    registerData.data.org_uid,
-                ));
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile,
+                    org_uid: registerData.data.org_uid,
+                }
+                dispatch(contactListAction.contactList(data,registerData.data.token));
             }
         }
     }, [loginData, registerData, isFocused])

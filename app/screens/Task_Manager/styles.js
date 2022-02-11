@@ -73,24 +73,55 @@ const styles = StyleSheet.create({
     },
     pickers: {
         flexDirection: 'row',
-        flex:1,
-        // justifyContent: 'flex-start',
-        padding: 15,
-        paddingLeft: 10,
-        paddingRight: 30,
-        borderRadius: 15,
+        justifyContent: 'flex-start',
+        borderWidth: 1,
+        borderColor: '#E8EAF5',
+        padding: 10,
+        paddingHorizontal: '7%',
+        borderRadius: 10
+    },
+    dropdown3: {
+        height: 42,
+        borderColor: '#E8EAF5',
+        borderWidth: 1,
+        borderRadius: 8,
+        width: '50%',
+        marginRight: '3%',
+        paddingHorizontal: 8,
+    },
+    icon3: {
+        marginRight: 5,
+    },
+
+    placeholderStyle3: {
+        fontSize: 16,
+    },
+    selectedTextStyle3: {
+        fontSize: 16,
+    },
+    iconStyle3: {
+        width: 20,
+        height: 20,
+    },
+    inputSearchStyle3: {
+        height: 40,
+        fontSize: 16,
+    },
+
+    headerBtn: {
+        borderRadius: 20,
+        width: '30%',
+        paddding: 10,
     },
 
     //    --------------------------------------------------------------------------------------------
-
-
     modalView: {
         // margin: 20,
         backgroundColor: "#fff",
-       borderTopLeftRadius:20,
-       borderTopRightRadius:20,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
         // padding: 15,
-        alignItems: "center",
+        // alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -100,21 +131,29 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5,
     },
-    button2: {
-        borderRadius: 5,
-        padding: 10,
-        elevation: 2,
-        marginBottom:'4%'
-    },
     buttonOpen: {
         backgroundColor: "#F194FF",
     },
-    buttonClose: {
+    updateBtn:{
         backgroundColor: '#114DC4',
         borderRadius: 10,
-        // alignSelf: 'center',
-        margin: '2%',
+        padding: 10,
+        marginHorizontal:'20%',
+        marginVertical:'3%'
     },
+    // button2: {
+    //     borderRadius: 5,
+    //     padding: 10,
+    //     elevation: 2,
+    //     marginBottom: '4%'
+    // },
+    
+    // buttonClose: {
+    //     backgroundColor: '#114DC4',
+    //     borderRadius: 10,
+    //     // alignSelf: 'center',
+    //     margin: '2%',
+    // },
     textStyle: {
         color: "#fff",
         fontWeight: "bold",
@@ -126,10 +165,10 @@ const styles = StyleSheet.create({
     modalText: {
         margin: 5,
         fontSize: 16,
-        color:'#000000',
-        paddingTop:'3%',
+        color: '#000000',
+        paddingTop: '3%',
         textAlign: "center",
-        
+
     },
 
     inputFields: {
@@ -138,13 +177,13 @@ const styles = StyleSheet.create({
         borderColor: '#E8EAF5',
         borderRadius: 10,
         margin: '3%',
-        
+
     },
     icon: {
         height: 21,
         width: 19,
         margin: '2%',
-        marginTop:'3%'
+        marginTop: '3%'
     },
 
     // --------------------------------------------------
@@ -159,7 +198,7 @@ const styles = StyleSheet.create({
     },
     modalView3: {
         margin: 20,
-        
+
         backgroundColor: "#FFFFFF",
         borderRadius: 20,
         padding: 15,
@@ -204,6 +243,44 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto',
         color: '#000000',
         textAlign: "center"
+    },
+    askModel: {
+        marginHorizontal: '5%',
+        marginTop: '50%',
+        backgroundColor: "white",
+        borderRadius: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    askTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        backgroundColor: '#3373F3',
+        color: 'white',
+        textAlign: "center",
+        paddingVertical: '3%',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
+    },
+    askSubtitle: {
+        margin: '5%',
+        fontSize: 21,
+        color: '#000000',
+        textAlign: "center"
+    },
+    askBtn: {
+        paddingVertical: '2%',
+        borderRadius: 10,
+        backgroundColor: "#2196F3",
+    },
+    askBtnText: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 20,
     }
 });
 

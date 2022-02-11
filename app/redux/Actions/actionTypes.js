@@ -76,12 +76,20 @@ export const Edit_Contact_Suceess = 'Edit_Contact_Suceess'
 export const Edit_Contact_Clear = 'Edit_Contact_Clear'
 
 
-//Tesk manager (TO-Do)
+//Task Manager
+export const Get_Task_Todo_Done = "Get_Task_Todo_Done"
+export const Task_Todo_Done_Success = "Task_Todo_Done_Success"
+export const Task_Todo_Done_Clear = 'Task_Todo_Done_Clear'
 
-// export const Import_Lead = "Import_Lead"
-// export const Add_Edit_Lead = "Add_Edit_Lead"
-export const Get_Todo = 'Get_Todo'
-// export const Lead_CLEAR = 'Lead_CLEAR'
+// Add_Edit Task Manager
+export const Add_Edit_Task = "Add_Edit_Task"
+export const Add_Edit_Task_Success = "Add_Edit_Task_Success"
+export const Add_Edit_Task_Clear = "Add_Edit_Task_Clear"
+
+// Delete Task Manager
+export const Delete_Task = "Delete_Task"
+export const Delete_Task_Success = "Delete_Task_Success"
+export const Delete_Task_Clear = "Delete_Task_Clear"
 
 //History 
 export const Get_History = 'Get_History'
