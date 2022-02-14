@@ -234,6 +234,21 @@ export const Organization_List_Success = "Organization_List_Success"
 export const Organization_List_Clear = 'Organization_List_Clear'
 
 
+//Get Meeting
+export const Meeting = "Meeting"
+export const Meeting_Success = "Meeting_Success"
+export const Meeting_Clear = 'Meeting_Clear'
+
+// Add_Edit_Meeting
+export const Add_Edit_Meeting = "Add_Edit_Meeting"
+export const Add_Edit_Meeting_Success = "Add_Edit_Meeting_Success"
+export const Add_Edit_Meeting_Clear= "Add_Edit_Meeting_Clear"
+
+//Get Meeting Detail
+export const Meeting_Detail = "Meeting_Detail"
+export const Meeting_Detail_Success = "Meeting_Detail_Success"
+export const Meeting_Detail_Clear = 'Meeting_Detail_Clear'
+
 
 
 

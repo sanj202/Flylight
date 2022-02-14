@@ -153,7 +153,7 @@ export default function SideMenu({ navigation }) {
             </View>
 
 
-            <ScrollView style={{ marginHorizontal:'3%',marginBottom:'10%'}}>
+            <ScrollView style={{ marginHorizontal: '3%', marginBottom: '10%' }}>
 
                 <View style={styles.menusTop}>
 
@@ -256,7 +256,7 @@ export default function SideMenu({ navigation }) {
                                 </Text>
 
                                 <Image
-                                    style={[styles.image3, { marginLeft: '28%' }]}
+                                    style={[styles.image3, { marginLeft: '31%' }]}
                                     source={require('../../images/next.png')}
                                 />
                             </View>
@@ -264,11 +264,37 @@ export default function SideMenu({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
-                    onPress={()=>navigation.navigate('Campaign')}
+                    onPress={() => navigation.navigate('Meetings')}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Image
+                                style={[styles.image2, {
+                                    marginRight: '4%',
+                                    height: 18, width: 15.75
+                                }]}
+                                source={require('../../images/Lead.png')}
+                            />
+                            <View style={styles.menus}>
+                                <Text style={styles.items}>
+                                    Meetings
+                                </Text>
+
+                                <Image
+                                    style={[styles.image3, { marginLeft: '48%' }]}
+                                    source={require('../../images/next.png')}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.menusTop}>
+
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Campaign')}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
@@ -277,11 +303,11 @@ export default function SideMenu({ navigation }) {
                             />
                             <View style={styles.menus}>
                                 <Text style={styles.items}>
-                                Campaigns
+                                    Campaigns
                                 </Text>
 
                                 <Image
-                                    style={[styles.image3, { marginLeft: '38%' }]}
+                                    style={[styles.image3, { marginLeft: '42%' }]}
                                     source={require('../../images/next.png')}
                                 />
                             </View>

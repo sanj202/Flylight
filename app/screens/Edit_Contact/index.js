@@ -139,6 +139,8 @@ export default function EditContact({ navigation, route }) {
                 }
             }
             else {
+                setState(null)
+                setCity('')
             }
         }
         else {

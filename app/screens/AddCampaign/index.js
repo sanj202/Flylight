@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
-} from 'react-native';
+import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -13,7 +11,6 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation }) {
-
 
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)
@@ -124,6 +121,16 @@ export default function AddContact({ navigation }) {
         if (responseAdd_Edit) {
             // console.log("dsfvghf.......................",responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
+                setcampaignName(""),
+                    setStatus(null),
+                    setcampaignType(""),
+                    setRevenue(""),
+                    setBudgetedCost(""),
+                    setDescription(""),
+                    setstarttext(true),
+                    setendtext(true)
+                setCampaignOwner(null)
+                setIsLodding(false)
                 Alert.alert(responseAdd_Edit.message)
                 navigation.navigate('Campaign')
             }
@@ -161,10 +168,10 @@ export default function AddContact({ navigation }) {
                         campaign_status: Status,
                         campaign_type: campaignType,
                         expected_revenue: Revenue,
-                        budgeted_cost:BudgetedCost,
-                        description : Description,
-                        start_date:formateStartDate,
-                        end_date:formateEndDate
+                        budgeted_cost: BudgetedCost,
+                        description: Description,
+                        start_date: formateStartDate,
+                        end_date: formateEndDate
                     }
                     dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
                 }
@@ -178,10 +185,10 @@ export default function AddContact({ navigation }) {
                         campaign_status: Status,
                         campaign_type: campaignType,
                         expected_revenue: Revenue,
-                        budgeted_cost:BudgetedCost,
-                        description : Description,
-                        start_date:formateStartDate,
-                        end_date:formateEndDate
+                        budgeted_cost: BudgetedCost,
+                        description: Description,
+                        start_date: formateStartDate,
+                        end_date: formateEndDate
                     }
                     dispatch(campaignAction.Add_EditCampaign(data, registerData.data.token));
                 }

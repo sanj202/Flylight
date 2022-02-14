@@ -216,28 +216,28 @@ export default function Campaign({ navigation }) {
 
                     <View style={styles.inputFields}>
                         <View>
-                            <Text style={styles.DetailCampTitle}>Campaign Name </Text>
-                            <Text style={styles.DetailCampTitle}>Status</Text>
-                            <Text style={styles.DetailCampTitle}>Start Date</Text>
-                            <Text style={styles.DetailCampTitle}>End Date</Text>
-                            <Text style={styles.DetailCampTitle}>Campaign Type</Text>
-                            <Text style={styles.DetailCampTitle}>Expected Revenue</Text>
-                            <Text style={styles.DetailCampTitle}>Budgeted Cost</Text>
-                            <Text style={styles.DetailCampTitle}>Description</Text>
-                            <Text style={styles.DetailCampTitle}>created Date</Text>
-                            <Text style={styles.DetailCampTitle}>updated Date</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Campaign Name: </Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Status:</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Start Date</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>End Date</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Campaign Type</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Expected Revenue</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Budgeted Cost</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Description</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>created Date</Text>
+                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>updated Date</Text>
                         </View>
                         <View style={{ marginLeft: '3%', width: '60%' }}>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.CampaignName}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.Status}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.StartDate}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.EndDate}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.CampaignType}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.ExpectedRevenue}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.BudgetedCost}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.Description}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{moment(Objcet.created_at).format('lll')}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{moment(Objcet.updated_at).format('lll')}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.CampaignName}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.Status}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.StartDate}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.EndDate}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.CampaignType}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.ExpectedRevenue}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.BudgetedCost}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.Description}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {moment(Objcet.created_at).format('lll')}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {moment(Objcet.updated_at).format('lll')}</Text>
                         </View>
                     </View>
                 </View>

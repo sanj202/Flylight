@@ -57,9 +57,8 @@ export default function AddContact({ navigation }) {
                 setIsLodding(false)
                 dispatch(profileAction.clearResponse())
             }
-            else {
+            else if (profileData.status == []) {
                 setIsLodding(false)
-                Alert.alert(profileData.message)
             }
         }
         else {

@@ -139,6 +139,8 @@ export default function AddContact({ navigation }) {
         }
       }
       else {
+        setState(null)
+        setCity('')
       }
     }
     else {

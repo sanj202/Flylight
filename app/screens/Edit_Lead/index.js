@@ -140,6 +140,8 @@ export default function AddContact({ navigation, route }) {
                 }
             }
             else {
+                setState(null)
+                setCity('')
             }
         }
         else {

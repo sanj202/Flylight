@@ -30,7 +30,10 @@ import {
   Organization,
   Campaign,
   AddCampaign,
-  EditCampaign
+  EditCampaign,
+  Meetings,
+  AddMeetings,
+  EditMeetings
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -335,6 +338,35 @@ function HomeTabs() {
       <Tab.Screen
         name='Staff_Members'
         component={Staff_Members}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+      
+      <Tab.Screen
+        name='Meetings'
+        component={Meetings}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+        <Tab.Screen
+        name='AddMeetings'
+        component={AddMeetings}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+      
+      <Tab.Screen
+        name='EditMeetings'
+        component={EditMeetings}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,

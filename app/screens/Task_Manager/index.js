@@ -22,7 +22,6 @@ export default function lead_manager({ navigation }) {
     ];
 
     const [isService, setisService] = useState('All');
-    const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
     const [askDelete, setaskDelete] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
@@ -34,11 +33,10 @@ export default function lead_manager({ navigation }) {
     const [title, settitle] = useState('')
     const { width, height } = Dimensions.get('window');
 
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, settext] = useState(true)
-
 
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
@@ -69,7 +67,6 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (loginData || registerData && isFocused) {
             Get_Data()
-
         }
     }, [loginData, registerData, isFocused])
 
@@ -82,7 +79,6 @@ export default function lead_manager({ navigation }) {
                 org_uid: loginData.data.org_uid,
             }
             dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-
         }
         else if (registerData.status == "success") {
             setIsLodding(true)
@@ -92,7 +88,6 @@ export default function lead_manager({ navigation }) {
                 org_uid: registerData.data.org_uid,
             }
             dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
-
         }
     }
 
@@ -116,11 +111,11 @@ export default function lead_manager({ navigation }) {
 
     const [temObject, settempObject] = useState('')
     const CheckEditTask = (value) => {
-        console.log('values of .......................', moment(value.due_date).format("MMMM Do, YYYY H:mma"))
+        // console.log('values of .......................', value.priority);
         settitle(value.title)
         if (value.due_date) {
-            // setDate(value.due_date.toISOString())
-            // setDate(value.due_date)
+            const dateStr = new Date(value.due_date);
+            setDate(dateStr)
             settext(false)
         }
         setStatus(value.status)
@@ -138,7 +133,7 @@ export default function lead_manager({ navigation }) {
         else {
             // setIsVisible(false)
             let formateStartDate = moment(date).format("YYYY-MM-DD")
-            // console.log('..................................', Status)
+            // console.log('..................................', value.priority)
             if (loginData || registerData) {
                 if (loginData.status == "success") {
                     setEIsLodding(true)
@@ -156,7 +151,7 @@ export default function lead_manager({ navigation }) {
                         status: Status,
                         priority: value.priority ? value.priority : '',
                         description: value.description ? value.description : '',
-                        due_date: value.due_date ? moment(value.due_date).format("YYYY-MM-DD") : formateStartDate,
+                        due_date: formateStartDate,
                     }
                     dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
                 }
@@ -174,9 +169,9 @@ export default function lead_manager({ navigation }) {
                         task_related_to: value.related_to ? value.related_to : '',
                         task_related_to_id: value.what_id ? value.what_id : '',
                         status: Status,
-                        priority: value.Priority ? value.Priority : '',
-                        description: value.Description ? value.Description : '',
-                        due_date: value.updated_at ? moment(value.updated_at).format("YYYY-MM-DD") : formateStartDate,
+                        priority: value.priority ? value.priority : '',
+                        description: value.description ? value.description : '',
+                        due_date: formateStartDate,
                     }
                     dispatch(taskmanagerAction.Add_EditTask(data, registerData.data.token));
                 }
@@ -279,16 +274,11 @@ export default function lead_manager({ navigation }) {
                     <View style={{ backgroundColor: '', justifyContent: 'center', }}>
                         {item.profile ?
                             item.profile.user ?
-                                <Image
-
-                                    style={{ height: 48, width: 48, borderRadius: 24 }}
+                                <Image style={{ height: 48, width: 48, borderRadius: 24 }}
                                     source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
                                 />
-                                : <Image
-
-                                    style={{ height: 48, width: 48, }}
-                                    source={require('../../images/profileCall.png')}
-                                />
+                                : <Image style={{ height: 48, width: 48, }}
+                                    source={require('../../images/profileCall.png')} />
                             : ''}
                     </View>
                     <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
@@ -296,16 +286,9 @@ export default function lead_manager({ navigation }) {
                             fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
                             fontFamily: 'Roboto'
                         }}>{item.profile ? item.profile.user.name : ''}</Text>
-
                         <View style={{ flexDirection: 'row', }}>
-
                             <View style={{ width: '45%', backgroundColor: '' }}>
-                                <Text
-                                    numberOfLines={1}
-                                    style={{
-                                        color: 'black', fontFamily: 'Roboto',
-                                        fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                                    }}>
+                                <Text numberOfLines={1} style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F', flexShrink: 1 }}>
                                     {item.title ? item.title : "not available"}</Text>
                             </View>
                             <View
@@ -318,11 +301,8 @@ export default function lead_manager({ navigation }) {
                             </View>
                         </View>
                         <View style={{ flexDirection: 'column', }}>
-                            <Text
-                                style={{
-                                    color: 'black', fontFamily: 'Roboto',
-                                    fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                                }}>
+                            <Text style={{ color: 'black', fontFamily: 'Roboto',fontSize: 12, color: '#0F0F0F',
+                             flexShrink: 1 }}>
                                 {item.subject}</Text>
                         </View>
                     </View>
@@ -330,15 +310,13 @@ export default function lead_manager({ navigation }) {
                     <View style={{ flexDirection: 'row', marginTop: '10%' }}>
                         {item.status == 'completed' ?
                             < TouchableOpacity >
-                                <Image
-                                    style={{ height: 22, width: 22, marginRight: '2%' }}
+                                <Image  style={{ height: 22, width: 22, marginRight: '2%' }}
                                     source={require('../../images/okCall.png')}
                                 />
                             </TouchableOpacity>
                             :
                             <TouchableOpacity>
-                                <Image
-                                    style={{ height: 22, width: 22, marginRight: '2%' }}
+                                <Image style={{ height: 22, width: 22, marginRight: '2%' }}
                                     source={require('../../images/to-do.png')}
                                 />
                             </TouchableOpacity>
@@ -346,16 +324,14 @@ export default function lead_manager({ navigation }) {
                         <TouchableOpacity
                             onPress={() => CheckEditTask(item)}
                         >
-                            <Image
-                                style={{ height: 22, width: 22, marginRight: '2%' }}
+                            <Image style={{ height: 22, width: 22, marginRight: '2%' }}
                                 source={require('../../images/editCall.png')}
                             />
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => CheckDeleteFunction({ type: "Task", id: item.id })}
                         >
-                            <Image
-                                style={{ height: 22, width: 22, }}
+                            <Image style={{ height: 22, width: 22, }}
                                 source={require('../../images/deleteCall.png')}
                             />
                         </TouchableOpacity>
@@ -363,8 +339,7 @@ export default function lead_manager({ navigation }) {
 
                     <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <Image
-                                style={{ height: 10, width: 10, marginRight: '2%' }}
+                            <Image style={{ height: 10, width: 10, marginRight: '2%' }}
                                 source={require('../../images/material-call.png')}
                             />
                             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
@@ -388,12 +363,10 @@ export default function lead_manager({ navigation }) {
                             <View style={{ backgroundColor: '', justifyContent: 'center', }}>
                                 {item.profile ?
                                     item.profile.user ?
-                                        <Image
-                                            style={{ height: 48, width: 48, borderRadius: 24 }}
+                                        <Image style={{ height: 48, width: 48, borderRadius: 24 }}
                                             source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
                                         />
-                                        : <Image
-                                            style={{ height: 48, width: 48, }}
+                                        : <Image style={{ height: 48, width: 48, }}
                                             source={require('../../images/profileCall.png')}
                                         />
                                     : ''}
@@ -403,9 +376,7 @@ export default function lead_manager({ navigation }) {
                                     fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
                                     fontFamily: 'Roboto'
                                 }}>{item.profile ? item.profile.user.name : ''}</Text>
-
                                 <View style={{ flexDirection: 'row', }}>
-
                                     <View style={{ width: '45%', backgroundColor: '' }}>
                                         <Text
                                             numberOfLines={1}

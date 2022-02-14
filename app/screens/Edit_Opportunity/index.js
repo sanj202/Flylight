@@ -220,6 +220,8 @@ export default function AddContact({ navigation, route }) {
                 }
             }
             else {
+                setState(null)
+                setCity('')
             }
         }
         else {
@@ -525,8 +527,8 @@ export default function AddContact({ navigation, route }) {
                         onPress={showDatepicker} >
                         <View style={{ flexDirection: 'row' }}>
                             <Image
-                              style={Platform.OS == 'ios' ?
-                              [styles.icon] : [styles.icon, { marginTop: '1%' }]}
+                                style={Platform.OS == 'ios' ?
+                                    [styles.icon] : [styles.icon, { marginTop: '1%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {show && (

@@ -25,6 +25,7 @@ import leadmanagerReducer from './leadmanagerReducer'
 import StaffMemberReducer from "./staffMemberReducer";
 import organizationReducer from "./organizationReducer"
 import campaignReducer from './campaignReducer'
+import meetingReducer from './meetingReducer'
 
 export default combineReducers({
     //   auth: AuthReducer,
@@ -50,5 +51,6 @@ export default combineReducers({
     actionmanager:actionmanagerReducer,
     staffMember: StaffMemberReducer,
     organization:organizationReducer,
-    campaign:campaignReducer
+    campaign:campaignReducer,
+    meeting:meetingReducer
 });

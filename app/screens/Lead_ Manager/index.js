@@ -257,14 +257,14 @@ export default function lead_manager({ navigation, route }) {
   }
 
   const CheckImportType = (value) => {
-    console.log("ffn.......................................,", SelectedFile)
+    // console.log("ffn.........................test..............,", SelectedFile)
     setSelectedFile('choose-file')
+    setSingleFile(null)
     setImportFiles(!ImportFiles)
     settempUploadingType(value)
   }
 
   const UploadFile = (value) => {
-
     if (singleFile == null) {
       Alert.alert("Please Select File")
     }

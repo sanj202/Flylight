@@ -35,6 +35,9 @@ export { default as Organization } from '../screens/Organization'
 export { default as Campaign } from '../screens/Campaign'
 export { default as AddCampaign } from '../screens/AddCampaign'
 export {default as EditCampaign } from '../screens/EditCampaign'
+export {default as Meetings} from '../screens/Meetings'
+export {default as AddMeetings} from '../screens/AddMeetings'
+export {default as EditMeetings} from './EditMeetings'
 
 //stack screens
 
