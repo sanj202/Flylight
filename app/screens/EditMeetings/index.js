@@ -13,7 +13,7 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation, route }) {
 
-    console.log('sdfbsd.....................', route.params)
+    // console.log('sdfbsd.....................', route.params)
     const [modalVisible2, setModalVisible2] = useState(false);
     const [ListValues, setListValues] = useState(true)
     const [HostList, setHostList] = useState([])

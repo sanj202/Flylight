@@ -148,7 +148,7 @@ export default function AddContact({ navigation }) {
                 console.log('contact list ...............', contactData.data)
                 setListValues(contactData.data)
                 setModalVisible2(true)
-                // dispatch(contactListAction.clearResponse())
+                dispatch(contactListAction.clearResponse())
             }
             else if (contactData.status == "failed") {
                 setIsLodding(false)
@@ -168,8 +168,7 @@ export default function AddContact({ navigation }) {
                 // console.log("leadlist..............", Lead_OpportunityList.data.lead)
                 setListValues(Lead_OpportunityList.data.lead)
                 setModalVisible2(true)
-
-                // dispatch(leadmanagerAction.clearResponse())
+                dispatch(leadmanagerAction.clearResponse())
             }
             else if (Lead_OpportunityList.status == "failed") {
                 setIsLodding(false)

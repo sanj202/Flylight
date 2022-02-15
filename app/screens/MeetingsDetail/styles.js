@@ -9,12 +9,12 @@ const styles = StyleSheet.create({
     },
     listData: {
         padding: 5,
-        borderBottomWidth: 1,
+        borderWidth: 1,
         borderRadius: 10,
         borderColor: '#DBDBDB',
         flexDirection: 'row',
         marginHorizontal: '3%',
-        marginVertical: '0.5%'
+        marginVertical: '1%'
     },
 
     headerView: {
@@ -85,8 +85,7 @@ const styles = StyleSheet.create({
         borderColor: '#E8EAF5',
         borderWidth: 1,
         borderRadius: 8,
-        width: '50%',
-        marginRight: '3%',
+        marginHorizontal: '5%',
         paddingHorizontal: 8,
     },
     icon3: {
@@ -246,7 +245,7 @@ const styles = StyleSheet.create({
     },
     askModel: {
         marginHorizontal: '5%',
-        marginTop: '50%',
+        marginTop: '20%',
         backgroundColor: "white",
         borderRadius: 20,
         shadowColor: "#000",
@@ -281,7 +280,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 20,
-    }
+    },
+    askTitleR: {
+        margin: '5%',
+        marginRight: '3%',
+        marginTop: '-11.5%',
+        alignSelf: 'flex-end',
+        padding: 10
+    },
 });
 
 export default styles

@@ -76,12 +76,19 @@ export default function lead_manager({ navigation }) {
         navigation.navigate('EditMeetings', { item: value })
     }
 
+    const MeetingDetails = (value) => {
+        // console.log('value of editdat............',value)
+        navigation.navigate('MeetingsDetail', { item: value })
+    }
+
+
+
     const meetingListView = ({ item }) => {
         return (
             <TouchableOpacity
-            // onPress={() => Details(item)}
+                onPress={() => MeetingDetails(item)}
             >
-                <View style={styles.listData}>
+                {/* <View style={styles.listData}>
                     <View>
                         <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Title   </Text>
                         <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Start Date </Text>
@@ -114,6 +121,23 @@ export default function lead_manager({ navigation }) {
                             </TouchableOpacity>
                         </View>
                     </View>
+                </View> */}
+                <View style={styles.listData}>
+                    <Image style={{ height: 25, width: 22, marginVertical: '3%',marginHorizontal:'3%' }}
+                        source={require('../../images/DOB.png')} />
+                    <View style={{width:'75%',marginLeft:'3%'}}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#30353d', fontFamily: 'Roboto' }}>
+                        {item.title}</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 10, color: '#0F0F0F', fontFamily: 'Roboto' }}>
+                            {moment(item.from).format('lll')}</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 10, color: '#0F0F0F', fontFamily: 'Roboto' }}>
+                            {moment(item.to).format('lll')}</Text>
+
+                    </View>
+                    <Image
+                        style={{ height: 16, width: 10, marginVertical: '5%',alignSelf:'flex-end' }}
+                        source={require('../../images/next.png')}
+                    />
                 </View>
             </TouchableOpacity>
         )

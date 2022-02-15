@@ -33,7 +33,8 @@ import {
   EditCampaign,
   Meetings,
   AddMeetings,
-  EditMeetings
+  EditMeetings,
+  MeetingsDetail
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -367,6 +368,16 @@ function HomeTabs() {
       <Tab.Screen
         name='EditMeetings'
         component={EditMeetings}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+      
+      <Tab.Screen
+        name='MeetingsDetail'
+        component={MeetingsDetail}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,

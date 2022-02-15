@@ -33,7 +33,6 @@ export const SwitchOrg = (post, profileId, OrgUid) => {
     // console.log('profileId, OrgUidprofileId, OrgUid',profileId, OrgUid)
     return (dispatch) => {
         let postData = post;
-        console.clear();
         postData.data.cProfile = profileId;
         postData.data.org_uid = OrgUid;
         let responseData =

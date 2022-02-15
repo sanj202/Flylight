@@ -38,6 +38,7 @@ export {default as EditCampaign } from '../screens/EditCampaign'
 export {default as Meetings} from '../screens/Meetings'
 export {default as AddMeetings} from '../screens/AddMeetings'
 export {default as EditMeetings} from './EditMeetings'
+export {default as MeetingsDetail} from './MeetingsDetail'
 
 //stack screens
 

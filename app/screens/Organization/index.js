@@ -66,15 +66,47 @@ export default function Organization({ navigation }) {
     const ChangeOrg = (value) => {
         // console.log('switch org.................', value)
         if (loginData || registerData) {
+            setIsLodding(true)
             if (loginData.status == "success") {
                 dispatch(authAction.SwitchOrg(loginData, value.cProfile, value.orgUid));
             }
             else if (registerData.status == "success") {
                 dispatch(varificationAction.SwitchOrg(registerData, value.cProfile, value.orgUid));
             }
-            navigation.navigate('Home')
         }
     }
+
+    useEffect(() => {
+        if (registerData) {
+          if (registerData.status == "success") {
+            setIsLodding(false)
+            navigation.navigate('Home')
+          }
+          else if (registerData.status == "failed") {
+            setIsLodding(false)
+            Alert.alert(registerData.message)                                                                                //otherwise alert show 
+          }
+        }
+        else {
+        }
+      }, [registerData])
+
+      useEffect(() => {
+        if (loginData) {
+          if (loginData.status == "success") {
+            setIsLodding(false)
+            navigation.navigate('Home')
+          }
+          else if (loginData.status == "failed") {
+            setIsLodding(false)
+            Alert.alert(loginData.message)                                                                                //otherwise alert show 
+          }
+        }
+        else {
+        }
+      }, [loginData])
+
+
 
     const AllView = ({ item }) => {
         // console.log("allOrg veiw...................", 
