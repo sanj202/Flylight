@@ -9,7 +9,6 @@ import {
   Profile,
   Edit_Contact,
   AddContactUpload,
-  Edit_Lead,
   Edit_Opportunity,
   Task_Manager,
   Report2,

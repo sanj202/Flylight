@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator, FlatList, Image, Button, ScrollView,
-  Modal, Alert, Pressable, StatusBar, Dimensions, Platform, ColorPropType
+  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image,
+  Modal, Alert, Pressable, Dimensions, Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import styles from './styles'
 import Header from '../../component/header/index'
 import DocumentPicker from 'react-native-document-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { leadAction, opportunityAction, leadmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
-import { lead_OpprtunityList } from '../../redux/Actions/leadmanagerAction';
-//import axios from 'axios';
+
 export default function lead_manager({ navigation, route }) {
 
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
   const [modalVisible2, setModalVisible2] = useState(false);
   const [askDelete, setaskDelete] = useState(false);
   const [ImportFiles, setImportFiles] = useState(false)
+  const [AssignOwner, setAssignOwner] = useState(false)
+  const [leadOwnerData, setleadOwnerData] = useState('')
   const [SelectedFile, setSelectedFile] = useState('')
+  const [temarray, settemarray] = useState([])
   const [AllList, setAllList] = useState('')
-  const [Lead, setLead] = useState('')
+  const [Lead, setLead] = useState([])
   const [Opportunity, setOpportunity] = useState('')
   const [IsLodding, setIsLodding] = useState(false)
   const [IsULodding, setIsULodding] = useState(false)
+  const [IsALodding, setIsALodding] = useState(false)
   const { width, height } = Dimensions.get('window');
-  // const axios = require('axios');
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -45,8 +46,10 @@ export default function lead_manager({ navigation, route }) {
   const importLead = useSelector(state => state.leads.importLead)
   const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
   const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
+  const AssignLead = useSelector(state => state.leadmanager.assign)
   const deletelead = useSelector(state => state.leads.deleteLead)
   const deleteopportunity = useSelector(state => state.opportunitys.deleteOpportunity)
+  const leadOwner = useSelector(state => state.leads.leadOwner)
 
   const onChangeFrom = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -108,11 +111,36 @@ export default function lead_manager({ navigation, route }) {
   }
 
   useEffect(() => {
+    if (leadOwner) {
+      if (leadOwner.status == "200") {
+        // console.log('leadOwner.......,',leadOwner.data )
+        setleadOwnerData(leadOwner.data)
+        setAssignOwner(true)
+      }
+      else if (leadOwner.status == "failed") {
+      }
+      else if (leadOwner.status == "fail") {
+      }
+    }
+    else {
+    }
+  }, [leadOwner])
+
+  useEffect(() => {
     if (Lead_OpportunityList) {
       if (Lead_OpportunityList.status == "200") {
-        setLead(Lead_OpportunityList.data.lead)
-        setOpportunity(Lead_OpportunityList.data.opportunity)
-        CombineArrayData()
+        // console.log('value................', Lead_OpportunityList.data)
+        // let Leads = Lead_OpportunityList.data.lead && Lead_OpportunityList.data.lead.map((ld) => {
+        //   //  let user = { label: ld.user.name, value: ld.id }
+        //   return {
+        //     ...ld,
+        //     selected: false
+        //   }
+        // })
+        setLead(Lead_OpportunityList.data)
+        // console.log( Leads)
+        // setOpportunity(Lead_OpportunityList.data.opportunity)
+        // CombineArrayData()
         setIsLodding(false)
         dispatch(leadmanagerAction.clearResponse())
       }
@@ -333,6 +361,10 @@ export default function lead_manager({ navigation, route }) {
         setSingleFile(null)
         // dispatch(leadAction.clearImportLeadResponse())
       }
+      else if (importLead.status == "fail") {
+        Alert.alert(importLead.message)
+        // dispatch(leadAction.clearImportLeadResponse())
+      }
       else if (importLead == "error") {
         UploadFile()
       }
@@ -362,6 +394,32 @@ export default function lead_manager({ navigation, route }) {
 
     }
   }, [importOpportunity])
+
+  useEffect(() => {
+    if (AssignLead) {
+      if (AssignLead.status == "success") {
+        setIsALodding(false)
+        setAssignOwner(false)
+        Get_Data()
+        Alert.alert(AssignLead.message)
+        settemarray([])
+        dispatch(leadmanagerAction.clearResponse())
+      }
+      if (AssignLead.status == "failed") {
+        setIsALodding(false)
+        setAssignOwner(false)
+        Alert.alert(AssignLead.message)
+        settemarray([])
+        dispatch(leadmanagerAction.clearResponse())
+      }
+      else {
+
+      }
+    }
+    else {
+    }
+  }, [AssignLead])
+
 
   const AllView = ({ item }) => {
     return (
@@ -428,7 +486,7 @@ export default function lead_manager({ navigation, route }) {
                 </TouchableOpacity>
                 :
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Edit_Lead', { title: 'Edit Lead', Edata: item })}
+                  onPress={() => navigation.navigate('editLead', { Edata: item })}
                 >
                   <Image
                     style={{ height: 22, width: 22, marginRight: '2%' }}
@@ -477,9 +535,98 @@ export default function lead_manager({ navigation, route }) {
     );
   }
 
-  const LeadView = ({ item }) => {
+
+
+  const onPressRadioBtn = (value, type) => {
+    console.log(type, value)
+    if (type == true) {
+      temarray.push(value)
+    } else {
+      let newArray;
+      newArray = temarray.filter(item => item !== value)
+      settemarray(newArray)
+    }
+    let filterArray = Lead.map((item, index) => {
+      if (item.id === value) {
+        return { ...item, selected: type }
+      }
+      else {
+        return item
+      }
+    })
+    setLead(filterArray)
+  }
+
+  const onPressSendItem = (value, type) => {
+    if (temarray.length == 0) {
+      Alert.alert('  Please Select atlest Lead')
+    }
+    else {
+      if (loginData.status == "success") {
+        const data = {
+          uid: loginData.data.uid,
+          org_uid: loginData.data.org_uid,
+          profile_id: loginData.data.cProfile,
+        }
+        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        const data = {
+          profile_id: registerData.data.cProfile,
+          org_uid: registerData.data.org_uid,
+          uid: registerData.data.uid
+        }
+        dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+      }
+    }
+  }
+
+  const UserAssignLead = (value) => {
+    setIsALodding(true)
+    if (loginData.status == "success") {
+      const data = {
+        uid: loginData.data.uid,
+        profile_id: loginData.data.cProfile.toString(),
+        org_uid: loginData.data.org_uid,
+        lead_ids: temarray,
+        assignee: value
+      }
+      dispatch(leadmanagerAction.AssignLead(data, loginData.data.token));
+    }
+    else if (registerData.status == "success") {
+      const data = {
+        uid: registerData.data.uid,
+        profile_id: registerData.data.cProfile.toString(),
+        org_uid: registerData.data.org_uid,
+        lead_ids: temarray,
+        assignee: value
+      }
+      dispatch(leadmanagerAction.AssignLead(data, loginData.data.token));
+    }
+  }
+
+  const LeadView = ({ item, index }) => {
     return (
       <View style={styles.listData}>
+        {item.is_assign == '1' ?
+          <Image
+            style={[styles.radio,]}
+            source={require('../../images/disableCall.png')}
+          />
+          :
+          <Pressable
+            onPress={() =>
+              onPressRadioBtn(item.id, !item.selected)}
+          >
+            {item.selected == true ?
+              <Image
+                style={styles.radio}
+                source={require('../../images/okCall.png')}
+              />
+              : <View style={styles.radio}>
+              </View>}
+          </Pressable>
+        }
         <View style={{ backgroundColor: '', justifyContent: 'center', }}>
           <Image
             style={{ height: 48, width: 48, }}
@@ -491,7 +638,6 @@ export default function lead_manager({ navigation, route }) {
             fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
             fontFamily: 'Roboto'
           }}>{item.first_name} {item.last_name}</Text>
-
           <View style={{ flexDirection: 'row', }}>
             <View style={{ width: '35%', backgroundColor: '' }}>
               <Text
@@ -502,14 +648,17 @@ export default function lead_manager({ navigation, route }) {
                 }}>
                 {item.company ? item.company : "not available"}</Text>
             </View>
-            <View
-              style={{
-                backgroundColor: '#F69708', borderRadius: 15,
-                paddingHorizontal: 8, marginLeft: '2%',
-                borderWidth: 1, borderColor: '#F69708',
-              }}>
-              <Text style={{ color: '#fff', fontSize: 12 }}>Lead</Text>
-            </View>
+            {item.is_assign == '1' ?
+              <View
+                style={{
+                  backgroundColor: '#F69708', borderRadius: 15,
+                  paddingHorizontal: 8, marginLeft: '2%',
+                  borderWidth: 1, borderColor: '#F69708',
+                }}>
+                <Text style={{ color: '#fff', fontSize: 12 }}>{item.profile.user.name}</Text>
+              </View>
+              :
+              <View />}
           </View>
           <View style={{ flexDirection: 'row', }}>
             <TouchableOpacity>
@@ -519,7 +668,7 @@ export default function lead_manager({ navigation, route }) {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Edit_Lead', { title: 'Edit Lead', Edata: item })}
+              onPress={() => navigation.navigate('editLead', { Edata: item })}
             >
               <Image
                 style={{ height: 22, width: 22, marginRight: '2%' }}
@@ -552,6 +701,19 @@ export default function lead_manager({ navigation, route }) {
         </View>
       </View>
     );
+  }
+
+  const AssignVIew = ({ item }) => {
+    return (
+      <Pressable
+        onPress={() => UserAssignLead(item.user_id)}
+      >
+        <View style={[styles.listData, { flexDirection: 'column' }]} >
+          <Text style={styles.AssignTitle}>{item.user.name}</Text>
+          <Text style={styles.AssignTitle}>{item.user.phone}</Text>
+          <Text style={styles.AssignTitle}>{item.user.email}</Text>
+        </View>
+      </Pressable>)
   }
 
   const OpportunityVIew = ({ item }) => {
@@ -645,7 +807,7 @@ export default function lead_manager({ navigation, route }) {
           navigation.navigate('Notification')
         }}
       />
-      <View
+      {/* <View
         style={{
           marginHorizontal: '7%', marginTop: '-4%', backgroundColor: '#fff', borderRadius: 20,
           flexDirection: 'row', justifyContent: 'space-between'
@@ -692,9 +854,9 @@ export default function lead_manager({ navigation, route }) {
             <Text style={[styles.btnText, { color: 'black' }]}>Opportunity</Text>
           </TouchableOpacity>
         }
-      </View>
+      </View> */}
 
-      {
+      {/* {
         isService == "All" ?
 
           <View style={{ marginTop: '3%' }}>
@@ -806,109 +968,121 @@ export default function lead_manager({ navigation, route }) {
       }
 
       {
-        isService == "Lead" ?
-          <View style={{ marginTop: '3%' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
-              <TouchableOpacity
-                style={{ width: '48%' }}
-                onPress={showDatepicker}
-              >
-                <View style={styles.pickers}>
-                  <Image
-                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                    source={require('../../images/pikerCalander.png')}
-                  />
+        isService == "Lead" ? */}
+      <View style={{ marginTop: '3%' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
+          <TouchableOpacity
+            style={{ width: '48%' }}
+            onPress={showDatepicker}
+          >
+            <View style={styles.pickers}>
+              <Image
+                style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
+                source={require('../../images/pikerCalander.png')}
+              />
 
-                  {show && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                      value={date}
-                      mode={mode}
-                      // is24Hour={true}
-                      display="default"
-                      onChange={onChangeFrom}
-                    />
-                  )
-                  }
-                  {Platform.OS == 'ios' ? <View>
-                    {text == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                      :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                    }
-                  </View>
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
+                  value={date}
+                  mode={mode}
+                  // is24Hour={true}
+                  display="default"
+                  onChange={onChangeFrom}
+                />
+              )
+              }
+              {Platform.OS == 'ios' ? <View>
+                {text == true ?
+                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
+                  :
+                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                }
+              </View>
+                :
+                <View>
+                  {text == true ?
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
                     :
-                    <View>
-                      {text == true ?
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                        :
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                      }
-                    </View>
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                   }
                 </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={{ width: '48%' }} onPress={showDatepickers}>
-                <View style={styles.pickers}>
-                  <Image
-                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                    source={require('../../images/pikerCalander.png')}
-                  />
-                  {shows && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={dates}
-                      style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                      mode={modes}
-                      format="YYYY-MM-DD"
-                      // is24Hour={true}
-                      display="default"
-                      onChange={onChangeTo}
-                    />
-                  )
-                  }
-                  {Platform.OS == 'ios' ? <View>
-                    {texts == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                      :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                    }
-                  </View>
-                    :
-                    <View>
-                      {texts == true ?
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>To</Text>
-                        :
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('MM/DD/YYYY')}</Text>
-                      }
-                    </View>
-                  }
-                </View>
-              </TouchableOpacity>
+              }
             </View>
+          </TouchableOpacity>
 
-            <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <TouchableOpacity style={{ width: '48%' }} onPress={showDatepickers}>
+            <View style={styles.pickers}>
+              <Image
+                style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
+                source={require('../../images/pikerCalander.png')}
+              />
+              {shows && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={dates}
+                  style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
+                  mode={modes}
+                  format="YYYY-MM-DD"
+                  // is24Hour={true}
+                  display="default"
+                  onChange={onChangeTo}
+                />
+              )
+              }
+              {Platform.OS == 'ios' ? <View>
+                {texts == true ?
+                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
+                  :
+                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                }
+              </View>
+                :
+                <View>
+                  {texts == true ?
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>To</Text>
+                    :
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('MM/DD/YYYY')}</Text>
+                  }
+                </View>
+              }
+            </View>
+          </TouchableOpacity>
+        </View>
 
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Edit_Lead', { title: 'Add Lead' })}
-                style={styles.addNewBtn}
-              >
-                <Text style={{ color: "#fff", fontSize: 13 }}>
-                Add New Lead       
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => CheckImportType("lead")}
-                style={styles.addNewBtn}
-              >
-                <Text style={{ color: "#fff", fontSize: 13 }}>
-                  Import From Storage
-                </Text>
-              </TouchableOpacity>
+        <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
 
-              {/* <TouchableOpacity
+          <TouchableOpacity
+            onPress={() => navigation.navigate('addLead')}
+            style={styles.addNewBtn}
+          >
+            <Text style={{ color: "#fff", fontSize: 13 }}>
+              Add New Lead
+            </Text>
+          </TouchableOpacity>
+          {temarray.length > 0 ?
+            <TouchableOpacity
+              onPress={() => onPressSendItem()}
+              style={styles.addNewBtn}
+            >
+              <Text style={{ color: "#fff", fontSize: 13 }}>
+                Assign
+              </Text>
+            </TouchableOpacity>
+            :
+            <View />}
+
+          <TouchableOpacity
+            onPress={() => CheckImportType("lead")}
+            style={styles.addNewBtn}
+          >
+            <Text style={{ color: "#fff", fontSize: 13 }}>
+              Import From Storage
+            </Text>
+          </TouchableOpacity>
+
+          {/* <TouchableOpacity
                 style={{
                   backgroundColor: '#00b300',
                   width: '47%',
@@ -933,9 +1107,9 @@ export default function lead_manager({ navigation, route }) {
                 <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
               </TouchableOpacity> */}
 
-            </View>
+        </View>
 
-            {/* <TouchableOpacity
+        {/* <TouchableOpacity
               style={{
                 backgroundColor: '#00b300',
                 width: '47%',
@@ -948,28 +1122,28 @@ export default function lead_manager({ navigation, route }) {
               <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
             </TouchableOpacity> */}
 
-            <View style={{ marginTop: '2%' }}></View>
+        <View style={{ marginTop: '2%' }}></View>
 
-            {IsLodding == true ?
-              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-              :
-              <View>
-                {Lead !== undefined && Lead.length > 0 ?
-                  <FlatList
-                    style={{ height: "71%" }}
-                    data={Lead}
-                    renderItem={LeadView}
-                  />
-
-                  :
-                  <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
-                }
-              </View>}
-            <View style={{ marginTop: '2%' }}></View>
-          </View>
+        {IsLodding == true ?
+          <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
           :
+          <View>
+            {Lead !== undefined && Lead.length > 0 ?
+              <FlatList
+                style={{ height: "71%" }}
+                data={Lead}
+                renderItem={LeadView}
+              // keyExtractor={item => item.id.toString()}
+              />
+              :
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+            }
+          </View>}
+        <View style={{ marginTop: '2%' }}></View>
+      </View>
+      {/* :
           <View />
-      }
+      } */}
 
       {
         isService == "Opportunity" ?
@@ -1065,7 +1239,7 @@ export default function lead_manager({ navigation, route }) {
                 style={styles.addNewBtn}
               >
                 <Text style={{ color: "#fff", fontSize: 13 }}>
-                Add New Opportunity
+                  Add New Opportunity
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -1221,6 +1395,33 @@ export default function lead_manager({ navigation, route }) {
               <Text style={styles.askBtnText}>YES</Text>
             </Pressable>
           </View>
+          <View style={{ margin: '2%' }} />
+        </View>
+      </Modal>
+
+      <Modal animationType="slide" transparent={true} visible={AssignOwner}
+        onRequestClose={() => { setAssignOwner(!AssignOwner); }}>
+        <View style={[styles.askModel, { marginTop: '40%', }]}>
+          <Text style={styles.askTitle}>Assign TO </Text>
+
+          <TouchableOpacity
+            style={[styles.askTitleR]}
+            onPress={() => setAssignOwner(false)}
+          >
+            <Image
+              style={{ height: 14, width: 14 }}
+              source={require('../../images/cross.png')}
+            />
+          </TouchableOpacity>
+          {IsALodding == true ?
+            <ActivityIndicator size="large" color="#0000ff" />
+            :
+            <View />}
+          <FlatList
+            style={{ height: '70%', marginVertical: '1%' }}
+            data={leadOwnerData}
+            renderItem={AssignVIew}
+          />
           <View style={{ margin: '2%' }} />
         </View>
       </Modal>

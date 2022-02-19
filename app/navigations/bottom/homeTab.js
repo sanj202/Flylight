@@ -11,7 +11,7 @@ import {
   Action_Manager,
   ReportFeedback,
   Edit_Opportunity,
-  Edit_Lead,
+  editLead,
   lead_manager,
   All_Lead,
   Report,
@@ -34,7 +34,8 @@ import {
   Meetings,
   AddMeetings,
   EditMeetings,
-  MeetingsDetail
+  MeetingsDetail,
+  addLead
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -179,9 +180,19 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
+      
       <Tab.Screen
-        name="Edit_Lead"
-        component={Edit_Lead}
+        name="addLead"
+        component={addLead}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tab.Screen
+        name="editLead"
+        component={editLead}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,

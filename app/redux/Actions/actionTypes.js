@@ -188,6 +188,11 @@ export const LeadOwner = "LeadOwner"
 export const LeadOwner_Success = "LeadOwner_Success"
 export const LeadOwner_Clear = 'LeadOwner_Clear'
 
+//LeadAssign
+export const LeadAssign = "LeadAssign"
+export const LeadAssign_Success = "LeadAssign_Success"
+export const LeadAssign_Clear = 'LeadAssign_Clear'
+
 //LeadStatus
 export const LeadStatus = "LeadStatus"
 export const LeadStatus_Success = "LeadStatus_Success"
@@ -248,6 +253,7 @@ export const Add_Edit_Meeting_Clear= "Add_Edit_Meeting_Clear"
 export const Meeting_Detail = "Meeting_Detail"
 export const Meeting_Detail_Success = "Meeting_Detail_Success"
 export const Meeting_Detail_Clear = 'Meeting_Detail_Clear'
+
 
 
 

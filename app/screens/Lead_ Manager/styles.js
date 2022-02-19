@@ -184,7 +184,30 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     backgroundColor: '#2296E4',
     borderRadius: 15
-  }
+  },
+  radio: {
+    marginTop: '6%',
+    marginHorizontal: '1%',
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 1
+  },
+  AssignTitle: {
+    fontSize: 14,
+    color: '#0F0F0F',
+    fontFamily: 'Roboto'
+  },
+  askTitleR: {
+    margin: '5%',
+    marginRight: '3%',
+    marginTop: '-12%',
+    alignSelf: 'flex-end',
+    padding:'3%'
+    // height: 14,
+    // width: 14
+  },
+
 
 });
 

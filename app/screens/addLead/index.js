@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
-    StatusBar, Dimensions, ActivityIndicator
+    StatusBar, Dimensions, ActivityIndicator,
 } from 'react-native';
 import styles from './styles';
 import moment from 'moment';
@@ -11,46 +11,41 @@ import Header from '../../component/header/index'
 import { leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
-import { Campaign } from '../../redux/Actions/actionTypes';
-import { set } from 'react-native-reanimated';
 
 export default function AddContact({ navigation, route }) {
 
-    // console.log("route data...................",route.params)
-
-
-    const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
-    const [isFocus, setIsFocus] = useState(false);
-    const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
-    const [fname, setfname] = useState(route.params.Edata ? route.params.Edata.first_name : "")
-    const [lname, setlname] = useState(route.params.Edata ? route.params.Edata.last_name : "")
-    const [gender, setgender] = useState(route.params.Edata ? route.params.Edata.gender : null);
+    // const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
+    // const [isFocus, setIsFocus] = useState(false);
+    const [title, settitle] = useState("")
+    const [fname, setfname] = useState("")
+    const [lname, setlname] = useState("")
+    const [gender, setgender] = useState(null);
     const [isFocus2, setIsFocus2] = useState(false);
-    const [phone, setphone] = useState(route.params.Edata ? route.params.Edata.phone : "")
-    const [Aphone, setAphone] = useState(route.params.Edata ? route.params.Edata.phone2 : "")
-    const [email, setemail] = useState(route.params.Edata ? route.params.Edata.email : "")
-    const [Aemail, setAemail] = useState(route.params.Edata ? route.params.Edata.email2 : "")
-    const [companyName, setcompanyName] = useState(route.params.Edata ? route.params.Edata.company : "")
-    const [website, setwebsite] = useState(route.params.Edata ? route.params.Edata.website : "")
-    const [fax, setfax] = useState(route.params.Edata ? route.params.Edata.fax : "")
-    const [Address, setAddress] = useState(route.params.Edata ? route.params.Edata.address : "")
-    const [City, setCity] = useState(route.params.Edata ? route.params.Edata.city : "")
-    const [State, setState] = useState(route.params.Edata ? route.params.Edata.state : null)
+    const [phone, setphone] = useState("")
+    const [Aphone, setAphone] = useState("")
+    const [email, setemail] = useState("")
+    const [Aemail, setAemail] = useState("")
+    const [companyName, setcompanyName] = useState("")
+    const [website, setwebsite] = useState("")
+    const [fax, setfax] = useState("")
+    const [Address, setAddress] = useState("")
+    const [City, setCity] = useState("")
+    const [State, setState] = useState(null)
     const [isFocus5, setIsFocus5] = useState(false);
-    const [Country, setCountry] = useState(route.params.Edata ? route.params.Edata.country : "")
-    const [ZipCode, setZipCode] = useState(route.params.Edata ? route.params.Edata.zip : "")
-    const [LeadSource, setLeadSource] = useState(route.params.Edata ? route.params.Edata.lead_source : "")
-    const [LeadStatus, setLeadStatus] = useState(route.params.Edata ? route.params.Edata.lead_status : null);
+    const [Country, setCountry] = useState("")
+    const [ZipCode, setZipCode] = useState("")
+    const [LeadSource, setLeadSource] = useState("")
+    const [LeadStatus, setLeadStatus] = useState(null);
     const [isFocus3, setIsFocus3] = useState(false);
-    const [Industry, setIndustry] = useState(route.params.Edata ? route.params.Edata.industry : "")
-    const [employee, setemployee] = useState(route.params.Edata ? route.params.Edata.number_of_employee : "")
-    const [revenue, setrevenue] = useState(route.params.Edata ? route.params.Edata.annual_revenue : "")
-    const [campaign, setcampaign] = useState(route.params.Edata ? route.params.Edata.campaign : null);
+    const [Industry, setIndustry] = useState("")
+    const [employee, setemployee] = useState("")
+    const [revenue, setrevenue] = useState("")
+    const [campaign, setcampaign] = useState(null);
     const [isFocus4, setIsFocus4] = useState(false);
-    const [description, setdescription] = useState(route.params.Edata ? route.params.Edata.campaign : null);
+    const [description, setdescription] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
 
-    const [leadOwnerData, setleadOwnerData] = useState([])
+    // const [leadOwnerData, setleadOwnerData] = useState([])
     const [leadstatusData, setleadstatusData] = useState([])
     const [campaignData, setcampaignData] = useState([])
     const [stateData, setstateData] = useState([])
@@ -62,7 +57,7 @@ export default function AddContact({ navigation, route }) {
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
     const leadData = useSelector(state => state.leads.newLead)
-    const leadOwner = useSelector(state => state.leads.leadOwner)
+    // const leadOwner = useSelector(state => state.leads.leadOwner)
     const campaignList = useSelector(state => state.leads.campaign)
     const leadstatusList = useSelector(state => state.leads.leadstatus)
     const stateList = useSelector(state => state.leads.states)
@@ -75,6 +70,7 @@ export default function AddContact({ navigation, route }) {
         { label: 'Female', value: 'Female' },
     ];
 
+    // const [date, setDate] = useState(new Date(1598051730000));
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -100,20 +96,20 @@ export default function AddContact({ navigation, route }) {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
-                    profile_id: LeadOwner ? LeadOwner : loginData.data.cProfile.toString(),
+                    profile_id: loginData.data.cProfile.toString(),
                 }
-                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+                // dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
                 dispatch(leadAction.CampaignList(data, loginData.data.token));
                 dispatch(leadAction.LeadStatusList(data, loginData.data.token));
                 dispatch(leadAction.StateList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 const data = {
-                    profile_id: LeadOwner ? LeadOwner : registerData.data.cProfile.toString(),
+                    profile_id: registerData.data.cProfile.toString(),
                     org_uid: registerData.data.org_uid,
                     uid: registerData.data.uid
                 }
-                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+                // dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
                 dispatch(leadAction.CampaignList(data, registerData.data.token));
                 dispatch(leadAction.LeadStatusList(data, registerData.data.token));
                 dispatch(leadAction.StateList(data, registerData.data.token));
@@ -148,23 +144,23 @@ export default function AddContact({ navigation, route }) {
         }
     }, [ZipCode])
 
-    useEffect(() => {
-        if (leadOwner) {
-            if (leadOwner.status == "200") {
-                let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.id }
-                    return user;
-                })
-                setleadOwnerData(userData ? userData : [{ label: 'None', value: 'None' }])
-            }
-            else if (leadOwner.status == "failed") {
-            }
-            else if (leadOwner.status == "fail") {
-            }
-        }
-        else {
-        }
-    }, [leadOwner])
+    // useEffect(() => {
+    //     if (leadOwner) {
+    //         if (leadOwner.status == "200") {
+    //             let userData = leadOwner.data && leadOwner.data.map((ld) => {
+    //                 let user = { label: ld.user.name, value: ld.id }
+    //                 return user;
+    //             })
+    //             setleadOwnerData(userData ? userData : [{ label: 'None', value: 'None' }])
+    //         }
+    //         else if (leadOwner.status == "failed") {
+    //         }
+    //         else if (leadOwner.status == "fail") {
+    //         }
+    //     }
+    //     else {
+    //     }
+    // }, [leadOwner])
 
     useEffect(() => {
         if (campaignList) {
@@ -173,11 +169,10 @@ export default function AddContact({ navigation, route }) {
                     let user = { label: ld.campaign_name, value: ld.id }
                     return user;
                 })
-                setcampaignData(campList ?  campList : [{ label: 'None', value: 'None' }])
+                setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
             }
-            else if (campaignList.status == "failed") {
-            }
-            else if (campaignList.status == "fail") {
+            else {
+
             }
         }
         else {
@@ -190,9 +185,7 @@ export default function AddContact({ navigation, route }) {
                 setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
                     item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' }))
             }
-            else if (leadstatusList.status == "failed") {
-            }
-            else if (leadstatusList.status == "fail") {
+            else {
             }
         }
         else {
@@ -252,80 +245,82 @@ export default function AddContact({ navigation, route }) {
         else if (email == "") {
             Alert.alert(" Enter Email Id")
         }
+        else if (Country == "") {
+            Alert.alert(" Enter Country Name")
+        }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
             if (loginData || registerData) {
                 if (loginData.status == "success") {
-                    if (route.params.title == 'Edit Lead') {
-                        const data = {
-                            profile_id: loginData.data.cProfile.toString(),
-                            created_by: loginData.data.cProfile.toString(),      //profile id 
-                            modified_by: loginData.data.cProfile.toString(),     //profile id 
-                            org_uid: loginData.data.org_uid,
-                            uid: loginData.data.uid,
-                            lead_id: route.params.Edata.id, first_name: fname, last_name: lname, title: title, email: email,
-                            email2: Aemail, dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website,
-                            lead_source: LeadSource, lead_status: LeadStatus, industry: Industry, number_of_employee: employee,
-                            annual_revenue: revenue, company: companyName, address: Address, city: City, state: State, country: Country,
-                            zip: ZipCode, description: description, campaign: campaign,
-                        }
-                        dispatch(leadAction.addLaed(data, loginData.data.token,));
+                    const data = {
+                        profile_id: loginData.data.cProfile,
+                        created_by: loginData.data.cProfile,
+                        modified_by: loginData.data.cProfile,
+                        org_uid: loginData.data.org_uid,
+                        uid: loginData.data.uid,
+                        title: title,
+                        first_name: fname,
+                        last_name: lname,
+                        dob: formateDate,
+                        gender: gender,
+                        phone: phone,
+                        phone2: Aphone,
+                        email: email,
+                        email2: Aemail,
+                        company: companyName,
+                        website: website,
+                        fax: fax,
+                        address: Address,
+                        zip: ZipCode,
+                        state: State,
+                        city: City,
+                        country: Country,
+                        lead_source: LeadSource,
+                        lead_status: LeadStatus,
+                        industry: Industry,
+                        number_of_employee: employee,
+                        annual_revenue: revenue,
+                        description: description,
+                        campaign: campaign,
                     }
-                    else {
-                        const data = {
-                            profile_id: loginData.data.cProfile.toString(),
-                            created_by: loginData.data.cProfile.toString(),      //profile id 
-                            modified_by: loginData.data.cProfile.toString(),     //profile id 
-                            org_uid: loginData.data.org_uid,
-                            uid: loginData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
-                            dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
-                            lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-                            state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
-                        }
-                        dispatch(leadAction.addLaed(data, loginData.data.token,));
-                        setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-                            setZipCode(''), setdescription(''), setcampaign(null)
-                    }
+                    dispatch(leadAction.addLaed(data, loginData.data.token,));
                     setIsLodding(true)
                 }
-
                 else if (registerData.status == "success") {
-                    if (route.params.title == 'Edit Lead') {
-                        const data = {
-                            profile_id: registerData.data.cProfile.toString(),
-                            created_by: registerData.data.cProfile.toString(),      //profile id 
-                            modified_by: registerData.data.cProfile.toString(),     //profile id 
-                            org_uid: registerData.data.org_uid,
-                            uid: registerData.data.uid,
-                            lead_id: route.params.Edata.id, first_name: fname, last_name: lname, title: title, email: email,
-                            email2: Aemail, dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website,
-                            lead_source: LeadSource, lead_status: LeadStatus, industry: Industry, number_of_employee: employee,
-                            annual_revenue: revenue, company: companyName, address: Address, city: City, state: State, country: Country,
-                            zip: ZipCode, description: description, campaign: campaign,
-                        }
-                        dispatch(leadAction.addLaed(data, registerData.data.token,));
+                    const data = {
+                        profile_id: registerData.data.cProfile,
+                        created_by: registerData.data.cProfile,
+                        modified_by: registerData.data.cProfile,
+                        org_uid: registerData.data.org_uid,
+                        uid: registerData.data.uid,
+                        title: title,
+                        first_name: fname,
+                        last_name: lname,
+                        dob: formateDate,
+                        gender: gender,
+                        phone: phone,
+                        phone2: Aphone,
+                        email: email,
+                        email2: Aemail,
+                        company: companyName,
+                        website: website,
+                        fax: fax,
+                        address: Address,
+                        zip: ZipCode,
+                        state: State,
+                        city: City,
+                        country: Country,
+                        lead_source: LeadSource,
+                        lead_status: LeadStatus,
+                        industry: Industry,
+                        number_of_employee: employee,
+                        annual_revenue: revenue,
+                        description: description,
+                        campaign: campaign,
                     }
-                    else {
-                        const data = {
-                            profile_id: registerData.data.cProfile.toString(),
-                            created_by: registerData.data.cProfile.toString(),      //profile id 
-                            modified_by: registerData.data.cProfile.toString(),     //profile id 
-                            org_uid: registerData.data.org_uid,
-                            uid: registerData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
-                            dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
-                            lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-                            state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
-                        }
-                        dispatch(leadAction.addLaed(data, registerData.data.token,));
-                        setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                            setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-                            setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-                            setZipCode(''), setdescription(''), setcampaign(null)
-                    }
+                    dispatch(leadAction.addLaed(data, registerData.data.token,));
                     setIsLodding(true)
-                }
+                }    
             }
         }
     }
@@ -335,6 +330,11 @@ export default function AddContact({ navigation, route }) {
             if (leadData.status == "success") {
                 setIsLodding(false)
                 setModalVisible(true)
+                setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+                setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+                setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+                setZipCode(''), setdescription(''), setcampaign(null),settext(true),setDate(new Date())
+                navigation.navigate('lead_manager')
                 dispatch(leadAction.clearResponse());
             }
             else if (leadData.status == "failed") {
@@ -366,7 +366,7 @@ export default function AddContact({ navigation, route }) {
                 onPressLeft={() => {
                     navigation.goBack()
                 }}
-                title={route.params.title}
+                title='Add Lead'
                 onPressRight={() => {
                     navigation.navigate('Notification')
                 }}
@@ -375,7 +375,7 @@ export default function AddContact({ navigation, route }) {
             <ScrollView style={{ width: width, height: height }}>
                 <View style={{ margin: '3%', marginTop: '2%' }}>
 
-                    <View style={{ marginTop: '2%' }}>
+                    {/* <View style={{ marginTop: '2%' }}>
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
@@ -402,7 +402,7 @@ export default function AddContact({ navigation, route }) {
                                 </View>
                             )}
                         />
-                    </View>
+                    </View> */}
 
                     <View style={styles.inputFields}>
                         <Image
@@ -451,8 +451,8 @@ export default function AddContact({ navigation, route }) {
                         onPress={showDatepicker} >
                         <View style={{ flexDirection: 'row' }}>
                             <Image
-                                 style={Platform.OS == 'ios' ?
-                                 [styles.icon] : [styles.icon, { marginTop: '1%' }]}
+                                style={Platform.OS == 'ios' ?
+                                    [styles.icon] : [styles.icon, { marginTop: '1%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {show && (
@@ -776,7 +776,7 @@ export default function AddContact({ navigation, route }) {
 
                     <View style={styles.inputFields}>
                         <Image
-                            style={[styles.icon, { height: 26, width: '5%', marginLeft: '2.5%' }]}
+                            style={[styles.icon, { height: 26, width: '5.5%', marginLeft: '2.5%' }]}
                             source={require('../../images/list.png')}
                         />
                         <TextInput
