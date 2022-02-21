@@ -615,15 +615,19 @@ export default function lead_manager({ navigation, route }) {
           />
           :
           <Pressable
+            style={styles.radio}
             onPress={() =>
               onPressRadioBtn(item.id, !item.selected)}
           >
             {item.selected == true ?
               <Image
-                style={styles.radio}
+                style={[styles.radio, { marginTop: '-5%',marginLeft:'-5%' }]}
                 source={require('../../images/okCall.png')}
               />
-              : <View style={styles.radio}>
+              :
+              <View
+              //  style={styles.radio}
+              >
               </View>}
           </Pressable>
         }
