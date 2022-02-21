@@ -254,7 +254,11 @@ export const Meeting_Detail = "Meeting_Detail"
 export const Meeting_Detail_Success = "Meeting_Detail_Success"
 export const Meeting_Detail_Clear = 'Meeting_Detail_Clear'
 
+//packegeTopups
 
+export const packegeTopups_Detail = "packegeTopups_Detail"
+export const packegeTopups_Detail_Success = "packegeTopups_Detail_Success"
+export const packegeTopups_Detail_Clear = 'packegeTopups_Detail_Clear'
 
 
 

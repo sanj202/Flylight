@@ -267,7 +267,7 @@ export default function SideMenu({ navigation }) {
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
-                    onPress={() => navigation.navigate('Meetings')}
+                        onPress={() => navigation.navigate('Meetings')}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
@@ -308,6 +308,31 @@ export default function SideMenu({ navigation }) {
 
                                 <Image
                                     style={[styles.image3, { marginLeft: '42%' }]}
+                                    source={require('../../images/next.png')}
+                                />
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+
+
+
+                <View style={styles.menusTop}>
+
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('packegeTopups')}
+                    >
+                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                            <Image
+                                style={[styles.image2, { marginRight: '2%',height:24,width:22 }]}
+                                source={require('../../images/buy.png')}
+                            />
+                            <View style={styles.menus}>
+                                <Text style={styles.items}>
+                                    PackegeTopups
+                                </Text>
+                                <Image
+                                    style={[styles.image3, { marginLeft: '28%' }]}
                                     source={require('../../images/next.png')}
                                 />
                             </View>

@@ -35,7 +35,8 @@ import {
   AddMeetings,
   EditMeetings,
   MeetingsDetail,
-  addLead
+  addLead,
+  packegeTopups
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -180,7 +181,7 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-      
+
       <Tab.Screen
         name="addLead"
         component={addLead}
@@ -227,7 +228,7 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-      
+
       <Tab.Screen
         name="AddTask"
         component={AddTask}
@@ -348,6 +349,17 @@ function HomeTabs() {
       />
 
       <Tab.Screen
+        name='packegeTopups'
+        component={packegeTopups}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+
+      <Tab.Screen
         name='Staff_Members'
         component={Staff_Members}
         options={{
@@ -356,7 +368,7 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-      
+
       <Tab.Screen
         name='Meetings'
         component={Meetings}
@@ -366,7 +378,7 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-        <Tab.Screen
+      <Tab.Screen
         name='AddMeetings'
         component={AddMeetings}
         options={{
@@ -375,7 +387,7 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-      
+
       <Tab.Screen
         name='EditMeetings'
         component={EditMeetings}
@@ -385,7 +397,7 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-      
+
       <Tab.Screen
         name='MeetingsDetail'
         component={MeetingsDetail}

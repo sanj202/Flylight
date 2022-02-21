@@ -1,4 +1,6 @@
-import { Organization_List,Organization_List_Clear,Organization_List_Success } from './actionTypes';
+import {
+     Organization_List,Organization_List_Clear,Organization_List_Success,
+     packegeTopups_Detail,packegeTopups_Detail_Success,packegeTopups_Detail_Clear } from './actionTypes';
 import BaseUrl from '../../../const'
 
 
@@ -34,33 +36,67 @@ import BaseUrl from '../../../const'
 //     }
 // };
 
-// export const addLaed = (data, token) => {
-//     console.log(" credentails..................", data, token)
-//     return (dispatch) => {
-//         dispatch({ type: Add_Edit_Lead })
+export const packageList = (data, token) => {
+    console.log(" credentails..................", data, token)
 
-//         fetch(`${BaseUrl}/v1/leadsAddEdit`,
-//             {
-//                 method: "POST",
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     // 'Content-Type': "application/x-www-form-urlencoded",
-//                     'Content-Type': 'application/json',
-//                     'Authorization': 'Bearer ' + token,
-//                     // 'Authorization': uid,
-//                 },
-//                 body: JSON.stringify(data),
-//             })
-//             .then(response => response.json())
-//             .then(responseData => {
-//                 // console.log("AddLead .........::::::::::::::::", responseData)
-//                 dispatch({ type: Add_Edit_Lead, payload: responseData })
-//             })
-//             .catch((error) => {
-//                 console.log("error" + error);
-//             })
-//     }
-// };
+    fetch(`${BaseUrl}/Packages`, {
+                method: 'GET'
+                //Request Type 
+            })
+            .then((response) => response)
+            //If response is in json then in success
+            .then((responseJson) => {
+                //Success 
+                console.log(responseJson);
+            })
+            //If response is not in json then in error
+            .catch((error) => {
+                //Error 
+                console.error(error);
+            });
+
+    // return (dispatch) => {
+    //     dispatch({ type: packegeTopups_Detail })
+
+
+    //     fetch(`${BaseUrl}/Packages`, {
+    //         method: 'GET'
+    //         //Request Type 
+    //     })
+    //     .then((response) => response)
+    //     //If response is in json then in success
+    //     .then((responseJson) => {
+    //         //Success 
+    //         console.log(responseJson);
+    //     })
+    //     //If response is not in json then in error
+    //     .catch((error) => {
+    //         //Error 
+    //         console.error(error);
+    //     });
+
+    //     // fetch(`${BaseUrl}/Packages`,
+    //     //     {
+    //     //         method: "POST",
+    //     //         headers: {
+    //     //             'Accept': 'application/json',
+    //     //             // 'Content-Type': "application/x-www-form-urlencoded",
+    //     //             'Content-Type': 'application/json',
+    //     //             'Authorization': 'Bearer ' + token,
+    //     //             // 'Authorization': uid,
+    //     //         },
+    //     //         body: JSON.stringify(data),
+    //     //     })
+    //     //     .then(response => response.json())
+    //     //     .then(responseData => {
+    //     //         // console.log("AddLead .........::::::::::::::::", responseData)
+    //     //         dispatch({ type: Add_Edit_Lead, payload: responseData })
+    //     //     })
+    //     //     .catch((error) => {
+    //     //         console.log("error" + error);
+    //     //     })
+    // }
+};
 
 
 
@@ -97,5 +133,12 @@ export const clearResponse = () => {
         type: Organization_List_Clear,
     };
 };
+
+export const packclearResponse = () => {
+    return {
+        type: Organization_List_Clear,
+    };
+};
+
 
 
