@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
-} from 'react-native';
+import { ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform } from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -75,7 +73,7 @@ export default function AddContact({ navigation }) {
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
-    const leadOwner = useSelector(state => state.leads.leadOwner)
+    const leadOwner = useSelector(state =>state.taskmanager.taskOwner)
     const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
 
     const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
@@ -89,7 +87,7 @@ export default function AddContact({ navigation }) {
                     org_uid: loginData.data.org_uid,
                     profile_id: loginData.data.cProfile.toString(),
                 }
-                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+                dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 const data = {
@@ -97,7 +95,7 @@ export default function AddContact({ navigation }) {
                     org_uid: registerData.data.org_uid,
                     uid: registerData.data.uid
                 }
-                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+                dispatch(taskmanagerAction.TaskOwnerList(data, registerData.data.token));
             }
         }
     }, [loginData, registerData, isFocused])

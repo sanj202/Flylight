@@ -1,13 +1,15 @@
 import {
     Get_Task_Todo_Done, Task_Todo_Done_Success, Task_Todo_Done_Clear,
     Add_Edit_Task, Add_Edit_Task_Success, Add_Edit_Task_Clear,
-    Delete_Task, Delete_Task_Success, Delete_Task_Clear
+    Delete_Task, Delete_Task_Success, Delete_Task_Clear,
+    TaskOwner, TaskOwner_Success, TaskOwner_Clear
 } from '../Actions/actionTypes';
 
 const initialState = {
     getList: [],
     addTask: [],
     deleteTask: [],
+    taskOwner:[]
 };
 const taskmanagerR = (state = initialState, action) => {
     switch (action.type) {
@@ -56,6 +58,19 @@ const taskmanagerR = (state = initialState, action) => {
                 ...state,
                 deleteTask: []
             };
+
+            case TaskOwner:
+                return {
+                    ...state
+                }
+            case TaskOwner_Success:
+                return {
+                    taskOwner: action.payload
+                }
+            case TaskOwner_Clear:
+                return {
+                    taskOwner: []
+                }
         default:
             return state;
     }

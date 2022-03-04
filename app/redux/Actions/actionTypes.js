@@ -260,5 +260,12 @@ export const packegeTopups_Detail = "packegeTopups_Detail"
 export const packegeTopups_Detail_Success = "packegeTopups_Detail_Success"
 export const packegeTopups_Detail_Clear = 'packegeTopups_Detail_Clear'
 
+//TaskOwnerList
+export const TaskOwner = "TaskOwner"
+export const TaskOwner_Success = "TaskOwner_Success"
+export const TaskOwner_Clear = 'TaskOwner_Clear'
 
-
+//TaskOwnerList
+export const profileRole = "profileRole"
+export const profileRole_Success = "profileRole_Success"
+export const profileRole_Clear = 'profileRole_Clear'

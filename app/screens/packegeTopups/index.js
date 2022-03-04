@@ -12,6 +12,8 @@ import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
+import RazorpayCheckout from 'react-native-razorpay';
+
 
 export default function lead_manager({ navigation }) {
 
@@ -50,6 +52,34 @@ export default function lead_manager({ navigation }) {
 
 
 
+
+    const BuyPlane =()=> {
+        var options = {
+        description: 'Credits towards consultation',
+        image: 'https://i.imgur.com/3g7nmJC.png',
+        currency: 'INR',
+        key: 'vIqhRkI5wqwIq8CjhzFBMW5g',
+        amount: '5000',
+        name: 'AcmeCorp',
+        order_id: '1sdfsdfdsfsdf',//Replace this with an order_id created using Orders API.
+        prefill: {
+          email: 'gaurav.kumar@example.com',
+          contact: '9191919191',
+          name: 'Gaurav Kumar',
+        //   method: 'netbanking', //card|upi|wallet
+        },
+        theme: {color: '#53a20e'}
+      }
+
+      console.log(options)
+      RazorpayCheckout.open(options).then((data) => {
+        // handle success
+        alert(`Success: ${data.razorpay_payment_id}`);
+      }).catch((error) => {
+        // handle failure
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
+    }
 
 
 
@@ -648,13 +678,13 @@ export default function lead_manager({ navigation }) {
 
                 {isService == 'Topups' ?
                     <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
-                        onPress={() => checkValue("Topups")}
+                        // onPress={() => checkValue("Topups")}
                     >
                         <Text style={{ color: '#FFF', textAlign: 'center', }}>Topups</Text>
                     </TouchableOpacity>
                     :
                     <TouchableOpacity style={[styles.headerBtn]}
-                        onPress={() => checkValue("Topups")}
+                        // onPress={() => checkValue("Topups")}
                     >
                         <Text style={{ textAlign: 'center', color: 'black', }}>Topups</Text>
                     </TouchableOpacity>
@@ -750,6 +780,7 @@ export default function lead_manager({ navigation }) {
                                         borderWidth: 2, borderRadius: 10, padding: 5
                                     }}>
                                          <TouchableOpacity
+                                        //  onPress={()=>BuyPlane()}
                                             style={{ alignSelf: 'center', backgroundColor: 'blue', paddingHorizontal: 10, paddingVertical: 5 }}
                                         >
                                             <Text style={{ color: '#fff' }}>Start Now</Text>

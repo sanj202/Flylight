@@ -18,6 +18,11 @@ export default function lead_manager({ navigation }) {
     const [isFocus, setIsFocus] = useState(false);
     const [account, setaccount] = useState(null);
     const [isFocus2, setIsFocus2] = useState(false);
+
+    const [RoleList,setRoleList] = useState('')
+    const [AcType,setAcType] = useState('')
+
+
     const Roles = [
         { label: 'CEO', value: 1 },
         { label: 'Manager', value: 2 },
@@ -29,6 +34,7 @@ export default function lead_manager({ navigation }) {
         { label: 'Editor', value: 2 },
         { label: 'Visitor', value: 3 },
     ];
+
     const [askDelete, setaskDelete] = useState(false);
     const [askDelete1, setaskDelete1] = useState(false);
     const { width, height } = Dimensions.get('window');
@@ -41,16 +47,19 @@ export default function lead_manager({ navigation }) {
     const registerData = useSelector(state => state.varify.otp)
     const inviteResponse = useSelector(state => state.staffMember.inviteData)
     const leadOwner = useSelector(state => state.leads.leadOwner)
-
-
+    const roleResponse = useSelector(state => state.staffMember.role)
+    
     useEffect(() => {
         if (loginData || registerData && isFocused) {
+            setIsLodding(true)
             if (loginData.status == "success") {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
                     profile_id: loginData.data.cProfile.toString(),
                 }
+                
+                dispatch(staffMemberAction.ProfileRoleList(data, loginData.data.token));
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
@@ -59,24 +68,45 @@ export default function lead_manager({ navigation }) {
                     org_uid: registerData.data.org_uid,
                     uid: registerData.data.uid
                 }
+                dispatch(staffMemberAction.ProfileRoleList(data,registerData.data.token));
                 dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
             }
-            setIsLodding(true)
         }
     }, [loginData, registerData, isFocused])
+
+    useEffect(() => {
+        if (roleResponse) {
+            if (roleResponse.status == "200") {
+                console.log('roleResponse..........................', roleResponse.data)
+                // setroleResponseData(roleResponse.data.map((item, index) => item.user))
+                setIsLodding(false)
+            }
+            else if (roleResponse.status == "failed") {
+                setIsLodding(false)
+            }
+            else if (roleResponse.status == "fail") {
+                setIsLodding(false)
+            }
+          
+        }
+        else {
+        }
+    }, [roleResponse])
 
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 console.log('leadOwner..........................', leadOwner)
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
-
+                setIsLodding(false)
             }
             else if (leadOwner.status == "failed") {
+                setIsLodding(false)
             }
             else if (leadOwner.status == "fail") {
+                setIsLodding(false)
             }
-            setIsLodding(false)
+            
         }
         else {
         }
@@ -85,19 +115,19 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (inviteResponse) {
             if (inviteResponse.status == "success") {
-                setIsLodding(false)
                 Alert.alert(inviteResponse.message)
                 dispatch(staffMemberAction.clearResponse())
+                setIsLodding(false)
             }
             else if (inviteResponse.status == "failed") {
-                setIsLodding(false)
                 Alert.alert(inviteResponse.message)
                 dispatch(staffMemberAction.clearResponse())
+                setIsLodding(false)
             }
             else if (inviteResponse.status == "fail") {
-                setIsLodding(false)
                 Alert.alert(inviteResponse.message)
                 dispatch(staffMemberAction.clearResponse())
+                setIsLodding(false)
             }
             else {
                 setIsLodding(false)
@@ -170,7 +200,6 @@ export default function lead_manager({ navigation }) {
                     </View>
                     <View style={{ marginLeft: '-18%' }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('lll')}</Text>
-                        {/* <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format("h:mm A")}</Text> */}
                     </View>
                 </View>
             </TouchableOpacity>)

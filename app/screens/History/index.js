@@ -346,7 +346,9 @@ export default function lead_manager({ navigation }) {
         />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => Search()}>
+      <TouchableOpacity style={styles.button} 
+      // onPress={() => Search()}
+      >
         <Text style={[styles.textButton, { fontWeight: 'bold', fontSize: 17 }]}>SEARCH</Text>
       </TouchableOpacity>
 

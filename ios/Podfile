@@ -17,6 +17,8 @@ target 'Fliylight' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-razorpay', :path => '../node_modules/react-native-razorpay'
+
   target 'FliylightTests' do
     inherit! :complete
     # Pods for testing

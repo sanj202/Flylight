@@ -2,7 +2,8 @@
 import {
     Get_Task_Todo_Done,Task_Todo_Done_Success,Task_Todo_Done_Clear,
     Add_Edit_Task, Add_Edit_Task_Success, Add_Edit_Task_Clear,
-    Delete_Task,Delete_Task_Success,Delete_Task_Clear
+    Delete_Task,Delete_Task_Success,Delete_Task_Clear,
+    TaskOwner, TaskOwner_Success, TaskOwner_Clear
 } from './actionTypes';
 import BaseUrl from '../../../const'
 
@@ -90,11 +91,35 @@ export const deleteTask = (data, token,) => {
 };
 
 
+export const TaskOwnerList = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: TaskOwner })
+        fetch(`${BaseUrl}/v1/getOrgUserList`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: TaskOwner_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
 export const clearResponse = () => {
     return {
         type: Task_Todo_Done_Clear,
         type : Add_Edit_Task_Clear,
-        type : Delete_Task_Clear
+        type : Delete_Task_Clear,
+        type : TaskOwner_Clear
     };
 };
 

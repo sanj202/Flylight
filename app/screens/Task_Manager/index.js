@@ -268,10 +268,11 @@ export default function lead_manager({ navigation }) {
     }
 
     const AllView = ({ item }) => {
+        console.log(item)
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
-                    <View style={{ backgroundColor: '', justifyContent: 'center', }}>
+                    {/* <View style={{ backgroundColor: '', justifyContent: 'center', }}>
                         {item.profile ?
                             item.profile.user ?
                                 <Image style={{ height: 48, width: 48, borderRadius: 24 }}
@@ -280,6 +281,11 @@ export default function lead_manager({ navigation }) {
                                 : <Image style={{ height: 48, width: 48, }}
                                     source={require('../../images/profileCall.png')} />
                             : ''}
+                    </View> */}
+
+                    <View style={{ backgroundColor: '', justifyContent: 'center', }}>
+                        <Image style={{ height: 48, width: 48, }}
+                            source={require('../../images/profileCall.png')} />
                     </View>
                     <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
                         <Text style={{
@@ -301,8 +307,10 @@ export default function lead_manager({ navigation }) {
                             </View>
                         </View>
                         <View style={{ flexDirection: 'column', }}>
-                            <Text style={{ color: 'black', fontFamily: 'Roboto',fontSize: 12, color: '#0F0F0F',
-                             flexShrink: 1 }}>
+                            <Text style={{
+                                color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F',
+                                flexShrink: 1
+                            }}>
                                 {item.subject}</Text>
                         </View>
                     </View>
@@ -310,7 +318,7 @@ export default function lead_manager({ navigation }) {
                     <View style={{ flexDirection: 'row', marginTop: '10%' }}>
                         {item.status == 'completed' ?
                             < TouchableOpacity >
-                                <Image  style={{ height: 22, width: 22, marginRight: '2%' }}
+                                <Image style={{ height: 22, width: 22, marginRight: '2%' }}
                                     source={require('../../images/okCall.png')}
                                 />
                             </TouchableOpacity>
@@ -461,19 +469,20 @@ export default function lead_manager({ navigation }) {
                     <View style={{ marginTop: '1%' }}>
                         <View style={styles.listData}>
                             <View style={{ backgroundColor: '', justifyContent: 'center', }}>
-                                {item.profile ?
+                                {/* {item.profile ?
                                     item.profile.user ?
                                         <Image
 
                                             style={{ height: 48, width: 48, borderRadius: 24 }}
                                             source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
                                         />
-                                        : <Image
+                                        : */}
+                                         <Image
 
                                             style={{ height: 48, width: 48, }}
                                             source={require('../../images/profileCall.png')}
                                         />
-                                    : ''}
+                                    {/* : ''} */}
                             </View>
                             <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
                                 <Text style={{
@@ -660,6 +669,7 @@ export default function lead_manager({ navigation }) {
                                     data={allTask}
                                     renderItem={AllView}
                                 />
+                                // <Text>test</Text>
                                 :
                                 <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
                         </View>
@@ -668,7 +678,6 @@ export default function lead_manager({ navigation }) {
                 :
                 <View />
             }
-
             {
                 isService == "To-Do" ?
                     <View style={{ marginTop: '3%' }}>
@@ -699,6 +708,7 @@ export default function lead_manager({ navigation }) {
                                         data={allTask}
                                         renderItem={TODOView}
                                     />
+                                 
                                     :
                                     <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
                             </View>
@@ -707,7 +717,6 @@ export default function lead_manager({ navigation }) {
                     :
                     <View />
             }
-
             {
                 isService == "Done" ?
 
@@ -748,6 +757,8 @@ export default function lead_manager({ navigation }) {
                     :
                     <View />
             }
+
+          
 
             {/* ================================================== */}
 

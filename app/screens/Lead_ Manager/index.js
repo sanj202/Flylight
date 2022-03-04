@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image,
-  Modal, Alert, Pressable, Dimensions, Platform,
+import {Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image,Modal, Alert, Pressable, Dimensions, Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -85,6 +83,7 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (loginData || registerData && isFocused) {
+      setIsLodding(true)
       Get_Data()
     }
   }, [loginData, registerData, isFocused])
@@ -116,6 +115,7 @@ export default function lead_manager({ navigation, route }) {
         // console.log('leadOwner.......,',leadOwner.data )
         setleadOwnerData(leadOwner.data)
         setAssignOwner(true)
+        dispatch(leadAction.clearResponse())
       }
       else if (leadOwner.status == "failed") {
       }
@@ -141,8 +141,9 @@ export default function lead_manager({ navigation, route }) {
         // console.log( Leads)
         // setOpportunity(Lead_OpportunityList.data.opportunity)
         // CombineArrayData()
-        setIsLodding(false)
+       
         dispatch(leadmanagerAction.clearResponse())
+        setIsLodding(false)
       }
       else if (Lead_OpportunityList.status == "failed") {
         setIsLodding(false)
@@ -177,6 +178,7 @@ export default function lead_manager({ navigation, route }) {
 
   const DeleteFunction = () => {
     if (tempType == "Lead") {
+      setIsLodding(true)
       if (loginData.status == "success") {
         setaskDelete(!askDelete)
         const data = {
@@ -197,7 +199,6 @@ export default function lead_manager({ navigation, route }) {
         }
         dispatch(leadAction.deleteLead(data, registerData.data.token));
       }
-      setIsLodding(true)
     }
     else if (tempType == "Opportunity") {
       if (loginData.status == "success") {
@@ -220,7 +221,7 @@ export default function lead_manager({ navigation, route }) {
         }
         dispatch(opportunityAction.deleteOpportunity(data, registerData.data.token));
       }
-      setIsLodding(true)
+     
     }
     else {
     }
@@ -230,12 +231,14 @@ export default function lead_manager({ navigation, route }) {
     if (deletelead) {
       if (deletelead.status == "200") {
         setModalVisible2(!modalVisible2)
+        setIsLodding(false)
       }
       else if (deletelead.status == "failed") {
+        setIsLodding(false)
       }
       else if (deletelead.status == 'fail') {
+        setIsLodding(false)
       }
-      setIsLodding(false)
     }
     else {
     }
@@ -245,12 +248,15 @@ export default function lead_manager({ navigation, route }) {
     if (deleteopportunity) {
       if (deleteopportunity.status == "200") {
         setModalVisible2(!modalVisible2)
+        setIsLodding(false)
       }
       else if (deleteopportunity.status == "failed") {
+        setIsLodding(false)
       }
       else if (deleteopportunity.status == 'fail') {
+        setIsLodding(false)
       }
-      setIsLodding(false)
+      
     }
     else {
     }
@@ -305,13 +311,13 @@ export default function lead_manager({ navigation, route }) {
         size: singleFile[0].size
       }
       if (loginData.status == "success") {
+        setIsULodding(true)
         if (tempUploadingType == 'Opportunity') {
           const formdata = new FormData;
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', loginData.data.cProfile);
           formdata.append('org_uid', loginData.data.org_uid);
           dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
-          setIsULodding(true)
         }
         else {
           const formdata = new FormData;
@@ -319,17 +325,16 @@ export default function lead_manager({ navigation, route }) {
           formdata.append('profile_id', loginData.data.cProfile);
           formdata.append('org_uid', loginData.data.org_uid);
           dispatch(leadAction.importLead(formdata, loginData.data.token));
-          setIsULodding(true)
         }
       }
       else if (registerData.status == "success") {
+        setIsULodding(true)
         if (tempUploadingType == 'Opportunity') {
           const formdata = new FormData;
           formdata.append('CSVFILE', file);
           formdata.append('profile_id', registerData.data.cProfile);
           formdata.append('org_uid', registerData.data.org_uid);
           dispatch(opportunityAction.importOpportunity(formdata, registerData.data.token));
-          setIsULodding(true)
         }
         else {
           const formdata = new FormData;
@@ -337,7 +342,6 @@ export default function lead_manager({ navigation, route }) {
           formdata.append('profile_id', registerData.data.cProfile);
           formdata.append('org_uid', registerData.data.org_uid);
           dispatch(leadAction.importLead(formdata, registerData.data.token));
-          setIsULodding(true)
         }
       }
     }
@@ -352,18 +356,20 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (importLead) {
-      setIsULodding(false)
+     
       if (importLead.status == "success") {
         // CombineArrayData()
         Get_Data()
         setImportFiles(false)
         Alert.alert(importLead.message)
         setSingleFile(null)
+        setIsULodding(false)
         // dispatch(leadAction.clearImportLeadResponse())
       }
       else if (importLead.status == "fail") {
         Alert.alert(importLead.message)
-        // dispatch(leadAction.clearImportLeadResponse())
+        dispatch(leadAction.clearImportLeadResponse())
+        setIsULodding(false)
       }
       else if (importLead == "error") {
         UploadFile()
@@ -376,14 +382,20 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (importOpportunity) {
-      setIsULodding(false)
+      
       if (importOpportunity.status == "success") {
         // CombineArrayData()
         Get_Data()
         setImportFiles(false)
         Alert.alert(importOpportunity.message)
         setSingleFile(null)
+        setIsULodding(false)
         // dispatch(opportunityAction.clearResponse())
+      }
+      else if (importOpportunity.status == "fail") {
+        Alert.alert(importOpportunity.message)
+        dispatch(opportunityAction.clearResponse())
+        setIsULodding(false)
       }
       else if (importOpportunity == "error") {
         UploadFile()
@@ -398,19 +410,19 @@ export default function lead_manager({ navigation, route }) {
   useEffect(() => {
     if (AssignLead) {
       if (AssignLead.status == "success") {
-        setIsALodding(false)
         setAssignOwner(false)
         Get_Data()
         Alert.alert(AssignLead.message)
         settemarray([])
         dispatch(leadmanagerAction.clearResponse())
+        setIsALodding(false)
       }
       if (AssignLead.status == "failed") {
-        setIsALodding(false)
         setAssignOwner(false)
         Alert.alert(AssignLead.message)
         settemarray([])
         dispatch(leadmanagerAction.clearResponse())
+        setIsALodding(false)
       }
       else {
 
@@ -710,7 +722,7 @@ export default function lead_manager({ navigation, route }) {
   const AssignVIew = ({ item }) => {
     return (
       <Pressable
-        onPress={() => UserAssignLead(item.user_id)}
+        onPress={() => UserAssignLead(item.id)}
       >
         <View style={[styles.listData, { flexDirection: 'column' }]} >
           <Text style={styles.AssignTitle}>{item.user.name}</Text>
