@@ -47,10 +47,16 @@ export default function lead_manager({ navigation }) {
     const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
 
     const onChangeFrom = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        settext(false)
-        setDate(currentDate)
+        if (event.type == 'dismissed') {
+            setShow(!show);
+        }
+        else {
+            console.log('date selected ')
+            const currentDate = selectedDate || date;
+            setShow(Platform.OS === 'ios');
+            setDate(currentDate)
+            settext(false)
+        }
     };
     const showMode = (currentMode) => {
         setShow(!show);
@@ -62,6 +68,49 @@ export default function lead_manager({ navigation }) {
 
     const checkValue = (value) => {
         setisService(value)
+        setIsLodding(true)
+        if (loginData.status == "success") {
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+                pageSize: '10',
+                pageNumber: '0',
+                filters: []
+            }
+            if (value == 'Done') {
+                data.filters.push({ eq: '3', key: 'status' })
+            }
+            else if (value == 'To-Do') {
+                data.filters.push({ eq: '1', key: 'status' })
+            }
+            else {
+
+            }
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
+        }
+        else if (registerData.status == "success") {
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+                pageSize: '10',
+                pageNumber: '0',
+                filters: []
+            }
+
+            if (value == 'Done') {
+                data.filters.push({ eq: '3', key: 'status' })
+            }
+            else if (value == 'To-Do') {
+                data.filters.push({ eq: '1', key: 'status' })
+            }
+            else {
+
+            }
+            dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
+        }
+        else { }
     }
 
     useEffect(() => {
@@ -77,6 +126,9 @@ export default function lead_manager({ navigation }) {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
+                pageSize: '10',
+                pageNumber: '0',
+                filters: []
             }
             dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
@@ -86,6 +138,9 @@ export default function lead_manager({ navigation }) {
                 uid: registerData.data.uid,
                 profile_id: registerData.data.cProfile.toString(),
                 org_uid: registerData.data.org_uid,
+                pageSize: '10',
+                pageNumber: '0',
+                filters: []
             }
             dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
         }
@@ -93,7 +148,7 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (taskList) {
-            if (taskList.status == "200") {
+            if (taskList.status == "success") {
                 setallTask(taskList.data)
             }
             else if (taskList.status == "failed") {
@@ -362,220 +417,13 @@ export default function lead_manager({ navigation }) {
         )
     }
 
-    const DoneView = ({ item }) => {
-        return (
-            <View>
-                {item.status == 'completed' ?
-                    <View style={{ marginTop: '1%' }}>
-                        <View style={styles.listData}>
-                            <View style={{ backgroundColor: '', justifyContent: 'center', }}>
-                                {item.profile ?
-                                    item.profile.user ?
-                                        <Image style={{ height: 48, width: 48, borderRadius: 24 }}
-                                            source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
-                                        />
-                                        : <Image style={{ height: 48, width: 48, }}
-                                            source={require('../../images/profileCall.png')}
-                                        />
-                                    : ''}
-                            </View>
-                            <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
-                                <Text style={{
-                                    fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
-                                    fontFamily: 'Roboto'
-                                }}>{item.profile ? item.profile.user.name : ''}</Text>
-                                <View style={{ flexDirection: 'row', }}>
-                                    <View style={{ width: '45%', backgroundColor: '' }}>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={{
-                                                color: 'black', fontFamily: 'Roboto',
-                                                fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                                            }}>
-                                            {item.related_to ? item.related_to : "not available"}</Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            backgroundColor: '#F69708', borderRadius: 15,
-                                            paddingHorizontal: 8, marginLeft: '2%',
-                                            borderWidth: 1, borderColor: '#F69708',
-                                        }}>
-                                        <Text style={{ color: '#fff', fontSize: 12 }}>{item.task_for}</Text>
-                                    </View>
-                                </View>
-                                <View style={{ flexDirection: 'column', }}>
-                                    <Text
-                                        style={{
-                                            color: 'black', fontFamily: 'Roboto',
-                                            fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                                        }}>
-                                        {item.subject}</Text>
-                                </View>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', marginTop: '10%' }}>
-                                <TouchableOpacity>
-                                    <Image
-                                        style={{ height: 22, width: 22, marginRight: '2%' }}
-                                        source={require('../../images/okCall.png')}
-                                    />
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                // onPress={() => EditTask()}
-                                >
-                                    <Image
-                                        style={{ height: 22, width: 22, marginRight: '2%' }}
-                                        source={require('../../images/editCall.png')}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                // onPress={() => DeleteTask()}
-                                >
-                                    <Image
-                                        style={{ height: 22, width: 22, }}
-                                        source={require('../../images/deleteCall.png')}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-
-                            <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Image
-                                        style={{ height: 10, width: 10, marginRight: '2%' }}
-                                        source={require('../../images/material-call.png')}
-                                    />
-                                    <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
-                                </View>
-                                <Text style={{
-                                    marginTop: '30%', textAlign: 'right',
-                                    color: 'black', fontSize: 11
-                                }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text>
-                            </View>
-                        </View>
-                    </View >
-                    :
-                    <View>
-                    </View>
-                }
-            </View>
-        )
-    }
-
-    const TODOView = ({ item }) => {
-        return (
-            <View>
-                {item.status !== 'completed' ?
-                    <View style={{ marginTop: '1%' }}>
-                        <View style={styles.listData}>
-                            <View style={{ backgroundColor: '', justifyContent: 'center', }}>
-                                {/* {item.profile ?
-                                    item.profile.user ?
-                                        <Image
-
-                                            style={{ height: 48, width: 48, borderRadius: 24 }}
-                                            source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
-                                        />
-                                        : */}
-                                         <Image
-
-                                            style={{ height: 48, width: 48, }}
-                                            source={require('../../images/profileCall.png')}
-                                        />
-                                    {/* : ''} */}
-                            </View>
-                            <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
-                                <Text style={{
-                                    fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
-                                    fontFamily: 'Roboto'
-                                }}>{item.profile ? item.profile.user.name : ''}</Text>
-
-                                <View style={{ flexDirection: 'row', }}>
-
-                                    <View style={{ width: '45%', backgroundColor: '' }}>
-                                        <Text
-                                            numberOfLines={1}
-                                            style={{
-                                                color: 'black', fontFamily: 'Roboto',
-                                                fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                                            }}>
-                                            {item.related_to ? item.related_to : "not available"}</Text>
-                                    </View>
-                                    <View
-                                        style={{
-                                            backgroundColor: '#F69708', borderRadius: 15,
-                                            paddingHorizontal: 8, marginLeft: '2%',
-                                            borderWidth: 1, borderColor: '#F69708',
-                                        }}>
-                                        <Text style={{ color: '#fff', fontSize: 12 }}>{item.task_for}</Text>
-                                    </View>
-                                </View>
-                                <View style={{ flexDirection: 'column', }}>
-                                    <Text
-                                        style={{
-                                            color: 'black', fontFamily: 'Roboto',
-                                            fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                                        }}>
-                                        {item.subject}</Text>
-                                </View>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', marginTop: '10%' }}>
-                                <TouchableOpacity>
-                                    <Image
-                                        style={{ height: 22, width: 22, marginRight: '2%' }}
-                                        source={require('../../images/to-do.png')}
-                                    />
-                                </TouchableOpacity>
-
-                                <TouchableOpacity
-                                // onPress={() => EditTask()}
-                                >
-                                    <Image
-                                        style={{ height: 22, width: 22, marginRight: '2%' }}
-                                        source={require('../../images/editCall.png')}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                // onPress={() => DeleteTask()}
-                                >
-                                    <Image
-                                        style={{ height: 22, width: 22, }}
-                                        source={require('../../images/deleteCall.png')}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-
-                            <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Image
-                                        style={{ height: 10, width: 10, marginRight: '2%' }}
-                                        source={require('../../images/material-call.png')}
-                                    />
-                                    <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
-                                </View>
-                                <Text style={{
-                                    marginTop: '30%', textAlign: 'right',
-                                    color: 'black', fontSize: 11
-                                }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text>
-                            </View>
-                        </View>
-                    </View >
-                    :
-                    <View>
-                    </View>
-                }
-            </View>
-        )
-    }
-
     return (
         <View style={styles.container}>
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Task Manager'
                 onPressRight={() => {
@@ -639,7 +487,84 @@ export default function lead_manager({ navigation }) {
 
             </View>
 
-            {isService == "All" ?
+            <View style={{ marginTop: '3%' }}>
+                {IsLodding == true ?
+                    <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                    :
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('AddTask')}
+                            style={{
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                paddingHorizontal: 10,
+                                paddingVertical: 2,
+                                alignSelf: 'flex-end',
+                                marginHorizontal: '5%',
+                                backgroundColor: '#2296E4',
+                                borderRadius: 15
+                            }}
+                        >
+                            <Text style={{ color: "#fff", fontSize: 13 }}>
+                                +Add
+                            </Text>
+                        </TouchableOpacity>
+
+                        {allTask !== undefined && allTask.length > 0 ?
+                            <FlatList
+                                style={{ height: "85%" }}
+                                data={allTask}
+                                renderItem={AllView}
+                            />
+                            // <Text>test</Text>
+                            :
+                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+                    </View>
+                }
+            </View>
+
+
+            {/* {isService == "All" ?
+            <View style={{ marginTop: '3%' }}>
+                {IsLodding == true ?
+                    <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                    :
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('AddTask')}
+                            style={{
+                                borderColor: '#fff',
+                                borderWidth: 1,
+                                paddingHorizontal: 10,
+                                paddingVertical: 2,
+                                alignSelf: 'flex-end',
+                                marginHorizontal: '5%',
+                                backgroundColor: '#2296E4',
+                                borderRadius: 15
+                            }}
+                        >
+                            <Text style={{ color: "#fff", fontSize: 13 }}>
+                                +Add
+                            </Text>
+                        </TouchableOpacity>
+
+                        {allTask !== undefined && allTask.length > 0 ?
+                            <FlatList
+                                // style={{ height: height / 1.55 }}
+                                data={allTask}
+                                renderItem={AllView}
+                            />
+                            // <Text>test</Text>
+                            :
+                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+                    </View>
+                }
+            </View>
+            :
+            <View />
+        }
+        {
+            isService == "To-Do" ?
                 <View style={{ marginTop: '3%' }}>
                     {IsLodding == true ?
                         <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
@@ -662,14 +587,13 @@ export default function lead_manager({ navigation }) {
                                     +Add
                                 </Text>
                             </TouchableOpacity>
-
                             {allTask !== undefined && allTask.length > 0 ?
                                 <FlatList
                                     // style={{ height: height / 1.55 }}
                                     data={allTask}
-                                    renderItem={AllView}
+                                    renderItem={TODOView}
                                 />
-                                // <Text>test</Text>
+
                                 :
                                 <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
                         </View>
@@ -677,88 +601,49 @@ export default function lead_manager({ navigation }) {
                 </View>
                 :
                 <View />
-            }
-            {
-                isService == "To-Do" ?
-                    <View style={{ marginTop: '3%' }}>
-                        {IsLodding == true ?
-                            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                            :
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate('AddTask')}
-                                    style={{
-                                        borderColor: '#fff',
-                                        borderWidth: 1,
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 2,
-                                        alignSelf: 'flex-end',
-                                        marginHorizontal: '5%',
-                                        backgroundColor: '#2296E4',
-                                        borderRadius: 15
-                                    }}
-                                >
-                                    <Text style={{ color: "#fff", fontSize: 13 }}>
-                                        +Add
-                                    </Text>
-                                </TouchableOpacity>
-                                {allTask !== undefined && allTask.length > 0 ?
-                                    <FlatList
-                                        // style={{ height: height / 1.55 }}
-                                        data={allTask}
-                                        renderItem={TODOView}
-                                    />
-                                 
-                                    :
-                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-                            </View>
-                        }
-                    </View>
-                    :
-                    <View />
-            }
-            {
-                isService == "Done" ?
+        }
+        {
+            isService == "Done" ?
 
 
-                    <View style={{ marginTop: '3%' }}>
-                        {IsLodding == true ?
-                            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                            :
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate('AddTask')}
-                                    style={{
-                                        borderColor: '#fff',
-                                        borderWidth: 1,
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 2,
-                                        alignSelf: 'flex-end',
-                                        marginHorizontal: '5%',
-                                        backgroundColor: '#2296E4',
-                                        borderRadius: 15
-                                    }}
-                                >
-                                    <Text style={{ color: "#fff", fontSize: 13 }}>
-                                        +Add
-                                    </Text>
-                                </TouchableOpacity>
-                                {allTask !== undefined && allTask.length > 0 ?
-                                    <FlatList
-                                        // style={{ height: height / 1.55 }}
-                                        data={allTask}
-                                        renderItem={DoneView}
-                                    />
-                                    :
-                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-                            </View>
-                        }
-                    </View>
-                    :
-                    <View />
-            }
+                <View style={{ marginTop: '3%' }}>
+                    {IsLodding == true ?
+                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                        :
+                        <View>
+                            <TouchableOpacity
+                                onPress={() => navigation.navigate('AddTask')}
+                                style={{
+                                    borderColor: '#fff',
+                                    borderWidth: 1,
+                                    paddingHorizontal: 10,
+                                    paddingVertical: 2,
+                                    alignSelf: 'flex-end',
+                                    marginHorizontal: '5%',
+                                    backgroundColor: '#2296E4',
+                                    borderRadius: 15
+                                }}
+                            >
+                                <Text style={{ color: "#fff", fontSize: 13 }}>
+                                    +Add
+                                </Text>
+                            </TouchableOpacity>
+                            {allTask !== undefined && allTask.length > 0 ?
+                                <FlatList
+                                    // style={{ height: height / 1.55 }}
+                                    data={allTask}
+                                    renderItem={DoneView}
+                                />
+                                :
+                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+                        </View>
+                    }
+                </View>
+                :
+                <View />
+        } */}
 
-          
+
 
             {/* ================================================== */}
 

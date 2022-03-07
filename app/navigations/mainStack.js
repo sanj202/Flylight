@@ -13,10 +13,11 @@ import {
   Task_Manager,
   Report2,
   EditProfile,
- Notification
+  Notification
 } from '../screens/index'
 import { HomeTabs } from './bottom/homeTab'
 import { AuthStack } from './authStack';
+import { TopTab } from './drawer/TopTab'
 
 // const TabNavigation = () => {
 //   <HomeTabs initialRouteName='DashBoard' {...props}/>
@@ -24,21 +25,23 @@ import { AuthStack } from './authStack';
 
 const Stack = createStackNavigator();
 
-export function MainStack({route}) {
+export function MainStack({ route }) {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }} // initialRouteName='HomeTabs' 
     >
-      <Stack.Screen name='HomeTabs' component={HomeTabs} options={{ headerShown: false }} />
+      <Stack.Screen name='HomeTabs' component={TopTab} options={{ headerShown: false }} />
+
+      {/* <Stack.Screen name='HomeTabs' component={HomeTabs} options={{ headerShown: false }} /> */}
       <Stack.Screen name='Edit_Contact' component={Edit_Contact} />
       {/* <Stack.Screen name='EditProfile' component={EditProfile} /> */}
       {/* <Stack.Screen name='Profile' component={Profile} /> */}
       <Stack.Screen name="Edit_Opportunity" component={Edit_Opportunity} />
-      <Stack.Screen name="Task_Manager" component={Task_Manager} />
-       <Stack.Screen name="All_Lead" component={All_Lead} />
-       <Stack.Screen name="AddContactUpload" component={AddContactUpload} />
+      {/* <Stack.Screen name="Task_Manager" component={Task_Manager} /> */}
+      <Stack.Screen name="All_Lead" component={All_Lead} />
+      <Stack.Screen name="AddContactUpload" component={AddContactUpload} />
       {/* <Stack.Screen name="Logout" component={Login} /> */}
-      <Stack.Screen name='Logout' component={AuthStack} options={{ headerShown: false }} />
+      {/* <Stack.Screen name='Logout' component={AuthStack} options={{ headerShown: false }} /> */}
     </Stack.Navigator>
   );
 }

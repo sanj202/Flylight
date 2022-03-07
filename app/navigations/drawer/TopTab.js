@@ -15,6 +15,7 @@ import {
   Contacts,
   Profile
 } from '../../screens/index'
+import { HomeTabs } from '../bottom/homeTab'
 
 const width = Dimensions.get("screen").width;
 
@@ -22,7 +23,7 @@ const width = Dimensions.get("screen").width;
 const Drawer = createDrawerNavigator();
 
 export function TopTab(props) {
-  
+
   // console.log("drawer................")
   const toggleDrawer = () => {
     props.navigationProps.toggleDrawer();
@@ -37,11 +38,11 @@ export function TopTab(props) {
         headerShown: false,
       }}
     >
-      <Drawer.Screen name='DashBoard' component={DashBoard} />
-      <Drawer.Screen name='Report2' component={Report} />
-      <Drawer.Screen name='Contacts2' component={Contacts} />
+      <Drawer.Screen name='DashBoard' component={HomeTabs} />
+      {/* <Drawer.Screen name='Report2' component={Report} />
+      <Drawer.Screen name='Contacts2' component={Contacts} /> */}
       {/* <Drawer.Screen name='Profile2' component={Profile} /> */}
-         
+
     </Drawer.Navigator>
   );
 }

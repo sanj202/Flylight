@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image,Modal, Alert, Pressable, Dimensions, Platform,
+import {
+  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, Alert, Pressable, Dimensions, Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -50,11 +51,17 @@ export default function lead_manager({ navigation, route }) {
   const leadOwner = useSelector(state => state.leads.leadOwner)
 
   const onChangeFrom = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    settext(false)
-    setDate(currentDate)
+    if (event.type == 'dismissed') {
+      setShow(!show);
+    }
+    else {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      settext(false)
+      setDate(currentDate)
+    }
   };
+
   const showMode = (currentMode) => {
     setShow(!show);
     setMode(currentMode);
@@ -64,10 +71,15 @@ export default function lead_manager({ navigation, route }) {
   };
 
   const onChangeTo = (event, selectedDates) => {
-    const currentDates = selectedDates || dates;
-    setShows(Platform.OS === 'ios');
-    settexts(false)
-    setDates(currentDates);
+    if (event.type == 'dismissed') {
+      setShows(!shows);
+    }
+    else {
+      const currentDates = selectedDates || dates;
+      setShows(Platform.OS === 'ios');
+      settexts(false)
+      setDates(currentDates);
+    }
   };
   const showModes = (currentModes) => {
     setShows(!shows);
@@ -95,6 +107,7 @@ export default function lead_manager({ navigation, route }) {
         uid: loginData.data.uid,
         profile_id: loginData.data.cProfile.toString(),
         org_uid: loginData.data.org_uid,
+        filters: []
       }
       dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
     }
@@ -104,9 +117,92 @@ export default function lead_manager({ navigation, route }) {
         uid: registerData.data.uid,
         profile_id: registerData.data.cProfile.toString(),
         org_uid: registerData.data.org_uid,
+        filters: []
       }
       dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
     }
+  }
+
+  const Search = () => {
+    let StartDate = moment(date).format("YYYY-MM-DD")
+    let EndDate = moment(dates).format("YYYY-MM-DD")
+    setIsLodding(true)
+    if (loginData.status == "success") {
+      let data = {
+        uid: loginData.data.uid,
+        profile_id: loginData.data.cProfile.toString(),
+        org_uid: loginData.data.org_uid,
+        filters: []
+        // pageSize: results,
+        // pageNumber: page,
+      }
+      if (text == false || texts == false) {
+        if (StartDate !== EndDate) {
+          if (text == true) {
+            Alert.alert('Please Select Start Date')
+          }
+          else if (texts == true) {
+            Alert.alert('Please Select end Date')
+          }
+          else {
+            if (StartDate <= EndDate) {
+              setIsLodding(true)
+              data.filters.push({ gte: StartDate, key: 'created_at' },
+                { lte: EndDate, key: 'created_at' })
+            }
+            else {
+              Alert.alert('wrong format')
+            }
+          }
+        }
+        console.log(data)
+        dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+      }
+      // console.log(data)
+    }
+    else if (registerData.status == "success") {
+      let data = {
+        uid: registerData.data.uid,
+        profile_id: registerData.data.cProfile.toString(),
+        org_uid: registerData.data.org_uid,
+        filters: []
+        // pageSize: results,
+        // pageNumber: page,
+      }
+      if (text == false || texts == false) {
+        if (StartDate !== EndDate) {
+          if (text == true) {
+            Alert.alert('Please Select Start Date')
+          }
+          else if (texts == true) {
+            Alert.alert('Please Select end Date')
+          }
+          else {
+            if (StartDate <= EndDate) {
+              setIsLodding(true)
+              data.filters.push({ gte: StartDate, key: 'created_at' },
+                { lte: EndDate, key: 'created_at' })
+            }
+            else {
+              Alert.alert('wrong format')
+            }
+          }
+        }
+        dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
+      }
+    }
+    // console.log(data)
+  }
+
+  const Reset = () => {
+    settext(true)
+    settexts(true)
+    // setstatusId(null)
+    // setstatus(null)
+    setDate(new Date())
+    setDates(new Date())
+    setIsLodding(true)
+    Get_Data()
   }
 
   useEffect(() => {
@@ -141,7 +237,7 @@ export default function lead_manager({ navigation, route }) {
         // console.log( Leads)
         // setOpportunity(Lead_OpportunityList.data.opportunity)
         // CombineArrayData()
-       
+
         dispatch(leadmanagerAction.clearResponse())
         setIsLodding(false)
       }
@@ -221,7 +317,7 @@ export default function lead_manager({ navigation, route }) {
         }
         dispatch(opportunityAction.deleteOpportunity(data, registerData.data.token));
       }
-     
+
     }
     else {
     }
@@ -256,7 +352,7 @@ export default function lead_manager({ navigation, route }) {
       else if (deleteopportunity.status == 'fail') {
         setIsLodding(false)
       }
-      
+
     }
     else {
     }
@@ -356,7 +452,7 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (importLead) {
-     
+
       if (importLead.status == "success") {
         // CombineArrayData()
         Get_Data()
@@ -382,7 +478,7 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (importOpportunity) {
-      
+
       if (importOpportunity.status == "success") {
         // CombineArrayData()
         Get_Data()
@@ -633,7 +729,7 @@ export default function lead_manager({ navigation, route }) {
           >
             {item.selected == true ?
               <Image
-                style={[styles.radio, { marginTop: '-5%',marginLeft:'-5%' }]}
+                style={[styles.radio, { marginTop: '-5%', marginLeft: '-5%' }]}
                 source={require('../../images/okCall.png')}
               />
               :
@@ -1021,7 +1117,7 @@ export default function lead_manager({ navigation, route }) {
                   {text == true ?
                     <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
                     :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('DD/MM/YYYY')}</Text>
                   }
                 </View>
               }
@@ -1059,7 +1155,7 @@ export default function lead_manager({ navigation, route }) {
                   {texts == true ?
                     <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>To</Text>
                     :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('MM/DD/YYYY')}</Text>
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('DD/MM/YYYY')}</Text>
                   }
                 </View>
               }
@@ -1138,6 +1234,24 @@ export default function lead_manager({ navigation, route }) {
               <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
             </TouchableOpacity> */}
 
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <TouchableOpacity style={[styles.button, { width: '60%' }]}
+          onPress={() => Search()}
+          >
+            <Text style={styles.btnText}>SEARCH</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            // style={styles.button}
+            style={{ marginTop: '2%' }}
+          onPress={() => Reset()}
+          >
+            {/* <Text style={styles.btnText}>RESET</Text> */}
+            <Image
+              source={require('../../images/refreshButton.png')}
+              style={{ height: 24, width: 24 }} />
+          </TouchableOpacity>
+        </View>
+
         <View style={{ marginTop: '2%' }}></View>
 
         {IsLodding == true ?
@@ -1146,7 +1260,7 @@ export default function lead_manager({ navigation, route }) {
           <View>
             {Lead !== undefined && Lead.length > 0 ?
               <FlatList
-                style={{ height: "71%" }}
+                style={{ height: "65%" }}
                 data={Lead}
                 renderItem={LeadView}
               // keyExtractor={item => item.id.toString()}

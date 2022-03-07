@@ -207,6 +207,19 @@ const styles = StyleSheet.create({
     // height: 14,
     // width: 14
   },
+  button: {
+    backgroundColor: '#3373F3',
+    borderRadius: 10,
+    marginHorizontal: '3%',
+    marginTop:'1%',
+    padding: 7
+  },
+  btnText: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#fff',
+    textAlign: 'center'
+  },
 
 
 });

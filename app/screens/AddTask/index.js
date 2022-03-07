@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform } from 'react-native';
+import {
+    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform, ToastAndroid
+} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -20,10 +22,15 @@ export default function AddContact({ navigation }) {
     const [title, settitle] = useState("")
     const [releetedToId, setreleetedToId] = useState('')
     const [releetedTo, setreleetedTo] = useState('')
+    const [releetedToFname, setreleetedToFname] = useState('Contact')
+    const [releetedToLname, setreleetedToLname] = useState('Person')
+    const [StatusList, setStatusList] = useState([]);
     const [Status, setStatus] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
+    const [TaskForList, setTaskForList] = useState([])
     const [TaskFor, setTaskFor] = useState(null)
     const [isFocus2, setIsFocus2] = useState(false);
+    const [PriorityList, setPriorityList] = useState([])
     const [Priority, setPriority] = useState(null)
     const [isFocus1, setIsFocus1] = useState(false);
     const [Description, setDescription] = useState("")
@@ -35,49 +42,35 @@ export default function AddContact({ navigation }) {
     const [starttext, setstarttext] = useState(true)
 
     const onChangeStartDate = (event, selectedDate) => {
-        const currentDate = selectedDate || startdate;
-        setstartShow(Platform.OS === 'ios');
-        setstartDate(currentDate)
+        if (event.type == 'dismissed') {
+            setstartShow(!startshow);
+        }
+        else {
+            const currentDate = selectedDate || startdate;
+            setstartShow(Platform.OS === 'ios');
+            setstartDate(currentDate)
+            setstarttext(false)
+        }
     };
     const setMode = (currentMode) => {
         setstartShow(!startshow);
         setstartMode(currentMode);
     };
     const showDatepicker = () => {
-        setstarttext(false)
+        // setstarttext(false)
         setMode('date');
     };
-
-    const data = [
-        { label: 'Not Started', value: 'Not Started', },
-        { label: 'In Progress', value: 'In Progress' },
-        { label: 'Completed', value: 'Completed' },
-    ];
-
-    const data1 = [
-        { label: 'High', value: 'Not Started', },
-        { label: 'Highest', value: 'In Progress' },
-        { label: 'Low', value: 'Low' },
-        { label: 'Lowest', value: 'Lowest' },
-    ];
-
-    const data2 = [
-        { label: 'Lead', value: 'Lead', },
-        { label: 'Contact', value: 'Contact' },
-        { label: 'Account', value: 'Account' },
-    ];
-
-
 
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const registerData = useSelector(state => state.varify.otp)
-    const leadOwner = useSelector(state =>state.taskmanager.taskOwner)
+    const leadOwner = useSelector(state => state.taskmanager.taskOwner)
     const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
+    const Lead_OpportunityList = useSelector(state => state.taskmanager.tasklead)
+    const contactData = useSelector(state => state.taskmanager.taskcontact)
+    const TaskStatus = useSelector(state => state.taskmanager.taskstatus)
 
-    const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
-    const contactData = useSelector(state => state.contactList.contacts)
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
@@ -88,6 +81,7 @@ export default function AddContact({ navigation }) {
                     profile_id: loginData.data.cProfile.toString(),
                 }
                 dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
+                dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
             }
             else if (registerData.status == "success") {
                 const data = {
@@ -96,15 +90,18 @@ export default function AddContact({ navigation }) {
                     uid: registerData.data.uid
                 }
                 dispatch(taskmanagerAction.TaskOwnerList(data, registerData.data.token));
+                dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
             }
         }
     }, [loginData, registerData, isFocused])
 
     useEffect(() => {
         if (leadOwner) {
+
+            console.log('leadOwner............................................',leadOwner)
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.user.id }
+                    let user = { label: ld.user.name, value: ld.id }
                     if (user !== undefined) {
                         setTaskOwnerList([user])
                     }
@@ -120,30 +117,27 @@ export default function AddContact({ navigation }) {
         }
     }, [leadOwner])
 
+
     useEffect(() => {
-        if (responseAdd_Edit) {
-            // console.log('one<><><><>>>>>>>>>>>>>>>>>',responseAdd_Edit)
-            if (responseAdd_Edit.status == "success") {
-                Alert.alert(responseAdd_Edit.message)
-                navigation.navigate('Task_Manager')
-                dispatch(taskmanagerAction.clearResponse())
+        if (TaskStatus) {
+            if (TaskStatus.status == "200") {
+                setStatusList(TaskStatus.data.TaskStatus)
+                setTaskForList(TaskStatus.data.TaskFor)
+                setPriorityList(TaskStatus.data.TaskPriority)
             }
-            else if (responseAdd_Edit.status == "failed") {
+            else if (TaskStatus.status == "failed") {
             }
-            else if (responseAdd_Edit.status == "fail") {
-                Alert.alert(responseAdd_Edit.message)
-                dispatch(taskmanagerAction.clearResponse())
+            else if (TaskStatus.status == "fail") {
             }
-            setIsLodding(false)
         }
         else {
         }
-    }, [responseAdd_Edit])
+    }, [TaskStatus])
+
 
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                console.log('contact list ...............', contactData.data)
                 setListValues(contactData.data)
                 setModalVisible2(true)
                 dispatch(contactListAction.clearResponse())
@@ -163,7 +157,6 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (Lead_OpportunityList) {
             if (Lead_OpportunityList.status == "200") {
-                // console.log("leadlist..............", Lead_OpportunityList.data.lead)
                 setListValues(Lead_OpportunityList.data.lead)
                 setModalVisible2(true)
                 dispatch(leadmanagerAction.clearResponse())
@@ -187,14 +180,14 @@ export default function AddContact({ navigation }) {
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
             }
-            if (value == 'Lead') {
-                dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+            if (value == 'lead') {
+                dispatch(taskmanagerAction.TaskleadList(data, loginData.data.token));
             }
-            else if (value == 'Contact') {
-                dispatch(contactListAction.contactList(data, loginData.data.token));
+            else if (value == 'contact') {
+                dispatch(taskmanagerAction.TaskcontactList(data, loginData.data.token));
             }
             else {
-                console.log('account APi.................................. ')
+                console.log('account APi..........account........................ ')
             }
         }
         else if (registerData.status == "success") {
@@ -203,10 +196,10 @@ export default function AddContact({ navigation }) {
                 profile_id: registerData.data.cProfile.toString(),
                 org_uid: registerData.data.org_uid,
             }
-            if (value == 'Lead') {
+            if (value == 'lead') {
                 dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
             }
-            else if (value == 'Contact') {
+            else if (value == 'contact') {
                 dispatch(contactListAction.contactList(data, registerData.data.token));
             }
             else {
@@ -218,8 +211,10 @@ export default function AddContact({ navigation }) {
     const AddNewCampaign = () => {
         if (title == "") {
             Alert.alert(" Enter Title ")
+            // ToastAndroid.show("Enter Title...", ToastAndroid.SHORT);
         }
         else if (releetedTo == "") {
+            // ToastAndroid.show("Enter Related To...", ToastAndroid.SHORT);
             Alert.alert(" Enter Related To")
         }
         else if (Status == null) {
@@ -237,7 +232,7 @@ export default function AddContact({ navigation }) {
                     const data = {
                         uid: loginData.data.uid,
                         org_uid: loginData.data.org_uid,
-                        profile_id: loginData.data.cProfile,
+                        profile_id:TaskOwner !== null ? TaskOwner :loginData.data.cProfile,
                         created_by: loginData.data.cProfile,
                         modified_by: loginData.data.cProfile,
                         title: title,
@@ -256,7 +251,7 @@ export default function AddContact({ navigation }) {
                     const data = {
                         uid: registerData.data.uid,
                         org_uid: registerData.data.org_uid,
-                        profile_id: registerData.data.cProfile,
+                        profile_id: TaskOwner !== null ? TaskOwner :registerData.data.cProfile,
                         created_by: registerData.data.cProfile,
                         modified_by: registerData.data.cProfile,
                         title: title,
@@ -274,8 +269,34 @@ export default function AddContact({ navigation }) {
         }
     }
 
+    useEffect(() => {
+        if (responseAdd_Edit) {
+            console.log('one<><><><>>>>>>>>>>>>>>>>>',responseAdd_Edit)
+            if (responseAdd_Edit.status == "success") {
+                Alert.alert(responseAdd_Edit.message)
+                navigation.navigate('Task_Manager')
+                settitle(''), setTaskFor(null), setreleetedTo(''),
+                    setreleetedToId(), setreleetedToFname('Contact'), setreleetedToLname('Person'),
+                    setStatus(null), setPriority(null),
+                    setDescription(), setstartDate(new Date()), setstarttext(true)
+                dispatch(taskmanagerAction.clearResponse())
+            }
+            else if (responseAdd_Edit.status == "failed") {
+            }
+            else if (responseAdd_Edit.status == "fail") {
+                Alert.alert(responseAdd_Edit.message)
+                dispatch(taskmanagerAction.clearResponse())
+            }
+            setIsLodding(false)
+        }
+        else {
+        }
+    }, [responseAdd_Edit])
+
     const RadioSelect = (value) => {
-        // console.log('.....................', value)
+        // console.log('.....................', value.id, value.title, value.first_name, value.last_name)
+        setreleetedToFname(value.first_name)
+        setreleetedToLname(value.last_name)
         setreleetedToId(value.id)
         setreleetedTo(value.title)
         setModalVisible2(false)
@@ -291,7 +312,9 @@ export default function AddContact({ navigation }) {
                     { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', }
             }>
                 <TouchableOpacity
-                    onPress={() => RadioSelect({ id: item.id, title: item.title })}
+                    onPress={() => RadioSelect(item
+                        // { id: item.id, title: item.title }
+                    )}
                 >
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ width: '20%', marginLeft: '1%' }}>
@@ -321,14 +344,16 @@ export default function AddContact({ navigation }) {
             <Header
                 // style={{ height: "12%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Add Task'
                 onPressRight={() => {
                     navigation.navigate('Notification')
                 }}
             />
+
+
             <ScrollView style={{ width: width, height: height }}>
 
                 <View style={{ margin: '5%' }}>
@@ -383,22 +408,23 @@ export default function AddContact({ navigation }) {
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
-                            data={data2}
+                            data={TaskForList}
                             maxHeight={100}
-                            labelField="label"
-                            valueField="value"
+                            labelField="task_for"
+                            valueField="task_for"
                             placeholder={!isFocus2 ? 'Task For' : '...'}
                             value={TaskFor}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
-                            onChange={item => {
-                                setTaskFor(item.value);
-                                setIsFocus2(false);
-                            }}
+                            // onChange={item => {
+                            //     setTaskFor(item.value);
+                            //     setIsFocus2(false);
+                            // }}
 
                             onChange={item => {
-                                selectOneFile(item.value)
-                                setTaskFor(item.value);
+
+                                selectOneFile(item.task_for)
+                                setTaskFor(item.task_for);
                                 setIsFocus2(false);
                             }}
 
@@ -412,6 +438,52 @@ export default function AddContact({ navigation }) {
                             )}
                         />
                     </View>
+                    {/* {modalVisible2 == true ? null : */}
+                    {/* //  <Text style={{ paddingVertical: '1%', textAlign: 'right' }}>Name :{releetedToFname} {releetedToLname}</Text> */}
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, {
+                                height: 20, width: 18,
+                            }]}
+                            source={require('../../images/user.png')}
+                        />
+                        <Text style={{ marginTop: '4%' }}>{releetedToFname} {releetedToLname}</Text>
+                    </View>
+                    {/* } */}
+
+                    {/* {modalVisible2 == true ?
+                        <View>
+                            <View style={styles.askModel}>
+
+                            <Text style={styles.askTitle}>Select</Text>
+                            <TouchableOpacity
+                                onPress={() => setModalVisible2(false)}
+                            >
+                                <Image
+                                    style={styles.askTitleR}
+                                    source={require('../../images/cross.png')}
+                                />
+                            </TouchableOpacity>
+                            {ListValues !== undefined && ListValues.length > 0 ?
+                                <View >
+                                    <FlatList
+                                        data={ListValues}
+                                        ScrollView={true}
+                                    
+                                        renderItem={AllView}
+                                    />
+                                </View>
+                                :
+                                <View>
+                                    <Text style={{ marginVertical: '10%', textAlign: 'center' }}>Data Not Available</Text>
+                                </View>
+                            }
+                            </View>
+                        </View>
+                        :
+                        <View>
+                            <Text style={{ paddingVertical: '1%' }}>{releetedToFname} {releetedToLname}</Text>
+                        </View>} */}
 
                     <View style={styles.inputFields}>
                         <Image
@@ -427,13 +499,14 @@ export default function AddContact({ navigation }) {
                             placeholder="Related To" />
                     </View>
 
+
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
                             borderColor: '#C3C7E5',
                             borderRadius: 10,
                             // marginHorizontal: '3%',
-                            paddingVertical: 5,
+                            paddingVertical: 8,
                             marginTop: '2%'
                         }}
                         onPress={showDatepicker} >
@@ -482,16 +555,17 @@ export default function AddContact({ navigation }) {
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
-                            data={data}
+                            data={StatusList}
                             maxHeight={100}
-                            labelField="label"
-                            valueField="value"
+                            labelField="status"
+                            valueField="id"
                             placeholder={!isFocus ? 'Status' : '...'}
                             value={Status}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
                             onChange={item => {
-                                setStatus(item.value);
+
+                                setStatus(item.id);
                                 setIsFocus(false);
                             }}
                             renderLeftIcon={() => (
@@ -513,16 +587,16 @@ export default function AddContact({ navigation }) {
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
-                            data={data1}
+                            data={PriorityList}
                             maxHeight={100}
-                            labelField="label"
-                            valueField="value"
+                            labelField="priority"
+                            valueField="id"
                             placeholder={!isFocus1 ? 'Priority' : '...'}
                             value={Priority}
                             onFocus={() => setIsFocus1(true)}
                             onBlur={() => setIsFocus1(false)}
                             onChange={item => {
-                                setPriority(item.value);
+                                setPriority(item.id);
                                 setIsFocus1(false);
                             }}
                             renderLeftIcon={() => (
@@ -595,7 +669,6 @@ export default function AddContact({ navigation }) {
                     }
                 </View>
             </Modal >
-
         </View >
     );
 }

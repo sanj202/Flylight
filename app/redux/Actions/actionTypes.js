@@ -166,12 +166,12 @@ export const Import_Opportunity_Error = "Import_Opportunity_Error"
 // Add_Edit_Lead
 export const Add_Edit_Lead = "Add_Edit_Lead"
 export const Add_Edit_Lead_Success = "Add_Edit_Lead_Success"
-export const Add_Edit_Lead_Clear= "Add_Edit_Lead_Clear"
+export const Add_Edit_Lead_Clear = "Add_Edit_Lead_Clear"
 
 // Add_Edit_Opportunity
 export const Add_Edit_Opportunity = "Add_Edit_Opportunity"
 export const Add_Edit_Opportunity_Success = "Add_Edit_Opportunity_Success"
-export const Add_Edit_Opportunity_Clear= "Add_Edit_Opportunity_Clear"
+export const Add_Edit_Opportunity_Clear = "Add_Edit_Opportunity_Clear"
 
 //Delete Lead
 export const Delete_Lead = "Delete_Lead"
@@ -206,7 +206,7 @@ export const Campaign_Clear = 'Campaign_Clear'
 // Add_Edit_Campaign
 export const Add_Edit_Campaign = "Add_Edit_Campaign"
 export const Add_Edit_Campaign_Success = "Add_Edit_Campaign_Success"
-export const Add_Edit_Campaign_Clear= "Add_Edit_Campaign_Clear"
+export const Add_Edit_Campaign_Clear = "Add_Edit_Campaign_Clear"
 
 //get state 
 export const All_State = "All_State"
@@ -247,12 +247,22 @@ export const Meeting_Clear = 'Meeting_Clear'
 // Add_Edit_Meeting
 export const Add_Edit_Meeting = "Add_Edit_Meeting"
 export const Add_Edit_Meeting_Success = "Add_Edit_Meeting_Success"
-export const Add_Edit_Meeting_Clear= "Add_Edit_Meeting_Clear"
+export const Add_Edit_Meeting_Clear = "Add_Edit_Meeting_Clear"
 
 //Get Meeting Detail
 export const Meeting_Detail = "Meeting_Detail"
 export const Meeting_Detail_Success = "Meeting_Detail_Success"
 export const Meeting_Detail_Clear = 'Meeting_Detail_Clear'
+
+//TaskOwnerList
+export const MeetingLeads = "MeetingLeads"
+export const MeetingLeads_Success = "MeetingLeads_Success"
+export const MeetingLeads_Clear = 'MeetingLeads_Clear'
+
+//TaskOwnerList
+export const MeetingContact = "MeetingContact"
+export const MeetingContact_Success = "MeetingContact_Success"
+export const MeetingContact_Clear = 'MeetingContact_Clear'
 
 //packegeTopups
 
@@ -269,3 +279,18 @@ export const TaskOwner_Clear = 'TaskOwner_Clear'
 export const profileRole = "profileRole"
 export const profileRole_Success = "profileRole_Success"
 export const profileRole_Clear = 'profileRole_Clear'
+
+//TaskOwnerList
+export const TaskLeads = "TaskLeads"
+export const TaskLeads_Success = "TaskLeads_Success"
+export const TaskLeads_Clear = 'TaskLeads_Clear'
+
+//TaskOwnerList
+export const TaskContact = "TaskContact"
+export const TaskContact_Success = "TaskContact_Success"
+export const TaskContact_Clear = 'TaskContact_Clear'
+
+//TaskOwnerList
+export const TaskStatus = "TaskStatus"
+export const TaskStatus_Success = "TaskStatus_Success"
+export const TaskStatus_Clear = 'TaskStatus_Clear'

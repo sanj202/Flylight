@@ -21,6 +21,8 @@ export default function AddContact({ navigation }) {
     const [isFocus3, setIsFocus3] = useState(false);
     const [title, settitle] = useState("")
     const [releetedToId, setreleetedToId] = useState('')
+    const [releetedToFname, setreleetedToFname] = useState('Contact')
+    const [releetedToLname, setreleetedToLname] = useState('Person')
     const [Attatchment, setAttatchment] = useState('');
     const [releetedTo, setreleetedTo] = useState('')
     const [location, setlocation] = useState('')
@@ -36,41 +38,49 @@ export default function AddContact({ navigation }) {
     const [starttext, setstarttext] = useState(true)
 
     const onChangeStartDate = (event, selectedDate) => {
-        const currentDate = selectedDate || startdate;
-        setstartShow(Platform.OS === 'ios');
-        setstartDate(currentDate)
+        if (event.type == 'dismissed') {
+            setstartShow(!startshow);
+        }
+        else {
+            const currentDate = selectedDate || startdate;
+            setstartShow(Platform.OS === 'ios');
+            setstartDate(currentDate)
+            setstarttext(false)
+        }
     };
     const setMode = (currentMode) => {
         setstartShow(!startshow);
         setstartMode(currentMode);
     };
     const showDatepicker = () => {
-        setstarttext(false)
+
         setMode('date');
     };
 
     const [time, setTime] = useState(new Date(1598051730000));
     const [Timemode, setTimeMode] = useState('date');
     const [show, setShow] = useState(false);
-    // const [starttext, setstarttext] = useState(true)
+    const [starttexttime, setstarttexttime] = useState(true)
 
     const onChange = (event, selectedTime) => {
-        const currentTime = selectedTime || time;
-        setShow(Platform.OS === 'ios');
-        setTime(currentTime);
+        if (event.type == 'dismissed') {
+            setShow(!show);
+        }
+        else {
+            const currentTime = selectedTime || time;
+            setShow(Platform.OS === 'ios');
+            setTime(currentTime);
+            setstarttexttime(false)
+        }
     };
 
     const showMode = (currentMode) => {
-        setShow(true);
+        setShow(!show);
         setTimeMode(currentMode);
     };
 
-    const showDatepicker1 = () => {
-        showMode('date');
-    };
-
     const showTimepicker = () => {
-        setstarttext(false)
+
         showMode('time');
     };
 
@@ -81,16 +91,22 @@ export default function AddContact({ navigation }) {
     const [endtext, setendtext] = useState(true)
 
     const onChangeendDate = (event, selectedDate) => {
-        const currentDate = selectedDate || enddate;
-        setendShow(Platform.OS === 'ios');
-        setendDate(currentDate)
+        if (event.type == 'dismissed') {
+            setendShow(!endshow);
+        }
+        else {
+            const currentDate = selectedDate || enddate;
+            setendShow(Platform.OS === 'ios');
+            setendDate(currentDate)
+            setendtext(false)
+        }
     };
     const setEMode = (currentMode) => {
         setendShow(!endshow);
         setendMode(currentMode);
     };
     const showEDatepicker = () => {
-        setendtext(false)
+
         setEMode('date');
     };
 
@@ -98,28 +114,29 @@ export default function AddContact({ navigation }) {
     const [endtime, setendtime] = useState(new Date(1598051730000));
     const [endtimemode, setendtimeMode] = useState('date');
     const [endtimeshow, setendtimeShow] = useState(false);
+    const [endtexttime, setendtexttime] = useState(true)
 
-    
     const endtimeonChange = (event, selectedEndTime) => {
-        const currentETime = selectedEndTime || endtime;
-        setendtimeShow(Platform.OS === 'ios');
-        setendtime(currentETime);
+        if (event.type == 'dismissed') {
+            setendtimeShow(!endtimeshow);
+        }
+        else {
+            const currentETime = selectedEndTime || endtime;
+            setendtimeShow(Platform.OS === 'ios');
+            setendtime(currentETime);
+            setendtexttime(false)
+        }
     };
 
     const EndshowMode = (currentMode) => {
-        setendtimeShow(true);
+        setendtimeShow(!endtimeshow);
         setendtimeMode(currentMode);
     };
 
-    const showDatepicker2 = () => {
-        EndshowMode('date');
-    };
-
     const showEndTimepicker = () => {
-        setendtext(false)
         EndshowMode('time');
     };
-    
+
     const data = [
         { label: 'Lead', value: 'Lead', },
         { label: 'Contact', value: 'Contact' },
@@ -134,9 +151,8 @@ export default function AddContact({ navigation }) {
     const registerData = useSelector(state => state.varify.otp)
     const leadOwner = useSelector(state => state.leads.leadOwner)
     const responseAdd_Edit = useSelector(state => state.meeting.newMeeting)
-
-    const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
-    const contactData = useSelector(state => state.contactList.contacts)
+    const Lead_OpportunityList = useSelector(state => state.meeting.meetingLeads)
+    const contactData = useSelector(state => state.meeting.meetingcontacts)
 
     useEffect(() => {
         if (loginData || registerData && isFocused) {
@@ -181,11 +197,28 @@ export default function AddContact({ navigation }) {
 
     useEffect(() => {
         if (responseAdd_Edit) {
-            console.log('one<><><><>>>>>>>>>>>>>>>>>',responseAdd_Edit)
+            console.log('one<><><><>>>>>>>>>>>>>>>>>', responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
                 Alert.alert(responseAdd_Edit.message)
                 navigation.navigate('Meetings')
                 dispatch(taskmanagerAction.clearResponse())
+                setlocation(''),
+                    setmeetingFor(null),
+                    setreleetedTo(''),
+                    setreleetedToId(''),
+                    setreleetedToFname('Contact'),
+                    setreleetedToLname('Person'),
+                    setDescription(''),
+                    settitle(''),
+                    setAttatchment('')
+                setstartDate(new Date())
+                setstarttext(true)
+                setendDate(new Date())
+                setendtext(true)
+                setTime(new Date())
+                setstarttexttime(true)
+                setendtime(new Date())
+                setendtexttime(true)
             }
             else if (responseAdd_Edit.status == "failed") {
             }
@@ -205,7 +238,7 @@ export default function AddContact({ navigation }) {
                 console.log('contact list ...............', contactData.data)
                 setListValues(contactData.data)
                 setModalVisible2(true)
-                // dispatch(contactListAction.clearResponse())
+                dispatch(meetingAction.clearResponse())
             }
             else if (contactData.status == "failed") {
                 setIsLodding(false)
@@ -225,8 +258,7 @@ export default function AddContact({ navigation }) {
                 // console.log("leadlist..............", Lead_OpportunityList.data.lead)
                 setListValues(Lead_OpportunityList.data.lead)
                 setModalVisible2(true)
-
-                // dispatch(leadmanagerAction.clearResponse())
+                dispatch(meetingAction.clearResponse())
             }
             else if (Lead_OpportunityList.status == "failed") {
                 setIsLodding(false)
@@ -248,10 +280,10 @@ export default function AddContact({ navigation }) {
                 org_uid: loginData.data.org_uid,
             }
             if (value == 'Lead') {
-                dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+                dispatch(meetingAction.MeetingleadList(data, loginData.data.token));
             }
             else if (value == 'Contact') {
-                dispatch(contactListAction.contactList(data, loginData.data.token));
+                dispatch(meetingAction.MeetingcontactList(data, loginData.data.token));
             }
             else {
                 console.log('account APi.................................. ')
@@ -264,10 +296,10 @@ export default function AddContact({ navigation }) {
                 org_uid: registerData.data.org_uid,
             }
             if (value == 'Lead') {
-                dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
+                dispatch(meetingAction.MeetingleadList(data, registerData.data.token));
             }
             else if (value == 'Contact') {
-                dispatch(contactListAction.contactList(data, registerData.data.token));
+                dispatch(meetingAction.MeetingcontactList(data, registerData.data.token));
             }
             else {
                 console.log('account APi.................................. ')
@@ -287,8 +319,8 @@ export default function AddContact({ navigation }) {
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
             let formateEndDate = moment(enddate).format("YYYY-MM-DD")
-            let formateStartTime= moment(time).format("HH:mm:ss")
-            let formateEndTime= moment(endtime).format("HH:mm:ss")
+            let formateStartTime = moment(time).format("HH:mm:ss")
+            let formateEndTime = moment(endtime).format("HH:mm:ss")
 
             if (loginData || registerData) {
                 if (loginData.status == "success") {
@@ -298,8 +330,8 @@ export default function AddContact({ navigation }) {
                         org_uid: loginData.data.org_uid,
                         profile_id: loginData.data.cProfile,
                         location: location,
-                        from: formateStartDate+' '+formateStartTime,
-                        to: formateEndDate+' '+formateEndTime,
+                        from: formateStartDate + ' ' + formateStartTime,
+                        to: formateEndDate + ' ' + formateEndTime,
                         meeting_for: meetingFor,
                         related_to: releetedTo,
                         related_to_id: releetedToId,
@@ -316,8 +348,8 @@ export default function AddContact({ navigation }) {
                         org_uid: registerData.data.org_uid,
                         profile_id: registerData.data.cProfile,
                         location: location,
-                        from: formateStartDate+' '+formateStartTime,
-                        to: formateEndDate+' '+formateEndTime,
+                        from: formateStartDate + ' ' + formateStartTime,
+                        to: formateEndDate + ' ' + formateEndTime,
                         meeting_for: meetingFor,
                         related_to: releetedTo,
                         related_to_id: releetedToId,
@@ -333,6 +365,8 @@ export default function AddContact({ navigation }) {
 
     const RadioSelect = (value) => {
         // console.log('.....................', value)
+        setreleetedToFname(value.first_name)
+        setreleetedToLname(value.last_name)
         setreleetedToId(value.id)
         setlocation(value.title)
         setModalVisible2(false)
@@ -348,7 +382,7 @@ export default function AddContact({ navigation }) {
                     { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', }
             }>
                 <TouchableOpacity
-                    onPress={() => RadioSelect({ id: item.id, title: item.title })}
+                    onPress={() => RadioSelect(item)}
                 >
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ width: '20%', marginLeft: '1%' }}>
@@ -464,10 +498,10 @@ export default function AddContact({ navigation }) {
                             value={meetingFor}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
-                            onChange={item => {
-                                setmeetingFor(item.value);
-                                setIsFocus2(false);
-                            }}
+                            // onChange={item => {
+                            //     setmeetingFor(item.value);
+                            //     setIsFocus2(false);
+                            // }}
 
                             onChange={item => {
                                 selectOneFile(item.value)
@@ -484,6 +518,16 @@ export default function AddContact({ navigation }) {
                                 </View>
                             )}
                         />
+                    </View>
+
+                    <View style={styles.inputFields}>
+                        <Image
+                            style={[styles.icon, {
+                                height: 20, width: 18,
+                            }]}
+                            source={require('../../images/user.png')}
+                        />
+                        <Text style={{ marginTop: '4%' }}>{releetedToFname} {releetedToLname}</Text>
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -534,7 +578,7 @@ export default function AddContact({ navigation }) {
                                 <Image
                                     style={Platform.OS == 'ios' ?
                                         [styles.icon] :
-                                        [styles.icon, {marginTop: '2%' ,width:20 }]}
+                                        [styles.icon, { marginTop: '2%', width: 20 }]}
                                     source={require('../../images/clockIcon.png')}
                                 />
                                 {show && (
@@ -559,7 +603,7 @@ export default function AddContact({ navigation }) {
                                     />
                                 )} */}
                                 {Platform.OS == 'ios' ? <View>
-                                    {starttext == true ?
+                                    {starttexttime == true ?
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>From Time</Text>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
@@ -567,7 +611,7 @@ export default function AddContact({ navigation }) {
                                 </View>
                                     :
                                     <View>
-                                        {starttext == true ?
+                                        {starttexttime == true ?
                                             <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>From Time</Text>
                                             :
                                             <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(time).format('h:mm:ss a')}</Text>
@@ -628,10 +672,10 @@ export default function AddContact({ navigation }) {
                                 <Image
                                     style={Platform.OS == 'ios' ?
                                         [styles.icon] :
-                                        [styles.icon, { marginTop: '2%' ,width:20}]}
+                                        [styles.icon, { marginTop: '2%', width: 20 }]}
                                     source={require('../../images/clockIcon.png')}
                                 />
-                                 {endtimeshow && (
+                                {endtimeshow && (
                                     <DateTimePicker
                                         testID="dateTimePicker"
                                         value={endtime}
@@ -653,7 +697,7 @@ export default function AddContact({ navigation }) {
                                     />
                                 )} */}
                                 {Platform.OS == 'ios' ? <View>
-                                    {endtext == true ?
+                                    {endtexttime == true ?
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>To Time</Text>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
@@ -661,7 +705,7 @@ export default function AddContact({ navigation }) {
                                 </View>
                                     :
                                     <View>
-                                        {endtext == true ?
+                                        {endtexttime == true ?
                                             <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>To Time</Text>
                                             :
                                             <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(endtime).format('h:mm:ss a')}</Text>
@@ -698,7 +742,7 @@ export default function AddContact({ navigation }) {
                             style={{ flex: 1 }}
                             value={releetedTo}
                             onChangeText={e5 => setreleetedTo(e5)}
-                            placeholder="Releeted To" />
+                            placeholder="Related To" />
                     </View>
 
 

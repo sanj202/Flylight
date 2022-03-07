@@ -61,7 +61,8 @@ function HomeTabs() {
     >
       <Tab.Screen
         name="Home"
-        component={TopTab}
+        // component={TopTab}
+        component={DashBoard}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarLabelStyle: {

@@ -2,7 +2,9 @@
 import {
     Meeting, Meeting_Success, Meeting_Clear,
     Meeting_Detail,Meeting_Detail_Success,Meeting_Detail_Clear,
-    Add_Edit_Meeting, Add_Edit_Meeting_Success, Add_Edit_Meeting_Clear
+    Add_Edit_Meeting, Add_Edit_Meeting_Success, Add_Edit_Meeting_Clear,
+    MeetingLeads,MeetingLeads_Success,MeetingContact_Clear,
+    MeetingContact,MeetingContact_Success,MeetingLeads_Clear
 } from './actionTypes';
 import BaseUrl from '../../../const'
 
@@ -76,7 +78,56 @@ export const MeetingOne = (data, token,) => {
     }
 };
 
+export const  MeetingleadList = (data, token) => {
+    return (dispatch) => {
+        dispatch({ type: MeetingLeads })
+        fetch(`${BaseUrl}/v1/getleadsList`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: MeetingLeads_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
 
+export const MeetingcontactList = (data,token) => {
+    // console.log(" credentails..................", token,uid,profile_id,org_uid )
+    return (dispatch) => {
+        dispatch({ type: MeetingContact })
+
+        fetch(`${BaseUrl}/v1/getContactList`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    // 'Content-Type': "application/x-www-form-urlencoded",
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                    // 'Authorization': uid,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                // console.log("contact APi response ::::::::::::::::", responseData)
+                dispatch({ type: MeetingContact_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
 
 
 
@@ -87,6 +138,8 @@ export const clearResponse = () => {
         type: Add_Edit_Meeting_Clear,
         type: Meeting_Clear,
         type: Meeting_Detail_Clear,
+        type: MeetingLeads_Clear,
+        type: MeetingContact_Clear
     };
 };
 

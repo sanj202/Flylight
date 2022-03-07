@@ -23,6 +23,7 @@ export default function Campaign({ navigation }) {
     // console.log("campaignList.............................", campaignList)
     useEffect(() => {
         if (loginData || registerData && isFocused) {
+            setIsLodding(true)
             if (loginData.status == "success") {
                 const data = {
                     uid: loginData.data.uid,
@@ -39,7 +40,6 @@ export default function Campaign({ navigation }) {
                 }
                 dispatch(campaignAction.CampaignList(data, registerData.data.token));
             }
-            setIsLodding(true)
         }
     }, [loginData, registerData, isFocused])
 
@@ -48,12 +48,15 @@ export default function Campaign({ navigation }) {
             if (campaignList.status == "200") {
                 // console.log("datat.....................", campaignList.data)
                 setCampaignData(campaignList.data)
+                setIsLodding(false)
+                dispatch(campaignAction.clearResponse())
             }
             else if (campaignList.status == "failed") {
+                setIsLodding(false)
             }
             else if (campaignList.status == "fail") {
+                setIsLodding(false)
             }
-            setIsLodding(false)
         }
         else {
         }
@@ -112,31 +115,29 @@ export default function Campaign({ navigation }) {
                         <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
                         <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Status </Text>
                         <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Type</Text>
-                        {/* <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Start Date</Text> */}
-                        {/* <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>End Date</Text> */}
                     </View>
                     <View style={{ marginLeft: '2%', width: '60%' }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name}</Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.status}</Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_type}</Text>
-                        {/* <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.start_date}</Text> */}
-                        {/* <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.end_date}</Text> */}
                     </View>
 
                     <View style={{ marginLeft: '-10%' }}>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                            <TouchableOpacity
+                            // onPress={() => navigation.navigate('EditCampaign', {  campData: item})}
+                            >
+                                <Text style={{ color: '#fff', marginHorizontal: '8%' }}></Text>
+                                {/* <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
+                                    source={require('../../images/deleteCall.png')} /> */}
+                            </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => navigation.navigate('EditCampaign', { campData: item })}
                             >
                                 <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
                                     source={require('../../images/editCall.png')} />
                             </TouchableOpacity>
-                            <TouchableOpacity
-                            // onPress={() => navigation.navigate('EditCampaign', {  campData: item})}
-                            >
-                                <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
-                                    source={require('../../images/deleteCall.png')} />
-                            </TouchableOpacity>
+
                         </View>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}></Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}></Text>
@@ -155,8 +156,8 @@ export default function Campaign({ navigation }) {
             <Header
                 style={{ height: "16%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Campaigns'
                 onPressRight={() => {
@@ -216,16 +217,16 @@ export default function Campaign({ navigation }) {
 
                     <View style={styles.inputFields}>
                         <View>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Campaign Name: </Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Status:</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Start Date</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>End Date</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Campaign Type</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Expected Revenue</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Budgeted Cost</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>Description</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>created Date</Text>
-                            <Text style={[styles.DetailCampTitle,{marginVertical:'1.6%'}]}>updated Date</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Campaign Name: </Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Status:</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Start Date</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>End Date</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Campaign Type</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Expected Revenue</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Budgeted Cost</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Description</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>created Date</Text>
+                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>updated Date</Text>
                         </View>
                         <View style={{ marginLeft: '3%', width: '60%' }}>
                             <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.CampaignName}</Text>

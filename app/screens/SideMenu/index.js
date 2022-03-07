@@ -388,8 +388,7 @@ export default function SideMenu({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.menusTop}>
-
+                {/* <View style={styles.menusTop}>
                     <TouchableOpacity>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
@@ -400,7 +399,6 @@ export default function SideMenu({ navigation }) {
                                 <Text style={styles.items}>
                                     Language Setting
                                 </Text>
-
                                 <Image
                                     style={[styles.image3, { marginLeft: '23%' }]}
                                     source={require('../../images/next.png')}
@@ -408,7 +406,7 @@ export default function SideMenu({ navigation }) {
                             </View>
                         </View>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
 
 
