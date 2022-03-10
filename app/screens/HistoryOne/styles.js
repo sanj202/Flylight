@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     margin: '3%',
     marginTop: '-0.5%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   listDataDetail: {
     padding: 5,

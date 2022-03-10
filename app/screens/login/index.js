@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator,
+  Text, View, StyleSheet, TouchableOpacity, ActivityIndicator,ToastAndroid,
   TextInput, Image, Alert, StatusBar, SafeAreaView, Platform
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -31,10 +31,10 @@ export default function Login({ navigation, route, props }) {
 
   const login = () => {
     if (Email == "") {
-      Alert.alert(" Enter Email/Mobile ")
+      ToastAndroid.show('Enter Email/Mobile', ToastAndroid.SHORT);    
     }
     else if (Password == "") {
-      Alert.alert("Enter Password")
+      ToastAndroid.show('Enter Password', ToastAndroid.SHORT);    
     }
     else {
       setIsLodding(true)
@@ -68,11 +68,10 @@ export default function Login({ navigation, route, props }) {
       else if (loginData.status == "failed") {
         setIsLodding(false)
         dispatch(authAction.clearResponse())
-        Alert.alert(loginData.message)                                                                                //otherwise alert show 
+        ToastAndroid.show(loginData.message, ToastAndroid.SHORT);                                                                               //otherwise alert show 
       }
       else {
-        setIsLodding(false)
-        // Alert.alert('something wrong') 
+        setIsLodding(false) 
       }
     }
   }, [loginData])

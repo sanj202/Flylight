@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View, Text, StyleSheet, Image, TextInput, ActivityIndicator, StatusBar, TouchableOpacity,
+    View, Text, ToastAndroid, Image, TextInput, ActivityIndicator, StatusBar, TouchableOpacity,
     ScrollView, ToastAndroidAlert, Dimensions, Alert
 } from 'react-native';
 import styles from './styles';
@@ -70,7 +70,7 @@ export default function AddContact({ navigation }) {
             if (profileImage.status == "success") {
                 getProfile()
                 setIsLodding(false)
-                Alert.alert(profileImage.message)
+                ToastAndroid.show(profileImage.message, ToastAndroid.SHORT);
                 dispatch(profileAction.clearprofileImageResponse())
             }
             else if (profileImage == "error") {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-    Alert, Dimensions, View, Text, SafeAreaView, Image, useWindowDimensions, ImageBackground, StatusBar
+    Alert, Dimensions, View, Text, ToastAndroid, Image, useWindowDimensions, ImageBackground, StatusBar
 } from 'react-native'
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
@@ -61,7 +61,7 @@ export default function SideMenu({ navigation }) {
             }
             else {
                 setIsLodding(false)
-                Alert.alert(profileData.message)
+                ToastAndroid.show(profileData.message, ToastAndroid.SHORT);
             }
         }
         else {

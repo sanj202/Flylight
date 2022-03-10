@@ -219,7 +219,7 @@ export default function Report({ navigation }) {
                         maxHeight={160}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus3 ? 'Holi Campaign' : '...'}
+                        placeholder='Holi Campaign'
                         // searchPlaceholder="Search..."
                         value={value3}
                         onFocus={() => setIsFocus3(true)}

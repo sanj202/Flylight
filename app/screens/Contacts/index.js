@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    Text, StyleSheet, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
+    Text, ToastAndroid, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
     ActivityIndicator, Linking, Platform, ScrollView, Alert
 } from 'react-native';
 import styles from './styles';
@@ -40,7 +40,7 @@ export default function Contacts({ navigation }) {
         Linking.canOpenURL(phoneNumber)
             .then(supported => {
                 if (!supported) {
-                    Alert.alert("Number is not available");
+                    ToastAndroid.show('Number is not available', ToastAndroid.SHORT);
                 } else {
                     return Linking.openURL(phoneNumber);
                 }

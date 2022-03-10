@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
+    Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image, Button, ActivityIndicator,
     Modal, Alert, Pressable, StatusBar, Dimensions
 } from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -74,7 +74,7 @@ export default function lead_manager({ navigation }) {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
-                pageSize: '10',
+                pageSize: '40',
                 pageNumber: '0',
                 filters: []
             }
@@ -94,7 +94,7 @@ export default function lead_manager({ navigation }) {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
-                pageSize: '10',
+                pageSize: '40',
                 pageNumber: '0',
                 filters: []
             }
@@ -126,7 +126,7 @@ export default function lead_manager({ navigation }) {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
-                pageSize: '10',
+                pageSize: '40',
                 pageNumber: '0',
                 filters: []
             }
@@ -138,7 +138,7 @@ export default function lead_manager({ navigation }) {
                 uid: registerData.data.uid,
                 profile_id: registerData.data.cProfile.toString(),
                 org_uid: registerData.data.org_uid,
-                pageSize: '10',
+                pageSize: '40',
                 pageNumber: '0',
                 filters: []
             }
@@ -154,7 +154,7 @@ export default function lead_manager({ navigation }) {
             else if (taskList.status == "failed") {
             }
             else if (taskList.status == "fail") {
-                Alert.alert(taskList.message)
+                ToastAndroid.show(taskList.message, ToastAndroid.SHORT);  
             }
             else {
             }
@@ -180,10 +180,10 @@ export default function lead_manager({ navigation }) {
 
     const EditFunction = (value) => {
         if (title == "") {
-            Alert.alert(" Enter Title ")
+            ToastAndroid.show('Enter Title', ToastAndroid.SHORT);
         }
         else if (Status == null) {
-            Alert.alert(" Select Status")
+            ToastAndroid.show('Select Status', ToastAndroid.SHORT);
         }
         else {
             // setIsVisible(false)
@@ -239,7 +239,7 @@ export default function lead_manager({ navigation }) {
             // console.log('one<><><><>>>>>>>>>>>>>>>>>', responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
                 setIsVisible(false)
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 settitle('')
                 setDate(new Date())
                 settext(true)
@@ -251,7 +251,7 @@ export default function lead_manager({ navigation }) {
             else if (responseAdd_Edit.status == "failed") {
             }
             else if (responseAdd_Edit.status == "fail") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(taskmanagerAction.clearResponse())
             }
             setEIsLodding(false)
@@ -719,7 +719,7 @@ export default function lead_manager({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus ? 'Status' : '...'}
+                            placeholder='Status'
                             value={Status}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, FlatList, Image, ActivityIndicator, Alert, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, Image, ActivityIndicator, ToastAndroid, Dimensions } from 'react-native';
 import moment from 'moment';
 import Header from '../../component/header/index'
 import { meetingAction, taskmanagerAction } from '../../redux/Actions/index'
@@ -61,7 +61,7 @@ export default function lead_manager({ navigation }) {
             else if (GetMeetings.status == "failed") {
             }
             else if (GetMeetings.status == "fail") {
-                Alert.alert(GetMeetings.message)
+                ToastAndroid.show(GetMeetings.message, ToastAndroid.SHORT);
             }
             else {
             }

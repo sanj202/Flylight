@@ -36,7 +36,8 @@ import {
   EditMeetings,
   MeetingsDetail,
   addLead,
-  packegeTopups
+  packegeTopups,
+  Edit_Contact
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -363,6 +364,16 @@ function HomeTabs() {
       <Tab.Screen
         name='Staff_Members'
         component={Staff_Members}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name='Edit_Contact'
+        component={Edit_Contact}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,

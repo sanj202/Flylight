@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
+    Text, View, ToastAndroid, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
     Modal, Alert, Pressable, StatusBar, Dimensions
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -115,17 +115,17 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (inviteResponse) {
             if (inviteResponse.status == "success") {
-                Alert.alert(inviteResponse.message)
+                ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
                 dispatch(staffMemberAction.clearResponse())
                 setIsLodding(false)
             }
             else if (inviteResponse.status == "failed") {
-                Alert.alert(inviteResponse.message)
+                ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
                 dispatch(staffMemberAction.clearResponse())
                 setIsLodding(false)
             }
             else if (inviteResponse.status == "fail") {
-                Alert.alert(inviteResponse.message)
+                ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
                 dispatch(staffMemberAction.clearResponse())
                 setIsLodding(false)
             }
@@ -146,13 +146,13 @@ export default function lead_manager({ navigation }) {
 
     const invite_Members = () => {
         if (Email == "") {
-            Alert.alert(" Enter Email Id ")
+            ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT);
         }
         else if (role == null) {
-            Alert.alert(" Select Role")
+            ToastAndroid.show('Select Role', ToastAndroid.SHORT);
         }
         else if (account == null) {
-            Alert.alert(" Select Account Type ")
+            ToastAndroid.show('Select Role', ToastAndroid.SHORT);
         }
         else {
             if (loginData.status == "success") {
@@ -326,7 +326,7 @@ export default function lead_manager({ navigation }) {
                         maxHeight={100}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus ? 'Role' : '...'}
+                        placeholder='Role'
                         value={role}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
@@ -353,7 +353,7 @@ export default function lead_manager({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus2 ? 'Account Type' : '...'}
+                            placeholder='Account Type'
                             value={account}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}

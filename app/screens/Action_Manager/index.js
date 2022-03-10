@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
+    Image, ToastAndroid, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -62,11 +62,11 @@ export default function action_manager({ navigation }) {
             }
             else if (actionList.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(leadList.message)
+                ToastAndroid.show(leadList.message, ToastAndroid.SHORT);
             }
             else if (actionList.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(actionList.message)
+                ToastAndroid.show(leadList.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -85,11 +85,11 @@ export default function action_manager({ navigation }) {
             }
             else if (statusList.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(statusList.message)
+                ToastAndroid.show(statusList.message, ToastAndroid.SHORT);
             }
             else if (statusList.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(statusList.message)
+                ToastAndroid.show(statusList.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -172,7 +172,7 @@ export default function action_manager({ navigation }) {
     useEffect(() => {
         if (addActionData) {
             if (addActionData.status == "success") {
-                Alert.alert(addActionData.message)
+                ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
                 setIsLodding(false)
                 setnewAction('')
                 dispatch(actionmanagerAction.clearAddActionResponse())
@@ -180,11 +180,11 @@ export default function action_manager({ navigation }) {
             }
             else if (addActionData.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(leadList.message)
+                ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
             }
             else if (addActionData.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(addActionData.message)
+                ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -197,7 +197,7 @@ export default function action_manager({ navigation }) {
     useEffect(() => {
         if (addStatusData) {
             if (addStatusData.status == "success") {
-                Alert.alert(addStatusData.message)
+                ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
                 setnewStatus('')
                 setIsLodding(false)
                 dispatch(actionmanagerAction.clearAddStatusResponse())
@@ -205,10 +205,11 @@ export default function action_manager({ navigation }) {
             }
             else if (addStatusData.status == "failed") {
                 setIsLodding(false)
+                ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
             }
             else if (addStatusData.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(addStatusData.message)
+                ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -366,18 +367,18 @@ export default function action_manager({ navigation }) {
     useEffect(() => {
         if (deleteaction) {
             if (deleteaction.status == "200") {
-                Alert.alert(deleteaction.message)
+                ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
                 setIsLodding(false)
                 dispatch(actionmanagerAction.clearDeleteActionResponse())
                 Get_ActionStatus()
             }
             else if (deleteaction.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(leadList.message)
+                ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
             }
             else if (deleteaction.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(deleteaction.message)
+                ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -390,18 +391,18 @@ export default function action_manager({ navigation }) {
     useEffect(() => {
         if (deletestatus) {
             if (deletestatus.status == "200") {
-                Alert.alert(deletestatus.message)
+                ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
                 setIsLodding(false)
                 dispatch(actionmanagerAction.clearDeleteStatusResponse())
                 Get_ActionStatus()
             }
             else if (deletestatus.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(leadList.message)
+                ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
             }
             else if (deletestatus.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(deletestatus.message)
+                ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -708,7 +709,6 @@ export default function action_manager({ navigation }) {
                 transparent={true}
                 visible={modalVisible2}
                 onRequestClose={() => {
-                    // Alert.alert("Modal has been closed.");
                     setModalVisible2(!modalVisible2);
                 }}
             >
@@ -749,7 +749,6 @@ export default function action_manager({ navigation }) {
                 transparent={true}
                 visible={modalVisible4}
                 onRequestClose={() => {
-                    // Alert.alert("Modal has been closed.");
                     setModalVisible4(!modalVisible4);
                 }}
             >

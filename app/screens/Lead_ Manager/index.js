@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, Alert, Pressable, Dimensions, Platform,
+  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid, Pressable, Dimensions, Platform,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -107,7 +107,9 @@ export default function lead_manager({ navigation, route }) {
         uid: loginData.data.uid,
         profile_id: loginData.data.cProfile.toString(),
         org_uid: loginData.data.org_uid,
-        filters: []
+        filters: [],
+        pageSize: '30',
+        pageNumber: '0',
       }
       dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
     }
@@ -117,7 +119,9 @@ export default function lead_manager({ navigation, route }) {
         uid: registerData.data.uid,
         profile_id: registerData.data.cProfile.toString(),
         org_uid: registerData.data.org_uid,
-        filters: []
+        filters: [],
+        pageSize: '30',
+        pageNumber: '0',
       }
       dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
     }
@@ -126,37 +130,45 @@ export default function lead_manager({ navigation, route }) {
   const Search = () => {
     let StartDate = moment(date).format("YYYY-MM-DD")
     let EndDate = moment(dates).format("YYYY-MM-DD")
-    setIsLodding(true)
+    // setIsLodding(true)
     if (loginData.status == "success") {
       let data = {
         uid: loginData.data.uid,
         profile_id: loginData.data.cProfile.toString(),
         org_uid: loginData.data.org_uid,
-        filters: []
-        // pageSize: results,
-        // pageNumber: page,
+        filters: [],
+        pageSize: '30',
+        pageNumber: '0',
       }
       if (text == false || texts == false) {
         if (StartDate !== EndDate) {
           if (text == true) {
-            Alert.alert('Please Select Start Date')
+            ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
           }
           else if (texts == true) {
-            Alert.alert('Please Select end Date')
+            ToastAndroid.show('Please Select End Date', ToastAndroid.SHORT);
           }
           else {
             if (StartDate <= EndDate) {
               setIsLodding(true)
               data.filters.push({ gte: StartDate, key: 'created_at' },
                 { lte: EndDate, key: 'created_at' })
+              dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
             }
             else {
-              Alert.alert('wrong format')
+              ToastAndroid.show('wrong format', ToastAndroid.SHORT);
             }
           }
         }
+        else if (StartDate == EndDate && text == false && texts == false) {
+          setIsLodding(true)
+          data.filters.push({ gte: StartDate, key: 'created_at' },
+            { lte: EndDate, key: 'created_at' })
+          dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+        }
+
         console.log(data)
-        dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+
       }
       // console.log(data)
     }
@@ -165,30 +177,37 @@ export default function lead_manager({ navigation, route }) {
         uid: registerData.data.uid,
         profile_id: registerData.data.cProfile.toString(),
         org_uid: registerData.data.org_uid,
-        filters: []
-        // pageSize: results,
-        // pageNumber: page,
+        filters: [],
+        pageSize: '30',
+        pageNumber: '0',
       }
       if (text == false || texts == false) {
         if (StartDate !== EndDate) {
-          if (text == true) {
-            Alert.alert('Please Select Start Date')
+          if (text == true) {          
+            ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
           }
           else if (texts == true) {
-            Alert.alert('Please Select end Date')
+            ToastAndroid.show('Please Select End Date', ToastAndroid.SHORT);
           }
           else {
             if (StartDate <= EndDate) {
               setIsLodding(true)
               data.filters.push({ gte: StartDate, key: 'created_at' },
                 { lte: EndDate, key: 'created_at' })
+              dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
             }
             else {
-              Alert.alert('wrong format')
+              ToastAndroid.show('wrong format', ToastAndroid.SHORT);
             }
           }
         }
-        dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
+        else if (StartDate == EndDate && text == false && texts == false) {
+          setIsLodding(true)
+          data.filters.push({ gte: StartDate, key: 'created_at' },
+            { lte: EndDate, key: 'created_at' })
+          dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
+        }
+
       }
     }
     // console.log(data)
@@ -203,6 +222,7 @@ export default function lead_manager({ navigation, route }) {
     setDates(new Date())
     setIsLodding(true)
     Get_Data()
+    settemarray([])
   }
 
   useEffect(() => {
@@ -224,20 +244,11 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (Lead_OpportunityList) {
-      if (Lead_OpportunityList.status == "200") {
+      // console.log('value................', Lead_OpportunityList)
+      if (Lead_OpportunityList.status == "success") {
         // console.log('value................', Lead_OpportunityList.data)
-        // let Leads = Lead_OpportunityList.data.lead && Lead_OpportunityList.data.lead.map((ld) => {
-        //   //  let user = { label: ld.user.name, value: ld.id }
-        //   return {
-        //     ...ld,
-        //     selected: false
-        //   }
-        // })
+    
         setLead(Lead_OpportunityList.data)
-        // console.log( Leads)
-        // setOpportunity(Lead_OpportunityList.data.opportunity)
-        // CombineArrayData()
-
         dispatch(leadmanagerAction.clearResponse())
         setIsLodding(false)
       }
@@ -396,7 +407,7 @@ export default function lead_manager({ navigation, route }) {
 
   const UploadFile = (value) => {
     if (singleFile == null) {
-      Alert.alert("Please Select File")
+      ToastAndroid.show('Please Select File', ToastAndroid.SHORT);
     }
     else {
 
@@ -457,13 +468,13 @@ export default function lead_manager({ navigation, route }) {
         // CombineArrayData()
         Get_Data()
         setImportFiles(false)
-        Alert.alert(importLead.message)
+        ToastAndroid.show(importLead.message, ToastAndroid.SHORT);
         setSingleFile(null)
         setIsULodding(false)
         // dispatch(leadAction.clearImportLeadResponse())
       }
       else if (importLead.status == "fail") {
-        Alert.alert(importLead.message)
+        ToastAndroid.show(importLead.message, ToastAndroid.SHORT);
         dispatch(leadAction.clearImportLeadResponse())
         setIsULodding(false)
       }
@@ -483,13 +494,13 @@ export default function lead_manager({ navigation, route }) {
         // CombineArrayData()
         Get_Data()
         setImportFiles(false)
-        Alert.alert(importOpportunity.message)
+          ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
         setSingleFile(null)
         setIsULodding(false)
         // dispatch(opportunityAction.clearResponse())
       }
       else if (importOpportunity.status == "fail") {
-        Alert.alert(importOpportunity.message)
+          ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
         dispatch(opportunityAction.clearResponse())
         setIsULodding(false)
       }
@@ -508,14 +519,14 @@ export default function lead_manager({ navigation, route }) {
       if (AssignLead.status == "success") {
         setAssignOwner(false)
         Get_Data()
-        Alert.alert(AssignLead.message)
+        ToastAndroid.show(AssignLead.message, ToastAndroid.SHORT);
         settemarray([])
         dispatch(leadmanagerAction.clearResponse())
         setIsALodding(false)
       }
-      if (AssignLead.status == "failed") {
+      else if (AssignLead.status == "failed") {
         setAssignOwner(false)
-        Alert.alert(AssignLead.message)
+        ToastAndroid.show(AssignLead.message, ToastAndroid.SHORT);
         settemarray([])
         dispatch(leadmanagerAction.clearResponse())
         setIsALodding(false)
@@ -667,7 +678,7 @@ export default function lead_manager({ navigation, route }) {
 
   const onPressSendItem = (value, type) => {
     if (temarray.length == 0) {
-      Alert.alert('  Please Select atlest Lead')
+      ToastAndroid.show('Please Select atlest Lead', ToastAndroid.SHORT);
     }
     else {
       if (loginData.status == "success") {
@@ -919,168 +930,6 @@ export default function lead_manager({ navigation, route }) {
           navigation.navigate('Notification')
         }}
       />
-      {/* <View
-        style={{
-          marginHorizontal: '7%', marginTop: '-4%', backgroundColor: '#fff', borderRadius: 20,
-          flexDirection: 'row', justifyContent: 'space-between'
-        }}
-      >
-        {isService == 'All' ?
-          <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
-            onPress={() => checkValue("All")}
-          >
-            <Text style={[styles.btnText, { color: '#FFF' }]}>All</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity style={styles.btn}
-            onPress={() => checkValue("All")}
-          >
-            <Text style={[styles.btnText, { color: 'black' }]}>All</Text>
-          </TouchableOpacity>
-        }
-
-        {isService == 'Lead' ?
-          <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
-            onPress={() => checkValue("Lead")}
-          >
-            <Text style={[styles.btnText, { color: '#FFF' }]}>Lead</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity style={styles.btn}
-            onPress={() => checkValue("Lead")}
-          >
-            <Text style={[styles.btnText, { color: 'black' }]}>Lead</Text>
-          </TouchableOpacity>
-        }
-
-        {isService == 'Opportunity' ?
-          <TouchableOpacity style={[styles.btn, { backgroundColor: '#4F46BA' }]}
-            onPress={() => checkValue("Opportunity")}
-          >
-            <Text style={[styles.btnText, { color: '#FFF' }]}>Opportunity</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity style={styles.btn}
-            onPress={() => checkValue("Opportunity")}
-          >
-            <Text style={[styles.btnText, { color: 'black' }]}>Opportunity</Text>
-          </TouchableOpacity>
-        }
-      </View> */}
-
-      {/* {
-        isService == "All" ?
-
-          <View style={{ marginTop: '3%' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
-              <TouchableOpacity
-                style={{ width: '48%' }}
-                onPress={showDatepicker}
-              >
-                <View style={styles.pickers}>
-                  <Image
-                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                    source={require('../../images/pikerCalander.png')}
-                  />
-
-                  {show && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                      value={date}
-                      mode={mode}
-                      // is24Hour={true}
-                      display="default"
-                      onChange={onChangeFrom}
-                    />
-                  )
-                  }
-                  {Platform.OS == 'ios' ? <View>
-                    {text == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                      :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                    }
-                  </View>
-                    :
-                    <View>
-                      {text == true ?
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                        :
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                      }
-                    </View>
-                  }
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{ width: '48%' }}
-                onPress={showDatepickers}>
-
-                <View style={styles.pickers}>
-
-                  <Image
-                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                    source={require('../../images/pikerCalander.png')}
-                  />
-                  {shows && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={dates}
-                      style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                      mode={modes}
-                      format="YYYY-MM-DD"
-                      // is24Hour={true}
-                      display="default"
-                      onChange={onChangeTo}
-                    />
-                  )
-                  }
-                  {Platform.OS == 'ios' ? <View>
-                    {texts == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                      :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                    }
-                  </View>
-                    :
-                    <View>
-                      {texts == true ?
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>To</Text>
-                        :
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('MM/DD/YYYY')}</Text>
-                      }
-                    </View>
-                  }
-                </View>
-              </TouchableOpacity>
-            </View>
-
-
-            <View style={{ marginTop: '-1%' }}></View>
-            {IsLodding == true ?
-              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-              :
-              <View>
-                {AllList !== undefined && AllList.length > 0 ?
-                  <FlatList
-                    style={{ height: "78%" }}
-                    data={AllList}
-                    renderItem={AllView}
-                  />
-                  :
-                  <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-              </View>
-            }
-            <View style={{ marginTop: '2%' }}></View>
-          </View>
-          :
-          <View />
-      }
-
-      {
-        isService == "Lead" ? */}
       <View style={{ marginTop: '3%' }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
           <TouchableOpacity
@@ -1193,57 +1042,17 @@ export default function lead_manager({ navigation, route }) {
               Import From Storage
             </Text>
           </TouchableOpacity>
-
-          {/* <TouchableOpacity
-                style={{
-                  backgroundColor: '#00b300',
-                  width: '47%',
-                  borderRadius: 20,
-                  padding: 5
-                }}
-                onPress={() => navigation.navigate('Edit_Lead', { title: 'Add Lead' })}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Add New Lead</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#00b300',
-                  width: '47%',
-                  borderRadius: 20,
-                  padding: 5
-                }}
-                // onPress={() => selectLeadFile()}
-                onPress={() => CheckImportType("lead")}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
-              </TouchableOpacity> */}
-
         </View>
-
-        {/* <TouchableOpacity
-              style={{
-                backgroundColor: '#00b300',
-                width: '47%',
-                marginTop: '5%',
-                borderRadius: 20,
-                padding: 5
-              }}
-              onPress={() => sendAPI()}
-            >
-              <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
-            </TouchableOpacity> */}
-
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity style={[styles.button, { width: '60%' }]}
-          onPress={() => Search()}
+            onPress={() => Search()}
           >
             <Text style={styles.btnText}>SEARCH</Text>
           </TouchableOpacity>
           <TouchableOpacity
             // style={styles.button}
             style={{ marginTop: '2%' }}
-          onPress={() => Reset()}
+            onPress={() => Reset()}
           >
             {/* <Text style={styles.btnText}>RESET</Text> */}
             <Image
@@ -1271,165 +1080,6 @@ export default function lead_manager({ navigation, route }) {
           </View>}
         <View style={{ marginTop: '2%' }}></View>
       </View>
-      {/* :
-          <View />
-      } */}
-
-      {
-        isService == "Opportunity" ?
-
-          <View style={{ marginTop: '3%' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
-              <TouchableOpacity
-                style={{ width: '48%' }}
-                onPress={showDatepicker}
-              >
-                <View style={styles.pickers}>
-                  <Image
-                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                    source={require('../../images/pikerCalander.png')}
-                  />
-
-                  {show && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                      value={date}
-                      mode={mode}
-                      // is24Hour={true}
-                      display="default"
-                      onChange={onChangeFrom}
-                    />
-                  )
-                  }
-                  {Platform.OS == 'ios' ? <View>
-                    {text == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                      :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                    }
-                  </View>
-                    :
-                    <View>
-                      {text == true ?
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                        :
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                      }
-                    </View>
-                  }
-                </View>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{ width: '48%' }}
-                onPress={showDatepickers}>
-
-                <View style={styles.pickers}>
-
-                  <Image
-                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                    source={require('../../images/pikerCalander.png')}
-                  />
-                  {shows && (
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={dates}
-                      style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                      mode={modes}
-                      format="YYYY-MM-DD"
-                      // is24Hour={true}
-                      display="default"
-                      onChange={onChangeTo}
-                    />
-                  )
-                  }
-                  {Platform.OS == 'ios' ? <View>
-                    {texts == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                      :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                    }
-                  </View>
-                    :
-                    <View>
-                      {texts == true ?
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>To</Text>
-                        :
-                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('MM/DD/YYYY')}</Text>
-                      }
-                    </View>
-                  }
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Edit_Opportunity', { title: 'Add Opportunity' })}
-                style={styles.addNewBtn}
-              >
-                <Text style={{ color: "#fff", fontSize: 13 }}>
-                  Add New Opportunity
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => CheckImportType("Opportunity")}
-                style={styles.addNewBtn}
-              >
-                <Text style={{ color: "#fff", fontSize: 13 }}>
-                  Import From Storage
-                </Text>
-              </TouchableOpacity>
-              {/* <TouchableOpacity
-                style={{
-                  backgroundColor: '#00b300',
-                  width: '47%',
-                  borderRadius: 20,
-                  padding: 5
-                }}
-                onPress={() => navigation.navigate('Edit_Opportunity', { title: 'Add Opportunity' })}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Add New Opportunity</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#00b300',
-                  width: '47%',
-                  borderRadius: 20,
-                  padding: 5
-                }}
-                // onPress={() => selectOpportunityFile()}
-                onPress={() => CheckImportType("Opportunity")}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', fontWeight: 'bold' }}>Import From Storage</Text>
-              </TouchableOpacity> */}
-
-            </View>
-            <View style={{ marginTop: '2%' }}></View>
-
-            {IsLodding == true ?
-              <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-              :
-              <View>
-                {Opportunity !== undefined && Opportunity.length > 0 ?
-                  <FlatList
-                    style={{ height: "71%" }}
-                    data={Opportunity}
-                    renderItem={OpportunityVIew}
-                  />
-
-                  :
-                  <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
-                }
-              </View>
-
-            }
-            <View style={{ marginTop: '2%' }}></View>
-          </View>
-          :
-          <View />
-      }
 
       <Modal animationType="slide" transparent={true} visible={askDelete}
         onRequestClose={() => { setaskDelete(!askDelete); }}>
@@ -1532,7 +1182,7 @@ export default function lead_manager({ navigation, route }) {
       <Modal animationType="slide" transparent={true} visible={AssignOwner}
         onRequestClose={() => { setAssignOwner(!AssignOwner); }}>
         <View style={[styles.askModel, { marginTop: '40%', }]}>
-          <Text style={styles.askTitle}>Assign TO </Text>
+          <Text style={styles.askTitle}>Assign To </Text>
 
           <TouchableOpacity
             style={[styles.askTitleR]}

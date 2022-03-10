@@ -154,13 +154,13 @@ export default function AddContact({ navigation, route }) {
 
   const AddFunction = () => {
     if (fname == "") {
-      Alert.alert(" Enter First Name ")
+      ToastAndroid.show('Enter First Name', ToastAndroid.SHORT);
     }
     else if (lname == "") {
-      Alert.alert("Enter Last Name")
+      ToastAndroid.show('Enter Last Name', ToastAndroid.SHORT);
     }
     else if (phone == "") {
-      Alert.alert(" Enter phone Number ")
+      ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
@@ -192,14 +192,14 @@ export default function AddContact({ navigation, route }) {
 
     if (FeedbackData) {
       if (FeedbackData.status == 'success') {
-        Alert.alert(FeedbackData.message)
+        ToastAndroid.show(FeedbackData.message, ToastAndroid.SHORT);
         setfname(''), setlname(''), setphone(''), setCity(''),
           setState(), setdescription(), setDate(new Date()), settime(new Date())
         navigation.navigate('History');
         dispatch(contactListAction.clearResponse())
       }
       else if (FeedbackData.status == 'fail') {
-        Alert.alert(FeedbackData.message)
+        ToastAndroid.show(FeedbackData.message, ToastAndroid.SHORT);
       }
       else {
 

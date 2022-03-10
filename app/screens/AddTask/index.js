@@ -210,18 +210,16 @@ export default function AddContact({ navigation }) {
 
     const AddNewCampaign = () => {
         if (title == "") {
-            Alert.alert(" Enter Title ")
-            // ToastAndroid.show("Enter Title...", ToastAndroid.SHORT);
+            ToastAndroid.show("Enter Title", ToastAndroid.SHORT);
         }
         else if (releetedTo == "") {
-            // ToastAndroid.show("Enter Related To...", ToastAndroid.SHORT);
-            Alert.alert(" Enter Related To")
+            ToastAndroid.show("Enter Related To", ToastAndroid.SHORT);
         }
         else if (Status == null) {
-            Alert.alert(" Select Status")
+            ToastAndroid.show("Select Status", ToastAndroid.SHORT);
         }
         else if (Priority == null) {
-            Alert.alert(" Select Priority")
+            ToastAndroid.show("Select Priority", ToastAndroid.SHORT);
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
@@ -271,9 +269,8 @@ export default function AddContact({ navigation }) {
 
     useEffect(() => {
         if (responseAdd_Edit) {
-            console.log('one<><><><>>>>>>>>>>>>>>>>>',responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 navigation.navigate('Task_Manager')
                 settitle(''), setTaskFor(null), setreleetedTo(''),
                     setreleetedToId(), setreleetedToFname('Contact'), setreleetedToLname('Person'),
@@ -284,7 +281,7 @@ export default function AddContact({ navigation }) {
             else if (responseAdd_Edit.status == "failed") {
             }
             else if (responseAdd_Edit.status == "fail") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(taskmanagerAction.clearResponse())
             }
             setIsLodding(false)
@@ -367,7 +364,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus3 ? ' Task Owner' : '...'}
+                            placeholder='Task Owner'
                             value={TaskOwner}
                             onFocus={() => setIsFocus3(true)}
                             onBlur={() => setIsFocus3(false)}
@@ -412,7 +409,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="task_for"
                             valueField="task_for"
-                            placeholder={!isFocus2 ? 'Task For' : '...'}
+                            placeholder='Task For'
                             value={TaskFor}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
@@ -559,7 +556,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="status"
                             valueField="id"
-                            placeholder={!isFocus ? 'Status' : '...'}
+                            placeholder='Status'
                             value={Status}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
@@ -591,7 +588,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="priority"
                             valueField="id"
-                            placeholder={!isFocus1 ? 'Priority' : '...'}
+                            placeholder='Priority'
                             value={Priority}
                             onFocus={() => setIsFocus1(true)}
                             onBlur={() => setIsFocus1(false)}

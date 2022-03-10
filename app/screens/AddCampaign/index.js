@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform} from 'react-native';
+    Image, Button, ScrollView, Modal, Alert, ToastAndroid, StatusBar, Dimensions, Platform} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -131,7 +131,7 @@ export default function AddContact({ navigation }) {
                     setendtext(true)
                 setCampaignOwner(null)
                 setIsLodding(false)
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 navigation.navigate('Campaign')
             }
             else if (responseAdd_Edit.status == "failed") {
@@ -147,10 +147,10 @@ export default function AddContact({ navigation }) {
 
     const AddNewCampaign = () => {
         if (campaignName == "") {
-            Alert.alert(" Enter campaign Name ")
+            ToastAndroid.show('Enter campaign Name', ToastAndroid.SHORT);      
         }
         else if (Status == null) {
-            Alert.alert(" Enter campaign Status")
+            ToastAndroid.show('Enter campaign Status', ToastAndroid.SHORT);      
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
@@ -225,7 +225,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus3 ? ' Campaign Owner' : '...'}
+                            placeholder='Campaign Owner'
                             value={CampaignOwner}
                             onFocus={() => setIsFocus3(true)}
                             onBlur={() => setIsFocus3(false)}
@@ -270,7 +270,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus ? 'Campaign Status' : '...'}
+                            placeholder="Campaign Status"
                             value={Status}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}

@@ -14,11 +14,12 @@ const styles = StyleSheet.create({
     },
     notify:{
         flexDirection: 'row',
-         justifyContent: 'space-between',
+        // justifyContent: 'space-between',
         borderWidth: 1, 
         borderColor:'#DBDBDB',
         borderRadius: 10,
-        padding: 5
+        paddingVertical:5,
+        paddingHorizontal:2
 
      },
 

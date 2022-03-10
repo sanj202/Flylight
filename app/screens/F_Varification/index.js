@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useDebugValue } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,TextInput,Alert,
+import {Text,View,StyleSheet,TouchableOpacity,TextInput,Alert,ToastAndroid,
   Image,StatusBar,ActivityIndicator} from 'react-native';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { FvarificationAction, resendOtpAction } from '../../redux/Actions/index'
@@ -40,8 +40,8 @@ export default function Varification({ navigation, route }) {
       }
       else if (FotpData.status == "failed") {
         // console.log('sucess...........false...')
-        setIsLodding(false)
-        Alert.alert(FotpData.message)                                                                                //otherwise alert show 
+        setIsLodding(false) 
+        ToastAndroid.show(FotpData.message, ToastAndroid.SHORT);                                                                             //otherwise alert show 
       }
     }
     else {
@@ -55,13 +55,13 @@ export default function Varification({ navigation, route }) {
       if (resendOtpData.status == "success") {
         // console.log('sucess..............', otpData)
         setIsLodding(false)
-        Alert.alert(resendOtpData.message)
+       ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);  
 
       }
       else if (resendOtpData.status == "failed") {
         // console.log('sucess...........false...')
         setIsLodding(false)
-        Alert.alert(resendOtpData.message)                                                                                //otherwise alert show 
+       ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
 
       }
     }
@@ -76,7 +76,7 @@ export default function Varification({ navigation, route }) {
   const login = () => {
 
     if (value == "") {
-      Alert.alert("Enter OTP")
+      ToastAndroid.show('Enter OTP', ToastAndroid.SHORT);  
     }
 
     else {

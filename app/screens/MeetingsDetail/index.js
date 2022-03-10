@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Modal, Pressable, ScrollView, Image, ActivityIndicator, Alert, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, Modal, Pressable, ToastAndroid, Image, ActivityIndicator, Alert, Dimensions } from 'react-native';
 import moment from 'moment';
 import Header from '../../component/header/index'
 import { meetingAction, leadmanagerAction, contactListAction } from '../../redux/Actions/index'
@@ -84,7 +84,7 @@ export default function lead_manager({ navigation, route }) {
             else if (GetMeetings.status == "failed") {
             }
             else if (GetMeetings.status == "fail") {
-                Alert.alert(GetMeetings.message)
+                ToastAndroid.show(GetMeetings.message, ToastAndroid.SHORT);     
             }
             else {
             }
@@ -420,14 +420,14 @@ export default function lead_manager({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!IsFocus2 ? 'Task For' : '...'}
+                            placeholder='Task For'
                             value={TaskFor}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
-                            onChange={item => {
-                                setTaskFor(item.value);
-                                setIsFocus2(false);
-                            }}
+                            // onChange={item => {
+                            //     setTaskFor(item.value);
+                            //     setIsFocus2(false);
+                            // }}
                             onChange={item => {
                                 selectOneFile(item.value)
                                 setTaskFor(item.value);

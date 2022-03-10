@@ -1,13 +1,17 @@
 
-import { Get_History ,History_Success,History_Clear ,
-    History_Feedback,History_Feedback_Success,History_Feedback_Clear } from './actionTypes';
+import {
+    Add_callhistory, Add_callhistory_Success, Add_callhistory_Clear,
+    callhistory, callhistory_Success, callhistory_Clear,
+    Campaign, Campaign_Success, Campaign_Clear,
+    lead_status, lead_status_Success, lead_status_Clear,
+    historyDetail, historyDetail_Success, historyDetail_Clear
+} from './actionTypes';
 import BaseUrl from '../../../const'
 
-export const AddEdit_feedback_History = (token,data) => {
-    // console.log(" credentails..................", data)
+export const AddCallHistory = (data, token,) => {
     return (dispatch) => {
-        dispatch({ type: History_Feedback })
-        fetch(`${BaseUrl}/v1/addedit-historyfeedback`,
+        dispatch({ type: Add_callhistory })
+        fetch(`${BaseUrl}/v1/addCallhistory`,
             {
                 method: "POST",
                 headers: {
@@ -19,8 +23,7 @@ export const AddEdit_feedback_History = (token,data) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("History_Feedback .........::::::::::::::::", responseData)
-                dispatch({ type: History_Feedback_Success, payload: responseData })
+                // console.log('Add call History',responseData)
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -28,17 +31,13 @@ export const AddEdit_feedback_History = (token,data) => {
     }
 };
 
-export const clearHistoryFeedbackResponse = () => {
-    return {
-        type: History_Feedback_Clear,
-    };
-};
 
-export const historyList = (data,token,) => {
-    // console.log(" credentails..................",data)
+
+export const HistoryList = (data, token,) => {
     return (dispatch) => {
-        dispatch({ type: Get_History })
-        fetch(`${BaseUrl}/v1/history`,
+        dispatch({ type: callhistory })
+        // fetch(`http://3.23.113.168:3000/getCallHistoryList`,
+        fetch(`http://3.23.113.168:3000/getFeedbackList`,
             {
                 method: "POST",
                 headers: {
@@ -50,8 +49,8 @@ export const historyList = (data,token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("History.......::::::::::::::::", responseData)
-                dispatch({ type: History_Success, payload: responseData })
+                // console.log(responseData)
+                dispatch({ type: callhistory_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -59,13 +58,85 @@ export const historyList = (data,token,) => {
     }
 };
 
+export const CampaignList = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: Campaign })
+        fetch(`${BaseUrl}/v1/campaign-list`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                // console.log(responseData)
+                dispatch({ type: Campaign_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const LeadStatusList = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: lead_status })
+        fetch(`${BaseUrl}/v1/leadStatus`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: lead_status_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const HistoryDetail = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: historyDetail })
+        fetch(`http://3.23.113.168:3000/getCallHistoryList`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                // console.log(responseData)
+                dispatch({ type: historyDetail_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
 
 export const clearResponse = () => {
     return {
-        type: History_Clear,
+        type: Add_callhistory_Clear,
+        type: callhistory_Clear,
+        type: Campaign_Clear,
+        type: lead_status_Clear,
+        type: historyDetail_Clear
     };
 };
-
-
 
 

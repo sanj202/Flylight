@@ -13,7 +13,7 @@ import {
     ScrollView,
     Modal,
     Alert,
-    Pressable
+   ToastAndroid
 } from 'react-native';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -102,11 +102,10 @@ export default function UploadContact({ navigation }) {
         // setOpportunity(value)
 
         if (value == "+ Add List") {
-            // Alert.alert("navigation screen ")
             setModalVisible2(true);
         }
         else {
-            Alert.alert("search functinality")
+            ToastAndroid.show('search functinality', ToastAndroid.SHORT);
         }
 
     }
@@ -182,7 +181,7 @@ export default function UploadContact({ navigation }) {
                     maxHeight={160}
                     labelField="label"
                     valueField="value"
-                    placeholder={!isFocus ? 'Select list' : '...'}
+                    placeholder='Select list'
                     // searchPlaceholder="Search..."
                     value={value}
                     onFocus={() => setIsFocus(true)}

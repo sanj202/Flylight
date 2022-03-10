@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,TextInput,Image,Alert,StatusBar,
+import {Text,View,StyleSheet,TouchableOpacity,TextInput,Image,Alert,StatusBar,ToastAndroid,
  SafeAreaView ,ActivityIndicator} from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from './styles';
@@ -26,18 +26,17 @@ export default function SetPassword({ navigation, route, props }) {
         setstate("")
         setstate1("")
         setIsLodding(false)
-        Alert.alert(PassData.message)
+        ToastAndroid.show(PassData.message, ToastAndroid.SHORT); 
         navigation.navigate("Login")
       }
       else if (PassData.status == "failed") {
         // console.log('sucess...........false...')
         setIsLodding(false)
-        Alert.alert(PassData.message)                                                                                //otherwise alert show 
-        // setNumber('');
+        ToastAndroid.show(PassData.message, ToastAndroid.SHORT);
       }
       else if (PassData.status == "fail") {
         setIsLodding(false)
-        Alert.alert(PassData.message)
+        ToastAndroid.show(PassData.message, ToastAndroid.SHORT);
       }
       else {
       }
@@ -46,10 +45,10 @@ export default function SetPassword({ navigation, route, props }) {
 
   const SetPassword = () => {
     if (state == "") {
-      Alert.alert("Enter Password")
+      ToastAndroid.show('Enter Password', ToastAndroid.SHORT);
     }
     else if (state1 == "") {
-      Alert.alert("Enter Re- Password")
+      ToastAndroid.show('Enter Re-Password', ToastAndroid.SHORT);
     }
     else {
       setIsLodding(true)

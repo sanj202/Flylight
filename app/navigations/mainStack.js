@@ -32,18 +32,26 @@ export function MainStack({ route }) {
     >
       <Stack.Screen name='HomeTabs' component={TopTab} options={{ headerShown: false }} />
 
-      {/* <Stack.Screen name='HomeTabs' component={HomeTabs} options={{ headerShown: false }} /> */}
-      <Stack.Screen name='Edit_Contact' component={Edit_Contact} />
-      {/* <Stack.Screen name='EditProfile' component={EditProfile} /> */}
-      {/* <Stack.Screen name='Profile' component={Profile} /> */}
-      <Stack.Screen name="Edit_Opportunity" component={Edit_Opportunity} />
-      {/* <Stack.Screen name="Task_Manager" component={Task_Manager} /> */}
+     
+
+      {/* <Stack.Screen name="Edit_Opportunity" component={Edit_Opportunity} />
       <Stack.Screen name="All_Lead" component={All_Lead} />
       <Stack.Screen name="AddContactUpload" component={AddContactUpload} />
-      {/* <Stack.Screen name="Logout" component={Login} /> */}
-      {/* <Stack.Screen name='Logout' component={AuthStack} options={{ headerShown: false }} /> */}
+      <Stack.Screen name='Edit_Contact' component={Edit_Contact} /> */}
     </Stack.Navigator>
   );
 }
 
 
+
+
+ {/* <Stack.Screen name='HomeTabs' component={HomeTabs} options={{ headerShown: false }} /> */}
+     
+      {/* <Stack.Screen name='EditProfile' component={EditProfile} /> */}
+      {/* <Stack.Screen name='Profile' component={Profile} /> */}
+  
+      {/* <Stack.Screen name="Task_Manager" component={Task_Manager} /> */}
+    
+     
+      {/* <Stack.Screen name="Logout" component={Login} /> */}
+      {/* <Stack.Screen name='Logout' component={AuthStack} options={{ headerShown: false }} /> */}

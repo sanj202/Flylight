@@ -1,39 +1,76 @@
-import { Get_History, History_Success, History_Clear, History_Feedback, History_Feedback_Success, History_Feedback_Clear } from '../Actions/actionTypes';
+import {
+    Add_callhistory, Add_callhistory_Success, Add_callhistory_Clear,
+    callhistory, callhistory_Success, callhistory_Clear,
+    Campaign, Campaign_Success, Campaign_Clear,
+    lead_status, lead_status_Success, lead_status_Clear,
+    historyDetail, historyDetail_Success, historyDetail_Clear
+} from '../Actions/actionTypes';
 
 const initialState = {
-    getHistoryList: [],
-    feedback: []
+    getHistory: [],
+    campData: [],
+    leadData: [],
+    detailHistory: []
 };
+
 const historyR = (state = initialState, action) => {
+
     switch (action.type) {
-        case Get_History:
+        case callhistory:
             return {
                 ...state,
             };
-        case History_Success:
+        case callhistory_Success:
             return {
                 ...state,
-                getHistoryList: action.payload
+                getHistory: action.payload,
             };
-        case History_Clear:
+        case callhistory_Clear:
+            return {
+                getHistory: [],
+            };
+
+        case Campaign:
             return {
                 ...state,
-                getHistoryList: []
             };
-        case History_Feedback:
+        case Campaign_Success:
+            return {
+                ...state,
+                campData: action.payload,
+            };
+        case Campaign_Clear:
+            return {
+                campData: [],
+            };
+
+        case lead_status:
             return {
                 ...state,
             };
-        case History_Feedback_Success:
+        case lead_status_Success:
             return {
                 ...state,
-                feedback: action.payload
+                leadData: action.payload,
             };
-        case History_Feedback_Clear:
+        case lead_status_Clear:
+            return {
+                leadData: [],
+            };
+        case historyDetail:
             return {
                 ...state,
-                feedback: []
             };
+        case historyDetail_Success:
+            return {
+                ...state,
+                detailHistory: action.payload,
+            };
+        case historyDetail_Clear:
+            return {
+                detailHistory: [],
+            };
+
         default:
             return state;
     }

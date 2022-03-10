@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+    ActivityIndicator, Text, View, ToastAndroid, TouchableOpacity, TextInput, FlatList,
     Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
 } from 'react-native';
 import styles from './styles';
@@ -197,9 +197,8 @@ export default function AddContact({ navigation }) {
 
     useEffect(() => {
         if (responseAdd_Edit) {
-            console.log('one<><><><>>>>>>>>>>>>>>>>>', responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 navigation.navigate('Meetings')
                 dispatch(taskmanagerAction.clearResponse())
                 setlocation(''),
@@ -223,7 +222,7 @@ export default function AddContact({ navigation }) {
             else if (responseAdd_Edit.status == "failed") {
             }
             else if (responseAdd_Edit.status == "fail") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(taskmanagerAction.clearResponse())
             }
             setIsLodding(false)
@@ -309,10 +308,10 @@ export default function AddContact({ navigation }) {
 
     const AddNewMeeting = () => {
         if (title == "") {
-            Alert.alert(" Enter Title ")
+            ToastAndroid.show('Enter Title', ToastAndroid.SHORT);
         }
         else if (location == "") {
-            Alert.alert(" Enter location")
+            ToastAndroid.show('Enter location', ToastAndroid.SHORT);
         }
 
 
@@ -433,7 +432,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus3 ? ' Host ' : '...'}
+                            placeholder='Host'
                             value={Host}
                             onFocus={() => setIsFocus3(true)}
                             onBlur={() => setIsFocus3(false)}
@@ -494,7 +493,7 @@ export default function AddContact({ navigation }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus2 ? 'Meeting For' : '...'}
+                            placeholder='Meeting For'
                             value={meetingFor}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}

@@ -5,9 +5,10 @@ import {
 import BaseUrl from '../../../const';
 
 export const lead_OpprtunityList = (data, token) => {
+    console.log(data)
     return (dispatch) => {
         dispatch({ type: Get_Lead_Opportunity })
-        fetch(`${BaseUrl}/v1/getleadsList`,
+        fetch(`http://3.23.113.168:3000/getLeadList`,
             {
                 method: "POST",
                 headers: {
@@ -19,6 +20,7 @@ export const lead_OpprtunityList = (data, token) => {
             })
             .then(response => response.json())
             .then(responseData => {
+                console.log(responseData.data)
                 dispatch({ type: Lead_Opportunity_Success, payload: responseData })
             })
             .catch((error) => {

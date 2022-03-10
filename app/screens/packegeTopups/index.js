@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
-    Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
-import { BottomSheet, ListItem } from 'react-native-elements';
+import {Text, View, StyleSheet, TouchableOpacity, ToastAndroid, Picker, FlatList, Image, Button, ActivityIndicator,
+    Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
 import moment from 'moment';
 import Header from '../../component/header/index'
 import { taskmanagerAction, organizationAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Dropdown } from 'react-native-element-dropdown';
 import RazorpayCheckout from 'react-native-razorpay';
 
-
 export default function lead_manager({ navigation }) {
-
-    const data = [
-        { label: 'Not Started', value: 'Not Started', },
-        { label: 'In Progress', value: 'In Progress' },
-        { label: 'Completed', value: 'Completed' },
-    ];
 
     const [packegeVisible, setpackegeVisible] = useState(false);
 
@@ -37,11 +25,6 @@ export default function lead_manager({ navigation }) {
     const [title, settitle] = useState('')
     const { width, height } = Dimensions.get('window');
 
-    const [date, setDate] = useState(new Date(1598051730000));
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
-    const [text, settext] = useState(true)
-
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
@@ -53,32 +36,38 @@ export default function lead_manager({ navigation }) {
 
 
 
-    const BuyPlane =()=> {
-        var options = {
-        description: 'Credits towards consultation',
-        image: 'https://i.imgur.com/3g7nmJC.png',
-        currency: 'INR',
-        key: 'vIqhRkI5wqwIq8CjhzFBMW5g',
-        amount: '5000',
-        name: 'AcmeCorp',
-        order_id: '1sdfsdfdsfsdf',//Replace this with an order_id created using Orders API.
-        prefill: {
-          email: 'gaurav.kumar@example.com',
-          contact: '9191919191',
-          name: 'Gaurav Kumar',
-        //   method: 'netbanking', //card|upi|wallet
-        },
-        theme: {color: '#53a20e'}
-      }
+    const BuyPlane = (value) => {
+        console.log('value...',value)
+        // var options = {
+        //     description: "Package Transaction",
+        //     image: "assets/images/logo.png",
+        //     currency: "INR",
+        //     key:  "rzp_test_iijGgC2DfISWDR",
+        //     amount: '5000',
+        //     name: 'Flylight',
+        //     order_id: 'order_J5LRYWmrPyerIn',
+        //     prefill: {
+        //         email: 'gaurav.kumar@example.com',
+        //         contact: '9655577124',
+        //         name: 'Gaurav Kumar',
+        //     },
+        //     notes: {
+        //         address: "Flylight CRM indore"
+        //     },
+        //     theme: { color: 'blue' }
+        // }
 
-      console.log(options)
-      RazorpayCheckout.open(options).then((data) => {
-        // handle success
-        alert(`Success: ${data.razorpay_payment_id}`);
-      }).catch((error) => {
-        // handle failure
-        alert(`Error: ${error.code} | ${error.description}`);
-      });
+        // console.log(options)
+        // RazorpayCheckout.open(options).then((data) => {
+        //     // handle success
+        //     // alert(`Success: ${data.razorpay_payment_id}`);
+
+        //     console.log('razar................',data)
+
+        // }).catch((error) => {
+        //     // handle failure
+        //     alert(`Error: ${error.code} | ${error.description}`);
+        // });
     }
 
 
@@ -141,7 +130,7 @@ export default function lead_manager({ navigation }) {
             else if (taskList.status == "failed") {
             }
             else if (taskList.status == "fail") {
-                Alert.alert(taskList.message)
+                ToastAndroid.show(taskList.message, ToastAndroid.SHORT);
             }
             else {
             }
@@ -167,10 +156,10 @@ export default function lead_manager({ navigation }) {
 
     const EditFunction = (value) => {
         if (title == "") {
-            Alert.alert(" Enter Title ")
+            ToastAndroid.show('Enter Title', ToastAndroid.SHORT);
         }
         else if (Status == null) {
-            Alert.alert(" Select Status")
+            ToastAndroid.show('Select Status', ToastAndroid.SHORT);
         }
         else {
             // setIsVisible(false)
@@ -226,7 +215,7 @@ export default function lead_manager({ navigation }) {
             // console.log('one<><><><>>>>>>>>>>>>>>>>>', responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
                 setIsVisible(false)
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 settitle('')
                 setDate(new Date())
                 settext(true)
@@ -236,9 +225,10 @@ export default function lead_manager({ navigation }) {
                 dispatch(taskmanagerAction.clearResponse())
             }
             else if (responseAdd_Edit.status == "failed") {
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
             }
             else if (responseAdd_Edit.status == "fail") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(taskmanagerAction.clearResponse())
             }
             setEIsLodding(false)
@@ -678,33 +668,17 @@ export default function lead_manager({ navigation }) {
 
                 {isService == 'Topups' ?
                     <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
-                        // onPress={() => checkValue("Topups")}
+                        onPress={() => checkValue("Topups")}
                     >
                         <Text style={{ color: '#FFF', textAlign: 'center', }}>Topups</Text>
                     </TouchableOpacity>
                     :
                     <TouchableOpacity style={[styles.headerBtn]}
-                        // onPress={() => checkValue("Topups")}
+                        onPress={() => checkValue("Topups")}
                     >
                         <Text style={{ textAlign: 'center', color: 'black', }}>Topups</Text>
                     </TouchableOpacity>
                 }
-
-                {/* {isService == 'Done' ?
-
-                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
-                        onPress={() => checkValue("Done")}
-                    >
-                        <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>Done</Text>
-                    </TouchableOpacity>
-                    :
-                    <TouchableOpacity style={[styles.headerBtn]}
-                        onPress={() => checkValue("Done")}
-                    >
-                        <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>Done</Text>
-                    </TouchableOpacity>
-                } */}
-
             </View>
 
             {isService == "Package" ?
@@ -779,13 +753,13 @@ export default function lead_manager({ navigation }) {
                                         marginHorizontal: '10%',
                                         borderWidth: 2, borderRadius: 10, padding: 5
                                     }}>
-                                         <TouchableOpacity
-                                        //  onPress={()=>BuyPlane()}
+                                        <TouchableOpacity
+                                            onPress={() => BuyPlane()}
                                             style={{ alignSelf: 'center', backgroundColor: 'blue', paddingHorizontal: 10, paddingVertical: 5 }}
                                         >
                                             <Text style={{ color: '#fff' }}>Start Now</Text>
                                         </TouchableOpacity>
-                                        
+
                                         <Text style={{ fontSize: 15, fontWeight: 'bold', textAlign: 'center', }}>
                                             STARTUP
                                         </Text>
@@ -799,7 +773,7 @@ export default function lead_manager({ navigation }) {
                                         <Text style={{ textAlign: 'center', }}>organizations  (1)</Text>
                                         <Text style={{ textAlign: 'center', }}>leads  (50)</Text>
                                         <Text style={{ textAlign: 'center', }}>users  (4)</Text>
-                                       
+
                                     </View>
 
                                 </View>
@@ -822,24 +796,6 @@ export default function lead_manager({ navigation }) {
                             <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                             :
                             <View>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate('AddTask')}
-                                    style={{
-                                        borderColor: '#fff',
-                                        borderWidth: 1,
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 2,
-                                        alignSelf: 'flex-end',
-                                        marginHorizontal: '5%',
-                                        backgroundColor: '#2296E4',
-                                        borderRadius: 15
-                                    }}
-                                >
-                                    <Text style={{ color: "#fff", fontSize: 13 }}>
-                                        +Add
-                                    </Text>
-                                </TouchableOpacity>
-
                                 <View style={{
                                     flexDirection: 'row',
                                     //  justifyContent: 'space-between',
@@ -883,211 +839,6 @@ export default function lead_manager({ navigation }) {
                     :
                     <View />
             }
-
-            {/* {
-                isService == "Done" ?
-
-
-                    <View style={{ marginTop: '3%' }}>
-                        {IsLodding == true ?
-                            <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                            :
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => navigation.navigate('AddTask')}
-                                    style={{
-                                        borderColor: '#fff',
-                                        borderWidth: 1,
-                                        paddingHorizontal: 10,
-                                        paddingVertical: 2,
-                                        alignSelf: 'flex-end',
-                                        marginHorizontal: '5%',
-                                        backgroundColor: '#2296E4',
-                                        borderRadius: 15
-                                    }}
-                                >
-                                    <Text style={{ color: "#fff", fontSize: 13 }}>
-                                        +Add
-                                    </Text>
-                                </TouchableOpacity>
-                                {allTask !== undefined && allTask.length > 0 ?
-                                    <FlatList
-                                        // style={{ height: height / 1.55 }}
-                                        data={allTask}
-                                        renderItem={DoneView}
-                                    />
-                                    :
-                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-                            </View>
-                        }
-                    </View>
-                    :
-                    <View />
-            } */}
-
-            {/* ================================================== */}
-
-            {/* <BottomSheet modalProps={{
-                animationType: 'fade',
-                hardwareAccelerated: true,
-                onRequestClose: () => { setIsVisible(false); },
-            }}
-                isVisible={isVisible}>
-
-                <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Edit Task Manager</Text>
-                    <View style={styles.inputFields}>
-                        <Image style={styles.icon}
-                            source={require('../../images/user.png')}
-                        />
-                        <TextInput
-                            placeholder="Meeting with Mr.George"
-                            placeholderTextColor='#4A4A4A'
-                            value={title}
-                            onChangeText={e19 => settitle(e19)}
-                            style={{ paddingRight: '20%', flex: 1, }}
-                        />
-                    </View>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-
-                        <TouchableOpacity
-                            style={{ marginLeft: '3%' }}
-                            onPress={showDatepicker}
-                        >
-                            <View style={styles.pickers}>
-                                <Image
-                                    style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                                    source={require('../../images/pikerCalander.png')}
-                                />
-                                {show && (
-                                    <DateTimePicker
-                                        testID="dateTimePicker"
-                                        style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                                        value={date}
-                                        mode={mode}
-                                        // is24Hour={true}
-                                        display="default"
-                                        onChange={onChangeFrom}
-                                    />
-                                )
-                                }
-                                {Platform.OS == 'ios' ? <View>
-                                    {text == true ?
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', }}>From</Text>
-                                        :
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-                                    }
-                                </View>
-                                    :
-                                    <View>
-                                        {text == true ?
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', paddingRight: '15%' }}>From</Text>
-                                            :
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                                        }
-                                    </View>
-                                }
-                            </View>
-                        </TouchableOpacity>
-
-                        <Dropdown
-                            style={styles.dropdown3}
-                            placeholderStyle={styles.placeholderStyle3}
-                            selectedTextStyle={styles.selectedTextStyle3}
-                            data={data}
-                            maxHeight={100}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={!isFocus ? 'Status' : '...'}
-                            value={Status}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                                setStatus(item.value);
-                                setIsFocus(false);
-                            }}
-                            renderLeftIcon={() => (
-                                <Image
-                                    style={[styles.icon, { height: 22, width: 22 }]}
-                                    source={require('../../images/transgender.png')}
-                                />)}
-                        />
-                    </View>
-
-                    {EIsLodding == true ?
-                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '5%' }} />
-                        :
-                        <View />
-                    }
-
-                    <Pressable
-                        // style={[styles.button2, styles.buttonClose]}
-                        style={styles.updateBtn}
-                        onPress={() => EditFunction(temObject)} >
-                        <Text style={styles.textStyle}>Update</Text>
-                    </Pressable>
-                </View>
-            </BottomSheet>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible2}
-                onRequestClose={() => { setModalVisible2(!modalVisible2); }}
-            >
-                <View style={styles.centeredView3}>
-                    <View style={styles.modalView3}>
-                        <TouchableOpacity
-                            style={{ alignSelf: 'flex-end' }}
-                            onPress={() => setModalVisible2(!modalVisible2)}
-                        >
-                            <Image
-                                style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
-                                source={require('../../images/crossImgR.png')}
-                            />
-                        </TouchableOpacity>
-                        <Image
-                            source={require('../../images/checkmark-circle.png')}
-                            style={{ width: 38.75, height: 38.75 }}
-                        />
-                        <Text style={[styles.modalText3, { fontWeight: 'bold' }]} >Successfully{'\n'}Deleted</Text>
-                        <Pressable
-                            style={[styles.button3, styles.buttonClose3, { paddingLeft: '10%', paddingRight: '10%' }]}
-                            onPress={() => DeleteSuccessFully()}
-                        >
-                            <Text style={styles.textStyle3}>OK</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
-
-            <Modal animationType="slide" transparent={true} visible={askDelete}
-                onRequestClose={() => { setaskDelete(!askDelete); }}>
-                <View style={styles.askModel}>
-                    <Text style={styles.askTitle}> Are you sure ?</Text>
-                    <Text style={styles.askSubtitle}>
-                        you want to delete this{'\n'} Task ?</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-
-                        <Pressable
-                            style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
-                            onPress={() => CencelFunction()}
-                        >
-                            <Text style={styles.askBtnText}>NO</Text>
-                        </Pressable>
-                        <View style={{ margin: '5%' }} />
-                        <Pressable
-                            style={[styles.askBtn, { paddingHorizontal: '5%' }]}
-                            onPress={() => DeleteFunction()}
-                        >
-                            <Text style={styles.askBtnText}>YES</Text>
-                        </Pressable>
-                    </View>
-                    <View style={{ margin: '2%' }} />
-                </View>
-            </Modal> */}
-
         </View >
     );
 }

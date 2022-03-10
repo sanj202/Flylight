@@ -294,3 +294,34 @@ export const TaskContact_Clear = 'TaskContact_Clear'
 export const TaskStatus = "TaskStatus"
 export const TaskStatus_Success = "TaskStatus_Success"
 export const TaskStatus_Clear = 'TaskStatus_Clear'
+
+//Add History
+export const Add_callhistory = 'Add_callhistory'
+export const Add_callhistory_Success = 'Add_callhistory_Success'
+export const Add_callhistory_Clear = 'Add_callhistory_Clear'
+
+// Get History
+export const callhistory = 'callhistory'
+export const callhistory_Success = 'callhistory_Success'
+export const callhistory_Clear = 'callhistory_Clear'
+
+// lead_status
+export const lead_status = 'lead_status'
+export const lead_status_Success = 'lead_status_Success'
+export const lead_status_Clear = 'lead_status_Clear'
+
+// // Campaign List
+// export const Campaign = 'Campaign'
+// export const Campaign_Success = 'Campaign_Success'
+// export const Campaign_Clear = 'Campaign_Clear'
+
+// HistoryDetail
+export const historyDetail = 'historyDetail'
+export const historyDetail_Success = 'historyDetail_Success'
+export const historyDetail_Clear = 'historyDetail_Clear'
+
+
+// Profile
+export const Get_Notification = 'Get_Notification'
+export const Notification_Suceess = 'Notification_Suceess'
+export const Notification_Clear = 'Notification_Clear'

@@ -39,7 +39,7 @@ export default function Contacts({ navigation }) {
         Linking.canOpenURL(phoneNumber)
             .then(supported => {
                 if (!supported) {
-                    Alert.alert("Number is not available");
+                    ToastAndroid.show('Number is not available', ToastAndroid.SHORT);
                 } else {
                     return Linking.openURL(phoneNumber);
                 }
@@ -321,7 +321,7 @@ export default function Contacts({ navigation }) {
                         maxHeight={160}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus1 ? 'All List' : '...'}
+                        placeholder='All List'
                         // searchPlaceholder="Search..."
                         value={value1}
                         onFocus={() => setIsFocus1(true)}

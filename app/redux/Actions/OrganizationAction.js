@@ -37,65 +37,29 @@ import BaseUrl from '../../../const'
 // };
 
 export const packageList = (data, token) => {
-    console.log(" credentails..................", data, token)
+    return (dispatch) => {
+        dispatch({ type: Organization_List })
 
-    fetch(`${BaseUrl}/Packages`, {
-                method: 'GET'
-                //Request Type 
+        fetch(`${BaseUrl}/v1/Package`,
+            {
+                method: "GET",
+                // headers: {
+                //     'Accept': 'application/json',
+                //     // 'Content-Type': "application/x-www-form-urlencoded",
+                //     'Content-Type': 'application/json',
+                //     'Authorization': 'Bearer ' + token,
+                // },
+                // body: JSON.stringify(data),
             })
-            .then((response) => response)
-            //If response is in json then in success
-            .then((responseJson) => {
-                //Success 
-                console.log(responseJson);
+            .then(response => response.json())
+            .then(responseData => {
+                console.log("change TODO........::::::::::::::::", responseData.data)
+                // dispatch({ type: Organization_List_Success, payload: responseData })
             })
-            //If response is not in json then in error
             .catch((error) => {
-                //Error 
-                console.error(error);
-            });
-
-    // return (dispatch) => {
-    //     dispatch({ type: packegeTopups_Detail })
-
-
-    //     fetch(`${BaseUrl}/Packages`, {
-    //         method: 'GET'
-    //         //Request Type 
-    //     })
-    //     .then((response) => response)
-    //     //If response is in json then in success
-    //     .then((responseJson) => {
-    //         //Success 
-    //         console.log(responseJson);
-    //     })
-    //     //If response is not in json then in error
-    //     .catch((error) => {
-    //         //Error 
-    //         console.error(error);
-    //     });
-
-    //     // fetch(`${BaseUrl}/Packages`,
-    //     //     {
-    //     //         method: "POST",
-    //     //         headers: {
-    //     //             'Accept': 'application/json',
-    //     //             // 'Content-Type': "application/x-www-form-urlencoded",
-    //     //             'Content-Type': 'application/json',
-    //     //             'Authorization': 'Bearer ' + token,
-    //     //             // 'Authorization': uid,
-    //     //         },
-    //     //         body: JSON.stringify(data),
-    //     //     })
-    //     //     .then(response => response.json())
-    //     //     .then(responseData => {
-    //     //         // console.log("AddLead .........::::::::::::::::", responseData)
-    //     //         dispatch({ type: Add_Edit_Lead, payload: responseData })
-    //     //     })
-    //     //     .catch((error) => {
-    //     //         console.log("error" + error);
-    //     //     })
-    // }
+                console.log("error" + error);
+            })
+    }
 };
 
 

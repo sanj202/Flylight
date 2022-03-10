@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,TextInput,Image,Alert,StatusBar,
+import {Text,View,StyleSheet,TouchableOpacity,TextInput,Image,Alert,StatusBar,ToastAndroid,
 ActivityIndicator} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
@@ -17,15 +17,13 @@ export default function ForgotPassword({ navigation }) {
   useEffect(() => {
     if (getData) {
       if (getData.status == "success") {
-        // console.log('sucess..............',)
-        Alert.alert(getData.message)
+        ToastAndroid.show(getData.message, ToastAndroid.SHORT);  
         setstate("")
         setIsLodding(false)
         navigation.navigate("F_Varification", { email: getData.data.email})
       }
       else if (getData.status == 'warning') {
-        // console.log('sucess...........warning...')
-        Alert.alert(getData.message)
+        ToastAndroid.show(getData.message, ToastAndroid.SHORT);
         setstate("")
         setIsLodding(false)
         navigation.navigate("F_Varification", {email: getData.data.email})                                                                                                           //otherwise alert show 
@@ -33,13 +31,13 @@ export default function ForgotPassword({ navigation }) {
       else if (getData.status == "fail") {
         // console.log('sucess...........fail...')
         setIsLodding(false)
-        Alert.alert(getData.message)                                                                                //otherwise alert show 
+        ToastAndroid.show(getData.message, ToastAndroid.SHORT);                                                                               //otherwise alert show 
 
       }
       else if (getData.status == "failed") {
         // console.log('sucess...........failed...')
         setIsLodding(false)
-        Alert.alert(getData.message)                                                                                //otherwise alert show 
+        ToastAndroid.show(getData.message, ToastAndroid.SHORT);                                                                               //otherwise alert show 
 
       }
     }
@@ -54,7 +52,7 @@ export default function ForgotPassword({ navigation }) {
   const login = () => {
 
     if (state == "") {
-      Alert.alert(" Enter Email/Mobile ")
+      ToastAndroid.show('Enter Email/Mobile', ToastAndroid.SHORT);    
     }
     else {
       setIsLodding(true)

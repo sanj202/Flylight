@@ -26,6 +26,7 @@ import StaffMemberReducer from "./staffMemberReducer";
 import organizationReducer from "./organizationReducer"
 import campaignReducer from './campaignReducer'
 import meetingReducer from './meetingReducer'
+import notificationReducer from './notificationReducer'
 
 export default combineReducers({
     //   auth: AuthReducer,
@@ -42,15 +43,16 @@ export default combineReducers({
     Eprofile: editProfileReducer,
     ManuallyAddContact: addcontactManuallyReducer,
     contactList: contactListRaducer,
-    leads:leadRaducer,
-    opportunitys:OpportunityReducer,
-    taskmanager:taskmanagerReducer,
-    leadmanager:leadmanagerReducer,
-    history:historyRaducer,
-    report:reportReducer,
-    actionmanager:actionmanagerReducer,
+    leads: leadRaducer,
+    opportunitys: OpportunityReducer,
+    taskmanager: taskmanagerReducer,
+    leadmanager: leadmanagerReducer,
+    history: historyRaducer,
+    report: reportReducer,
+    actionmanager: actionmanagerReducer,
     staffMember: StaffMemberReducer,
-    organization:organizationReducer,
-    campaign:campaignReducer,
-    meeting:meetingReducer
+    organization: organizationReducer,
+    campaign: campaignReducer,
+    meeting: meetingReducer,
+    notification: notificationReducer
 });

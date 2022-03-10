@@ -116,13 +116,13 @@ export default function AddContact({ navigation, route }) {
 
   const AddFunction = () => {
     if (fname == "") {
-      Alert.alert(" Enter First Name ")
+      ToastAndroid.show('Enter First Name', ToastAndroid.SHORT);    
     }
     else if (lname == "") {
-      Alert.alert("Enter Last Name")
+      ToastAndroid.show('Enter Last Name', ToastAndroid.SHORT);    
     }
     else if (phone == "") {
-      Alert.alert(" Enter phone Number ")
+      ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);    
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
@@ -162,7 +162,7 @@ export default function AddContact({ navigation, route }) {
 
     if (FeedbackData) {
       if (FeedbackData.status == 'success') {
-        Alert.alert(FeedbackData.message)
+        ToastAndroid.show(FeedbackData.message, ToastAndroid.SHORT);    
         setIsLodding(false)
         setfname(''), setlname(''), setphone(''), setCity(''),
           setState(), setdescription(), setDate(new Date()), settime(new Date())
@@ -170,7 +170,7 @@ export default function AddContact({ navigation, route }) {
         dispatch(historyAction.clearHistoryFeedbackResponse())
       }
       else if (FeedbackData.status == 'fail') {
-        Alert.alert(FeedbackData.message)
+        ToastAndroid.show(FeedbackData.message, ToastAndroid.SHORT);    
         setIsLodding(false)
       }
       else {
@@ -439,7 +439,7 @@ export default function AddContact({ navigation, route }) {
           maxHeight={160}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'In-Progress' : '...'}
+          placeholder='In-Progress'
           // searchPlaceholder="Search..."
           value={value}
           onFocus={() => setIsFocus(true)}
@@ -469,7 +469,7 @@ export default function AddContact({ navigation, route }) {
           maxHeight={160}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus1 ? 'Task' : '...'}
+          placeholder='Task'
           // searchPlaceholder="Search..."
           value={value1}
           onFocus={() => setIsFocus1(true)}
@@ -498,7 +498,7 @@ export default function AddContact({ navigation, route }) {
           maxHeight={160}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus2 ? 'Note' : '...'}
+          placeholder='Note'
           // searchPlaceholder="Search..."
           value={value2}
           onFocus={() => setIsFocus2(true)}
@@ -527,7 +527,7 @@ export default function AddContact({ navigation, route }) {
           maxHeight={160}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus3 ? 'Message' : '...'}
+          placeholder='Message'
           // searchPlaceholder="Search..."
           value={value3}
           onFocus={() => setIsFocus3(true)}

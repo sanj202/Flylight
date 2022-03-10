@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useDebugValue } from 'react';
-import { Text, View, ActivityIndicator, TouchableOpacity, TextInput, Alert, Image, StatusBar, } from 'react-native';
+import { Text, View, ActivityIndicator, TouchableOpacity, ToastAndroid, Alert, Image, StatusBar, } from 'react-native';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { varificationAction, resendOtpAction } from '../../redux/Actions/index'
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
@@ -24,11 +24,7 @@ export default function Varification({ navigation, route }) {
     if (otpData) {
       if (otpData.status == "success") {
         setValue('')
-        // Alert.alert(otpData.message)
         setIsLodding(false)
-        // navigation.navigate("Login")
-        // dispatch(varificationAction.clearResponse())
-        // navigation.navigate("MainStack")
         if (otpData.data.token){
           navigation.navigate("MainStack")
         }
@@ -40,7 +36,7 @@ export default function Varification({ navigation, route }) {
       else if (otpData.status == "failed") {
         setIsLodding(false)
         // dispatch(varificationAction.clearResponse())
-        Alert.alert(otpData.message)                                                                                //otherwise alert show 
+        ToastAndroid.show(otpData.message, ToastAndroid.SHORT);                                                                              //otherwise alert show 
       }
     }
     else {
@@ -51,11 +47,11 @@ export default function Varification({ navigation, route }) {
     if (resendOtpData) {
       if (resendOtpData.status == "success") {
         setIsLodding(false)
-        Alert.alert(resendOtpData.message)
+        ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);       
       }
       else if (resendOtpData.status == "failed") {
         setIsLodding(false)
-        Alert.alert(resendOtpData.message)                                                                                //otherwise alert show 
+        ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
       }
     }
     else {
@@ -64,7 +60,7 @@ export default function Varification({ navigation, route }) {
 
   const Register = () => {
     if (value == "") {
-      Alert.alert("Enter OTP")
+      ToastAndroid.show('Enter OTP', ToastAndroid.SHORT); 
     }
     else {
       setIsLodding(true)

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator, Text, View, ScrollView, TouchableOpacity, TextInput, Picker,
-  FlatList, Image, Platform, StatusBar, Modal, Pressable, Alert, RefreshControl
+  FlatList, Image, Platform, ToastAndroid, Modal, Pressable, Alert, RefreshControl
 } from 'react-native';
 import { Card } from 'react-native-paper';
 import PieChart from 'react-native-pie-chart';
@@ -167,7 +167,7 @@ export default function Dashboard({ navigation, route, props }) {
       else if (dashboardData == '') {                                                                               //otherwise alert show 
       }
       else {
-        Alert.alert(dashboardData.message)
+        ToastAndroid.show(dashboardData.message, ToastAndroid.SHORT);
       }
     }
     else {
@@ -251,7 +251,7 @@ export default function Dashboard({ navigation, route, props }) {
           <View
               style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
               <TouchableOpacity style={{ marginRight: '5%' }}
-                onPress={() => checkValue("Opportunity")}
+                // onPress={() => checkValue("Opportunity")}
               >
                 <View style={{ borderBottomWidth: 3, borderColor: '#6998F8', }} >
                   <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', fontSize: 16 }}>Opportunity</Text></View>

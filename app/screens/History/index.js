@@ -1,615 +1,638 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList, Image, Button, ScrollView,
-  Modal, Alert, Pressable, StatusBar, Platform, ActivityIndicator
-} from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, Image, Alert, Platform, ActivityIndicator, Pressable, Dimensions, ToastAndroid } from 'react-native';
 import styles from "./styles";
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
+import { Card } from 'react-native-paper'
 import { historyAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
-export default function lead_manager({ navigation }) {
+export default function History({ navigation }) {
 
 
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [selectedValue1, setSelectedValue1] = useState('');
-  const [selectedValue2, setSelectedValue2] = useState('');
-
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('date');
-  const [show, setShow] = useState(false);
-  const [text, settext] = useState(true)
-
-  const [dates, setDates] = useState(new Date());
-  const [modes, setModes] = useState('date');
-  const [shows, setShows] = useState(false);
-  const [texts, settexts] = useState(true)
-
-  const onChangeFrom = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    settext(false)
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-
-  const onChangeTo = (event, selectedDates) => {
-    const currentDates = selectedDates || dates;
-    setShows(Platform.OS === 'ios');
-    setDates(currentDates);
-  };
-
-  const showModes = (currentModes) => {
-    setShows(true);
-    setModes(currentModes);
-  };
-
-  const showDatepickers = () => {
-    showModes('date');
-  };
-
-
-  const [value, setValue] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
-
-
-  const data = [
-    { label: 'Select Campaign', value: 'Select Campaign' },
-    { label: 'Select Campaign1', value: 'Select Campaign1' },
-    { label: 'Select Campaign2', value: 'Select Campaign2' },
-  ];
-
-  const [value1, setValue1] = useState(null);
-  const [isFocus1, setIsFocus1] = useState(false);
-
-
-  const data1 = [
-    { label: 'Select Status', value: 'Select Status' },
-    { label: 'Select Status1', value: 'Select Status1' },
-    { label: 'Select Status2', value: 'Select Status2' },
-  ];
-  const Search = () => {
-    Alert.alert('Search functionality')
-  }
-
-  const Detail = () => {
-    navigation.navigate('HistoryOne')
-  }
-  // const { width, height } = Dimensions.get('window');
   const [History, setHistory] = useState()
   const [IsLodding, setIsLodding] = useState(false)
+  const [campList, setcampList] = useState([])
+  const [campId, setcampId] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
+  const [statusList, setstatusList] = useState([])
+  const [statusId, setstatusId] = useState(null);
+  const [status, setstatus] = useState(null);
+  const [isFocus1, setIsFocus1] = useState(false);
+  const { width, height } = Dimensions.get('window');
+
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
+  const UserData = useSelector(state => state.auth.data)
+  const historyData = useSelector(state => state.history.getHistory)
+  const CampData = useSelector(state => state.history.campData)
+  const LeadData = useSelector(state => state.history.leadData)
+
   const loginData = useSelector(state => state.auth.data)
   const registerData = useSelector(state => state.varify.otp)
-  const historyData = useSelector(state => state.history.getHistoryList)
 
-  useEffect(() => {
-    if (loginData || registerData && isFocused) {
+
+  const [startDate, setstartDate] = useState(new Date());
+  const [startmode, setstartMode] = useState('date');
+  const [startshow, setstartshow] = useState(false);
+  const [starttext, setstarttext] = useState(true)
+
+  const onChangeFrom = (event, selectedDate) => {
+    if (event.type == 'dismissed') {
+      setstartshow(!startshow);
+    }
+    else {
+      console.log('date selected ', event)
+      const currentDate = selectedDate || startDate;
+      setstartshow(Platform.OS === 'ios' ? true : false);
+      setstartDate(currentDate)
+      setstarttext(false)
+    }
+  };
+  const Mode = (currentMode) => {
+    setstartshow(!startshow);
+    setstartMode(currentMode);
+  };
+  const showDatepicker = () => {
+    Mode('date');
+  };
+
+
+
+  const [enddate, setendDate] = useState(new Date());
+  const [endmode, setendMode] = useState('date');
+  const [endshow, setendShow] = useState(false);
+  const [endtext, setendtext] = useState(true)
+
+  const onChangeendDate = (event, selectedDate) => {
+    if (event.type == 'dismissed') {
+      console.log('date not selected end ')
+      setendShow(!endshow);
+    }
+    else {
+      const currentDate = selectedDate || enddate;
+      setendShow(Platform.OS === 'ios' ? true : false);
+      setendDate(currentDate)
+      setendtext(false)
+    }
+  };
+  const setEMode = (currentMode) => {
+    setendShow(!endshow);
+    setendMode(currentMode);
+  };
+  const showEDatepicker = () => {
+    setEMode('date');
+  };
+
+  const Search = () => {
+    let StartDate = moment(startDate).format("YYYY-MM-DD")
+    let EndDate = moment(enddate).format("YYYY-MM-DD")
+    if (loginData || registerData) {
       if (loginData.status == "success") {
-        var Data = {
+        let data = {
           uid: loginData.data.uid,
-          profile_id: loginData.data.cProfile,
           org_uid: loginData.data.org_uid,
+          profile_id: loginData.data.cProfile.toString(),
+          pageSize: '40',
+          pageNumber: '0',
+          filters: []
         }
-        dispatch(historyAction.historyList(Data, loginData.data.token));
-        setIsLodding(true)
+        if (starttext == false || endtext == false || statusId !== null || campId !== null) {
+          if (StartDate !== EndDate) {
+            if (starttext == true) {
+              ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
+            }
+            else if (endtext == true) {
+              ToastAndroid.show('Please Select end Date', ToastAndroid.SHORT);
+            }
+            else {
+              if (StartDate <= EndDate) {
+                setIsLodding(true)
+                data.filters.push({ gte: StartDate, key: 'created_at' },
+                  { lte: EndDate, key: 'created_at' })
+                  dispatch(historyAction.HistoryList(data, loginData.data.token));
+              }
+              else {
+                ToastAndroid.show('wrong format', ToastAndroid.SHORT);
+              }
+            }
+          }
+          else if (StartDate == EndDate && starttext == false && endtext == false){
+            setIsLodding(true)
+            data.filters.push({ gte: StartDate, key: 'created_at' },
+              { lte: EndDate, key: 'created_at' })
+              dispatch(historyAction.HistoryList(data, loginData.data.token));
+          }
+
+          if (statusId !== null && campId !== null) {
+            setIsLodding(true)
+            data.filters.push({ eq: campId, key: 'campaign' },
+              { eq: status, key: 'lead_status' })
+              dispatch(historyAction.HistoryList(data, loginData.data.token));
+          }
+          else if (statusId !== null) {
+            setIsLodding(true)
+            data.filters.push({ eq: status, key: 'lead_status' })
+            dispatch(historyAction.HistoryList(data, loginData.data.token));
+          }
+          else if (campId !== null) {
+            setIsLodding(true)
+            data.filters.push({ eq: campId, key: 'campaign' })
+            dispatch(historyAction.HistoryList(data, loginData.data.token));
+          }
+        }
+        console.log(data)
       }
       else if (registerData.status == "success") {
-        var Data = {
+        let data = {
           uid: registerData.data.uid,
-          profile_id: registerData.data.cProfile,
           org_uid: registerData.data.org_uid,
+          profile_id: registerData.data.cProfile.toString(),
+          pageSize: '40',
+          pageNumber: '0',
+          filters: []
         }
-        dispatch(historyAction.historyList(Data, registerData.data.token));
-        setIsLodding(true)
+        if (starttext == false || endtext == false || statusId !== null || campId !== null) {
+          if (StartDate !== EndDate) {
+            if (starttext == true) {
+              ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
+            }
+            else if (endtext == true) {
+              ToastAndroid.show('Please Select end Date', ToastAndroid.SHORT);
+            }
+            else {
+              if (StartDate <= EndDate) {
+                setIsLodding(true)
+                data.filters.push({ gte: StartDate, key: 'created_at' },
+                  { lte: EndDate, key: 'created_at' })
+                  dispatch(historyAction.HistoryList(data, registerData.data.token));
+              }
+              else if (StartDate == EndDate && starttext == false && endtext == false){
+                setIsLodding(true)
+                data.filters.push({ gte: StartDate, key: 'created_at' },
+                  { lte: EndDate, key: 'created_at' })
+                  dispatch(historyAction.HistoryList(data, registerData.data.token));
+              }
+              else {
+                ToastAndroid.show('wrong format', ToastAndroid.SHORT);
+              }
+            }
+          }
+          else if (StartDate == EndDate && starttext == false && endtext == false){
+            setIsLodding(true)
+            data.filters.push({ gte: StartDate, key: 'created_at' },
+              { lte: EndDate, key: 'created_at' })
+              dispatch(historyAction.HistoryList(data, registerData.data.token));
+          }
+          if (statusId !== null && campId !== null) {
+            setIsLodding(true)
+            data.filters.push({ eq: campId, key: 'campaign' },
+              { eq: status, key: 'lead_status' })
+              dispatch(historyAction.HistoryList(data, registerData.data.token));
+          }
+          else if (statusId !== null) {
+            setIsLodding(true)
+            data.filters.push({ eq: status, key: 'lead_status' })
+            dispatch(historyAction.HistoryList(data, registerData.data.token));
+          }
+          else if (campId !== null) {
+            setIsLodding(true)
+            data.filters.push({ eq: campId, key: 'campaign' })
+            dispatch(historyAction.HistoryList(data, registerData.data.token));
+          }
+         
+        }
+        console.log(data)
       }
     }
-  }, [loginData, registerData, isFocused])
+  }
+
+  const Reset = () => {
+    console.log('reser')
+    setstarttext(true)
+    setendtext(true)
+    setcampId(null)
+    setstatusId(null)
+    setstatus(null)
+    setstartDate(new Date())
+    setendDate(new Date())
+    setIsLodding(true)
+    if (loginData || registerData) {
+      if (loginData.status == "success") {
+        let data = {
+          uid: loginData.data.uid,
+          org_uid: loginData.data.org_uid,
+          profile_id: loginData.data.cProfile.toString(),
+          pageSize: '40',
+          pageNumber: '0',
+          filters: []
+        }
+        dispatch(historyAction.HistoryList(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        let data = {
+          uid: registerData.data.uid,
+          org_uid: registerData.data.org_uid,
+          profile_id: registerData.data.cProfile.toString(),
+          pageSize: '40',
+          pageNumber: '0',
+          filters: []
+        }
+        dispatch(historyAction.HistoryList(data, registerData.data.token));
+      }
+    }
+  }
+
+  const Detail = (value) => {
+    navigation.navigate('HistoryOne', { id: value })
+  }
+
+  useEffect(() => {
+    setIsLodding(true)
+    if (loginData || registerData ) {
+      if (loginData.status == "success") {
+        let data = {
+          uid: loginData.data.uid,
+          org_uid: loginData.data.org_uid,
+          profile_id: loginData.data.cProfile.toString(),
+          pageSize: '40',
+          pageNumber: '0',
+          filters: []
+        }
+        dispatch(historyAction.HistoryList(data, loginData.data.token));
+        dispatch(historyAction.LeadStatusList(data, loginData.data.token));
+        dispatch(historyAction.CampaignList(data, loginData.data.token));
+      }
+      else if (registerData.status == "success") {
+        let data = {
+          uid: registerData.data.uid,
+          org_uid: registerData.data.org_uid,
+          profile_id: registerData.data.cProfile.toString(),
+          pageSize: '40',
+          pageNumber: '0',
+          filters: []
+        }
+        dispatch(historyAction.HistoryList(data, registerData.data.token));
+        dispatch(historyAction.LeadStatusList(data, registerData.data.token));
+        dispatch(historyAction.CampaignList(data, registerData.data.token));
+      }
+    }
+  }, [loginData ,registerData ])
 
   useEffect(() => {
     if (historyData) {
-      if (historyData.status == "200") {
-        setHistory([historyData.data])
+
+      if (historyData.status == "success") {
+        setHistory(historyData.data)
         setIsLodding(false)
+        dispatch(historyAction.clearResponse())
       }
       else if (historyData.status == "failed") {
         setIsLodding(false)
+        ToastAndroid.show(historyData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
       }
       else if (historyData.status == "fail") {
         setIsLodding(false)
-        Alert.alert(historyData.message)
+        ToastAndroid.show(historyData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
       }
       else {
-        setIsLodding(false)
       }
-    }
-    else {
-
     }
   }, [historyData])
 
+  useEffect(() => {
+    if (CampData) {
+      if (CampData.status == "200") {
+        setcampList(
+          CampData.data !== undefined && CampData.data.map((item, index) =>
+            item ? { label: item.campaign_name, value: item.id } : { label: 'None', value: 'None' })
+        )
+        // setHistory(CampData.data)
+        setIsLodding(false)
+      }
+      else if (CampData.status == "failed") {
+        setIsLodding(false)
+        ToastAndroid.show(CampData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+      else if (CampData.status == "fail") {
+        setIsLodding(false)
+        ToastAndroid.show(CampData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+      else {
+
+      }
+    }
+  }, [CampData])
+
+  useEffect(() => {
+    if (LeadData) {
+
+      if (LeadData.status == "200") {
+        setstatusList(
+          LeadData.data !== undefined && LeadData.data.map((item, index) =>
+            item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' })
+        )
+        // setHistory(LeadData.data)
+        setIsLodding(false)
+        dispatch(historyAction.clearResponse())
+      }
+      else if (LeadData.status == "failed") {
+        setIsLodding(false)
+        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+      else if (LeadData.status == "fail") {
+        setIsLodding(false)
+        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+      else {
+
+      }
+    }
+  }, [LeadData])
+
+
+  const [fileterType, setfileterType] = useState([])
+
+  const campaignSelect = (value) => {
+    setcampId(value);
+    setIsFocus(false);
+  }
+
+  const statusSelect = (item) => {
+    // console.log(item)
+    setstatus(item.label)
+    setstatusId(item.value);
+    setIsFocus1(false);
+  }
+
   const HistoryView = ({ item }) => {
-    // console.log("item.....HistoryView..............", item)
     return (
       <TouchableOpacity
-        onPress={() => Detail('Closed')}
+        onPress={() => Detail(item.lead_id)}
       >
-        <View style={styles.listData}>
-          <View style={{ justifyContent: 'center', }}>
+        <Card style={{ marginHorizontal: '3%', marginVertical: '1%', padding: 3 }}>
+          <View style={{ flexDirection: 'row', marginVertical: '2%' }}>
             <Image
-              style={{ height: 48, width: 48, }}
+              style={{ height: 48, width: 48, marginHorizontal: '1%', }}
               source={require('../../images/profileCall.png')}
             />
-          </View>
-          <View style={{ marginLeft: '2%', flex: 1, }}>
-            <Text style={{
-              fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',
-              fontFamily: 'Roboto'
-            }}>{item.first_name} {item.last_name}</Text>
-
-            <View style={{ flexDirection: 'row', }}>
-              <Text
-                style={{
-                  color: 'black', fontFamily: 'Roboto',
-                  fontSize: 12, color: '#0F0F0F', flexShrink: 1
-                }}>
-                {item.company ? item.company : 'no name'}</Text>
-
+            <View style={{ marginHorizontal: '2%', width: '52%' }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>{item.lead ? item.lead.first_name : ''} {item.lead ? item.lead.last_name : ''}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>{item.lead ? item.lead.company : ''}</Text>
+                {item.feedbackStatus ? item.feedbackStatus.status ?
+                  <Text style={{
+                    color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
+                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
+                  }}>{item.feedbackStatus.status}</Text>
+                  :
+                  null : null}
+              </View>
+              <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>
+                {/* Last Call: Sep 17, 15:24PM */}
+                Last Call: {moment(item.created_at).format('lll')}
+              </Text>
             </View>
-            <View style={{ flexDirection: 'row', marginTop: '1%' }}>
-              <Text style={{ fontWeight: '500', fontSize: 12, color: '#0F0F0F' }}>Last Call: {moment(item.updated_at).format('LLL')}</Text>
-            </View>
-          </View>
-
-          <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
             <View style={{ flexDirection: 'row' }}>
               <Image
-                style={{ height: 10, width: 10, marginRight: '2%' }}
+                style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
                 source={require('../../images/material-call.png')}
               />
-              <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
+              <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 {item.lead ? item.lead.phone : ''}</Text>
             </View>
-
           </View>
-        </View>
+        </Card>
+
       </TouchableOpacity>
     )
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: width, height: height }]}>
       <Header
-        onPressLeft={() => {
-          // navigation.OpenDrawer()
-          navigation.goBack()
-        }}
+        style={Platform.OS == 'ios' ?
+          { height: "20%" } :
+          // { height: "16%" }}
+          {}}
         title='History'
+        renderLeft={() => {
+          return (
+            <Image
+              // style={styles.image2}
+              source={require('../../images/home.png')}
+              style={{ width: 28, height: 28 }} />
+          );
+        }}
+        onPressLeft={() => {
+          navigation.goBack()
+          // navigation.openDrawer()
+        }}
+        renderRight={() => {
+          return (
+            <Image
+              source={require('../../images/Notifications.png')}
+              style={{ width: 28, height: 28 }} />
+          );
+        }}
         onPressRight={() => {
           navigation.navigate('Notification')
         }}
       />
-
-      {shows && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={dates}
-          mode={modes}
-          // is24Hour={true}
-          display="default"
-          onChange={onChangeTo}
-        />
-      )}
-
-      <View style={{
-        flexDirection: 'row',
-        justifyContent: 'space-around', padding: '2%'
-      }}>
-
-        <TouchableOpacity
-          style={{ width: '48%' }}
-          onPress={showDatepicker}
-        >
-          <View style={styles.pickers}>
-            <Image
-              style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-              source={require('../../images/pikerCalander.png')}
-            />
-
-            {show && (
-              <DateTimePicker
-                testID="dateTimePicker"
-                style={{ backgroundColor: '', marginTop: '-5%', width: '100%' }}
-                value={date}
-                mode={mode}
-                // is24Hour={true}
-                display="default"
-                onChange={onChangeFrom}
-              />
-            )
-            }
-            {Platform.OS == 'ios' ? <View>
-              {text == true ?
-                <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                :
-                <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
-              }
-            </View>
-              :
-              <View>
-                {text == true ?
-                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>From</Text>
-                  :
-                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                }
-              </View>
-            }
-
-
-
-          </View>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity
-          style={{ width: '48%' }}
-          onPress={showDatepickers}
-        >
-          <View style={styles.pickers}>
-            <Image
-              style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-              source={require('../../images/pikerCalander.png')}
-            />
-            {texts == true ?
-              <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>To</Text>
-              :
-              <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(dates).format('MM/DD/YYYY')}</Text>
-            }
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%', marginTop: '-2%' }}>
-        <Dropdown
-          style={[styles.dropdown3, { width: '48%' }, isFocus && { borderColor: '' }]}
-          placeholderStyle={styles.placeholderStyle3}
-          selectedTextStyle={styles.selectedTextStyle3}
-          // inputSearchStyle={styles.inputSearchStyle3}
-          iconStyle={styles.iconStyle3}
-          data={data}
-          // search
-          maxHeight={160}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus ? 'Select Campaign' : '...'}
-          // searchPlaceholder="Search..."
-          value={value}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          onChange={item => {
-            setValue(item.value);
-            setIsFocus(false);
-          }}
-          renderLeftIcon={() => (
-
-            <View>
-              <Image
-                source={require('../../images/list.png')}
-                style={{ height: 21, width: 16, marginRight: '5%' }}
-              />
-            </View>
-          )}
-        />
-
-        <Dropdown
-          style={[styles.dropdown3, { width: '48%' }, isFocus && { borderColor: '' }]}
-          placeholderStyle={styles.placeholderStyle3}
-          selectedTextStyle={styles.selectedTextStyle3}
-          // inputSearchStyle={styles.inputSearchStyle3}
-          iconStyle={styles.iconStyle3}
-          data={data1}
-          // search
-          maxHeight={160}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus1 ? 'Select Status' : '...'}
-          // searchPlaceholder="Search..."
-          value={value1}
-          onFocus={() => setIsFocus1(true)}
-          onBlur={() => setIsFocus1(false)}
-          onChange={item => {
-            setValue1(item.value);
-            setIsFocus1(false);
-          }}
-          renderLeftIcon={() => (
-
-            <View>
-              <Image
-                source={require('../../images/statusnet.png')}
-                style={{ height: 21.08, width: 22.71, marginRight: '5%' }}
-              />
-            </View>
-          )}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.button} 
-      // onPress={() => Search()}
-      >
-        <Text style={[styles.textButton, { fontWeight: 'bold', fontSize: 17 }]}>SEARCH</Text>
-      </TouchableOpacity>
-
-      {/* <View style={{ backgroundColor: 'red', height: 20 }}></View> */}
       {IsLodding == true ?
         <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
         :
         <View>
-          {History !== undefined && History.length > 0 ?
-            <FlatList
-              // style={{ height: height / 1.55 }}
-              data={History}
-              renderItem={HistoryView}
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around', padding: '2%'
+          }}>
+
+            <Pressable
+              style={styles.pickerStyle}
+              onPress={showDatepicker} >
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  style={Platform.OS == 'ios' ?
+                    [styles.icon] :
+                    [styles.icon, { marginTop: '2%' }]}
+                  source={require('../../images/DOB.png')}
+                />
+                {startshow && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    style={{ paddingVertical: '5%', width: '50%' }}
+                    // is24Hour={true}
+                    value={startDate}
+                    mode={startmode}
+                    display="default"
+                    onChange={onChangeFrom}
+                  />
+                )}
+                {Platform.OS == 'ios' ? <View>
+                  {starttext == true ?
+                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>From Date</Text>
+                    :
+                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                  }
+                </View>
+                  :
+                  <View>
+                    {starttext == true ?
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>From Date</Text>
+                      :
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(startDate).format('DD/MM/YYYY')}</Text>
+                    }
+                  </View>
+                }
+              </View>
+            </Pressable>
+
+            <Pressable
+              style={styles.pickerStyle}
+              onPress={showEDatepicker} >
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  style={Platform.OS == 'ios' ?
+                    [styles.icon] :
+                    [styles.icon, { marginTop: '2%' }]}
+                  source={require('../../images/DOB.png')}
+                />
+                {endshow && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    style={{ paddingVertical: '5%', width: '50%' }}
+                    // is24Hour={true}
+                    value={enddate}
+                    mode={endmode}
+                    display="default"
+                    onChange={onChangeendDate}
+                  />
+                )}
+                {Platform.OS == 'ios' ? <View>
+                  {endtext == true ?
+                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>To Date</Text>
+                    :
+                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                  }
+                </View>
+                  :
+                  <View>
+                    {endtext == true ?
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>To Date</Text>
+                      :
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(enddate).format('DD/MM/YYYY')}</Text>
+                    }
+                  </View>
+                }
+              </View>
+            </Pressable>
+          </View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%', marginTop: '-2%' }}>
+            <Dropdown
+              style={[styles.dropdown, { width: '48%' }, isFocus && { borderColor: '' }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              // inputSearchStyle={styles.inputSearchStyle3}
+              iconStyle={styles.iconStyle}
+              data={campList}
+              // search
+              maxHeight={160}
+              labelField="label"
+              valueField="value"
+              placeholder='Select Campaign'
+              // searchPlaceholder="Search..."
+              value={campId}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={item => {
+                campaignSelect(item.value)
+                // setcampId(item.value);
+                // setIsFocus(false);
+              }}
+              renderLeftIcon={() => (
+
+                <View>
+                  <Image
+                    source={require('../../images/list.png')}
+                    style={{ height: 21, width: 16, marginRight: '5%' }}
+                  />
+                </View>
+              )}
             />
-            :
-            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
+
+            <Dropdown
+              style={[styles.dropdown, { width: '48%' }, isFocus && { borderColor: '' }]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              // inputSearchStyle={styles.inputSearchStyle3}
+              iconStyle={styles.iconStyle}
+              data={statusList}
+              // search
+              maxHeight={160}
+              labelField="label"
+              valueField="value"
+              placeholder='Select Status'
+              // searchPlaceholder="Search..."
+              value={statusId}
+              onFocus={() => setIsFocus1(true)}
+              onBlur={() => setIsFocus1(false)}
+              onChange={item => {
+                // console.log(item)
+                statusSelect(item)
+                // setstatusId(item.value);
+                // setIsFocus1(false);
+              }}
+              renderLeftIcon={() => (
+
+                <View>
+                  <Image
+                    source={require('../../images/statusnet.png')}
+                    style={{ height: 21.08, width: 22.71, marginRight: '5%' }}
+                  />
+                </View>
+              )}
+            />
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <TouchableOpacity style={[styles.button, { width: '60%' }]} onPress={() => Search()}>
+              <Text style={styles.btnText}>SEARCH</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              // style={styles.button}
+              style={{ marginTop: '2%' }}
+              onPress={() => Reset()}>
+              {/* <Text style={styles.btnText}>RESET</Text> */}
+              <Image
+                source={require('../../images/refreshButton.png')}
+                style={{ height: 24, width: 24 }} />
+            </TouchableOpacity>
+          </View>
+          <View>
+            {History !== undefined && History.length > 0 ?
+              // <Text>nh</Text>
+              <FlatList
+                style={{ height: height / 2 }}
+                data={History}
+                // scrollEnabled={true}
+                renderItem={HistoryView}
+              />
+              :
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
+            }
+          </View>
+          <View style={{ height: 10 }}></View>
         </View>
       }
-
-      {/* <View style={{ marginTop: '2.5%' }}>
-        <TouchableOpacity
-          onPress={() => Detail('New')}
-        >
-          <View style={styles.listData}>
-            <Image
-              style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-              source={require('../../images/profileCall.png')}
-            />
-            <View style={{ marginLeft: '-10%' }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                <Text style={{
-                  color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                  padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                }}>New</Text>
-              </View>
-              <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-            </View>
-
-            <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-              <Image
-                style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                source={require('../../images/material-call.png')}
-              />
-              <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View> */}
-
-      {/* <ScrollView>
-
-        <View style={{ marginTop: '2.5%' }}>
-          <TouchableOpacity
-            onPress={() => Detail('New')}
-          >
-            <View style={styles.listData}>
-              <Image
-                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                source={require('../../images/profileCall.png')}
-              />
-              <View style={{ marginLeft: '-10%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                  <Text style={{
-                    color: '#fff', backgroundColor: '#F69708', paddingLeft: 10, paddingRight: 10,
-                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                  }}>New</Text>
-                </View>
-                <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-                <Image
-                  style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                  source={require('../../images/material-call.png')}
-                />
-                <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-
-        <View style={{ marginTop: '-1%' }}>
-          <TouchableOpacity
-            onPress={() => Detail('Hold')}
-          >
-
-            <View style={styles.listData}>
-              <Image
-                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                source={require('../../images/profileCall.png')}
-              />
-              <View style={{ marginLeft: '-10%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                  <Text style={{
-                    color: '#fff', backgroundColor: '#608EE9', paddingLeft: 10, paddingRight: 10,
-                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                  }}>Hold</Text>
-                </View>
-                <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-                <Image
-                  style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                  source={require('../../images/material-call.png')}
-                />
-                <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ marginTop: '-1%' }}>
-          <TouchableOpacity
-            onPress={() => Detail('DND')}
-          >
-            <View style={styles.listData}>
-              <Image
-                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                source={require('../../images/profileCall.png')}
-              />
-              <View style={{ marginLeft: '-10%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                  <Text style={{
-                    color: '#fff', backgroundColor: '#FF0000', paddingLeft: 10, paddingRight: 10,
-                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                  }}>DND</Text>
-                </View>
-                <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-                <Image
-                  style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                  source={require('../../images/material-call.png')}
-                />
-                <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ marginTop: '-1%' }}>
-          <TouchableOpacity
-            onPress={() => Detail('Closed')}
-          >
-            <View style={styles.listData}>
-              <Image
-                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                source={require('../../images/profileCall.png')}
-              />
-              <View style={{ marginLeft: '-10%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                  <Text style={{
-                    color: '#fff', backgroundColor: '#05B829', paddingLeft: 10, paddingRight: 10,
-                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                  }}>Closed</Text>
-                </View>
-                <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-                <Image
-                  style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                  source={require('../../images/material-call.png')}
-                />
-                <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ marginTop: '-1%' }}>
-          <TouchableOpacity
-            onPress={() => Detail('Closed')}
-          >
-            <View style={styles.listData}>
-              <Image
-                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                source={require('../../images/profileCall.png')}
-              />
-              <View style={{ marginLeft: '-10%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                  <Text style={{
-                    color: '#fff', backgroundColor: '#05B829', paddingLeft: 10, paddingRight: 10,
-                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                  }}>Closed</Text>
-                </View>
-                <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-                <Image
-                  style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                  source={require('../../images/material-call.png')}
-                />
-                <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ marginTop: '-1%' }}>
-          <TouchableOpacity
-            onPress={() => Detail('Closed')}
-          >
-            <View style={styles.listData}>
-              <Image
-                style={{ height: 48, width: 48, marginTop: '2%', marginRight: '2%' }}
-                source={require('../../images/profileCall.png')}
-              />
-              <View style={{ marginLeft: '-10%' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 14, fontFamily: 'Roboto', color: '#0F0F0F' }}>Johne Doe</Text>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={{ color: '#565656', fontSize: 12, fontFamily: 'Roboto' }}>SMT Group</Text>
-                  <Text style={{
-                    color: '#fff', backgroundColor: '#05B829', paddingLeft: 10, paddingRight: 10,
-                    padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10
-                  }}>Closed</Text>
-                </View>
-                <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>Last Call: Sep 17, 15:24PM</Text>
-
-              </View>
-
-              <View style={{ flexDirection: 'row', marginLeft: '-3%' }}>
-                <Image
-                  style={{ height: 10, width: 10, marginRight: '3%', marginTop: '5%' }}
-                  source={require('../../images/material-call.png')}
-                />
-                <Text style={{ marginTop: '4%', color: '#0F0F0F', fontSize: 10 }}>+91 1234567890</Text>
-
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </ScrollView> */}
     </View >
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView,
+    Text, View, ToastAndroid, TouchableOpacity, TextInput, ScrollView,
     Image, Alert, StatusBar, SafeAreaView, Dimensions, Platform, ActivityIndicator
 } from 'react-native';
 import styles from './styles';
@@ -32,7 +32,7 @@ export default function Register({ navigation }) {
             else if (registerData.status == "failed") {
                 setIsLodding(false)
                 dispatch(registerAction.clearResponse())
-                Alert.alert(registerData.message)
+                ToastAndroid.show(registerData.message, ToastAndroid.SHORT);
             }
         }
         else {
@@ -41,22 +41,22 @@ export default function Register({ navigation }) {
 
     const RegisterFunction = () => {
         if (Name == "") {
-            Alert.alert(" Enter name ")
+            ToastAndroid.show('Enter name', ToastAndroid.SHORT);
         }
         else if (Email == "") {
-            Alert.alert("Enter Email")
+            ToastAndroid.show('Enter Email', ToastAndroid.SHORT);
         }
         else if (Phone == "") {
-            Alert.alert("Phone")
+            ToastAndroid.show('Enter Phone Number', ToastAndroid.SHORT);
         }
         else if (Org == "") {
-            Alert.alert(" Enter Organization ")
+            ToastAndroid.show('Enter Organization', ToastAndroid.SHORT);
         }
         else if (Password == "") {
-            Alert.alert("Enter Password")
+            ToastAndroid.show('Enter Password', ToastAndroid.SHORT);
         }
         else if (Cpassword == "") {
-            Alert.alert(" Enter Re-Password ")
+            ToastAndroid.show('Enter Re-Password', ToastAndroid.SHORT);
         }
         else {
             const data = {

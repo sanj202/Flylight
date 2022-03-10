@@ -225,28 +225,28 @@ export default function AddContact({ navigation, route }) {
 
     const AddLeadFuction = () => {
         if (title == "") {
-            Alert.alert(" Enter Lead Title ")
+            ToastAndroid.show('Enter Lead Title', ToastAndroid.SHORT);
         }
         else if (fname == "") {
-            Alert.alert(" Enter First Name ")
+            ToastAndroid.show('Enter First Name', ToastAndroid.SHORT);
         }
         else if (lname == "") {
-            Alert.alert("Enter Last Name")
+            ToastAndroid.show('Enter Last Name', ToastAndroid.SHORT);
         }
         else if (gender == null) {
-            Alert.alert("select gender ")
+            ToastAndroid.show('select gender', ToastAndroid.SHORT);
         }
         else if (phone == "") {
-            Alert.alert(" Enter phone Number ")
+            ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);
         }
         else if (Aphone == "") {
-            Alert.alert(" Enter Alternative phone Number ")
+            ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT);
         }
         else if (email == "") {
-            Alert.alert(" Enter Email Id")
+            ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT);
         }
         else if (Country == "") {
-            Alert.alert(" Enter Country Name")
+            ToastAndroid.show('Enter Country Name', ToastAndroid.SHORT);
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
@@ -339,12 +339,12 @@ export default function AddContact({ navigation, route }) {
             }
             else if (leadData.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(leadData.message)
+                ToastAndroid.show(leadData.message, ToastAndroid.SHORT);
                 dispatch(leadAction.clearResponse());
             }
             else if (leadData.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(leadData.message)
+                ToastAndroid.show(leadData.message, ToastAndroid.SHORT);
                 dispatch(leadAction.clearResponse());
             }
         }
@@ -385,7 +385,7 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={80}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus ? 'Lead Owner' : '...'}
+                            placeholder='Lead Owner'
                             value={LeadOwner}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
@@ -494,7 +494,7 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus2 ? 'Select Gender' : '...'}
+                            placeholder='Select Gender'
                             value={gender}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
@@ -661,7 +661,7 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={160}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus5 ? 'State' : '...'}
+                            placeholder='State'
                             value={State}
                             onFocus={() => setIsFocus5(true)}
                             onBlur={() => setIsFocus5(false)}
@@ -717,7 +717,7 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={160}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus3 ? '  Lead Status' : '...'}
+                            placeholder='Lead Status'
                             value={LeadStatus}
                             onFocus={() => setIsFocus3(true)}
                             onBlur={() => setIsFocus3(false)}
@@ -796,7 +796,7 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus4 ? 'Campaign' : '...'}
+                            placeholder='Campaign'
                             value={campaign}
                             onFocus={() => setIsFocus4(true)}
                             onBlur={() => setIsFocus4(false)}
@@ -840,7 +840,6 @@ export default function AddContact({ navigation, route }) {
                         transparent={true}
                         visible={modalVisible}
                         onRequestClose={() => {
-                            // Alert.alert("Modal has been closed.");
                             setModalVisible(!modalVisible);
                         }}
                     >

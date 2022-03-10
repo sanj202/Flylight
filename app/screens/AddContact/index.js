@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+  ActivityIndicator, Text, View, ToastAndroid, TouchableOpacity, TextInput, FlatList,
   Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
 } from 'react-native';
 import styles from './styles';
@@ -232,25 +232,25 @@ export default function AddContact({ navigation }) {
 
   const AddContactFuction = () => {
     if (title == "") {
-      Alert.alert(" Enter Contact Title ")
+      ToastAndroid.show('Enter Contact Title', ToastAndroid.SHORT); 
     }
     else if (fname == "") {
-      Alert.alert(" Enter First Name ")
+      ToastAndroid.show('Enter First Name', ToastAndroid.SHORT); 
     }
     else if (lname == "") {
-      Alert.alert("Enter Last Name")
+      ToastAndroid.show('Enter Last Name', ToastAndroid.SHORT); 
     }
     else if (gender == null) {
-      Alert.alert("select gender ")
+      ToastAndroid.show('select gender', ToastAndroid.SHORT); 
     }
     else if (phone == "") {
-      Alert.alert(" Enter phone Number ")
+      ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT); 
     }
     else if (Aphone == "") {
-      Alert.alert(" Enter Alternative phone Number ")
+      ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT); 
     }
     else if (email == "") {
-      Alert.alert(" Enter Email Id")
+      ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT); 
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
@@ -300,12 +300,12 @@ export default function AddContact({ navigation }) {
       }
       else if (Data.status == "failed") {
         setIsLodding(false)
-        Alert.alert(Data.message)
+        ToastAndroid.show(Data.message, ToastAndroid.SHORT); 
         dispatch(addcontactManuallyAction.clearResponse())
       }
       else if (Data.status == "fail") {
         setIsLodding(false)
-        Alert.alert(Data.message)
+        ToastAndroid.show(Data.message, ToastAndroid.SHORT);
         dispatch(addcontactManuallyAction.clearResponse())
       }
     }
@@ -341,7 +341,7 @@ export default function AddContact({ navigation }) {
               maxHeight={100}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus3 ? ' Lead Owner' : '...'}
+              placeholder='Lead Owner'
               value={LeadOwner}
               onFocus={() => setIsFocus3(true)}
               onBlur={() => setIsFocus3(false)}
@@ -454,7 +454,7 @@ export default function AddContact({ navigation }) {
               maxHeight={100}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus ? 'Select Gender' : '...'}
+              placeholder='Select Gender'
               value={gender}
               onFocus={() => setIsFocus(true)}
               onBlur={() => setIsFocus(false)}
@@ -614,7 +614,7 @@ export default function AddContact({ navigation }) {
               maxHeight={160}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus5 ? 'State' : '...'}
+              placeholder='State'
               value={State}
               onFocus={() => setIsFocus5(true)}
               onBlur={() => setIsFocus5(false)}
@@ -670,7 +670,7 @@ export default function AddContact({ navigation }) {
               maxHeight={160}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus2 ? '  Lead Status' : '...'}
+              placeholder='Lead Status'
               value={LeadStatus}
               onFocus={() => setIsFocus2(true)}
               onBlur={() => setIsFocus2(false)}
@@ -737,7 +737,7 @@ export default function AddContact({ navigation }) {
               maxHeight={100}
               labelField="label"
               valueField="value"
-              placeholder={!isFocus1 ? '  Select a Campagin' : '...'}
+              placeholder='Select a Campagin'
               value={Campagin}
               onFocus={() => setIsFocus1(true)}
               onBlur={() => setIsFocus1(false)}
@@ -775,7 +775,6 @@ export default function AddContact({ navigation }) {
         transparent={true}
         visible={modalVisible2}
         onRequestClose={() => {
-          // Alert.alert("Modal has been closed.");
           setModalVisible2(!modalVisible2);
         }}
       >

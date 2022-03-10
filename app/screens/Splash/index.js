@@ -19,8 +19,6 @@ export default function Splash() {
           const body = notification.message;
           const title = notification.title;
           console.log("NOTIFICATION.....................:", body,title);
-          // Alert.alert(title,body)
-          // process the notification
 
           PushNotification.localNotification(notification);
           // (required) Called when a remote is received or opened, or local notification is opened

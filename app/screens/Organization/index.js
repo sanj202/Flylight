@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, FlatList, Image, ActivityIndicator, Alert, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, Image, ActivityIndicator, ToastAndroid, Dimensions } from 'react-native';
 import Header from '../../component/header/index'
 import { organizationAction, authAction, varificationAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -52,7 +52,7 @@ export default function Organization({ navigation }) {
             else if (orgList.status == "failed") {
             }
             else if (orgList.status == "fail") {
-                Alert.alert(orgList.message)
+                ToastAndroid.show(orgList.message, ToastAndroid.SHORT);     
             }
             else {
             }
@@ -80,11 +80,11 @@ export default function Organization({ navigation }) {
         if (registerData) {
           if (registerData.status == "success") {
             setIsLodding(false)
-            navigation.navigate('Home')
+            // navigation.navigate('Home')
           }
           else if (registerData.status == "failed") {
             setIsLodding(false)
-            Alert.alert(registerData.message)                                                                                //otherwise alert show 
+            ToastAndroid.show(registerData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
           }
         }
         else {
@@ -95,11 +95,11 @@ export default function Organization({ navigation }) {
         if (loginData) {
           if (loginData.status == "success") {
             setIsLodding(false)
-            navigation.navigate('Home')
+            // navigation.navigate('Home')
           }
           else if (loginData.status == "failed") {
             setIsLodding(false)
-            Alert.alert(loginData.message)                                                                                //otherwise alert show 
+            ToastAndroid.show(loginData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
           }
         }
         else {

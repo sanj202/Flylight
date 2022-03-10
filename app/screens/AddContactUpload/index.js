@@ -102,11 +102,7 @@ export default function UploadContact({ navigation }) {
     }
 
     const Search = (value) => {
-        // console.log("data,......................", value)
-
         setModalVisible2(!modalVisible2)
-
-        // Alert.alert("search functinality")
     }
 
 
@@ -178,14 +174,13 @@ export default function UploadContact({ navigation }) {
                         maxHeight={140}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus ? 'Select list' : '...'}
+                        placeholder='Select list'
                         // searchPlaceholder="Search..."
                         value={value}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
                         onChange={item => {
                             if (item.value == '+ Add List') {
-                                // Alert.alert("picker add krna hai ")
                                 selectOneFile()
                             }
                             else {
@@ -229,7 +224,6 @@ export default function UploadContact({ navigation }) {
                 transparent={true}
                 visible={modalVisible2}
                 onRequestClose={() => {
-                    // Alert.alert("Modal has been closed.");
                     setModalVisible2(!modalVisible2);
                 }}
             >
@@ -289,7 +283,6 @@ export default function UploadContact({ navigation }) {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
-                    // Alert.alert("Modal has been closed.");
                     setModalVisible(!modalVisible);
                 }}
             >

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ScrollView, View, Text, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, ScrollView, View, Text, TouchableOpacity, Image ,ToastAndroid} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper'
 import styles from "./styles";
@@ -62,10 +62,11 @@ export default function Report({ navigation }) {
             }
             else if (reportData.status == "failed") {
                 setIsLodding(false)
+                ToastAndroid.show(reportData.message, ToastAndroid.SHORT);
             }
             else if (reportData.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(reportData.message)
+                ToastAndroid.show(reportData.message, ToastAndroid.SHORT);
             }
             else {
                 setIsLodding(false)
@@ -120,7 +121,7 @@ export default function Report({ navigation }) {
                         maxHeight={100}
                         labelField="label"
                         valueField="value"
-                        placeholder={!isFocus ? 'Select Campaign' : '...'}
+                        placeholder='Select Campaign'
                         // searchPlaceholder="Search..."
                         value={value}
                         onFocus={() => setIsFocus(true)}

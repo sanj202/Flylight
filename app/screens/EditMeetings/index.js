@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList, Image, ScrollView, Modal, Alert, Dimensions, Platform
+    ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList, Image, ScrollView, Modal, ToastAndroid, Dimensions, Platform
 } from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -178,21 +178,15 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (responseAdd_Edit) {
             if (responseAdd_Edit.status == "success") {
-                // setlocation(''),
-                //     setmeetingFor(null),
-                //     setreleetedTo(''),
-                //     setreleetedToId(''),
-                //     setDescription(''),
-                //     settitle(''),
-                //     setAttatchment(''),
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 navigation.navigate('Meetings')
                 dispatch(taskmanagerAction.clearResponse())
             }
             else if (responseAdd_Edit.status == "failed") {
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
             }
             else if (responseAdd_Edit.status == "fail") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(taskmanagerAction.clearResponse())
             }
             setIsLodding(false)
@@ -276,25 +270,25 @@ export default function AddContact({ navigation, route }) {
     const AddNewMeeting = () => {
 
         if (title == "") {
-            Alert.alert(" Enter Title ")
+            ToastAndroid.show('Enter Title', ToastAndroid.SHORT);
         }
         else if (location == "") {
-            Alert.alert(" Enter location")
+            ToastAndroid.show('Enter location', ToastAndroid.SHORT);
         }
         else if (meetingFor == null) {
-            Alert.alert(" select Meeting for")
+            ToastAndroid.show('select Meeting for', ToastAndroid.SHORT);
         }
         else if (startdate > enddate) {
-            Alert.alert(" select valid date")
+            ToastAndroid.show('select valid date', ToastAndroid.SHORT);
         }
         else if (Attatchment == "") {
-            Alert.alert(" Enter Attatchment link")
+            ToastAndroid.show('Enter Attatchment link', ToastAndroid.SHORT);
         }
         else if (releetedTo == "") {
-            Alert.alert(" Enter Releted to")
+            ToastAndroid.show('Enter Releted to', ToastAndroid.SHORT);
         }
         else if (Description == "") {
-            Alert.alert(" Enter Description")
+            ToastAndroid.show('Enter Description', ToastAndroid.SHORT);
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
@@ -412,7 +406,7 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus3 ? ' Host ' : '...'}
+                            placeholder='Host'
                             value={Host}
                             onFocus={() => setIsFocus3(true)}
                             onBlur={() => setIsFocus3(false)}
@@ -473,14 +467,14 @@ export default function AddContact({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus2 ? 'Meeting For' : '...'}
+                            placeholder='Meeting For'
                             value={meetingFor}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
-                            onChange={item => {
-                                setmeetingFor(item.value);
-                                setIsFocus2(false);
-                            }}
+                            // onChange={item => {
+                            //     setmeetingFor(item.value);
+                            //     setIsFocus2(false);
+                            // }}
 
                             onChange={item => {
                                 selectOneFile(item.value)

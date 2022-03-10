@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, ActivityIndicator, TouchableOpacity, TextInput, Image, Alert, Dimensions, Platform
+    Text, View, ActivityIndicator, TouchableOpacity, TextInput, Image, Alert, Dimensions, Platform,ToastAndroid
 } from 'react-native';
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -55,28 +55,28 @@ export default function EditProfile({ navigation, route }) {
 
     const Update = () => {
         if (fname == "") {
-            Alert.alert(" Enter first name ")
+            ToastAndroid.show('Enter first name', ToastAndroid.SHORT);
         }
         else if (lname == "") {
-            Alert.alert("Enter last name")
+            ToastAndroid.show('Enter last name', ToastAndroid.SHORT);
         }
         else if (date > new Date()) {
-            Alert.alert(" Enter Valid Dob ")
+            ToastAndroid.show('Enter Valid Dob', ToastAndroid.SHORT);
         }
         else if (street == "") {
-            Alert.alert("Enter street")
+            ToastAndroid.show('Enter street', ToastAndroid.SHORT);
         }
         else if (city == "") {
-            Alert.alert(" Enter city name ")
+            ToastAndroid.show('Enter city name', ToastAndroid.SHORT);
         }
         else if (state == "") {
-            Alert.alert(" Enter state name ")
+            ToastAndroid.show('Enter state name', ToastAndroid.SHORT);
         }
         else if (country == "") {
-            Alert.alert(" Enter country name ")
+            ToastAndroid.show('Enter country name', ToastAndroid.SHORT);
         }
         else if (zip == "") {
-            Alert.alert(" Enter zip code ")
+            ToastAndroid.show('Enter zip code', ToastAndroid.SHORT);
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
@@ -113,18 +113,18 @@ export default function EditProfile({ navigation, route }) {
         if (UpdatedData) {
             if (UpdatedData.status == "success") {
                 setIsLodding(false)
-                Alert.alert(UpdatedData.message)
+                ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
                 navigation.navigate("Profile", {
                 })
                 dispatch(editProfileAction.clearResponse())
             }
             else if (UpdatedData.status == "failed") {
                 setIsLodding(false)
-                Alert.alert(UpdatedData.message)
+                ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
             }
             else if (UpdatedData.status == "fail") {
                 setIsLodding(false)
-                Alert.alert(UpdatedData.message)
+                ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
             }
         }
         else {

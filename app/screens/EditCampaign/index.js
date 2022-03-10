@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform
+    Image, Button, ScrollView, Modal, Alert, ToastAndroid, StatusBar, Dimensions, Platform
 } from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -129,14 +129,17 @@ export default function EditCampaign({ navigation, route }) {
         if (responseAdd_Edit) {
           setIsLodding(false)
             if (responseAdd_Edit.status == "success") {
-                Alert.alert(responseAdd_Edit.message)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(campaignAction.AddEditclearResponse())
                 navigation.navigate('Campaign')
             }
             else if (responseAdd_Edit.status == "failed") {
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
             }
             else if (responseAdd_Edit.status == "fail") {
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
             }
+
         }
         else {
         }
@@ -146,10 +149,10 @@ export default function EditCampaign({ navigation, route }) {
 
     const AddNewCampaign = () => {
         if (campaignName == "") {
-            Alert.alert(" Enter campaign Name ")
+            ToastAndroid.show('Enter campaign Name', ToastAndroid.SHORT);
         }
         else if (Status == null) {
-            Alert.alert(" Enter campaign Status")
+            ToastAndroid.show('Enter campaign Status', ToastAndroid.SHORT);
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
@@ -226,7 +229,7 @@ export default function EditCampaign({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus3 ? ' Campaign Owner' : '...'}
+                            placeholder='Campaign Owner'
                             value={CampaignOwner}
                             onFocus={() => setIsFocus3(true)}
                             onBlur={() => setIsFocus3(false)}
@@ -271,7 +274,7 @@ export default function EditCampaign({ navigation, route }) {
                             maxHeight={100}
                             labelField="label"
                             valueField="value"
-                            placeholder={!isFocus ? 'Campaign Status' : '...'}
+                            placeholder='Campaign Status'
                             value={Status}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
