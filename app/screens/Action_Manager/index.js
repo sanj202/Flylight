@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
-    Image, ToastAndroid, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions} from 'react-native';
+import {
+    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, Picker, FlatList, Platform,
+    Image, ToastAndroid, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions
+} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { BottomSheet, ListItem } from 'react-native-elements';
@@ -17,6 +19,7 @@ export default function action_manager({ navigation }) {
     const [modalVisible3, setModalVisible3] = useState(false);
     const [modalVisible4, setModalVisible4] = useState(false);
     const [IsLodding, setIsLodding] = useState(false)
+    const [IsLoddingNew, setIsLoddingNew] = useState(false)
 
     const checkValue = (value) => {
         setisService(value)
@@ -120,11 +123,12 @@ export default function action_manager({ navigation }) {
             dispatch(actionmanagerAction.getStatus(data, registerData.data.token));
             setIsLodding(true)
         }
-        setIsLodding(true)
+        // setIsLodding(true)
     }
 
     const AddActionFunction = (text) => {
         if (loginData || registerData) {
+            setIsLoddingNew(true)
             if (loginData.status == "success") {
                 if (text == "Status") {
                     const data = {
@@ -165,7 +169,7 @@ export default function action_manager({ navigation }) {
                     dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token,));
                 }
             }
-            setIsLodding(true)
+            // setIsLodding(true)
         }
     }
 
@@ -173,21 +177,25 @@ export default function action_manager({ navigation }) {
         if (addActionData) {
             if (addActionData.status == "success") {
                 ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 setnewAction('')
                 dispatch(actionmanagerAction.clearAddActionResponse())
                 Get_ActionStatus()
             }
             else if (addActionData.status == "failed") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
             }
             else if (addActionData.status == "fail") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
             }
             else {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
             }
         }
         else {
@@ -199,20 +207,24 @@ export default function action_manager({ navigation }) {
             if (addStatusData.status == "success") {
                 ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
                 setnewStatus('')
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 dispatch(actionmanagerAction.clearAddStatusResponse())
                 Get_ActionStatus()
             }
             else if (addStatusData.status == "failed") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
             }
             else if (addStatusData.status == "fail") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
             }
             else {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
             }
         }
         else {
@@ -228,62 +240,54 @@ export default function action_manager({ navigation }) {
 
     const EditData = () => {
         setIsVisible(!isVisible)
-            if (loginData.status == "success") {
-                if (type == "Action") {
-                    const data = {
-                        uid: loginData.data.uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                        action: EditingValue,
-                        org_uid: loginData.data.org_uid,
-                        action_id: EditingId
-                    }
-                    dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
+        if (loginData.status == "success") {
+            setIsLoddingNew(true)
+            if (type == "Action") {
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    action: EditingValue,
+                    org_uid: loginData.data.org_uid,
+                    action_id: EditingId
                 }
-                else {
-                    const data = {
-                        uid: loginData.data.uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                        status: EditingValue,
-                        org_uid: loginData.data.org_uid,
-                        status_id: EditingId
-                    }
-                    dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
-                }
-                setIsLodding(true)
+                dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
             }
-            else if (registerData.status == "success") {
-                if (type == "Action") {
-                    const data = {
-                        uid: registerData.data.uid,
-                        profile_id: registerData.data.cProfile.toString(),
-                        action: EditingValue,
-                        org_uid: registerData.data.org_uid,
-                        action_id: EditingId
-                    }
-                    dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token));
+            else {
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    status: EditingValue,
+                    org_uid: loginData.data.org_uid,
+                    status_id: EditingId
                 }
-                else {
-                    const data = {
-                        uid: registerData.data.uid,
-                        profile_id: registerData.data.cProfile.toString(),
-                        status: EditingValue,
-                        org_uid: registerData.data.org_uid,
-                        status_id: EditingId
-                    }
-                    dispatch(actionmanagerAction.add_EditStatus(data, registerData.data.token));
-                }
-                setIsLodding(true)
+                dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
+            }
+            // setIsLodding(true)
         }
-        // setModalVisible4(!modalVisible4)
-
-        // if (value == 'Status') {
-        //     setModalVisible(!modalVisible)
-        //     setModalVisible4(!modalVisible4)
-        // }
-        // else {
-        //     setModalVisible3(!modalVisible3)
-        //     setModalVisible4(!modalVisible4)
-        // }
+        else if (registerData.status == "success") {
+            setIsLoddingNew(true)
+            if (type == "Action") {
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                    action: EditingValue,
+                    org_uid: registerData.data.org_uid,
+                    action_id: EditingId
+                }
+                dispatch(actionmanagerAction.add_EditAction(data, registerData.data.token));
+            }
+            else {
+                const data = {
+                    uid: registerData.data.uid,
+                    profile_id: registerData.data.cProfile.toString(),
+                    status: EditingValue,
+                    org_uid: registerData.data.org_uid,
+                    status_id: EditingId
+                }
+                dispatch(actionmanagerAction.add_EditStatus(data, registerData.data.token));
+            }
+            // setIsLodding(true)
+        }
     }
 
     const [askDelete, setaskDelete] = useState(false);
@@ -304,6 +308,7 @@ export default function action_manager({ navigation }) {
 
     const deleteData = () => {
         if (loginData.status == "success") {
+            setIsLoddingNew(true)
             if (tempType == "Action") {
                 setaskDelete(!askDelete)
                 const data = {
@@ -326,9 +331,10 @@ export default function action_manager({ navigation }) {
             }
             else {
             }
-            setIsLodding(true)
+            // setIsLodding(true)
         }
         else if (registerData.status == "success") {
+            setIsLoddingNew(true)
             if (tempType == "Action") {
                 setaskDelete(!askDelete)
                 const data = {
@@ -351,7 +357,7 @@ export default function action_manager({ navigation }) {
             }
             else {
             }
-            setIsLodding(true)
+            // setIsLodding(true)
         }
         // setModalVisible4(!modalVisible4)
         // if (value == 'Status') {
@@ -368,20 +374,24 @@ export default function action_manager({ navigation }) {
         if (deleteaction) {
             if (deleteaction.status == "200") {
                 ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 dispatch(actionmanagerAction.clearDeleteActionResponse())
                 Get_ActionStatus()
             }
             else if (deleteaction.status == "failed") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
             }
             else if (deleteaction.status == "fail") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
             }
             else {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
             }
         }
         else {
@@ -392,20 +402,24 @@ export default function action_manager({ navigation }) {
         if (deletestatus) {
             if (deletestatus.status == "200") {
                 ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 dispatch(actionmanagerAction.clearDeleteStatusResponse())
                 Get_ActionStatus()
             }
             else if (deletestatus.status == "failed") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
             }
             else if (deletestatus.status == "fail") {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
                 ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
             }
             else {
-                setIsLodding(false)
+                // setIsLodding(false)
+                setIsLoddingNew(false)
             }
         }
         else {
@@ -564,6 +578,9 @@ export default function action_manager({ navigation }) {
                                         </TouchableOpacity>
                                     </View>
                                 </View>
+                                {IsLoddingNew == true ?
+                                    <ActivityIndicator size="small" color="#0000ff" />
+                                    : null}
                                 <View style={{ marginTop: '10%' }}>
                                     <View style={[styles.listData1]}>
                                         <Text style={{
@@ -659,7 +676,7 @@ export default function action_manager({ navigation }) {
                     <Text style={styles.modalText3}>Edit {isService} Manager</Text>
                     <View style={styles.listDataModal}>
                         <Image
-                            style={[styles.icon, { height: 24, width: 26, marginTop: '4%', marginHorizontal:'1.5%' }]}
+                            style={[styles.icon, { height: 24, width: 26, marginTop: '4%', marginHorizontal: '1.5%' }]}
                             source={require('../../images/statusnet.png')}
                         />
                         <TextInput

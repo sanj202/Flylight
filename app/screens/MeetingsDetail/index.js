@@ -12,7 +12,6 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 export default function lead_manager({ navigation, route }) {
 
-    console.log('route,...........................',route.params)
     const data = [
         { label: 'Lead', value: 'Lead', },
         { label: 'Contact', value: 'Contact' },
@@ -348,7 +347,7 @@ export default function lead_manager({ navigation, route }) {
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '5%' }}>
                             <Text style={{ fontWeight: 'bold' }}>Participants </Text>
-                            <Pressable
+                            {/* <Pressable
                                 onPress={() => addParticipents()}
                                 style={{
                                     borderColor: '#fff',
@@ -363,7 +362,7 @@ export default function lead_manager({ navigation, route }) {
                                 <Text style={{ color: "#fff", fontSize: 13 }}>
                                     +Add
                                 </Text>
-                            </Pressable>
+                            </Pressable> */}
                         </View>
                         <View style={{ marginHorizontal: '5%', borderWidth: 1, borderColor: 'gray', borderRadius: 10, padding: 5 }}>
                             <View style={{ flexDirection: 'row', }}>

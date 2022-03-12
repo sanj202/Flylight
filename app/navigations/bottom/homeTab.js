@@ -37,7 +37,8 @@ import {
   MeetingsDetail,
   addLead,
   packegeTopups,
-  Edit_Contact
+  Edit_Contact,
+  orderHistory
 } from '../../screens/index'
 import { TopTab } from '../drawer/TopTab'
 
@@ -58,7 +59,7 @@ function HomeTabs() {
           inactiveTintColor: 'lightgray',
         }
       }}
-      initialRouteName='Home'
+      // initialRouteName='Home'
     >
       <Tab.Screen
         name="Home"
@@ -403,6 +404,16 @@ function HomeTabs() {
       <Tab.Screen
         name='EditMeetings'
         component={EditMeetings}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+      <Tab.Screen
+        name='orderHistory'
+        component={orderHistory}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarIcon: () => null,

@@ -320,7 +320,7 @@ export default function SideMenu({ navigation }) {
                 <View style={styles.menusTop}>
 
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('packegeTopups')}
+                        onPress={() => navigation.navigate('orderHistory')}
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
@@ -329,10 +329,10 @@ export default function SideMenu({ navigation }) {
                             />
                             <View style={styles.menus}>
                                 <Text style={styles.items}>
-                                    PackegeTopups
+                                    Order History
                                 </Text>
                                 <Image
-                                    style={[styles.image3, { marginLeft: '28%' }]}
+                                    style={[styles.image3, { marginLeft: '36%' }]}
                                     source={require('../../images/next.png')}
                                 />
                             </View>

@@ -706,7 +706,7 @@ export default function AddContact({ navigation, route }) {
                             style={{ flex: 1 }}
                             value={releetedTo}
                             onChangeText={e5 => setreleetedTo(e5)}
-                            placeholder="Releeted To" />
+                            placeholder="Related To" />
                     </View>
 
 

@@ -102,13 +102,13 @@ export default function Dashboard({ navigation, route, props }) {
   useEffect(() => {
     if (loginData || registerData) {
       AsyncStorage.getItem('fcmToken', (err, token) => {
-        // console.log("fcm..........................",token)
+        // console.log("fcm..........tostring................",JSON.parse(token))
         if (token !== null) {
           if (loginData.status == "success") {
-            dispatch(dashboardAction.UpdateToken(loginData.data.uid, token, loginData.data.token))
+            dispatch(dashboardAction.UpdateToken(loginData.data.uid, JSON.parse(token), loginData.data.token))
           }
           else if (registerData.status == "success") {
-            dispatch(dashboardAction.UpdateToken(registerData.data.uid, token, registerData.data.token))
+            dispatch(dashboardAction.UpdateToken(registerData.data.uid, JSON.parse(token), registerData.data.token))
           }
         }
       })

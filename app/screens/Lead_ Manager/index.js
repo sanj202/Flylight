@@ -48,7 +48,7 @@ export default function lead_manager({ navigation, route }) {
   const AssignLead = useSelector(state => state.leadmanager.assign)
   const deletelead = useSelector(state => state.leads.deleteLead)
   const deleteopportunity = useSelector(state => state.opportunitys.deleteOpportunity)
-  const leadOwner = useSelector(state => state.leads.leadOwner)
+  const leadOwner = useSelector(state => state.leads.leadOwnerNew)
 
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
@@ -687,7 +687,7 @@ export default function lead_manager({ navigation, route }) {
           org_uid: loginData.data.org_uid,
           profile_id: loginData.data.cProfile,
         }
-        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+        dispatch(leadAction.LeadOwneList(data, loginData.data.token));
       }
       else if (registerData.status == "success") {
         const data = {
@@ -695,8 +695,10 @@ export default function lead_manager({ navigation, route }) {
           org_uid: registerData.data.org_uid,
           uid: registerData.data.uid
         }
-        dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
+        dispatch(leadAction.LeadOwneList(data, registerData.data.token));
       }
+
+      console.log('press..................')
     }
   }
 

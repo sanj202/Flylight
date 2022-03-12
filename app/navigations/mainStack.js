@@ -31,13 +31,6 @@ export function MainStack({ route }) {
     <Stack.Navigator screenOptions={{ headerShown: false }} // initialRouteName='HomeTabs' 
     >
       <Stack.Screen name='HomeTabs' component={TopTab} options={{ headerShown: false }} />
-
-     
-
-      {/* <Stack.Screen name="Edit_Opportunity" component={Edit_Opportunity} />
-      <Stack.Screen name="All_Lead" component={All_Lead} />
-      <Stack.Screen name="AddContactUpload" component={AddContactUpload} />
-      <Stack.Screen name='Edit_Contact' component={Edit_Contact} /> */}
     </Stack.Navigator>
   );
 }

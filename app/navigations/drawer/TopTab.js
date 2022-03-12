@@ -33,7 +33,7 @@ export function TopTab(props) {
     <Drawer.Navigator
       // drawerStyle={{ width: width }}
       drawerContent={props => <SideMenu {...props} />}
-      initialRouteName="DashBoard"
+      // initialRouteName="DashBoard"
       screenOptions={{
         headerShown: false,
       }}

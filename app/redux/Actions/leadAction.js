@@ -6,7 +6,8 @@ import {
     LeadOwner, LeadOwner_Success, LeadOwner_Clear,
     Campaign, Campaign_Success, Campaign_Clear,
     LeadStatus, LeadStatus_Success, LeadStatus_Clear,
-    All_State, All_State_Success, All_State_Clear, ZipData, ZipData_Success, ZipData_Clear
+    All_State, All_State_Success, All_State_Clear, ZipData, ZipData_Success, ZipData_Clear,
+    LeadOwnerNew,LeadOwnerNew_Success,LeadOwnerNew_Clear
 } from './actionTypes';
 import BaseUrl from '../../../const'
 import axios from 'axios';
@@ -73,6 +74,30 @@ export const LeadOwnerList = (data, token,) => {
             .then(response => response.json())
             .then(responseData => {
                 dispatch({ type: LeadOwner_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+
+export const LeadOwneList = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: LeadOwnerNew })
+        fetch(`${BaseUrl}/v1/getOrgUserList`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: LeadOwnerNew_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -207,6 +232,7 @@ export const clearResponse = () => {
         type: LeadStatus_Clear,
         type: All_State_Clear,
         type: ZipData_Clear,
+        type: LeadOwnerNew_Clear
     };
 };
 

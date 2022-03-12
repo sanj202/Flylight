@@ -266,9 +266,9 @@ export const MeetingContact_Clear = 'MeetingContact_Clear'
 
 //packegeTopups
 
-export const packegeTopups_Detail = "packegeTopups_Detail"
-export const packegeTopups_Detail_Success = "packegeTopups_Detail_Success"
-export const packegeTopups_Detail_Clear = 'packegeTopups_Detail_Clear'
+export const packegeTopups = "packegeTopups"
+export const packegeTopups_Success = "packegeTopups_Success"
+export const packegeTopups_Clear = 'packegeTopups_Clear'
 
 //TaskOwnerList
 export const TaskOwner = "TaskOwner"
@@ -325,3 +325,34 @@ export const historyDetail_Clear = 'historyDetail_Clear'
 export const Get_Notification = 'Get_Notification'
 export const Notification_Suceess = 'Notification_Suceess'
 export const Notification_Clear = 'Notification_Clear'
+
+//packegeTopups
+export const packegeTopups_history = "packegeTopups_history"
+export const packegeTopups_history_Success = "packegeTopups_history_Success"
+export const packegeTopups_history_Clear = 'packegeTopups_history_Clear'
+
+//OrderId
+export const Package_Order = "Package_Order"
+export const Package_Order_Success = "Package_Order_Success"
+export const Package_Order_Clear = 'Package_Order_Clear'
+
+//OrderId
+export const Package_Order_Verify = "Package_Order_Verify"
+export const Package_Order_Verify_Success = "Package_Order_Verify_Success"
+export const Package_Order_Verify_Clear = 'Package_Order_Verify_Clear'
+
+
+//OrderId
+export const TopUp_Order = "TopUp_Order"
+export const TopUp_Order_Success = "TopUp_Order_Success"
+export const TopUp_Order_Clear = 'TopUp_Order_Clear'
+
+//OrderId
+export const TopUp_Order_Verify = "TopUp_Order_Verify"
+export const TopUp_Order_Verify_Success = "TopUp_Order_Verify_Success"
+export const TopUp_Order_Verify_Clear = 'TopUp_Order_Verify_Clear'
+
+//LeadOwnerList
+export const LeadOwnerNew = "LeadOwnerNew"
+export const LeadOwnerNew_Success = "LeadOwnerNew_Success"
+export const LeadOwnerNew_Clear = 'LeadOwnerNew_Clear'

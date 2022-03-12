@@ -123,11 +123,11 @@ export default function lead_manager({ navigation }) {
                     </View>
                 </View> */}
                 <View style={styles.listData}>
-                    <Image style={{ height: 25, width: 22, marginVertical: '3%',marginHorizontal:'3%' }}
+                    <Image style={{ height: 25, width: 22, marginVertical: '3%', marginHorizontal: '3%' }}
                         source={require('../../images/DOB.png')} />
-                    <View style={{width:'75%',marginLeft:'3%'}}>
+                    <View style={{ width: '75%', marginLeft: '3%' }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#30353d', fontFamily: 'Roboto' }}>
-                        {item.title}</Text>
+                            {item.title}</Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 10, color: '#0F0F0F', fontFamily: 'Roboto' }}>
                             {moment(item.from).format('lll')}</Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 10, color: '#0F0F0F', fontFamily: 'Roboto' }}>
@@ -135,7 +135,7 @@ export default function lead_manager({ navigation }) {
 
                     </View>
                     <Image
-                        style={{ height: 16, width: 10, marginVertical: '5%',alignSelf:'flex-end' }}
+                        style={{ height: 16, width: 10, marginVertical: '5%', alignSelf: 'flex-end' }}
                         source={require('../../images/next.png')}
                     />
                 </View>

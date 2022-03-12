@@ -6,7 +6,8 @@ import {
     Campaign, Campaign_Success, Campaign_Clear,
     LeadStatus, LeadStatus_Success, LeadStatus_Clear,
     All_State, All_State_Success, All_State_Clear,
-    ZipData, ZipData_Success, ZipData_Clear
+    ZipData, ZipData_Success, ZipData_Clear,
+    LeadOwnerNew, LeadOwnerNew_Success, LeadOwnerNew_Clear
 } from '../Actions/actionTypes';
 
 const initialState = {
@@ -17,7 +18,8 @@ const initialState = {
     campaign: [],
     leadstatus: [],
     states: [],
-    ByZip: []
+    ByZip: [],
+    leadOwnerNew:[]
 };
 const LeadR = (state = initialState, action) => {
     switch (action.type) {
@@ -132,6 +134,19 @@ const LeadR = (state = initialState, action) => {
                 ...state,
                 importLead: []
             };
+
+        case LeadOwnerNew:
+            return {
+                ...state
+            }
+        case LeadOwnerNew_Success:
+            return {
+                leadOwnerNew: action.payload
+            }
+        case LeadOwnerNew_Clear:
+            return {
+                leadOwnerNew: []
+            }
 
         default:
             return state;

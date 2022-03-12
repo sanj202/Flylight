@@ -64,7 +64,7 @@ export default function Notifications({ navigation, route }) {
 
     const renderItem = ({ item }) => {
         return (
-            <View >
+            <View style={{marginBottom:'1%'}} >
                 <TouchableOpacity style={styles.notify} >
                     <Image
                         style={{ width: 45, height: 45 }}

@@ -1,60 +1,147 @@
 import {
-     Organization_List,Organization_List_Clear,Organization_List_Success,
-     packegeTopups_Detail,packegeTopups_Detail_Success,packegeTopups_Detail_Clear } from './actionTypes';
+    Organization_List, Organization_List_Clear, Organization_List_Success,
+    packegeTopups, packegeTopups_Success, packegeTopups_Clear,
+    packegeTopups_history, packegeTopups_history_Success, packegeTopups_history_Clear,
+    Package_Order, Package_Order_Success, Package_Order_Clear,
+    Package_Order_Verify, Package_Order_Verify_Success, Package_Order_Verify_Clear,
+    TopUp_Order, TopUp_Order_Success, TopUp_Order_Clear,
+    TopUp_Order_Verify, TopUp_Order_Verify_Success, TopUp_Order_Verify_Clear
+} from './actionTypes';
 import BaseUrl from '../../../const'
-
-
-// export const importLead = (res, token, cProfile, change) => {
-//     // console.log(" credentails..................", res, token, cProfile, change)
-//     return (dispatch) => {
-//         dispatch({ type: Import_Lead })
-
-//         fetch(`${BaseUrl}/v1/import-lead`,
-//             {
-//                 method: "POST",
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     // 'Content-Type': "application/x-www-form-urlencoded",
-//                     'Content-Type': 'application/json',
-//                     'Authorization': 'Bearer ' + token,
-//                     // 'Authorization': uid,
-//                 },
-//                 body: JSON.stringify({
-//                     CSVFILE: res,
-//                     orgid: change,
-//                     profile_id: cProfile
-//                 }),
-//             })
-//             .then(response => response.json())
-//             .then(responseData => {
-//                 // console.log("importLead .........::::::::::::::::", responseData)
-//                 dispatch({ type: Import_Lead, payload: responseData })
-//             })
-//             .catch((error) => {
-//                 console.log("error" + error);
-//             })
-//     }
-// };
 
 export const packageList = (data, token) => {
     return (dispatch) => {
-        dispatch({ type: Organization_List })
+        dispatch({ type: packegeTopups })
 
-        fetch(`${BaseUrl}/v1/Package`,
+        fetch(`${BaseUrl}/v1/Packages`,
             {
-                method: "GET",
-                // headers: {
-                //     'Accept': 'application/json',
-                //     // 'Content-Type': "application/x-www-form-urlencoded",
-                //     'Content-Type': 'application/json',
-                //     'Authorization': 'Bearer ' + token,
-                // },
-                // body: JSON.stringify(data),
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": "Bearer " + token
+                }
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log("change TODO........::::::::::::::::", responseData.data)
-                // dispatch({ type: Organization_List_Success, payload: responseData })
+                dispatch({ type: packegeTopups_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const getpackageOrder = (data, token) => {
+    return (dispatch) => {
+        dispatch({ type: Package_Order })
+
+        fetch(`${BaseUrl}/v1/CheckPackage`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: Package_Order_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const VerifypackageOrder = (data, token) => {
+    return (dispatch) => {
+        dispatch({ type: Package_Order_Verify })
+        fetch(`${BaseUrl}/v1/VerifyPackagePayment`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    // 'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: Package_Order_Verify_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+
+export const getTopOrder = (data, token) => {
+    return (dispatch) => {
+        dispatch({ type: TopUp_Order })
+
+        fetch(`${BaseUrl}/v1/CheckTopup`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: TopUp_Order_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const VerifyTopOrder = (data, token) => {
+    return (dispatch) => {
+        dispatch({ type: TopUp_Order_Verify })
+        fetch(`${BaseUrl}/v1/VerifyTopupPayment`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    // 'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                // console.log(responseData)
+                dispatch({ type: TopUp_Order_Verify_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
+export const orderHistoryList = (uid, org_id, profile_id, token) => {
+    return (dispatch) => {
+        dispatch({ type: packegeTopups_history })
+        fetch(`${BaseUrl}/v1/OrderHistory?uid=${uid}&org_uid=${org_id}&profile_id=${profile_id}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": "Bearer " + token
+                }
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                console.log(responseData)
+                dispatch({ type: packegeTopups_history_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -64,8 +151,7 @@ export const packageList = (data, token) => {
 
 
 
-export const OrganizationList = (data,token,) => {
-    // console.log(" credentails..................",data )
+export const OrganizationList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Organization_List })
 
@@ -74,7 +160,6 @@ export const OrganizationList = (data,token,) => {
                 method: "POST",
                 headers: {
                     'Accept': 'application/json',
-                    // 'Content-Type': "application/x-www-form-urlencoded",
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + token,
                 },
@@ -82,7 +167,6 @@ export const OrganizationList = (data,token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("change TODO........::::::::::::::::", responseData.data)
                 dispatch({ type: Organization_List_Success, payload: responseData })
             })
             .catch((error) => {
@@ -100,7 +184,9 @@ export const clearResponse = () => {
 
 export const packclearResponse = () => {
     return {
-        type: Organization_List_Clear,
+        type: packegeTopups_Clear,
+        type: Package_Order_Clear,
+        typeof: TopUp_Order_Clear
     };
 };
 
