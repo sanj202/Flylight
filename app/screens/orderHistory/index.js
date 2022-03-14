@@ -46,7 +46,7 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (OrderDetail) {
-            console.log(OrderDetail, 'useEffect')
+            // console.log(OrderDetail, 'useEffect')
             if (OrderDetail.status == "success") {
                 setPackage(OrderDetail.data.packageTransactions)
                 setTopUp(OrderDetail.data.topupTransactions)

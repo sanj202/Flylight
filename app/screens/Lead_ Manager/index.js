@@ -167,7 +167,7 @@ export default function lead_manager({ navigation, route }) {
           dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
         }
 
-        console.log(data)
+        // console.log(data)
 
       }
       // console.log(data)
@@ -657,7 +657,7 @@ export default function lead_manager({ navigation, route }) {
 
 
   const onPressRadioBtn = (value, type) => {
-    console.log(type, value)
+    // console.log(type, value)
     if (type == true) {
       temarray.push(value)
     } else {
@@ -698,7 +698,7 @@ export default function lead_manager({ navigation, route }) {
         dispatch(leadAction.LeadOwneList(data, registerData.data.token));
       }
 
-      console.log('press..................')
+      // console.log('press..................')
     }
   }
 

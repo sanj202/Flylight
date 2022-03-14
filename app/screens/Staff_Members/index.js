@@ -77,7 +77,7 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (roleResponse) {
             if (roleResponse.status == "200") {
-                console.log('roleResponse..........................', roleResponse.data)
+                // console.log('roleResponse..........................', roleResponse.data)
                 // setroleResponseData(roleResponse.data.map((item, index) => item.user))
                 setIsLodding(false)
             }
@@ -96,7 +96,7 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
-                console.log('leadOwner..........................', leadOwner)
+                // console.log('leadOwner..........................', leadOwner)
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
                 setIsLodding(false)
             }
@@ -216,7 +216,6 @@ export default function lead_manager({ navigation }) {
         updated_at: ''
     })
     const Details = (value) => {
-        console.log('staff.................................', value)
         setObjcet({
             name: value.name,
             organization: value.organization,

@@ -144,7 +144,7 @@ export default function History({ navigation }) {
             dispatch(historyAction.HistoryList(data, loginData.data.token));
           }
         }
-        console.log(data)
+        // console.log(data)
       }
       else if (registerData.status == "success") {
         let data = {
@@ -205,7 +205,7 @@ export default function History({ navigation }) {
           }
          
         }
-        console.log(data)
+        // console.log(data)
       }
     }
   }

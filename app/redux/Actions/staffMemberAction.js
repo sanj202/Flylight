@@ -32,7 +32,7 @@ export const Invitation = (data,token) => {
 
 export const ProfileRoleList = (data,token) => {
 
-    console.log(data,token)
+    // console.log(data,token)
     return (dispatch) => {
         dispatch({ type: profileRole })
         fetch(`${BaseUrl}/v1/getProfileRole`,

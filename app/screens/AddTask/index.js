@@ -98,7 +98,7 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (leadOwner) {
 
-            console.log('leadOwner............................................',leadOwner)
+            // console.log('leadOwner............................................',leadOwner)
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
                     let user = { label: ld.user.name, value: ld.id }

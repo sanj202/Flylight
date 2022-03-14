@@ -323,7 +323,7 @@ export default function lead_manager({ navigation }) {
     }
 
     const AllView = ({ item }) => {
-        console.log(item)
+     
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>

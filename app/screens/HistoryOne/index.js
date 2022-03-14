@@ -76,7 +76,7 @@ export default function HistoryOne({ navigation, route }) {
 
     const DetailView = ({ item }) => {
 
-        console.log(item)
+        // console.log(item)
         return (
             <View style={{
                 paddingHorizontal: 10, borderWidth: 1, borderRadius: 10,

@@ -153,7 +153,7 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (packDetail) {
-            console.log(packDetail)
+            // console.log(packDetail)
             if (packDetail.status == "success") {
                 setPackage(packDetail.data.package)
                 setTopUp(packDetail.data.topups)

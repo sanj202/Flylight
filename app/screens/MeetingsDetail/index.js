@@ -97,7 +97,7 @@ export default function lead_manager({ navigation, route }) {
     }, [GetMeetings])
 
     const selectOneFile = (value) => {
-        console.log('............................', value)
+        // console.log('............................', value)
         if (loginData.status == "success") {
             const data = {
                 uid: loginData.data.uid,
@@ -155,7 +155,7 @@ export default function lead_manager({ navigation, route }) {
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                console.log('contact list ...............', contactData.data)
+                // console.log('contact list ...............', contactData.data)
                 let usetdetail = contactData.data && contactData.data.map((ld) => {
                     let user = { label: ld.email, value: ld.id }
                     if (user !== undefined) {

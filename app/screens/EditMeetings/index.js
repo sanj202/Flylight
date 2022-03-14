@@ -198,7 +198,7 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                console.log('contact list ...............', contactData.data)
+                // console.log('contact list ...............', contactData.data)
                 setListValues(contactData.data)
                 setModalVisible2(true)
             }

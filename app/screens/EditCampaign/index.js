@@ -13,9 +13,7 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function EditCampaign({ navigation, route }) {
-    console.log("dsfffff....................", route.params.campData
-        // moment(route.params.campData.start_date).format(),new Date()
-    )
+ 
 
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)

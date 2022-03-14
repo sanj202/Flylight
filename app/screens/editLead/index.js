@@ -14,7 +14,7 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation, route }) {
 
-    console.log("route data...................", route.params)
+    // console.log("route data...................", route.params)
     // const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
     // const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState("")
@@ -704,7 +704,6 @@ export default function AddContact({ navigation, route }) {
                             onFocus={() => setIsFocus5(true)}
                             onBlur={() => setIsFocus5(false)}
                             onChange={item => {
-                                console.log("value of ............", item)
                                 setState(item.value);
                                 setIsFocus5(false);
                             }}

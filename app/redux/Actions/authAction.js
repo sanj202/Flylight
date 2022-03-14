@@ -37,7 +37,7 @@ export const SwitchOrg = (post, profileId, OrgUid) => {
         postData.data.org_uid = OrgUid;
         let responseData =
             Object.assign({}, { ...postData })
-        console.log('responseDatta..........................',responseData)
+        // console.log('responseDatta..........................',responseData)
         dispatch({ type: LOGIN_SUCCESS, payload: responseData })
     }
 };

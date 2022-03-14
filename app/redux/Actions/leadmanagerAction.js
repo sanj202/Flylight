@@ -5,7 +5,7 @@ import {
 import BaseUrl from '../../../const';
 
 export const lead_OpprtunityList = (data, token) => {
-    console.log(data)
+    // console.log(data)
     return (dispatch) => {
         dispatch({ type: Get_Lead_Opportunity })
         fetch(`http://3.23.113.168:3000/getLeadList`,
@@ -20,7 +20,7 @@ export const lead_OpprtunityList = (data, token) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log(responseData.data)
+                // console.log(responseData.data)
                 dispatch({ type: Lead_Opportunity_Success, payload: responseData })
             })
             .catch((error) => {
@@ -31,7 +31,7 @@ export const lead_OpprtunityList = (data, token) => {
 
 
 export const AssignLead = (data, token) => {
-    console.log(data, token)
+    // console.log(data, token)
     return (dispatch) => {
         dispatch({ type: LeadAssign })
         fetch(`http://3.23.113.168:3000/assignLead`,
@@ -46,7 +46,7 @@ export const AssignLead = (data, token) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log(responseData)
+                // console.log(responseData)
                 dispatch({ type: LeadAssign_Success, payload: responseData })
             })
             .catch((error) => {
