@@ -17,32 +17,18 @@ export default function Notifications({ navigation, route }) {
     const UserData = useSelector(state => state.auth.data)
     const notificationInfo = useSelector(state => state.notification.userNotification)
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
 
     useEffect(() => {
         setIsLodding(true)
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 let data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
                     profile_id: loginData.data.cProfile.toString(),
                 }
                 dispatch(notificationAction.notification(data, loginData.data.token));
-            }
-
-            else if (registerData.status == "success") {
-                let data = {
-                    uid: registerData.data.uid,
-                    org_uid: registerData.data.org_uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                }
-                dispatch(notificationAction.notification(data, registerData.data.token));
-            }
-
-
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (notificationInfo) {

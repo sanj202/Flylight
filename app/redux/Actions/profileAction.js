@@ -6,7 +6,7 @@ import BaseUrl from '../../../const'
 export const profile = (data, Token,) => {
     return (dispatch) => {
         dispatch({ type: Get_Profile })
-        fetch(`${BaseUrl}/v1/getUser`,
+        fetch(`${BaseUrl}/getUser`,
             {
                 method: "POST",
                 headers: {
@@ -34,7 +34,7 @@ export const profile = (data, Token,) => {
 export const updateAvatar =  (data, token) => {
     return (dispatch) => {
         dispatch({ type: Edit_ProfileImage })
-        fetch(`${BaseUrl}/v1/updateAvatar`,
+        fetch(`${BaseUrl}/updateAvatar`,
             {
                 method: "POST",
                 headers: {

@@ -9,7 +9,7 @@ export const forgotPassword = (loginID, Password) => {
         dispatch({ type: FGET_OTP })
         // {BaseUrl}/api/mobile/login
 
-        fetch(`${BaseUrl}/v1/forgot-password`,
+        fetch(`${BaseUrl}/forgot-password`,
             {
                 method: "POST",
                 headers: {

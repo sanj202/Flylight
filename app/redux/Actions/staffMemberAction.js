@@ -8,7 +8,7 @@ import BaseUrl from '../../../const'
 export const Invitation = (data,token) => {
     return (dispatch) => {
         dispatch({ type: Invite_Member })
-        fetch(`${BaseUrl}/v1/InviteUser`,
+        fetch(`${BaseUrl}/InviteUser`,
             {
                 method: "POST",
                 headers: {
@@ -35,7 +35,7 @@ export const ProfileRoleList = (data,token) => {
     // console.log(data,token)
     return (dispatch) => {
         dispatch({ type: profileRole })
-        fetch(`${BaseUrl}/v1/getProfileRole`,
+        fetch(`${BaseUrl}/getProfileRole`,
             {
                 method: "POST",
                 headers: {

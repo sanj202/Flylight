@@ -13,7 +13,7 @@ export const packageList = (data, token) => {
     return (dispatch) => {
         dispatch({ type: packegeTopups })
 
-        fetch(`${BaseUrl}/v1/Packages`,
+        fetch(`${BaseUrl}/Packages`,
             {
                 method: 'GET',
                 headers: {
@@ -35,7 +35,7 @@ export const getpackageOrder = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Package_Order })
 
-        fetch(`${BaseUrl}/v1/CheckPackage`,
+        fetch(`${BaseUrl}/CheckPackage`,
             {
                 method: "POST",
                 headers: {
@@ -58,7 +58,7 @@ export const getpackageOrder = (data, token) => {
 export const VerifypackageOrder = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Package_Order_Verify })
-        fetch(`${BaseUrl}/v1/VerifyPackagePayment`,
+        fetch(`${BaseUrl}/VerifyPackagePayment`,
             {
                 method: "POST",
                 headers: {
@@ -83,7 +83,7 @@ export const getTopOrder = (data, token) => {
     return (dispatch) => {
         dispatch({ type: TopUp_Order })
 
-        fetch(`${BaseUrl}/v1/CheckTopup`,
+        fetch(`${BaseUrl}/CheckTopup`,
             {
                 method: "POST",
                 headers: {
@@ -106,7 +106,7 @@ export const getTopOrder = (data, token) => {
 export const VerifyTopOrder = (data, token) => {
     return (dispatch) => {
         dispatch({ type: TopUp_Order_Verify })
-        fetch(`${BaseUrl}/v1/VerifyTopupPayment`,
+        fetch(`${BaseUrl}/VerifyTopupPayment`,
             {
                 method: "POST",
                 headers: {
@@ -130,7 +130,7 @@ export const VerifyTopOrder = (data, token) => {
 export const orderHistoryList = (uid, org_id, profile_id, token) => {
     return (dispatch) => {
         dispatch({ type: packegeTopups_history })
-        fetch(`${BaseUrl}/v1/OrderHistory?uid=${uid}&org_uid=${org_id}&profile_id=${profile_id}`,
+        fetch(`${BaseUrl}/OrderHistory?uid=${uid}&org_uid=${org_id}&profile_id=${profile_id}`,
             {
                 method: 'GET',
                 headers: {
@@ -155,7 +155,7 @@ export const OrganizationList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Organization_List })
 
-        fetch(`${BaseUrl}/v1/getOrganizationList`,
+        fetch(`${BaseUrl}/getOrganizationList`,
             {
                 method: "POST",
                 headers: {

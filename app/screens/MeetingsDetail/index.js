@@ -36,20 +36,18 @@ export default function lead_manager({ navigation, route }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const GetMeetings = useSelector(state => state.meeting.meetings)
 
     const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
     const contactData = useSelector(state => state.contactList.contacts)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
+        if (loginData  && isFocused) {
             Get_Data()
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     const Get_Data = () => {
-        if (loginData.status == "success") {
             setstate({
                 ...state,
                 IsLodding: true
@@ -60,19 +58,6 @@ export default function lead_manager({ navigation, route }) {
                 org_uid: loginData.data.org_uid,
             }
             dispatch(meetingAction.MeetingList(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-            setstate({
-                ...state,
-                IsLodding: true
-            })
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-            }
-            dispatch(meetingAction.MeetingList(data, registerData.data.token))
-        }
     }
 
     useEffect(() => {
@@ -97,8 +82,6 @@ export default function lead_manager({ navigation, route }) {
     }, [GetMeetings])
 
     const selectOneFile = (value) => {
-        // console.log('............................', value)
-        if (loginData.status == "success") {
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
@@ -122,34 +105,7 @@ export default function lead_manager({ navigation, route }) {
             }
             else {
                 console.log('account APi.................................. ')
-            }
-        }
-        else if (registerData.status == "success") {
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-            }
-            if (value == 'Lead') {
-                setstate({
-                    ...state,
-                    ListValues: '',
-                    modelLodding: true
-                })
-                dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
-            }
-            else if (value == 'Contact') {
-                setstate({
-                    ...state,
-                    ListValues: '',
-                    modelLodding: true
-                })
-                dispatch(contactListAction.contactList(data, registerData.data.token));
-            }
-            else {
-                console.log('account APi.................................. ')
-            }
-        }
+            } 
     }
 
     useEffect(() => {

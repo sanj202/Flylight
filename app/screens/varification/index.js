@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useDebugValue } from 'react';
 import { Text, View, ActivityIndicator, TouchableOpacity, ToastAndroid, Alert, Image, StatusBar, } from 'react-native';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { varificationAction, resendOtpAction } from '../../redux/Actions/index'
+import { varificationAction,authAction, resendOtpAction } from '../../redux/Actions/index'
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
@@ -17,7 +17,7 @@ export default function Varification({ navigation, route }) {
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({ value, setValue });
 
   const dispatch = useDispatch()
-  const otpData = useSelector(state => state.varify.otp)
+  const otpData = useSelector(state => state.auth.data)
   const resendOtpData = useSelector(state => state.resendOTP.otpResend)
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function Varification({ navigation, route }) {
     }
     else {
       setIsLodding(true)
-      dispatch(varificationAction.varification(value, state));
+      dispatch(authAction.varification(value, state));
     }
   }
 

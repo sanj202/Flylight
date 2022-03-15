@@ -13,7 +13,7 @@ import BaseUrl from '../../../const'
 export const Add_EditTask = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Add_Edit_Task })
-        fetch(`${BaseUrl}/v1/TaskAddEdit`,
+        fetch(`${BaseUrl}/TaskAddEdit`,
             {
                 method: "POST",
                 headers: {
@@ -70,7 +70,7 @@ export const deleteTask = (data, token,) => {
     // console.log(" credentails..................", res, token, cProfile, change)
     return (dispatch) => {
         dispatch({ type: Delete_Task })
-        fetch(`${BaseUrl}/v1/delete-task`,
+        fetch(`${BaseUrl}/delete-task`,
             {
                 method: "POST",
                 headers: {
@@ -97,7 +97,7 @@ export const deleteTask = (data, token,) => {
 export const TaskOwnerList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: TaskOwner })
-        fetch(`${BaseUrl}/v1/getOrgUserList`,
+        fetch(`${BaseUrl}/getOrgUserList`,
             {
                 method: "POST",
                 headers: {
@@ -120,7 +120,7 @@ export const TaskOwnerList = (data, token,) => {
 export const TaskleadList = (data, token) => {
     return (dispatch) => {
         dispatch({ type: TaskLeads })
-        fetch(`${BaseUrl}/v1/getleadsList`,
+        fetch(`${BaseUrl}/getleadsList`,
             {
                 method: "POST",
                 headers: {
@@ -145,7 +145,7 @@ export const TaskcontactList = (data, token) => {
     return (dispatch) => {
         dispatch({ type: TaskContact })
 
-        fetch(`${BaseUrl}/v1/getContactList`,
+        fetch(`${BaseUrl}/getContactList`,
             {
                 method: "POST",
                 headers: {
@@ -171,7 +171,7 @@ export const TaskcontactList = (data, token) => {
 export const TaskStatusList = (data, token) => {
     return (dispatch) => {
         dispatch({ type: TaskStatus })
-        fetch(`${BaseUrl}/v1/task-status`,
+        fetch(`${BaseUrl}/task-status`,
             {
                 method: "POST",
                 headers: {

@@ -26,14 +26,11 @@ export default function Report({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const reportData = useSelector(state => state.report.getReportList)
     const campaignList = useSelector(state => state.leads.campaign)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
@@ -41,18 +38,8 @@ export default function Report({ navigation }) {
                 }
                 dispatch(reportAction.reportList(data, loginData.data.token));
                dispatch(campaignAction.CampaignList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile,
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                dispatch(reportAction.reportList(data, registerData.data.token));
-               dispatch(campaignAction.CampaignList(data, registerData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (reportData) {

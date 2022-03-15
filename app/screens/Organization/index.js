@@ -15,32 +15,20 @@ export default function Organization({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const orgList = useSelector(state => state.organization.getList)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
-                const data = {
-                    uid: loginData.data.uid,
-                    profile_id: loginData.data.cProfile,
-                    org_uid: loginData.data.org_uid,
-                }
-                setcurrentOrg(loginData.data.org_uid)
-                dispatch(organizationAction.OrganizationList(data, loginData.data.token));
+        if (loginData && isFocused) {
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile,
+                org_uid: loginData.data.org_uid,
             }
-            else if (registerData.status == "success") {
-                const data = {
-                    uid: registerData.data.uid,
-                    profile_id: registerData.data.cProfile,
-                    org_uid: registerData.data.org_uid,
-                }
-                setcurrentOrg(registerData.data.org_uid)
-                dispatch(organizationAction.OrganizationList(data, registerData.data.token))
-            }
+            setcurrentOrg(loginData.data.org_uid)
+            dispatch(organizationAction.OrganizationList(data, loginData.data.token));
             setIsLodding(true)
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (orgList) {
@@ -52,7 +40,7 @@ export default function Organization({ navigation }) {
             else if (orgList.status == "failed") {
             }
             else if (orgList.status == "fail") {
-                ToastAndroid.show(orgList.message, ToastAndroid.SHORT);     
+                ToastAndroid.show(orgList.message, ToastAndroid.SHORT);
             }
             else {
             }
@@ -64,54 +52,29 @@ export default function Organization({ navigation }) {
     }, [orgList])
 
     const ChangeOrg = (value) => {
-        // console.log('switch org.................', value)
-        if (loginData || registerData) {
-            setIsLodding(true)
-            if (loginData.status == "success") {
-                dispatch(authAction.SwitchOrg(loginData, value.cProfile, value.orgUid));
-            }
-            else if (registerData.status == "success") {
-                dispatch(varificationAction.SwitchOrg(registerData, value.cProfile, value.orgUid));
-            }
-        }
+        setIsLodding(true)
+        dispatch(authAction.SwitchOrg(loginData, value.cProfile, value.orgUid));
     }
 
-    useEffect(() => {
-        if (registerData) {
-          if (registerData.status == "success") {
-            setIsLodding(false)
-            // navigation.navigate('Home')
-          }
-          else if (registerData.status == "failed") {
-            setIsLodding(false)
-            ToastAndroid.show(registerData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
-          }
-        }
-        else {
-        }
-      }, [registerData])
 
-      useEffect(() => {
+    useEffect(() => {
         if (loginData) {
-          if (loginData.status == "success") {
-            setIsLodding(false)
-            // navigation.navigate('Home')
-          }
-          else if (loginData.status == "failed") {
-            setIsLodding(false)
-            ToastAndroid.show(loginData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
-          }
+            if (loginData.status == "success") {
+                setIsLodding(false)
+                // navigation.navigate('Home')
+            }
+            else if (loginData.status == "failed") {
+                setIsLodding(false)
+                ToastAndroid.show(loginData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
+            }
         }
         else {
         }
-      }, [loginData])
+    }, [loginData])
 
 
 
     const AllView = ({ item }) => {
-        // console.log("allOrg veiw...................", 
-        // item.organization.org_unique_id,
-        // item.organization.profile_id)
         return (
             <TouchableOpacity
                 onPress={() => ChangeOrg({
@@ -120,14 +83,14 @@ export default function Organization({ navigation }) {
                 })}
             >
                 <View style={{ marginTop: '1%' }}>
-                    <View style={ currentOrg !== '' && currentOrg  == item.organization.org_unique_id ?
+                    <View style={currentOrg !== '' && currentOrg == item.organization.org_unique_id ?
                         [styles.listData, { backgroundColor: '#24BCFF' }]
                         :
                         styles.listData}>
                         <View style={{ backgroundColor: '', justifyContent: 'center', }}>
                             {item.organization.logo ?
                                 <Image
-                                    style={{ height: 48, width: 48, borderRadius: 24,backgroundColor:'#fff' }}
+                                    style={{ height: 48, width: 48, borderRadius: 24, backgroundColor: '#fff' }}
                                     source={require('../../images/profileCall.png')}
                                 // source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.organization.logo }}
                                 />
@@ -139,7 +102,7 @@ export default function Organization({ navigation }) {
                         </View>
                         <View style={{ marginLeft: '3%', flex: 1, backgroundColor: '', }}>
                             <Text
-                                style={ currentOrg !== '' && currentOrg  == item.organization.org_unique_id ?
+                                style={currentOrg !== '' && currentOrg == item.organization.org_unique_id ?
                                     { fontWeight: 'bold', fontSize: 14, color: '#FFFF', fontFamily: 'Roboto' }
                                     :
                                     { fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }
@@ -147,7 +110,7 @@ export default function Organization({ navigation }) {
                                 {item.organization.name ? item.organization.name : ''}</Text>
                             <Text
                                 numberOfLines={1}
-                                style={ currentOrg !== '' && currentOrg  == item.organization.org_unique_id ?
+                                style={currentOrg !== '' && currentOrg == item.organization.org_unique_id ?
                                     { fontFamily: 'Roboto', fontSize: 13, color: '#FFFF', flexShrink: 1 }
                                     :
                                     { fontFamily: 'Roboto', fontSize: 13, color: '#0F0F0F', flexShrink: 1 }

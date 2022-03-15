@@ -8,14 +8,18 @@ import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
 import { add_Edit_Meeting } from '../../redux/Actions/meetingAction';
 
-export default function lead_manager({ navigation }) {
+import { useNavigation } from '@react-navigation/native';
+
+
+
+export default function lead_manager() {
 
     const data = [
         { label: 'Not Started', value: 'Not Started', },
         { label: 'In Progress', value: 'In Progress' },
         { label: 'Completed', value: 'Completed' },
     ];
-
+    const navigation = useNavigation();
     const [allMeetings, setallMeetings] = useState()
     const [IsLodding, setIsLodding] = useState(false)
     const { width, height } = Dimensions.get('window');
@@ -23,17 +27,15 @@ export default function lead_manager({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const GetMeetings = useSelector(state => state.meeting.meetings)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
+        if (loginData  && isFocused) {
             Get_Data()
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     const Get_Data = () => {
-        if (loginData.status == "success") {
             setIsLodding(true)
             const data = {
                 uid: loginData.data.uid,
@@ -41,16 +43,6 @@ export default function lead_manager({ navigation }) {
                 org_uid: loginData.data.org_uid,
             }
             dispatch(meetingAction.MeetingList(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-            setIsLodding(true)
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-            }
-            dispatch(meetingAction.MeetingList(data, registerData.data.token))
-        }
     }
 
     useEffect(() => {

@@ -15,7 +15,7 @@ import axios from 'axios';
 export const addLaed = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Add_Edit_Lead })
-        fetch(`${BaseUrl}/v1/leadsAddEdit`,
+        fetch(`${BaseUrl}/leadsAddEdit`,
             {
                 method: "POST",
                 headers: {
@@ -38,7 +38,7 @@ export const addLaed = (data, token) => {
 export const deleteLead = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Delete_Lead })
-        fetch(`${BaseUrl}/v1/delete-lead`,
+        fetch(`${BaseUrl}/delete-lead`,
             {
                 method: "POST",
                 headers: {
@@ -61,7 +61,7 @@ export const deleteLead = (data, token,) => {
 export const LeadOwnerList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: LeadOwner })
-        fetch(`${BaseUrl}/v1/getOrgUserList`,
+        fetch(`${BaseUrl}/getOrgUserList`,
             {
                 method: "POST",
                 headers: {
@@ -85,7 +85,7 @@ export const LeadOwnerList = (data, token,) => {
 export const LeadOwneList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: LeadOwnerNew })
-        fetch(`${BaseUrl}/v1/getOrgUserList`,
+        fetch(`${BaseUrl}/getOrgUserList`,
             {
                 method: "POST",
                 headers: {
@@ -108,7 +108,7 @@ export const LeadOwneList = (data, token,) => {
 export const LeadStatusList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: LeadStatus })
-        fetch(`${BaseUrl}/v1/leadsControls`,
+        fetch(`${BaseUrl}/leadsControls`,
             {
                 method: "POST",
                 headers: {
@@ -131,7 +131,7 @@ export const LeadStatusList = (data, token,) => {
 export const CampaignList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Campaign })
-        fetch(`${BaseUrl}/v1/campaign-list`,
+        fetch(`${BaseUrl}/campaign-list`,
             {
                 method: "POST",
                 headers: {
@@ -154,7 +154,7 @@ export const CampaignList = (data, token,) => {
 export const StateList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: All_State })
-        fetch(`${BaseUrl}/v1/States`,
+        fetch(`${BaseUrl}/States`,
             {
                 method: "POST",
                 headers: {
@@ -177,7 +177,7 @@ export const StateList = (data, token,) => {
 export const Get_By_ZipCodeList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: ZipData })
-        fetch(`${BaseUrl}/v1/CityStateZip`,
+        fetch(`${BaseUrl}/CityStateZip`,
             {
                 method: "POST",
                 headers: {
@@ -202,7 +202,7 @@ export const Get_By_ZipCodeList = (data, token,) => {
 export const importLead = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Import_Lead })
-        fetch(`${BaseUrl}/v1/import-lead`,
+        fetch(`${BaseUrl}/import-lead`,
             {
                 method: "POST",
                 headers: {

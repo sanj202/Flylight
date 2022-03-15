@@ -49,7 +49,6 @@ export default function EditProfile({ navigation, route }) {
 
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const UpdatedData = useSelector(state => state.Eprofile.userUpdatedDetail)
 
 
@@ -80,8 +79,6 @@ export default function EditProfile({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-            if (loginData || registerData) {
-                if (loginData.status == "success") {
                     setIsLodding(true)
                     const data = {
                         first_name: fname,last_name: lname,
@@ -92,20 +89,6 @@ export default function EditProfile({ navigation, route }) {
                         profile_id: loginData.data.cProfile.toString(),
                     }
                     dispatch(editProfileAction.Eprofile(data, loginData.data.token));
-                }
-                else if (registerData.status == "success") {
-                    setIsLodding(true)
-                    const data = {
-                        first_name: fname,last_name: lname,
-                        phone: phone,dob: formateDate,street: street,
-                        city: city,state: state,zip: zip,country: country,
-                        uid: registerData.data.uid,
-                        org_uid: registerData.data.org_uid,
-                        profile_id: registerData.data.cProfile.toString(),
-                    }
-                    dispatch(editProfileAction.Eprofile(data, registerData.data.token));
-                }
-            }
         }
     }
 

@@ -32,8 +32,6 @@ export default function History({ navigation }) {
   const LeadData = useSelector(state => state.history.leadData)
 
   const loginData = useSelector(state => state.auth.data)
-  const registerData = useSelector(state => state.varify.otp)
-
 
   const [startDate, setstartDate] = useState(new Date());
   const [startmode, setstartMode] = useState('date');
@@ -90,7 +88,6 @@ export default function History({ navigation }) {
   const Search = () => {
     let StartDate = moment(startDate).format("YYYY-MM-DD")
     let EndDate = moment(enddate).format("YYYY-MM-DD")
-    if (loginData || registerData) {
       if (loginData.status == "success") {
         let data = {
           uid: loginData.data.uid,
@@ -145,68 +142,6 @@ export default function History({ navigation }) {
           }
         }
         // console.log(data)
-      }
-      else if (registerData.status == "success") {
-        let data = {
-          uid: registerData.data.uid,
-          org_uid: registerData.data.org_uid,
-          profile_id: registerData.data.cProfile.toString(),
-          pageSize: '40',
-          pageNumber: '0',
-          filters: []
-        }
-        if (starttext == false || endtext == false || statusId !== null || campId !== null) {
-          if (StartDate !== EndDate) {
-            if (starttext == true) {
-              ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
-            }
-            else if (endtext == true) {
-              ToastAndroid.show('Please Select end Date', ToastAndroid.SHORT);
-            }
-            else {
-              if (StartDate <= EndDate) {
-                setIsLodding(true)
-                data.filters.push({ gte: StartDate, key: 'created_at' },
-                  { lte: EndDate, key: 'created_at' })
-                  dispatch(historyAction.HistoryList(data, registerData.data.token));
-              }
-              else if (StartDate == EndDate && starttext == false && endtext == false){
-                setIsLodding(true)
-                data.filters.push({ gte: StartDate, key: 'created_at' },
-                  { lte: EndDate, key: 'created_at' })
-                  dispatch(historyAction.HistoryList(data, registerData.data.token));
-              }
-              else {
-                ToastAndroid.show('wrong format', ToastAndroid.SHORT);
-              }
-            }
-          }
-          else if (StartDate == EndDate && starttext == false && endtext == false){
-            setIsLodding(true)
-            data.filters.push({ gte: StartDate, key: 'created_at' },
-              { lte: EndDate, key: 'created_at' })
-              dispatch(historyAction.HistoryList(data, registerData.data.token));
-          }
-          if (statusId !== null && campId !== null) {
-            setIsLodding(true)
-            data.filters.push({ eq: campId, key: 'campaign' },
-              { eq: status, key: 'lead_status' })
-              dispatch(historyAction.HistoryList(data, registerData.data.token));
-          }
-          else if (statusId !== null) {
-            setIsLodding(true)
-            data.filters.push({ eq: status, key: 'lead_status' })
-            dispatch(historyAction.HistoryList(data, registerData.data.token));
-          }
-          else if (campId !== null) {
-            setIsLodding(true)
-            data.filters.push({ eq: campId, key: 'campaign' })
-            dispatch(historyAction.HistoryList(data, registerData.data.token));
-          }
-         
-        }
-        // console.log(data)
-      }
     }
   }
 
@@ -220,8 +155,7 @@ export default function History({ navigation }) {
     setstartDate(new Date())
     setendDate(new Date())
     setIsLodding(true)
-    if (loginData || registerData) {
-      if (loginData.status == "success") {
+    if (loginData ) {
         let data = {
           uid: loginData.data.uid,
           org_uid: loginData.data.org_uid,
@@ -231,18 +165,6 @@ export default function History({ navigation }) {
           filters: []
         }
         dispatch(historyAction.HistoryList(data, loginData.data.token));
-      }
-      else if (registerData.status == "success") {
-        let data = {
-          uid: registerData.data.uid,
-          org_uid: registerData.data.org_uid,
-          profile_id: registerData.data.cProfile.toString(),
-          pageSize: '40',
-          pageNumber: '0',
-          filters: []
-        }
-        dispatch(historyAction.HistoryList(data, registerData.data.token));
-      }
     }
   }
 
@@ -252,8 +174,6 @@ export default function History({ navigation }) {
 
   useEffect(() => {
     setIsLodding(true)
-    if (loginData || registerData ) {
-      if (loginData.status == "success") {
         let data = {
           uid: loginData.data.uid,
           org_uid: loginData.data.org_uid,
@@ -265,22 +185,8 @@ export default function History({ navigation }) {
         dispatch(historyAction.HistoryList(data, loginData.data.token));
         dispatch(historyAction.LeadStatusList(data, loginData.data.token));
         dispatch(historyAction.CampaignList(data, loginData.data.token));
-      }
-      else if (registerData.status == "success") {
-        let data = {
-          uid: registerData.data.uid,
-          org_uid: registerData.data.org_uid,
-          profile_id: registerData.data.cProfile.toString(),
-          pageSize: '40',
-          pageNumber: '0',
-          filters: []
-        }
-        dispatch(historyAction.HistoryList(data, registerData.data.token));
-        dispatch(historyAction.LeadStatusList(data, registerData.data.token));
-        dispatch(historyAction.CampaignList(data, registerData.data.token));
-      }
-    }
-  }, [loginData ,registerData ])
+  
+  }, [loginData ])
 
   useEffect(() => {
     if (historyData) {

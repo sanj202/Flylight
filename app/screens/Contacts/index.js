@@ -19,7 +19,6 @@ export default function Contacts({ navigation }) {
     const isFocused = useIsFocused();
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const contactData = useSelector(state => state.contactList.contacts)
     const [EditcontactId, setEditConatctId] = useState([])
     const [isVisible, setIsVisible] = useState(false);
@@ -50,8 +49,7 @@ export default function Contacts({ navigation }) {
 
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 setIsLodding(true)
                 const data = {
                     uid: loginData.data.uid,
@@ -59,18 +57,8 @@ export default function Contacts({ navigation }) {
                     org_uid: loginData.data.org_uid,
                 }
                 dispatch(contactListAction.contactList(data,loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                setIsLodding(true)
-                const data = {
-                    uid: registerData.data.uid,
-                    profile_id: registerData.data.cProfile,
-                    org_uid: registerData.data.org_uid,
-                }
-                dispatch(contactListAction.contactList(data,registerData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (contactData) {

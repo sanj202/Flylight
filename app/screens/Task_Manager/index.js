@@ -15,12 +15,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 
 export default function lead_manager({ navigation }) {
 
-    const data = [
-        { label: 'Not Started', value: 'Not Started', },
-        { label: 'In Progress', value: 'In Progress' },
-        { label: 'Completed', value: 'Completed' },
-    ];
-
+    const [StatusList, setStatusList] = useState([]);
     const [isService, setisService] = useState('All');
     const [modalVisible2, setModalVisible2] = useState(false);
     const [askDelete, setaskDelete] = useState(false);
@@ -41,10 +36,25 @@ export default function lead_manager({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const taskList = useSelector(state => state.taskmanager.getList)
     const deleteTask = useSelector(state => state.taskmanager.deleteTask)
     const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
+    const TaskStatus = useSelector(state => state.taskmanager.taskstatus)
+
+
+    useEffect(() => {
+        if (TaskStatus) {
+            if (TaskStatus.status == "200") {
+                setStatusList(TaskStatus.data.TaskStatus)
+            }
+            else if (TaskStatus.status == "failed") {
+            }
+            else if (TaskStatus.status == "fail") {
+            }
+        }
+        else {
+        }
+    }, [TaskStatus])
 
     const onChangeFrom = (event, selectedDate) => {
         if (event.type == 'dismissed') {
@@ -89,61 +99,29 @@ export default function lead_manager({ navigation }) {
             }
             dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
-        else if (registerData.status == "success") {
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                org_uid: loginData.data.org_uid,
-                pageSize: '40',
-                pageNumber: '0',
-                filters: []
-            }
 
-            if (value == 'Done') {
-                data.filters.push({ eq: '3', key: 'status' })
-            }
-            else if (value == 'To-Do') {
-                data.filters.push({ eq: '1', key: 'status' })
-            }
-            else {
-
-            }
-            dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
-        }
         else { }
     }
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
+        if (loginData && isFocused) {
             Get_Data()
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     const Get_Data = () => {
-        if (loginData.status == "success") {
-            setIsLodding(true)
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                org_uid: loginData.data.org_uid,
-                pageSize: '40',
-                pageNumber: '0',
-                filters: []
-            }
-            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
+
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+            pageSize: '40',
+            pageNumber: '0',
+            filters: []
         }
-        else if (registerData.status == "success") {
-            setIsLodding(true)
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-                pageSize: '40',
-                pageNumber: '0',
-                filters: []
-            }
-            dispatch(taskmanagerAction.TaskList(data, registerData.data.token))
-        }
+        dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
+        dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
     }
 
     useEffect(() => {
@@ -154,7 +132,7 @@ export default function lead_manager({ navigation }) {
             else if (taskList.status == "failed") {
             }
             else if (taskList.status == "fail") {
-                ToastAndroid.show(taskList.message, ToastAndroid.SHORT);  
+                ToastAndroid.show(taskList.message, ToastAndroid.SHORT);
             }
             else {
             }
@@ -166,7 +144,6 @@ export default function lead_manager({ navigation }) {
 
     const [temObject, settempObject] = useState('')
     const CheckEditTask = (value) => {
-        // console.log('values of .......................', value.priority);
         settitle(value.title)
         if (value.due_date) {
             const dateStr = new Date(value.due_date);
@@ -189,54 +166,32 @@ export default function lead_manager({ navigation }) {
             // setIsVisible(false)
             let formateStartDate = moment(date).format("YYYY-MM-DD")
             // console.log('..................................', value.priority)
-            if (loginData || registerData) {
-                if (loginData.status == "success") {
-                    setEIsLodding(true)
-                    const data = {
-                        uid: loginData.data.uid,
-                        org_uid: loginData.data.org_uid,
-                        profile_id: loginData.data.cProfile,
-                        created_by: loginData.data.cProfile,
-                        modified_by: loginData.data.cProfile,
-                        task_id: value.id ? value.id : '',
-                        title: title,
-                        task_for: value.task_for ? value.task_for : '',
-                        task_related_to: value.related_to ? value.related_to : '',
-                        task_related_to_id: value.what_id ? value.what_id : '',
-                        status: Status,
-                        priority: value.priority ? value.priority : '',
-                        description: value.description ? value.description : '',
-                        due_date: formateStartDate,
-                    }
-                    dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
+            if (loginData) {
+                setEIsLodding(true)
+                const data = {
+                    uid: loginData.data.uid,
+                    org_uid: loginData.data.org_uid,
+                    profile_id: loginData.data.cProfile,
+                    created_by: loginData.data.cProfile,
+                    modified_by: loginData.data.cProfile,
+                    task_id: value.id ? value.id : '',
+                    title: title,
+                    task_for: value.task_for ? value.task_for : '',
+                    task_related_to: value.related_to ? value.related_to : '',
+                    task_related_to_id: value.what_id ? value.what_id : '',
+                    status: Status,
+                    priority: value.priority ? value.priority : '',
+                    description: value.description ? value.description : '',
+                    due_date: formateStartDate,
                 }
-                else if (registerData.status == "success") {
-                    setEIsLodding(true)
-                    const data = {
-                        uid: registerData.data.uid,
-                        org_uid: registerData.data.org_uid,
-                        profile_id: registerData.data.cProfile,
-                        created_by: registerData.data.cProfile,
-                        modified_by: registerData.data.cProfile,
-                        task_id: value.id ? value.id : '',
-                        title: title,
-                        task_for: value.task_for ? value.task_for : '',
-                        task_related_to: value.related_to ? value.related_to : '',
-                        task_related_to_id: value.what_id ? value.what_id : '',
-                        status: Status,
-                        priority: value.priority ? value.priority : '',
-                        description: value.description ? value.description : '',
-                        due_date: formateStartDate,
-                    }
-                    dispatch(taskmanagerAction.Add_EditTask(data, registerData.data.token));
-                }
+                dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
+
             }
         }
     }
 
     useEffect(() => {
         if (responseAdd_Edit) {
-            // console.log('one<><><><>>>>>>>>>>>>>>>>>', responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
                 setIsVisible(false)
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
@@ -277,27 +232,14 @@ export default function lead_manager({ navigation }) {
     }
 
     const DeleteFunction = () => {
-        // console.log('API.................')
-        if (loginData.status == "success") {
-            setaskDelete(!askDelete)
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile,
-                org_uid: loginData.data.org_uid,
-                task_id: tempId
-            }
-            dispatch(taskmanagerAction.deleteTask(data, loginData.data.token));
+        setaskDelete(!askDelete)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile,
+            org_uid: loginData.data.org_uid,
+            task_id: tempId
         }
-        else if (registerData.status == "success") {
-            setaskDelete(!askDelete)
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-                task_id: tempId
-            }
-            dispatch(taskmanagerAction.deleteTask(data, registerData.data.token));
-        }
+        dispatch(taskmanagerAction.deleteTask(data, loginData.data.token));
         setIsLodding(true)
     }
 
@@ -323,7 +265,7 @@ export default function lead_manager({ navigation }) {
     }
 
     const AllView = ({ item }) => {
-     
+
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
@@ -523,130 +465,6 @@ export default function lead_manager({ navigation }) {
                 }
             </View>
 
-
-            {/* {isService == "All" ?
-            <View style={{ marginTop: '3%' }}>
-                {IsLodding == true ?
-                    <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                    :
-                    <View>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('AddTask')}
-                            style={{
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                paddingHorizontal: 10,
-                                paddingVertical: 2,
-                                alignSelf: 'flex-end',
-                                marginHorizontal: '5%',
-                                backgroundColor: '#2296E4',
-                                borderRadius: 15
-                            }}
-                        >
-                            <Text style={{ color: "#fff", fontSize: 13 }}>
-                                +Add
-                            </Text>
-                        </TouchableOpacity>
-
-                        {allTask !== undefined && allTask.length > 0 ?
-                            <FlatList
-                                // style={{ height: height / 1.55 }}
-                                data={allTask}
-                                renderItem={AllView}
-                            />
-                            // <Text>test</Text>
-                            :
-                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-                    </View>
-                }
-            </View>
-            :
-            <View />
-        }
-        {
-            isService == "To-Do" ?
-                <View style={{ marginTop: '3%' }}>
-                    {IsLodding == true ?
-                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                        :
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('AddTask')}
-                                style={{
-                                    borderColor: '#fff',
-                                    borderWidth: 1,
-                                    paddingHorizontal: 10,
-                                    paddingVertical: 2,
-                                    alignSelf: 'flex-end',
-                                    marginHorizontal: '5%',
-                                    backgroundColor: '#2296E4',
-                                    borderRadius: 15
-                                }}
-                            >
-                                <Text style={{ color: "#fff", fontSize: 13 }}>
-                                    +Add
-                                </Text>
-                            </TouchableOpacity>
-                            {allTask !== undefined && allTask.length > 0 ?
-                                <FlatList
-                                    // style={{ height: height / 1.55 }}
-                                    data={allTask}
-                                    renderItem={TODOView}
-                                />
-
-                                :
-                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-                        </View>
-                    }
-                </View>
-                :
-                <View />
-        }
-        {
-            isService == "Done" ?
-
-
-                <View style={{ marginTop: '3%' }}>
-                    {IsLodding == true ?
-                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
-                        :
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('AddTask')}
-                                style={{
-                                    borderColor: '#fff',
-                                    borderWidth: 1,
-                                    paddingHorizontal: 10,
-                                    paddingVertical: 2,
-                                    alignSelf: 'flex-end',
-                                    marginHorizontal: '5%',
-                                    backgroundColor: '#2296E4',
-                                    borderRadius: 15
-                                }}
-                            >
-                                <Text style={{ color: "#fff", fontSize: 13 }}>
-                                    +Add
-                                </Text>
-                            </TouchableOpacity>
-                            {allTask !== undefined && allTask.length > 0 ?
-                                <FlatList
-                                    // style={{ height: height / 1.55 }}
-                                    data={allTask}
-                                    renderItem={DoneView}
-                                />
-                                :
-                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>}
-                        </View>
-                    }
-                </View>
-                :
-                <View />
-        } */}
-
-
-
-            {/* ================================================== */}
-
             <BottomSheet modalProps={{
                 animationType: 'fade',
                 hardwareAccelerated: true,
@@ -715,16 +533,16 @@ export default function lead_manager({ navigation }) {
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
-                            data={data}
+                            data={StatusList}
                             maxHeight={100}
-                            labelField="label"
-                            valueField="value"
+                            labelField="status"
+                            valueField="id"
                             placeholder='Status'
                             value={Status}
                             onFocus={() => setIsFocus(true)}
                             onBlur={() => setIsFocus(false)}
                             onChange={item => {
-                                setStatus(item.value);
+                                setStatus(item.id);
                                 setIsFocus(false);
                             }}
                             renderLeftIcon={() => (

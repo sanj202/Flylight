@@ -5,7 +5,7 @@ import BaseUrl from '../../../const'
 export const dashboard = (uid, org_uid, profile_id, Token,) => {
     return (dispatch) => {
         dispatch({ type: Dashboard })
-        fetch(`${BaseUrl}/v1/dashboard`,
+        fetch(`${BaseUrl}/dashboard`,
             {
                 method: "POST",
                 headers: {
@@ -33,7 +33,7 @@ export const dashboard = (uid, org_uid, profile_id, Token,) => {
 export const UpdateToken = (uid,fcmtoken,Token) => {
     return (dispatch) => {
         dispatch({ type: Update_Token })
-        fetch(`${BaseUrl}/v1/updatefcmToken`,
+        fetch(`${BaseUrl}/updatefcmToken`,
             {
                 method: "POST",
                 headers: {

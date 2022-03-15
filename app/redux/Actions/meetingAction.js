@@ -12,7 +12,7 @@ import BaseUrl from '../../../const'
 export const add_Edit_Meeting = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Add_Edit_Meeting })
-        fetch(`${BaseUrl}/v1/addEditMeeting`,
+        fetch(`${BaseUrl}/addEditMeeting`,
             {
                 method: "POST",
                 headers: {
@@ -35,7 +35,7 @@ export const add_Edit_Meeting = (data, token) => {
 export const MeetingList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Meeting })
-        fetch(`${BaseUrl}/v1/getmeetingList`,
+        fetch(`${BaseUrl}/getmeetingList`,
             {
                 method: "POST",
                 headers: {
@@ -58,7 +58,7 @@ export const MeetingList = (data, token,) => {
 export const MeetingOne = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Meeting_Detail })
-        fetch(`${BaseUrl}/v1/getMeeting`,
+        fetch(`${BaseUrl}/getMeeting`,
             {
                 method: "POST",
                 headers: {
@@ -81,7 +81,7 @@ export const MeetingOne = (data, token,) => {
 export const  MeetingleadList = (data, token) => {
     return (dispatch) => {
         dispatch({ type: MeetingLeads })
-        fetch(`${BaseUrl}/v1/getleadsList`,
+        fetch(`${BaseUrl}/getleadsList`,
             {
                 method: "POST",
                 headers: {
@@ -106,7 +106,7 @@ export const MeetingcontactList = (data,token) => {
     return (dispatch) => {
         dispatch({ type: MeetingContact })
 
-        fetch(`${BaseUrl}/v1/getContactList`,
+        fetch(`${BaseUrl}/getContactList`,
             {
                 method: "POST",
                 headers: {

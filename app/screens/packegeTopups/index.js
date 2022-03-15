@@ -23,7 +23,6 @@ export default function lead_manager({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const packDetail = useSelector(state => state.organization.getpack)
     const packOrder = useSelector(state => state.organization.getpackOrder)
     const packOrderVerify = useSelector(state => state.organization.verifypackorder)
@@ -31,8 +30,7 @@ export default function lead_manager({ navigation }) {
     const topOrderVerify = useSelector(state => state.organization.verifytoporder)
 
     useEffect(() => {
-        if (loginData || registerData) {
-            if (loginData.status == "success") {
+        if (loginData ) {
                 setIsLodding(true)
                 const data = {
                     uid: loginData.data.uid,
@@ -40,25 +38,14 @@ export default function lead_manager({ navigation }) {
                     org_uid: loginData.data.org_uid,
                 }
                 dispatch(organizationAction.packageList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                setIsLodding(true)
-                const data = {
-                    uid: registerData.data.uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                }
-                dispatch(organizationAction.packageList(data, registerData.data.token));
-            }
         }
-    }, [loginData, registerData])
+    }, [loginData])
 
     const checkValue = (value) => {
         setisService(value)
     }
 
     const BuyPlane = (value) => {
-        if (loginData.status == "success") {
             setIsLoddingBuy(true)
             const data = {
                 uid: loginData.data.uid,
@@ -67,20 +54,8 @@ export default function lead_manager({ navigation }) {
                 package_id: value
             }
             dispatch(organizationAction.getpackageOrder(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-            setIsLoddingBuy(true)
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-                package_id: value
-            }
-            dispatch(organizationAction.getpackageOrder(data, registerData.data.token));
-        }
     }
     const BuyPlaneTopUp = (value) => {
-        if (loginData.status == "success") {
             setIsLoddingBuy(true)
             const data = {
                 uid: loginData.data.uid,
@@ -89,17 +64,6 @@ export default function lead_manager({ navigation }) {
                 topup_id: value
             }
             dispatch(organizationAction.getTopOrder(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-            setIsLoddingBuy(true)
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-                topup_id: value
-            }
-            dispatch(organizationAction.getTopOrder(data, registerData.data.token));
-        }
     }
 
 

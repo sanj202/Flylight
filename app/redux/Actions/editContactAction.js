@@ -11,7 +11,7 @@ export const EditContact = (data ,Token) => {
         dispatch({ type: Edit_Contact })
         // {BaseUrl}/api/mobile/login
 
-        fetch(`${BaseUrl}/v1/contactsAddEdit`,
+        fetch(`${BaseUrl}/contactsAddEdit`,
             {
                 method: "POST",
                 headers: {

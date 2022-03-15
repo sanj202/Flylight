@@ -5,7 +5,7 @@ import BaseUrl from '../../../const'
 export const notification = (data, Token,) => {
     return (dispatch) => {
         dispatch({ type: Get_Notification })
-        fetch(`${BaseUrl}/v1/getNotificationList`,
+        fetch(`${BaseUrl}/getNotificationList`,
             {
                 method: "POST",
                 headers: {

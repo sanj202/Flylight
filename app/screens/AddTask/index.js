@@ -64,7 +64,6 @@ export default function AddContact({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const leadOwner = useSelector(state => state.taskmanager.taskOwner)
     const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
     const Lead_OpportunityList = useSelector(state => state.taskmanager.tasklead)
@@ -73,8 +72,7 @@ export default function AddContact({ navigation }) {
 
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
@@ -82,18 +80,8 @@ export default function AddContact({ navigation }) {
                 }
                 dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
                 dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                dispatch(taskmanagerAction.TaskOwnerList(data, registerData.data.token));
-                dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (leadOwner) {
@@ -157,7 +145,7 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (Lead_OpportunityList) {
             if (Lead_OpportunityList.status == "200") {
-                setListValues(Lead_OpportunityList.data.lead)
+                setListValues(Lead_OpportunityList.data.lead ? Lead_OpportunityList.data.lead : Lead_OpportunityList.data)
                 setModalVisible2(true)
                 dispatch(leadmanagerAction.clearResponse())
             }
@@ -174,7 +162,6 @@ export default function AddContact({ navigation }) {
 
 
     const selectOneFile = (value) => {
-        if (loginData.status == "success") {
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
@@ -189,23 +176,6 @@ export default function AddContact({ navigation }) {
             else {
                 console.log('account APi..........account........................ ')
             }
-        }
-        else if (registerData.status == "success") {
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-            }
-            if (value == 'lead') {
-                dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
-            }
-            else if (value == 'contact') {
-                dispatch(contactListAction.contactList(data, registerData.data.token));
-            }
-            else {
-                console.log('account APi.................................. ')
-            }
-        }
     }
 
     const AddNewCampaign = () => {
@@ -223,9 +193,6 @@ export default function AddContact({ navigation }) {
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
-
-            if (loginData || registerData) {
-                if (loginData.status == "success") {
                     setIsLodding(true)
                     const data = {
                         uid: loginData.data.uid,
@@ -243,27 +210,7 @@ export default function AddContact({ navigation }) {
                         due_date: formateStartDate,
                     }
                     dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
-                }
-                else if (registerData.status == "success") {
-                    setIsLodding(true)
-                    const data = {
-                        uid: registerData.data.uid,
-                        org_uid: registerData.data.org_uid,
-                        profile_id: TaskOwner !== null ? TaskOwner :registerData.data.cProfile,
-                        created_by: registerData.data.cProfile,
-                        modified_by: registerData.data.cProfile,
-                        title: title,
-                        task_for: TaskFor,
-                        task_related_to: releetedTo,
-                        task_related_to_id: releetedToId,
-                        status: Status,
-                        priority: Priority,
-                        description: Description,
-                        due_date: formateStartDate,
-                    }
-                    dispatch(taskmanagerAction.Add_EditTask(data, registerData.data.token));
-                }
-            }
+           
         }
     }
 

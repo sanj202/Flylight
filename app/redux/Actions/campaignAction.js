@@ -9,7 +9,7 @@ export const CampaignList = (data, token,) => {
     // console.log("dskanfgsdfgjh.......................", data)
     return (dispatch) => {
         dispatch({ type: Campaign })
-        fetch(`${BaseUrl}/v1/campaign-list`,
+        fetch(`${BaseUrl}/campaign-list`,
             {
                 method: "POST",
                 headers: {
@@ -39,7 +39,7 @@ export const Add_EditCampaign = (data, token,) => {
     // console.log("dskanfgsdfgjh.......................", data)
     return (dispatch) => {
         dispatch({ type: Add_Edit_Campaign })
-        fetch(`${BaseUrl}/v1/addedit-campaign`,
+        fetch(`${BaseUrl}/addedit-campaign`,
             {
                 method: "POST",
                 headers: {

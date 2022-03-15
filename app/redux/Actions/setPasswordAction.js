@@ -9,7 +9,7 @@ export const setPassword = (email, state ,state1) => {
         dispatch({ type: SET_PASSWORD })
         // {BaseUrl}//api/mobile/register
 
-        fetch(`${BaseUrl}/v1/reset-password`,
+        fetch(`${BaseUrl}/reset-password`,
             {
                 method: "POST",
                 headers: {

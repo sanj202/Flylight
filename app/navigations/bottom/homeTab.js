@@ -74,10 +74,16 @@ function HomeTabs() {
           title: 'Home',
           tabBarIcon: ({ size, focused, color }) => {
             return (
+              focused ?
               <Image
-                style={{ width: 19.48, height: 21.64, marginTop: '7%', }}
+                style={{ width: 22, height: 24, marginTop: '7%', }}
                 source={require('../../images/homeTab.png')}
               />
+              :
+              <Image
+              style={{ width: 19.48, height: 21.64, marginTop: '7%', }}
+              source={require('../../images/homeTab.png')}
+            />
             );
           },
         }} />
@@ -91,10 +97,16 @@ function HomeTabs() {
           title: 'Report',
           tabBarIcon: ({ size, focused, color }) => {
             return (
+              focused ?
               <Image
-                style={{ width: 21, height: 21, marginTop: '5%', }}
+                style={{ width: 23, height: 23, marginTop: '5%', }}
                 source={require('../../images/report.png')}
               />
+              :
+              <Image
+              style={{ width: 21, height: 21, marginTop: '5%', }}
+              source={require('../../images/report.png')}
+            />
             );
           },
         }} />
@@ -142,10 +154,16 @@ function HomeTabs() {
           title: 'ContactList',
           tabBarIcon: ({ size, focused, color }) => {
             return (
+              focused ?
               <Image
-                style={{ width: 28.40, height: 9.10, marginTop: '7%' }}
+                style={{ width: 30, height: 11, marginTop: '7%' }}
                 source={require('../../images/callTab.png')}
               />
+              :
+              <Image
+              style={{ width: 28.40, height: 9.10, marginTop: '7%' }}
+              source={require('../../images/callTab.png')}
+            />
             );
           },
         }} />
@@ -160,9 +178,14 @@ function HomeTabs() {
           title: 'Profile',
           tabBarIcon: ({ size, focused, color }) => {
             return (
-              <Image style={{ width: 19.05, height: 20.77, marginTop: '6%' }}
+              focused ?
+              <Image style={{ width: 21, height: 22, marginTop: '6%' }}
                 source={require('../../images/profile.png')}
               />
+              :
+              <Image style={{ width: 19.05, height: 20.77, marginTop: '6%' }}
+              source={require('../../images/profile.png')}
+            />
             );
           },
         }} />

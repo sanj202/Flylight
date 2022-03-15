@@ -11,7 +11,7 @@ import BaseUrl from '../../../const'
 export const AddCallHistory = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Add_callhistory })
-        fetch(`${BaseUrl}/v1/addCallhistory`,
+        fetch(`${BaseUrl}/addCallhistory`,
             {
                 method: "POST",
                 headers: {
@@ -61,7 +61,7 @@ export const HistoryList = (data, token,) => {
 export const CampaignList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Campaign })
-        fetch(`${BaseUrl}/v1/campaign-list`,
+        fetch(`${BaseUrl}/campaign-list`,
             {
                 method: "POST",
                 headers: {
@@ -85,7 +85,7 @@ export const CampaignList = (data, token,) => {
 export const LeadStatusList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: lead_status })
-        fetch(`${BaseUrl}/v1/leadStatus`,
+        fetch(`${BaseUrl}/leadStatus`,
             {
                 method: "POST",
                 headers: {

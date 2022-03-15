@@ -17,37 +17,20 @@ export default function SideMenu({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const profileData = useSelector(state => state.profile.userDetail)
     const { width, height } = Dimensions.get('window');
 
-
-    // console.log("loginData....................", loginData.data.user)
-
-
-
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
-                setIsLodding(true)
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                dispatch(profileAction.profile(data, loginData.data.token));
+        if (loginData && isFocused) {
+            setIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                org_uid: loginData.data.org_uid,
+                profile_id: loginData.data.cProfile.toString(),
             }
-            else if (registerData.status == "success") {
-                setIsLodding(true)
-                const data = {
-                    uid: registerData.data.uid,
-                    org_uid: registerData.data.org_uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                }
-                dispatch(profileAction.profile(data, registerData.data.token));
-            }
+            dispatch(profileAction.profile(data, loginData.data.token));
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (profileData) {
@@ -69,14 +52,7 @@ export default function SideMenu({ navigation }) {
     }, [profileData])
 
     const LogoutSession = () => {
-        if (loginData.status == "success") {
-            dispatch(authAction.clearResponse())
-        }
-        else if (registerData.status == "success") {
-            dispatch(varificationAction.clearResponse())
-        }
-        else {
-        }
+        dispatch(authAction.clearResponse())
         // navigation.navigate('Logout')
     };
 
@@ -125,6 +101,7 @@ export default function SideMenu({ navigation }) {
                             {user.avatar ?
                                 <Avatar.Image
                                     size={100}
+                                    style={{ backgroundColor: '#fff' }}
                                     // source={require('../../images/avtar.jpg')}
                                     source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
                                 />
@@ -324,7 +301,7 @@ export default function SideMenu({ navigation }) {
                     >
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
-                                style={[styles.image2, { marginRight: '2%',height:24,width:22 }]}
+                                style={[styles.image2, { marginRight: '2%', height: 24, width: 22 }]}
                                 source={require('../../images/buy.png')}
                             />
                             <View style={styles.menus}>

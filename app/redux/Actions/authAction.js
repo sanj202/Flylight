@@ -5,7 +5,7 @@ import BaseUrl from '../../../const'
 export const login = (loginID, Password) => {
     return (dispatch) => {
         dispatch({ type: LOGIN })
-        fetch(`${BaseUrl}/v1/login`,
+        fetch(`${BaseUrl}/login`,
             {
                 method: "POST",
                 headers: {
@@ -27,6 +27,32 @@ export const login = (loginID, Password) => {
             })
     }
 
+};
+
+
+export const varification = (otp, uid) => {
+    return (dispatch) => {
+        dispatch({ type: LOGIN })
+        fetch(`${BaseUrl}/verifyotp`,
+            {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    otp: otp,
+                    uid: uid
+                }),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: LOGIN_SUCCESS, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
 };
 
 export const SwitchOrg = (post, profileId, OrgUid) => {

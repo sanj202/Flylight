@@ -13,7 +13,7 @@ export const add_EditStatus = (data,token) => {
 
     return (dispatch) => {
         dispatch({ type: Add_Edit_Status })
-        fetch(`${BaseUrl}/v1/addedit-status`,
+        fetch(`${BaseUrl}/addedit-status`,
             {
                 method: "POST",
                 headers: {
@@ -42,7 +42,7 @@ export const clearAddStatusResponse = () => {
 export const getStatus = (data,token) => {
     return (dispatch) => {
         dispatch({ type: Get_Status })
-        fetch(`${BaseUrl}/v1/status-list`,
+        fetch(`${BaseUrl}/status-list`,
             {
                 method: "POST",
                 headers: {
@@ -73,7 +73,7 @@ export const delete_Status = (data,token) => {
 
     return (dispatch) => {
         dispatch({ type: Get_Status_Delete })
-        fetch(`${BaseUrl}/v1/delete-status`,
+        fetch(`${BaseUrl}/delete-status`,
             {
                 method: "POST",
                 headers: {
@@ -102,7 +102,7 @@ export const clearDeleteStatusResponse = () => {
 export const add_EditAction = (data ,token,) => {
     return (dispatch) => {
         dispatch({ type: Add_Edit_Action })
-        fetch(`${BaseUrl}/v1/addedit-action`,
+        fetch(`${BaseUrl}/addedit-action`,
             {
                 method: "POST",
                 headers: {
@@ -131,7 +131,7 @@ export const clearAddActionResponse = () => {
 export const getAction = (data,token) => {
     return (dispatch) => {
         dispatch({ type: Get_Action })
-        fetch(`${BaseUrl}/v1/action-list`,
+        fetch(`${BaseUrl}/action-list`,
             {
                 method: "POST",
                 headers: {
@@ -163,7 +163,7 @@ export const delete_Action = (data,token) => {
 
     return (dispatch) => {
         dispatch({ type: Get_Action_Delete })
-        fetch(`${BaseUrl}/v1/delete-action`,
+        fetch(`${BaseUrl}/delete-action`,
             {
                 method: "POST",
                 headers: {

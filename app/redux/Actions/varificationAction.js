@@ -5,7 +5,7 @@ import BaseUrl from '../../../const'
 export const varification = (otp, uid) => {
     return (dispatch) => {
         dispatch({ type: VERIFY_OTP })
-        fetch(`${BaseUrl}/v1/verifyotp`,
+        fetch(`${BaseUrl}/verifyotp`,
             {
                 method: "POST",
                 headers: {

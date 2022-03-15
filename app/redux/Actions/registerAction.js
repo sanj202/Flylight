@@ -5,7 +5,7 @@ import BaseUrl from '../../../const'
 export const register = (data) => {
     return (dispatch) => {
         dispatch({ type: REGISTER })
-        fetch(`${BaseUrl}/v1/register`,
+        fetch(`${BaseUrl}/register`,
             {
                 method: "POST",
                 headers: {

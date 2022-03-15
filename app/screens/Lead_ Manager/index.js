@@ -41,7 +41,6 @@ export default function lead_manager({ navigation, route }) {
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
-  const registerData = useSelector(state => state.varify.otp)
   const importLead = useSelector(state => state.leads.importLead)
   const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
   const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
@@ -94,37 +93,23 @@ export default function lead_manager({ navigation, route }) {
   }
 
   useEffect(() => {
-    if (loginData || registerData && isFocused) {
+    if (loginData && isFocused) {
       setIsLodding(true)
       Get_Data()
     }
-  }, [loginData, registerData, isFocused])
+  }, [loginData, isFocused])
 
   const Get_Data = () => {
-    if (loginData.status == "success") {
-      setIsLodding(true)
-      const data = {
-        uid: loginData.data.uid,
-        profile_id: loginData.data.cProfile.toString(),
-        org_uid: loginData.data.org_uid,
-        filters: [],
-        pageSize: '30',
-        pageNumber: '0',
-      }
-      dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+    setIsLodding(true)
+    const data = {
+      uid: loginData.data.uid,
+      profile_id: loginData.data.cProfile.toString(),
+      org_uid: loginData.data.org_uid,
+      filters: [],
+      pageSize: '30',
+      pageNumber: '0',
     }
-    else if (registerData.status == "success") {
-      setIsLodding(true)
-      const data = {
-        uid: registerData.data.uid,
-        profile_id: registerData.data.cProfile.toString(),
-        org_uid: registerData.data.org_uid,
-        filters: [],
-        pageSize: '30',
-        pageNumber: '0',
-      }
-      dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
-    }
+    dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
   }
 
   const Search = () => {
@@ -167,57 +152,14 @@ export default function lead_manager({ navigation, route }) {
           dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
         }
 
-        // console.log(data)
-
-      }
-      // console.log(data)
-    }
-    else if (registerData.status == "success") {
-      let data = {
-        uid: registerData.data.uid,
-        profile_id: registerData.data.cProfile.toString(),
-        org_uid: registerData.data.org_uid,
-        filters: [],
-        pageSize: '30',
-        pageNumber: '0',
-      }
-      if (text == false || texts == false) {
-        if (StartDate !== EndDate) {
-          if (text == true) {          
-            ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
-          }
-          else if (texts == true) {
-            ToastAndroid.show('Please Select End Date', ToastAndroid.SHORT);
-          }
-          else {
-            if (StartDate <= EndDate) {
-              setIsLodding(true)
-              data.filters.push({ gte: StartDate, key: 'created_at' },
-                { lte: EndDate, key: 'created_at' })
-              dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
-            }
-            else {
-              ToastAndroid.show('wrong format', ToastAndroid.SHORT);
-            }
-          }
-        }
-        else if (StartDate == EndDate && text == false && texts == false) {
-          setIsLodding(true)
-          data.filters.push({ gte: StartDate, key: 'created_at' },
-            { lte: EndDate, key: 'created_at' })
-          dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
-        }
-
+        console.log(data)
       }
     }
-    // console.log(data)
   }
 
   const Reset = () => {
     settext(true)
     settexts(true)
-    // setstatusId(null)
-    // setstatus(null)
     setDate(new Date())
     setDates(new Date())
     setIsLodding(true)
@@ -228,7 +170,6 @@ export default function lead_manager({ navigation, route }) {
   useEffect(() => {
     if (leadOwner) {
       if (leadOwner.status == "200") {
-        // console.log('leadOwner.......,',leadOwner.data )
         setleadOwnerData(leadOwner.data)
         setAssignOwner(true)
         dispatch(leadAction.clearResponse())
@@ -244,10 +185,7 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (Lead_OpportunityList) {
-      // console.log('value................', Lead_OpportunityList)
       if (Lead_OpportunityList.status == "success") {
-        // console.log('value................', Lead_OpportunityList.data)
-    
         setLead(Lead_OpportunityList.data)
         dispatch(leadmanagerAction.clearResponse())
         setIsLodding(false)
@@ -296,16 +234,6 @@ export default function lead_manager({ navigation, route }) {
         }
         dispatch(leadAction.deleteLead(data, loginData.data.token));
       }
-      else if (registerData.status == "success") {
-        setaskDelete(!askDelete)
-        const data = {
-          uid: registerData.data.uid,
-          profile_id: registerData.data.cProfile.toString(),
-          org_uid: registerData.data.org_uid,
-          lead_id: tempId
-        }
-        dispatch(leadAction.deleteLead(data, registerData.data.token));
-      }
     }
     else if (tempType == "Opportunity") {
       if (loginData.status == "success") {
@@ -317,16 +245,6 @@ export default function lead_manager({ navigation, route }) {
           Opportinity_id: tempId
         }
         dispatch(opportunityAction.deleteOpportunity(data, loginData.data.token));
-      }
-      else if (registerData.status == "success") {
-        setaskDelete(!askDelete)
-        const data = {
-          uid: registerData.data.uid,
-          profile_id: registerData.data.cProfile.toString(),
-          org_uid: registerData.data.org_uid,
-          Opportinity_id: tempId
-        }
-        dispatch(opportunityAction.deleteOpportunity(data, registerData.data.token));
       }
 
     }
@@ -398,7 +316,6 @@ export default function lead_manager({ navigation, route }) {
   }
 
   const CheckImportType = (value) => {
-    // console.log("ffn.........................test..............,", SelectedFile)
     setSelectedFile('choose-file')
     setSingleFile(null)
     setImportFiles(!ImportFiles)
@@ -417,39 +334,22 @@ export default function lead_manager({ navigation, route }) {
         uri: singleFile[0].uri,
         size: singleFile[0].size
       }
-      if (loginData.status == "success") {
-        setIsULodding(true)
-        if (tempUploadingType == 'Opportunity') {
-          const formdata = new FormData;
-          formdata.append('CSVFILE', file);
-          formdata.append('profile_id', loginData.data.cProfile);
-          formdata.append('org_uid', loginData.data.org_uid);
-          dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
-        }
-        else {
-          const formdata = new FormData;
-          formdata.append('CSVFILE', file);
-          formdata.append('profile_id', loginData.data.cProfile);
-          formdata.append('org_uid', loginData.data.org_uid);
-          dispatch(leadAction.importLead(formdata, loginData.data.token));
-        }
+      setIsULodding(true)
+      if (tempUploadingType == 'Opportunity') {
+        const formdata = new FormData;
+        formdata.append('CSVFILE', file);
+        formdata.append('uid', loginData.data.uid);
+        formdata.append('profile_id', loginData.data.cProfile);
+        formdata.append('org_uid', loginData.data.org_uid);
+        dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
       }
-      else if (registerData.status == "success") {
-        setIsULodding(true)
-        if (tempUploadingType == 'Opportunity') {
-          const formdata = new FormData;
-          formdata.append('CSVFILE', file);
-          formdata.append('profile_id', registerData.data.cProfile);
-          formdata.append('org_uid', registerData.data.org_uid);
-          dispatch(opportunityAction.importOpportunity(formdata, registerData.data.token));
-        }
-        else {
-          const formdata = new FormData;
-          formdata.append('CSVFILE', file);
-          formdata.append('profile_id', registerData.data.cProfile);
-          formdata.append('org_uid', registerData.data.org_uid);
-          dispatch(leadAction.importLead(formdata, registerData.data.token));
-        }
+      else {
+        const formdata = new FormData;
+        formdata.append('CSVFILE', file);
+        formdata.append('uid', loginData.data.uid);
+        formdata.append('profile_id', loginData.data.cProfile);
+        formdata.append('org_uid', loginData.data.org_uid);
+        dispatch(leadAction.importLead(formdata, loginData.data.token));
       }
     }
   }
@@ -463,7 +363,6 @@ export default function lead_manager({ navigation, route }) {
 
   useEffect(() => {
     if (importLead) {
-
       if (importLead.status == "success") {
         // CombineArrayData()
         Get_Data()
@@ -494,13 +393,13 @@ export default function lead_manager({ navigation, route }) {
         // CombineArrayData()
         Get_Data()
         setImportFiles(false)
-          ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
+        ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
         setSingleFile(null)
         setIsULodding(false)
         // dispatch(opportunityAction.clearResponse())
       }
       else if (importOpportunity.status == "fail") {
-          ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
+        ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
         dispatch(opportunityAction.clearResponse())
         setIsULodding(false)
       }
@@ -681,49 +580,26 @@ export default function lead_manager({ navigation, route }) {
       ToastAndroid.show('Please Select atlest Lead', ToastAndroid.SHORT);
     }
     else {
-      if (loginData.status == "success") {
-        const data = {
-          uid: loginData.data.uid,
-          org_uid: loginData.data.org_uid,
-          profile_id: loginData.data.cProfile,
-        }
-        dispatch(leadAction.LeadOwneList(data, loginData.data.token));
+      const data = {
+        uid: loginData.data.uid,
+        org_uid: loginData.data.org_uid,
+        profile_id: loginData.data.cProfile,
       }
-      else if (registerData.status == "success") {
-        const data = {
-          profile_id: registerData.data.cProfile,
-          org_uid: registerData.data.org_uid,
-          uid: registerData.data.uid
-        }
-        dispatch(leadAction.LeadOwneList(data, registerData.data.token));
-      }
-
+      dispatch(leadAction.LeadOwneList(data, loginData.data.token));
       // console.log('press..................')
     }
   }
 
   const UserAssignLead = (value) => {
     setIsALodding(true)
-    if (loginData.status == "success") {
-      const data = {
-        uid: loginData.data.uid,
-        profile_id: loginData.data.cProfile.toString(),
-        org_uid: loginData.data.org_uid,
-        lead_ids: temarray,
-        assignee: value
-      }
-      dispatch(leadmanagerAction.AssignLead(data, loginData.data.token));
+    const data = {
+      uid: loginData.data.uid,
+      profile_id: loginData.data.cProfile.toString(),
+      org_uid: loginData.data.org_uid,
+      lead_ids: temarray,
+      assignee: value
     }
-    else if (registerData.status == "success") {
-      const data = {
-        uid: registerData.data.uid,
-        profile_id: registerData.data.cProfile.toString(),
-        org_uid: registerData.data.org_uid,
-        lead_ids: temarray,
-        assignee: value
-      }
-      dispatch(leadmanagerAction.AssignLead(data, loginData.data.token));
-    }
+    dispatch(leadmanagerAction.AssignLead(data, loginData.data.token));
   }
 
   const LeadView = ({ item, index }) => {

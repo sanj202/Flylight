@@ -17,31 +17,19 @@ export default function Campaign({ navigation }) {
     const isFocused = useIsFocused();
 
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const campaignList = useSelector(state => state.campaign.campaign)
 
-    // console.log("campaignList.............................", campaignList)
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
+        if (loginData  && isFocused) {
             setIsLodding(true)
-            if (loginData.status == "success") {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
                     profile_id: loginData.data.cProfile,
                 }
                 dispatch(campaignAction.CampaignList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile,
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                dispatch(campaignAction.CampaignList(data, registerData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (campaignList) {

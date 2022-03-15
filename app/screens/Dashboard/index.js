@@ -40,7 +40,6 @@ export default function Dashboard({ navigation, route, props }) {
   const isFocused = useIsFocused();
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
-  const registerData = useSelector(state => state.varify.otp)
   const dashboardData = useSelector(state => state.dashboard.data)
   const TokenData = useSelector(state => state.dashboard.tokenData)
   // console.log('tokenData..........', TokenData)
@@ -100,26 +99,21 @@ export default function Dashboard({ navigation, route, props }) {
   }
 
   useEffect(() => {
-    if (loginData || registerData) {
+    if (loginData) {
       AsyncStorage.getItem('fcmToken', (err, token) => {
         // console.log("fcm..........tostring................",JSON.parse(token))
         if (token !== null) {
-          if (loginData.status == "success") {
             dispatch(dashboardAction.UpdateToken(loginData.data.uid, JSON.parse(token), loginData.data.token))
-          }
-          else if (registerData.status == "success") {
-            dispatch(dashboardAction.UpdateToken(registerData.data.uid, JSON.parse(token), registerData.data.token))
-          }
         }
       })
     }
   }, [])
 
   useEffect(() => {
-    if (loginData || registerData && isFocused) {
+    if (loginData ) {
       Get_Data()
     }
-  }, [loginData, registerData, isFocused])
+  }, [loginData])
 
   // useEffect(() => {
   //   console.log("lengtegbsdbn/...............",Tcontacts.length)
@@ -129,26 +123,12 @@ export default function Dashboard({ navigation, route, props }) {
 
   const Get_Data = () => {
     setIsLodding(true)
-    if (loginData || registerData) {
-      if (loginData.status == "success") {
-        console.log("login..............")
-        dispatch(dashboardAction.dashboard(
-          loginData.data.uid,
-          loginData.data.org_uid,
-          loginData.data.cProfile,
-          loginData.data.token
-        ));
-      }
-      else if (registerData.status == "success") {
-        console.log("register..............")
-        dispatch(dashboardAction.dashboard(
-          registerData.data.uid,
-          registerData.data.org_uid,
-          registerData.data.cProfile,
-          registerData.data.token
-        ));
-      }
-    }
+    dispatch(dashboardAction.dashboard(
+      loginData.data.uid,
+      loginData.data.org_uid,
+      loginData.data.cProfile,
+      loginData.data.token
+    ));
   }
 
   useEffect(() => {
@@ -192,7 +172,7 @@ export default function Dashboard({ navigation, route, props }) {
         <ActivityIndicator size="small" color="#0000ff" />
         :
         <View>
-           <View
+          <View
             style={styles.reView}>
             <Pressable
               style={{ width: '49%' }}
@@ -201,9 +181,9 @@ export default function Dashboard({ navigation, route, props }) {
               })}
             >
               <Card
-                style={[styles.cardBox,{borderColor: '#FE2EA4',}]} >
+                style={[styles.cardBox, { borderColor: '#FE2EA4', }]} >
                 <Text style={styles.cardTitle}>Total Opportunity</Text>
-                <Text style={[styles.counter,{color: '#3072F2'}]}>{Topportunitys}</Text>
+                <Text style={[styles.counter, { color: '#3072F2' }]}>{Topportunitys}</Text>
               </Card>
             </Pressable >
             <Pressable
@@ -212,9 +192,9 @@ export default function Dashboard({ navigation, route, props }) {
                 key: 'Lead'
               })}>
               <Card
-                style={[styles.cardBox,{ borderColor: '#3373F3'}]}>
-                 <Text style={styles.cardTitle}>Total Leads</Text>
-                <Text style={[styles.counter,{ color: '#FE2EA4',}]}>{Tleads}</Text>
+                style={[styles.cardBox, { borderColor: '#3373F3' }]}>
+                <Text style={styles.cardTitle}>Total Leads</Text>
+                <Text style={[styles.counter, { color: '#FE2EA4', }]}>{Tleads}</Text>
               </Card>
             </Pressable >
           </View>
@@ -225,33 +205,33 @@ export default function Dashboard({ navigation, route, props }) {
               onRefresh={onRefresh}
             />
           }>
-          <View
-            style={[styles.reView,{ marginTop: 0 }]}>
-            <Pressable
-              style={{ width: '49%' }}
-                  // onPress={() => navigation.navigate('lead_manager')}
-            >
-              <Card
-                style={[styles.cardBox,{borderColor: '#FE2EA4',}]} >
-                <Text style={styles.cardTitle}>Total Accounts</Text>
-                <Text style={[styles.counter,{color: '#3072F2'}]}>{Taccounts}</Text>
-              </Card>
-            </Pressable >
-            <Pressable
-              style={{ width: '49%' }}
-              onPress={() => navigation.navigate('AddContact')}>
-              <Card
-                style={[styles.cardBox,{ borderColor: '#3373F3'}]}>
-                 <Text style={styles.cardTitle}>Total Contacts</Text>
-                <Text style={[styles.counter,{ color: '#FE2EA4',}]}>{Tcontacts}</Text>
-              </Card>
-            </Pressable >
-          </View>
+            <View
+              style={[styles.reView, { marginTop: 0 }]}>
+              <Pressable
+                style={{ width: '49%' }}
+              // onPress={() => navigation.navigate('lead_manager')}
+              >
+                <Card
+                  style={[styles.cardBox, { borderColor: '#FE2EA4', }]} >
+                  <Text style={styles.cardTitle}>Total Accounts</Text>
+                  <Text style={[styles.counter, { color: '#3072F2' }]}>{Taccounts}</Text>
+                </Card>
+              </Pressable >
+              <Pressable
+                style={{ width: '49%' }}
+                onPress={() => navigation.navigate('AddContact')}>
+                <Card
+                  style={[styles.cardBox, { borderColor: '#3373F3' }]}>
+                  <Text style={styles.cardTitle}>Total Contacts</Text>
+                  <Text style={[styles.counter, { color: '#FE2EA4', }]}>{Tcontacts}</Text>
+                </Card>
+              </Pressable >
+            </View>
 
-          <View
+            <View
               style={{ flexDirection: 'row', marginLeft: '5%', marginTop: '0%', marginBottom: '1%' }}>
               <TouchableOpacity style={{ marginRight: '5%' }}
-                // onPress={() => checkValue("Opportunity")}
+              // onPress={() => checkValue("Opportunity")}
               >
                 <View style={{ borderBottomWidth: 3, borderColor: '#6998F8', }} >
                   <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', fontSize: 16 }}>Opportunity</Text></View>
@@ -267,7 +247,7 @@ export default function Dashboard({ navigation, route, props }) {
             </View>
 
             <Card style={{ margin: '3%', padding: 5 }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-around',paddingVertical:'3%' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingVertical: '3%' }}>
 
                 <PieChart
                   widthAndHeight={widthAndHeight}
@@ -300,18 +280,18 @@ export default function Dashboard({ navigation, route, props }) {
                   {
                     Opportunity == "Today" ?
                       <TouchableOpacity
-                      style={[styles.opportunityBtn,{ backgroundColor: '#2450FF',borderColor: '#2450FF'}]}
+                        style={[styles.opportunityBtn, { backgroundColor: '#2450FF', borderColor: '#2450FF' }]}
                         onPress={() => checkStatusValue("Today")}
                       >
-                        <Text style={[styles.opportunityText,{color: 'white'}]}>
+                        <Text style={[styles.opportunityText, { color: 'white' }]}>
                           Today
                         </Text>
                       </TouchableOpacity>
                       : <TouchableOpacity
-                      style={[styles.opportunityBtn,{ backgroundColor: '#EBEBEB',borderColor: '#EBEBEB'}]}
+                        style={[styles.opportunityBtn, { backgroundColor: '#EBEBEB', borderColor: '#EBEBEB' }]}
                         onPress={() => checkStatusValue("Today")}
                       >
-                        <Text style={[styles.opportunityText,{ color: '#6094F9'} ]}>
+                        <Text style={[styles.opportunityText, { color: '#6094F9' }]}>
                           Today
                         </Text>
                       </TouchableOpacity>
@@ -320,18 +300,18 @@ export default function Dashboard({ navigation, route, props }) {
                   {
                     Opportunity == "7-Days" ?
                       <TouchableOpacity
-                      style={[styles.opportunityBtn,{ backgroundColor: '#2450FF',borderColor: '#2450FF'}]}
+                        style={[styles.opportunityBtn, { backgroundColor: '#2450FF', borderColor: '#2450FF' }]}
                         onPress={() => checkStatusValue("7-Days")}
                       >
-                        <Text style={[styles.opportunityText,{color: 'white'}]}>
+                        <Text style={[styles.opportunityText, { color: 'white' }]}>
                           7 Days
                         </Text>
                       </TouchableOpacity>
                       : <TouchableOpacity
-                      style={[styles.opportunityBtn,{ backgroundColor: '#EBEBEB',borderColor: '#EBEBEB'}]}
+                        style={[styles.opportunityBtn, { backgroundColor: '#EBEBEB', borderColor: '#EBEBEB' }]}
                         onPress={() => checkStatusValue("7-Days")}
                       >
-                         <Text style={[styles.opportunityText,{ color: '#6094F9'} ]}>
+                        <Text style={[styles.opportunityText, { color: '#6094F9' }]}>
                           7 Days
                         </Text>
                       </TouchableOpacity>
@@ -339,18 +319,18 @@ export default function Dashboard({ navigation, route, props }) {
                   {
                     Opportunity == "30-Days" ?
                       <TouchableOpacity
-                      style={[styles.opportunityBtn,{ backgroundColor: '#2450FF',borderColor: '#2450FF'}]}
+                        style={[styles.opportunityBtn, { backgroundColor: '#2450FF', borderColor: '#2450FF' }]}
                         onPress={() => checkStatusValue("30-Days")}
                       >
-                         <Text style={[styles.opportunityText,{color: 'white'}]}>
+                        <Text style={[styles.opportunityText, { color: 'white' }]}>
                           30 Days
                         </Text>
                       </TouchableOpacity>
                       : <TouchableOpacity
                         onPress={() => checkStatusValue("30-Days")}
-                        style={[styles.opportunityBtn,{ backgroundColor: '#EBEBEB',borderColor: '#EBEBEB'}]}
+                        style={[styles.opportunityBtn, { backgroundColor: '#EBEBEB', borderColor: '#EBEBEB' }]}
                       >
-                       <Text style={[styles.opportunityText,{ color: '#6094F9'} ]}>
+                        <Text style={[styles.opportunityText, { color: '#6094F9' }]}>
                           30 Days
                         </Text>
                       </TouchableOpacity>
@@ -358,13 +338,13 @@ export default function Dashboard({ navigation, route, props }) {
                 </View>
               </View>
             </Card>
-            </ScrollView>
-            <FlatList
+          </ScrollView>
+          <FlatList
             data={DATA}
             renderItem={({ item, index }) => (
               <View >
                 <TouchableOpacity
-                  // onPress={() => navigation.navigate('Task_Manager')}
+                // onPress={() => navigation.navigate('Task_Manager')}
                 >
                   <View style={styles.listData}>
                     <View style={{ flexDirection: 'row', }}>
@@ -411,11 +391,11 @@ export default function Dashboard({ navigation, route, props }) {
             keyExtractor={(item) => item.title}
           />
         </View>}
-        <Modal
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible2}
-        onRequestClose={() => { setModalVisible2(!modalVisible2);}}
+        onRequestClose={() => { setModalVisible2(!modalVisible2); }}
       >
         <View style={styles.centeredViewM}>
           <View style={styles.modalViewM}>
@@ -472,10 +452,10 @@ export default function Dashboard({ navigation, route, props }) {
         animationType="slide"
         transparent={true}
         visible={modalVisible3}
-        onRequestClose={() => {setModalVisible3(!modalVisible3);}}
+        onRequestClose={() => { setModalVisible3(!modalVisible3); }}
       >
         <Card style={[styles.centeredViewM2, { paddingBottom: '-5%', }]}>
-          <View style={{  paddingTop: '3%'}}>
+          <View style={{ paddingTop: '3%' }}>
             <TouchableOpacity
               onPress={() => setModalVisible3(!modalVisible3)}
             >
@@ -509,7 +489,7 @@ export default function Dashboard({ navigation, route, props }) {
 
           <View style={{ marginTop: '3%' }}>
             <TouchableOpacity
-              onPress={() =>ContactUpload() }
+              onPress={() => ContactUpload()}
             >
               <View style={styles.listDataA}>
                 <Image

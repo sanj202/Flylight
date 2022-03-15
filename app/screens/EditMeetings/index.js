@@ -127,7 +127,6 @@ export default function AddContact({ navigation, route }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const leadOwner = useSelector(state => state.leads.leadOwner)
     const responseAdd_Edit = useSelector(state => state.meeting.newMeeting)
 
@@ -135,25 +134,13 @@ export default function AddContact({ navigation, route }) {
     const contactData = useSelector(state => state.contactList.contacts)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
                     profile_id: loginData.data.cProfile.toString(),
                 }
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-            }
-        }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (leadOwner) {
@@ -233,7 +220,6 @@ export default function AddContact({ navigation, route }) {
 
 
     const selectOneFile = (value) => {
-        if (loginData.status == "success") {
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
@@ -248,23 +234,6 @@ export default function AddContact({ navigation, route }) {
             else {
                 console.log('account APi.................................. ')
             }
-        }
-        else if (registerData.status == "success") {
-            const data = {
-                uid: registerData.data.uid,
-                profile_id: registerData.data.cProfile.toString(),
-                org_uid: registerData.data.org_uid,
-            }
-            if (value == 'Lead') {
-                dispatch(leadmanagerAction.lead_OpprtunityList(data, registerData.data.token));
-            }
-            else if (value == 'Contact') {
-                dispatch(contactListAction.contactList(data, registerData.data.token));
-            }
-            else {
-                console.log('account APi.................................. ')
-            }
-        }
     }
 
     const AddNewMeeting = () => {
@@ -295,9 +264,6 @@ export default function AddContact({ navigation, route }) {
             let formateEndDate = moment(enddate).format("YYYY-MM-DD")
             let formateStartTime = moment(time).format("HH:mm:ss")
             let formateEndTime = moment(endtime).format("HH:mm:ss")
-
-            if (loginData || registerData) {
-                if (loginData.status == "success") {
                     setIsLodding(true)
                     const data = {
                         // uid: loginData.data.uid,
@@ -315,27 +281,6 @@ export default function AddContact({ navigation, route }) {
                         link: Attatchment,
                     }
                     dispatch(meetingAction.add_Edit_Meeting(data, loginData.data.token));
-                }
-                else if (registerData.status == "success") {
-                    setIsLodding(true)
-                    const data = {
-                        // uid: registerData.data.uid,
-                        meeting_id: route.params.item.id,
-                        org_uid: registerData.data.org_uid,
-                        profile_id: registerData.data.cProfile,
-                        location: location,
-                        from: formateStartDate + ' ' + formateStartTime,
-                        to: formateEndDate + ' ' + formateEndTime,
-                        meeting_for: meetingFor,
-                        related_to: releetedTo,
-                        related_to_id: releetedToId,
-                        description: Description,
-                        title: title,
-                        link: Attatchment,
-                    }
-                    dispatch(meetingAction.add_Edit_Meeting(data, registerData.data.token));
-                }
-            }
         }
     }
 

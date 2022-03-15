@@ -8,9 +8,7 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 const RootNavigation = () => {
     const [load, setLoad] = useState(true)
     const IsLogin = useSelector(state => state.auth.data)
-    const IsRegister = useSelector(state => state.varify.otp)
-
-    // console.log("value of ....................",IsRegister)
+    
     async function performload() {
         return new Promise(response => {
             setTimeout(() => { response("") }, 2000)
@@ -30,7 +28,7 @@ const RootNavigation = () => {
     }
     else {
         return (
-            (IsLogin !== undefined && IsLogin.status == 'success') || (IsRegister !== undefined && IsRegister.status == 'success') ?
+            (IsLogin !== undefined && IsLogin.status == 'success') ?
                 <MainStack />
                 :
                 <AuthStack />

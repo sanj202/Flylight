@@ -22,16 +22,14 @@ export default function AddContact({ navigation }) {
     const profileData = useSelector(state => state.profile.userDetail)
     const profileImage = useSelector(state => state.profile.userImage)
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
+        if (loginData  && isFocused) {
             getProfile()
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     const getProfile = () => {
-        if (loginData.status == "success") {
             setIsLodding(true)
             const data = {
                 uid: loginData.data.uid,
@@ -39,16 +37,6 @@ export default function AddContact({ navigation }) {
                 profile_id: loginData.data.cProfile,
             }
             dispatch(profileAction.profile(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-            setIsLodding(true)
-            const data = {
-                uid: registerData.data.uid,
-                org_uid: registerData.data.org_uid,
-                profile_id: registerData.data.cProfile,
-            }
-            dispatch(profileAction.profile(data, registerData.data.token));
-        }
     }
     useEffect(() => {
         if (profileData) {
@@ -97,34 +85,16 @@ export default function AddContact({ navigation }) {
                 name: 'photo',
                 size: image.size,
             };
-            // console.log("crop image........", photo);
-
-            if (loginData.status == "success") {
                 setIsLodding(true)
                 var formdata = new FormData();
                 formdata.append('userAvatar', photo)
                 formdata.append('uid', loginData.data.uid)
                 dispatch(profileAction.updateAvatar(formdata, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                setIsLodding(true)
-                var formdata = new FormData();
-                formdata.append('userAvatar', photo)
-                formdata.append('uid', registerData.data.uid)
-                dispatch(profileAction.updateAvatar(formdata, registerData.data.token));
-            }
         });
     };
 
     const LogoutSession = () => {
-        if (loginData.status == "success") {
             dispatch(authAction.clearResponse())
-        }
-        else if (registerData.status == "success") {
-            dispatch(varificationAction.clearResponse())
-        }
-        else {
-        }
     };
 
     return (

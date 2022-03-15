@@ -20,7 +20,6 @@ export default function lead_manager({ navigation }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const OrderDetail = useSelector(state => state.organization.getpackHistory)
 
     const checkValue = (value) => {
@@ -28,21 +27,13 @@ export default function lead_manager({ navigation }) {
     }
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 dispatch(organizationAction.orderHistoryList(
                     loginData.data.uid,
                     loginData.data.org_uid,
                     loginData.data.cProfile.toString(), loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                dispatch(organizationAction.orderHistoryList(
-                    registerData.data.uid,
-                    registerData.data.org_uid,
-                    registerData.data.cProfile.toString(), registerData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (OrderDetail) {

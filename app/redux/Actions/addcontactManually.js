@@ -10,7 +10,7 @@ export const M_addContact = (data ,Token) => {
     return (dispatch) => {
         dispatch({ type: Add_Contact_Manually })
         // {BaseUrl}/api/mobile/login
-        fetch(`${BaseUrl}/v1/contactsAddEdit`,
+        fetch(`${BaseUrl}/contactsAddEdit`,
             {
                 method: "POST",
                 headers: {

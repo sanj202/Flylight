@@ -55,7 +55,6 @@ export default function AddContact({ navigation }) {
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
-  const registerData = useSelector(state => state.varify.otp)
   const leadOwner = useSelector(state => state.leads.leadOwner)
   const campaignList = useSelector(state => state.leads.campaign)
   const leadstatusList = useSelector(state => state.leads.leadstatus)
@@ -94,8 +93,7 @@ export default function AddContact({ navigation }) {
   };
 
   useEffect(() => {
-    if (loginData || registerData && isFocused) {
-      if (loginData.status == "success") {
+    if (loginData  && isFocused) {
         const data = {
           uid: loginData.data.uid,
           org_uid: loginData.data.org_uid,
@@ -105,38 +103,17 @@ export default function AddContact({ navigation }) {
         dispatch(campaignAction.CampaignList(data, loginData.data.token));
         dispatch(leadAction.LeadStatusList(data, loginData.data.token));
         dispatch(leadAction.StateList(data, loginData.data.token));
-      }
-      else if (registerData.status == "success") {
-        const data = {
-          profile_id: registerData.data.cProfile.toString(),
-          org_uid: registerData.data.org_uid,
-          uid: registerData.data.uid
-        }
-        dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-        dispatch(campaignAction.CampaignList(data, registerData.data.token));
-        dispatch(leadAction.LeadStatusList(data, registerData.data.token));
-        dispatch(leadAction.StateList(data, registerData.data.token));
-      }
     }
-  }, [loginData, registerData, isFocused])
+  }, [loginData, isFocused])
 
   useEffect(() => {
     if (ZipCode) {
       if (ZipCode.length == 6) {
-        if (loginData.status == "success") {
           const data = {
             uid: loginData.data.uid,
             zipcode: ZipCode
           }
-          dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-          const data = {
-            uid: registerData.data.uid,
-            zipcode: ZipCode
-          }
-          dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
-        }
+          dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token))
       }
       else {
         setState(null)
@@ -254,8 +231,6 @@ export default function AddContact({ navigation }) {
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
-      if (loginData || registerData) {
-        if (loginData.status == "success") {
           setIsLodding(true)
           const data = {
             profile_id: loginData.data.cProfile.toString(),
@@ -268,22 +243,6 @@ export default function AddContact({ navigation }) {
             state: State, country: Country, zip: ZipCode
           }
           dispatch(addcontactManuallyAction.M_addContact(data, loginData.data.token));
-        }
-        else if (registerData.status == "success") {
-          setIsLodding(true)
-          const data = {
-            profile_id: registerData.data.cProfile.toString(),
-            created_by: registerData.data.cProfile.toString(),       //profile id 
-            modified_by: registerData.data.cProfile.toString(),      //profile id 
-            org_uid: registerData.data.org_uid,
-            first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
-            phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
-            number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-            state: State, country: Country, zip: ZipCode
-          }
-          dispatch(addcontactManuallyAction.M_addContact(data, registerData.data.token));
-        }
-      }
     }
   }
 

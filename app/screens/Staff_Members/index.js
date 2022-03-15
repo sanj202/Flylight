@@ -18,23 +18,8 @@ export default function lead_manager({ navigation }) {
     const [isFocus, setIsFocus] = useState(false);
     const [account, setaccount] = useState(null);
     const [isFocus2, setIsFocus2] = useState(false);
-
-    const [RoleList,setRoleList] = useState('')
-    const [AcType,setAcType] = useState('')
-
-
-    const Roles = [
-        { label: 'CEO', value: 1 },
-        { label: 'Manager', value: 2 },
-        { label: 'Assistant MAnager', value: 3 },
-        { label: 'New', value: 4 },
-    ];
-    const AccountType = [
-        { label: 'Administrator', value: 1 },
-        { label: 'Editor', value: 2 },
-        { label: 'Visitor', value: 3 },
-    ];
-
+const [Roles,setRoles] = useState([])
+    const [AccountType,setAccountType]= useState([])
     const [askDelete, setaskDelete] = useState(false);
     const [askDelete1, setaskDelete1] = useState(false);
     const { width, height } = Dimensions.get('window');
@@ -44,41 +29,29 @@ export default function lead_manager({ navigation }) {
     const isFocused = useIsFocused();
 
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const inviteResponse = useSelector(state => state.staffMember.inviteData)
     const leadOwner = useSelector(state => state.leads.leadOwner)
     const roleResponse = useSelector(state => state.staffMember.role)
-    
+
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
+        if (loginData && isFocused) {
             setIsLodding(true)
-            if (loginData.status == "success") {
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                
-                dispatch(staffMemberAction.ProfileRoleList(data, loginData.data.token));
-                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+            const data = {
+                uid: loginData.data.uid,
+                org_uid: loginData.data.org_uid,
+                profile_id: loginData.data.cProfile.toString(),
             }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                dispatch(staffMemberAction.ProfileRoleList(data,registerData.data.token));
-                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-            }
+
+            dispatch(staffMemberAction.ProfileRoleList(data, loginData.data.token));
+            dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (roleResponse) {
             if (roleResponse.status == "200") {
-                // console.log('roleResponse..........................', roleResponse.data)
-                // setroleResponseData(roleResponse.data.map((item, index) => item.user))
+                setAccountType(roleResponse.data.acTypes)
+                setRoles(roleResponse.data.rolelist)
                 setIsLodding(false)
             }
             else if (roleResponse.status == "failed") {
@@ -87,7 +60,7 @@ export default function lead_manager({ navigation }) {
             else if (roleResponse.status == "fail") {
                 setIsLodding(false)
             }
-          
+
         }
         else {
         }
@@ -96,7 +69,6 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
-                // console.log('leadOwner..........................', leadOwner)
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
                 setIsLodding(false)
             }
@@ -106,7 +78,7 @@ export default function lead_manager({ navigation }) {
             else if (leadOwner.status == "fail") {
                 setIsLodding(false)
             }
-            
+
         }
         else {
         }
@@ -155,30 +127,16 @@ export default function lead_manager({ navigation }) {
             ToastAndroid.show('Select Role', ToastAndroid.SHORT);
         }
         else {
-            if (loginData.status == "success") {
-                setIsLodding(true)
-                const data = {
-                    uid: loginData.data.uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                    org_uid: loginData.data.org_uid,
-                    role: role,
-                    account_type: account,
-                    email: Email,
-                }
-                dispatch(staffMemberAction.Invitation(data, loginData.data.token))
+            setIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+                role: role,
+                account_type: account,
+                email: Email,
             }
-            else if (registerData.status == "success") {
-                setIsLodding(true)
-                const data = {
-                    uid: registerData.data.uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                    role: role,
-                    account_type: account,
-                    email: Email,
-                }
-                dispatch(staffMemberAction.Invitation(data, registerData.data.token));
-            }
+            dispatch(staffMemberAction.Invitation(data, loginData.data.token))
         }
     }
 
@@ -323,14 +281,14 @@ export default function lead_manager({ navigation }) {
                         iconStyle={styles.iconStyle3}
                         data={Roles}
                         maxHeight={100}
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="id"
                         placeholder='Role'
                         value={role}
                         onFocus={() => setIsFocus(true)}
                         onBlur={() => setIsFocus(false)}
                         onChange={item => {
-                            setrole(item.value);
+                            setrole(item.id);
                             setIsFocus(false);
                         }}
                         renderLeftIcon={() => (
@@ -350,14 +308,14 @@ export default function lead_manager({ navigation }) {
                             iconStyle={styles.iconStyle3}
                             data={AccountType}
                             maxHeight={100}
-                            labelField="label"
-                            valueField="value"
+                            labelField="name"
+                            valueField="id"
                             placeholder='Account Type'
                             value={account}
                             onFocus={() => setIsFocus2(true)}
                             onBlur={() => setIsFocus2(false)}
                             onChange={item => {
-                                setaccount(item.value);
+                                setaccount(item.id);
                                 setIsFocus2(false);
                             }}
                             renderLeftIcon={() => (
@@ -410,7 +368,7 @@ export default function lead_manager({ navigation }) {
                         />
                     </TouchableOpacity>
 
-                    <View style={[styles.inputFields,{padding:10}]}>
+                    <View style={[styles.inputFields, { padding: 10 }]}>
                         <View>
                             <Text style={styles.DetailCampTitle}>Name </Text>
                             <Text style={styles.DetailCampTitle}>Organization</Text>

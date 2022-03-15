@@ -55,7 +55,6 @@ export default function AddContact({ navigation, route }) {
     const isFocused = useIsFocused();
 
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const leadData = useSelector(state => state.leads.newLead)
     // const leadOwner = useSelector(state => state.leads.leadOwner)
     const campaignList = useSelector(state => state.leads.campaign)
@@ -91,8 +90,7 @@ export default function AddContact({ navigation, route }) {
     };
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+  if (loginData  && isFocused) {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
@@ -102,39 +100,18 @@ export default function AddContact({ navigation, route }) {
                 dispatch(leadAction.CampaignList(data, loginData.data.token));
                 dispatch(leadAction.LeadStatusList(data, loginData.data.token));
                 dispatch(leadAction.StateList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                // dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-                dispatch(leadAction.CampaignList(data, registerData.data.token));
-                dispatch(leadAction.LeadStatusList(data, registerData.data.token));
-                dispatch(leadAction.StateList(data, registerData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (ZipCode) {
             if (ZipCode.length == 6) {
-                if (loginData.status == "success") {
                     const data = {
                         uid: loginData.data.uid,
                         zipcode: ZipCode
                     }
                     dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
                 }
-                else if (registerData.status == "success") {
-                    const data = {
-                        uid: registerData.data.uid,
-                        zipcode: ZipCode
-                    }
-                    dispatch(leadAction.Get_By_ZipCodeList(data, registerData.data.token));
-                }
-            }
             else {
                 setState(null)
                 setCity('')
@@ -250,8 +227,6 @@ export default function AddContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-            if (loginData || registerData) {
-                if (loginData.status == "success") {
                     const data = {
                         profile_id: loginData.data.cProfile,
                         created_by: loginData.data.cProfile,
@@ -284,45 +259,8 @@ export default function AddContact({ navigation, route }) {
                         campaign: campaign,
                     }
                     dispatch(leadAction.addLaed(data, loginData.data.token,));
-                    setIsLodding(true)
-                }
-                else if (registerData.status == "success") {
-                    const data = {
-                        profile_id: registerData.data.cProfile,
-                        created_by: registerData.data.cProfile,
-                        modified_by: registerData.data.cProfile,
-                        org_uid: registerData.data.org_uid,
-                        uid: registerData.data.uid,
-                        title: title,
-                        first_name: fname,
-                        last_name: lname,
-                        dob: formateDate,
-                        gender: gender,
-                        phone: phone,
-                        phone2: Aphone,
-                        email: email,
-                        email2: Aemail,
-                        company: companyName,
-                        website: website,
-                        fax: fax,
-                        address: Address,
-                        zip: ZipCode,
-                        state: State,
-                        city: City,
-                        country: Country,
-                        lead_source: LeadSource,
-                        lead_status: LeadStatus,
-                        industry: Industry,
-                        number_of_employee: employee,
-                        annual_revenue: revenue,
-                        description: description,
-                        campaign: campaign,
-                    }
-                    dispatch(leadAction.addLaed(data, registerData.data.token,));
-                    setIsLodding(true)
-                }    
+                    setIsLodding(true) 
             }
-        }
     }
 
     useEffect(() => {

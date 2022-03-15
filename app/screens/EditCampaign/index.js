@@ -78,30 +78,19 @@ export default function EditCampaign({ navigation, route }) {
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const leadOwner = useSelector(state => state.leads.leadOwner)
     const responseAdd_Edit = useSelector(state => state.campaign.addCampaign)
 
     useEffect(() => {
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 const data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
                     profile_id: loginData.data.cProfile.toString(),
                 }
                 dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                const data = {
-                    profile_id: registerData.data.cProfile.toString(),
-                    org_uid: registerData.data.org_uid,
-                    uid: registerData.data.uid
-                }
-                dispatch(leadAction.LeadOwnerList(data, registerData.data.token));
-            }
         }
-    }, [loginData, registerData, isFocused])
+    }, [loginData, isFocused])
 
     useEffect(() => {
         if (leadOwner) {
@@ -155,10 +144,6 @@ export default function EditCampaign({ navigation, route }) {
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
             let formateEndDate = moment(enddate).format("YYYY-MM-DD")
-
-            // console.log("done", formateStartDate, formateEndDate)
-            if (loginData || registerData) {
-                if (loginData.status == "success") {
                     setIsLodding(true)
                     const data = {
                         uid: loginData.data.uid,
@@ -175,26 +160,6 @@ export default function EditCampaign({ navigation, route }) {
                         end_date: formateEndDate
                     }
                     dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
-                }
-                else if (registerData.status == "success") {
-                    setIsLodding(true)
-                    const data = {
-                        uid: registerData.data.uid,
-                        profile_id: registerData.data.cProfile,
-                        org_uid: registerData.data.org_uid,
-                        campaign_id: route.params.campData.id,
-                        campaign_name: campaignName,
-                        campaign_status: Status,
-                        campaign_type: campaignType,
-                        expected_revenue: Revenue,
-                        budgeted_cost: BudgetedCost,
-                        description: Description,
-                        start_date: formateStartDate,
-                        end_date: formateEndDate
-                    }
-                    dispatch(campaignAction.Add_EditCampaign(data, registerData.data.token));
-                }
-            }
         }
     }
 

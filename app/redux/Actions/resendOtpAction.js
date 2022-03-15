@@ -9,7 +9,7 @@ export const resend = ( uid) => {
         dispatch({ type: RESEND_OTP })
         // {BaseUrl}//api/mobile/register
 
-        fetch(`${BaseUrl}/v1/resendotp`,
+        fetch(`${BaseUrl}/resendotp`,
             {
                 method: "POST",
                 headers: {

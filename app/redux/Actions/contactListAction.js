@@ -7,7 +7,7 @@ export const contactList = (data,token) => {
     return (dispatch) => {
         dispatch({ type: Contact_List })
 
-        fetch(`${BaseUrl}/v1/getContactList`,
+        fetch(`${BaseUrl}/getContactList`,
             {
                 method: "POST",
                 headers: {
@@ -34,7 +34,7 @@ export const AddEdit_feedback = (token,data) => {
     // console.log(" credentails..................", data)
     return (dispatch) => {
         dispatch({ type: Record_Feedback })
-        fetch(`${BaseUrl}/v1/add-feedback`,
+        fetch(`${BaseUrl}/add-feedback`,
             {
                 method: "POST",
                 headers: {

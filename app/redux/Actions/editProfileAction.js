@@ -6,7 +6,7 @@ export const Eprofile = (data,token)=> {
     return (dispatch) => {
         dispatch({ type: Edit_Profile })
 
-        fetch(`${BaseUrl}/v1/UpdateProfile`,
+        fetch(`${BaseUrl}/UpdateProfile`,
             {
                 method: "POST",
                 headers: {

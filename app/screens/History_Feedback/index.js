@@ -111,7 +111,6 @@ export default function AddContact({ navigation, route }) {
   const [IsLodding, setIsLodding] = useState(false)
   const dispatch = useDispatch()
   const loginData = useSelector(state => state.auth.data)
-  const registerData = useSelector(state => state.varify.otp)
   const FeedbackData = useSelector(state => state.history.feedback)
 
   const AddFunction = () => {
@@ -127,8 +126,6 @@ export default function AddContact({ navigation, route }) {
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
       let formateTime = moment(time).format("hh:mm")
-      if (loginData || registerData) {
-        if (loginData.status == "success") {
           const data = {
             uid: loginData.data.uid,
             profile_id: loginData.data.cProfile,
@@ -140,21 +137,6 @@ export default function AddContact({ navigation, route }) {
           }
           dispatch(historyAction.AddEdit_feedback_History(loginData.data.token, data));
           setIsLodding(true)
-        }
-        else if (registerData.status == "success") {
-          const data = {
-            uid: registerData.data.uid,
-            profile_id: registerData.data.cProfile,
-            org_uid: registerData.data.org_uid,
-            first_name: fname, last_name: lname, date: formateDate,
-            // time: formateTime,
-            phone: phone, state: State, city: City, description: description,
-            // feedback_id: "16"
-          }
-          dispatch(historyAction.AddEdit_feedback_History(registerData.data.token, data));
-          setIsLodding(true)
-        }
-      }
     }
   }
 

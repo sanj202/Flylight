@@ -9,7 +9,7 @@ import BaseUrl from '../../../const'
 export const importOpportunity = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Import_Opportunity })
-        fetch(`${BaseUrl}/v1/import-opportunity`,
+        fetch(`${BaseUrl}/import-opportunity`,
             {
                 method: "POST",
                 headers: {
@@ -36,7 +36,7 @@ export const importOpportunity = (data, token) => {
 export const addOpportunity = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Add_Edit_Opportunity })
-        fetch(`${BaseUrl}/v1/opportunityAddEdit`,
+        fetch(`${BaseUrl}/opportunityAddEdit`,
             {
                 method: "POST",
                 headers: {
@@ -59,7 +59,7 @@ export const addOpportunity = (data, token) => {
 export const deleteOpportunity = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Delete_Opportunity })
-        fetch(`${BaseUrl}/v1/delete-Opportinity`,
+        fetch(`${BaseUrl}/delete-Opportinity`,
             {
                 method: "POST",
                 headers: {

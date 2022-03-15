@@ -17,13 +17,11 @@ export default function HistoryOne({ navigation, route }) {
     const isFocused = useIsFocused();
     const UserData = useSelector(state => state.auth.data)
     const loginData = useSelector(state => state.auth.data)
-    const registerData = useSelector(state => state.varify.otp)
     const DetailData = useSelector(state => state.history.detailHistory)
 
     useEffect(() => {
         setIsLodding(true)
-        if (loginData || registerData && isFocused) {
-            if (loginData.status == "success") {
+        if (loginData  && isFocused) {
                 let data = {
                     uid: loginData.data.uid,
                     org_uid: loginData.data.org_uid,
@@ -34,21 +32,8 @@ export default function HistoryOne({ navigation, route }) {
                     filters: []
                 }
                 dispatch(historyAction.HistoryDetail(data, loginData.data.token));
-            }
-            else if (registerData.status == "success") {
-                let data = {
-                    uid: registerData.data.uid,
-                    org_uid: registerData.data.org_uid,
-                    profile_id: registerData.data.cProfile.toString(),
-                    pageSize: '40',
-                    pageNumber: '0',
-                    lead_id: route.params ? route.params.id : '',
-                    filters: []
-                }
-                dispatch(historyAction.HistoryDetail(data, registerData.data.token));
-            }
         }
-    }, [loginData, registerData ,isFocused])
+    }, [loginData ,isFocused])
 
     useEffect(() => {
         if (DetailData) {
@@ -144,7 +129,7 @@ export default function HistoryOne({ navigation, route }) {
                     );
                 }}
                 onPressRight={() => {
-                    navigation.navigate('Notifications')
+                    navigation.navigate('Notification')
                 }}
             />
             {IsLodding == true ?

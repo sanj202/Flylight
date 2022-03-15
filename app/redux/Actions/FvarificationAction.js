@@ -9,7 +9,7 @@ export const varification = (otp, uid) => {
         dispatch({ type: FVERIFY_OTP })
         // {BaseUrl}//api/mobile/register
 
-        fetch(`${BaseUrl}/v1/verify-forgot-password-otp`,
+        fetch(`${BaseUrl}/verify-forgot-password-otp`,
             {
                 method: "POST",
                 headers: {
