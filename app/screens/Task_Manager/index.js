@@ -13,7 +13,7 @@ import { useIsFocused } from "@react-navigation/core"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
 
-export default function lead_manager({ navigation }) {
+export default function Task_Manager({ navigation }) {
 
     const [StatusList, setStatusList] = useState([]);
     const [isService, setisService] = useState('All');

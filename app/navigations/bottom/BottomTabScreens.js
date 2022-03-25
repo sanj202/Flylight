@@ -1,9 +1,6 @@
 
 import React from 'react'
-import {
-  Image, View, StyleSheet, TouchableOpacity,
-  Text, Touchable, Dimensions, StatusBar, Platform
-} from 'react-native'
+import {Image, View, StyleSheet, TouchableOpacity,Text, Touchable, Dimensions, StatusBar, Platform} from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   Task_Manager,
@@ -18,7 +15,6 @@ import {
   AddContact,
   Profile,
   Contacts,
-  ContactsTwo,
   History,
   HistoryOne,
   History_Feedback,
@@ -40,7 +36,6 @@ import {
   Edit_Contact,
   orderHistory
 } from '../../screens/index'
-import { TopTab } from '../drawer/TopTab'
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +43,7 @@ const screenHeight = Dimensions.get('screen').height;
 const windowHeight = Dimensions.get('window').height;
 const navbarHeight = screenHeight - windowHeight + StatusBar.currentHeight;
 
-function HomeTabs() {
+export default function BottomTabScreens() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -87,7 +82,7 @@ function HomeTabs() {
             );
           },
         }} />
-      <Tab.Screen name="Report" component={Report}
+      <Tab.Screen name="Report" component={Report2}
         options={{
           tabBarHideOnKeyboard: true,
           tabBarLabelStyle: {
@@ -303,14 +298,14 @@ function HomeTabs() {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Report2"
         component={Report2}
         options={{
           tabBarIcon: () => null,
           tabBarButton: () => null,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Organization"
         component={Organization}
@@ -347,15 +342,6 @@ function HomeTabs() {
           tabBarButton: () => null,
         }}
       />
-      <Tab.Screen
-        name='ContactsTwo'
-        component={ContactsTwo}
-        options={{
-          tabBarIcon: () => null,
-          tabBarButton: () => null,
-        }}
-      />
-
       <Tab.Screen
         name='Notification'
         component={Notification}
@@ -492,5 +478,3 @@ const styles = StyleSheet.create({
     marginHorizontal: '10%'
   },
 })
-
-export { HomeTabs }

@@ -10,7 +10,7 @@ import { add_Edit_Meeting } from '../../redux/Actions/meetingAction';
 import SelectMultiple from 'react-native-select-multiple'
 import { Dropdown } from 'react-native-element-dropdown';
 
-export default function lead_manager({ navigation, route }) {
+export default function MeetingsDetail({ navigation, route }) {
 
     const data = [
         { label: 'Lead', value: 'Lead', },

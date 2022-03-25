@@ -11,7 +11,7 @@ import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
 import moment from 'moment';
 
-export default function lead_manager({ navigation }) {
+export default function Staff_Members({ navigation }) {
 
     const [Email, setEmail] = useState('')
     const [role, setrole] = useState(null);

@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   inputFields: {
     flexDirection: 'row',
     borderWidth: 0.5,
-    borderColor: '#C3C7E5',
+    borderColor: '#000000',
     borderRadius: 10,
     marginTop: '3%',
     height: 45
@@ -77,28 +77,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  button: {
-    backgroundColor: '#3373F3',
-    borderRadius: 10,
-    // alignSelf: 'center',
-    marginTop: '5%',
-    marginBottom: '10%'
-  },
-  textButton: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 15,
-    fontFamily: 'Roboto'
-  },
   container3: {
     backgroundColor: 'white',
     padding: 16,
   },
   dropdown3: {
     height: 45,
-    borderColor: '#C3C7E5',
+    borderColor: '#000000',
     borderWidth: 0.5,
     borderRadius: 10,
     paddingHorizontal: 8,
@@ -121,7 +106,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle3: {
     fontSize: 13,
-    color: '#B9BAC8',
+    color: '#000000',
     fontFamily: 'Roboto'
   },
   iconStyle3: {

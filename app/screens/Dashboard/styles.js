@@ -144,6 +144,11 @@ navigateImgA: {
   marginTop: '8%',
   marginRight: '2%',
   marginLeft:'10%'
+},
+notifyImage: {
+  height: 31,
+  width: 31,
+marginVertical:'5%'
 }
 
 });

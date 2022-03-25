@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Text, View, StyleSheet, TouchableOpacity, ToastAndroid, Picker, FlatList, Image, Button, ActivityIndicator,
-    Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
-import moment from 'moment';
+import { Text, View, ImageBackground, TouchableOpacity, ToastAndroid, FlatList, ActivityIndicator, Dimensions } from 'react-native';
 import Header from '../../component/header/index'
-import { taskmanagerAction, organizationAction } from '../../redux/Actions/index'
-import { useDispatch, useSelector, connect } from 'react-redux';
+import { organizationAction } from '../../redux/Actions/index'
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
 import RazorpayCheckout from 'react-native-razorpay';
 
-export default function lead_manager({ navigation }) {
+export default function PackegeTopups({ navigation }) {
 
     const [isService, setisService] = useState('Package');
     const [IsLodding, setIsLodding] = useState(false)
@@ -21,7 +17,6 @@ export default function lead_manager({ navigation }) {
     const [Package, setPackage] = useState('')
     const [TopUp, setTopUp] = useState('')
     const dispatch = useDispatch()
-    const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const packDetail = useSelector(state => state.organization.getpack)
     const packOrder = useSelector(state => state.organization.getpackOrder)
@@ -30,44 +25,44 @@ export default function lead_manager({ navigation }) {
     const topOrderVerify = useSelector(state => state.organization.verifytoporder)
 
     useEffect(() => {
-        if (loginData ) {
-                setIsLodding(true)
-                const data = {
-                    uid: loginData.data.uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                    org_uid: loginData.data.org_uid,
-                }
-                dispatch(organizationAction.packageList(data, loginData.data.token));
+        setIsLodding(true)
+        Get_Data()
+    }, [])
+
+    const Get_Data = () => {
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
         }
-    }, [loginData])
+        dispatch(organizationAction.packageList(data, loginData.data.token));
+    }
 
     const checkValue = (value) => {
         setisService(value)
     }
 
     const BuyPlane = (value) => {
-            setIsLoddingBuy(true)
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                org_uid: loginData.data.org_uid,
-                package_id: value
-            }
-            dispatch(organizationAction.getpackageOrder(data, loginData.data.token));
+        setIsLoddingBuy(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+            package_id: value
+        }
+        dispatch(organizationAction.getpackageOrder(data, loginData.data.token));
     }
     const BuyPlaneTopUp = (value) => {
-            setIsLoddingBuy(true)
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                org_uid: loginData.data.org_uid,
-                topup_id: value
-            }
-            dispatch(organizationAction.getTopOrder(data, loginData.data.token));
+        setIsLoddingBuy(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+            topup_id: value
+        }
+        dispatch(organizationAction.getTopOrder(data, loginData.data.token));
     }
-
-
-
     useEffect(() => {
         if (packOrder) {
             if (packOrder.status == "success") {
@@ -91,14 +86,8 @@ export default function lead_manager({ navigation }) {
                     theme: { color: 'blue' }
                 }
                 RazorpayCheckout.open(options).then((data) => {
-                    // handle success
-                    // alert(`Success: ${data.razorpay_payment_id}`);
-                    console.log('razar................', data)
                     dispatch(organizationAction.VerifypackageOrder(data));
                 }).catch((error) => {
-                    console.log('razar.....error...........', error)
-                    // handle failure
-                    // alert(`Error: ${error.code} | ${error.description}`);
                 });
                 dispatch(organizationAction.packclearResponse());
             }
@@ -117,7 +106,6 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (packDetail) {
-            // console.log(packDetail)
             if (packDetail.status == "success") {
                 setPackage(packDetail.data.package)
                 setTopUp(packDetail.data.topups)
@@ -141,7 +129,6 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (packOrderVerify) {
-            // console.log("packOrderVerify.........................",packOrderVerify)
             if (packOrderVerify.status == "success") {
                 setIsLoddingBuy(false)
                 ToastAndroid.show(packOrderVerify.message, ToastAndroid.SHORT);
@@ -166,7 +153,6 @@ export default function lead_manager({ navigation }) {
     useEffect(() => {
         if (topOrder) {
             if (topOrder.status == "success") {
-                // console.log('verifyTOp,.......................',topOrder)
                 setIsLodding(false)
                 var options = {
                     description: "Package Transaction",
@@ -187,13 +173,8 @@ export default function lead_manager({ navigation }) {
                     theme: { color: 'blue' }
                 }
                 RazorpayCheckout.open(options).then((data) => {
-                    // handle success
-                    // alert(`Success: ${data.razorpay_payment_id}`);
                     dispatch(organizationAction.VerifyTopOrder(data));
                 }).catch((error) => {
-                    console.log('razar.....error...........', error)
-                    // handle failure
-                    // alert(`Error: ${error.code} | ${error.description}`);
                 });
                 dispatch(organizationAction.packclearResponse());
             }
@@ -212,7 +193,6 @@ export default function lead_manager({ navigation }) {
 
     useEffect(() => {
         if (topOrderVerify) {
-            // console.log("topOrderVerify.........................",topOrderVerify)
             if (topOrderVerify.status == "success") {
                 setIsLoddingBuy(false)
                 ToastAndroid.show(topOrderVerify.message, ToastAndroid.SHORT);
@@ -236,54 +216,60 @@ export default function lead_manager({ navigation }) {
 
 
 
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        Get_Data()
+    }
     const PackView = ({ item, index }) => {
         return (
+
             <View style={{ borderWidth: 0.5, borderRadius: 10, padding: 5, marginTop: '2%' }}>
-                <Text style={{ fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#111211' }}>{item.aleas.toUpperCase()}</Text>
-                <Text style={{ fontSize: 24, textAlign: 'center', color: 'blue' }}>₹{item.amount} </Text>
-                <Text style={{ textAlign: 'center', color: '#111211', }}> /{item.duration} Days</Text>
-                <Text style={{ textAlign: 'center', fontSize: 20, color: '#111211' }}>Everything in {item.aleas}+</Text>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
-                    <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[0]}  {item.services.map((item, index) => item.quantity)[0]}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
-                    <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[1]}  {item.services.map((item, index) => item.quantity)[1]}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
-                    <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[2]}  {item.services.map((item, index) => item.quantity)[2]}</Text>
-                </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
-                    <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[3]}  {item.services.map((item, index) => item.quantity)[3]}</Text>
-                </View>
-                {item.services.map((item, index) => item.quantity)[4] ?
+                    <Text style={{ fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#111211' }}>{item.aleas.toUpperCase()}</Text>
+                    <Text style={{ fontSize: 24, textAlign: 'center', color: 'blue' }}>₹{item.amount} </Text>
+                    <Text style={{ textAlign: 'center', color: '#111211', }}> /{item.duration} Days</Text>
+                    <Text style={{ textAlign: 'center', fontSize: 20, color: '#111211' }}>Everything in {item.aleas}+</Text>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
-                        <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[4] ? item.services.map((item, index) => item.service_name)[4] : null}
-                            {item.services.map((item, index) => item.quantity)[4] ? item.services.map((item, index) => item.quantity)[4] : null}</Text>
+                        <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[0]}  {item.services.map((item, index) => item.quantity)[0]}</Text>
                     </View>
-                    :
-                    null}
-                <TouchableOpacity
-                    onPress={() => BuyPlane(item.uid)}
-                    style={{ alignSelf: 'center', borderRadius: 10, backgroundColor: '#1a64ed', paddingHorizontal: 10, paddingVertical: 12 }}
-                >
-                    <Text style={{ color: '#fff' }}>Start Now</Text>
-                </TouchableOpacity>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
+                        <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[1]}  {item.services.map((item, index) => item.quantity)[1]}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
+                        <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[2]}  {item.services.map((item, index) => item.quantity)[2]}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
+                        <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[3]}  {item.services.map((item, index) => item.quantity)[3]}</Text>
+                    </View>
+                    {item.services.map((item, index) => item.quantity)[4] ?
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
+                            <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[4] ? item.services.map((item, index) => item.service_name)[4] : null}
+                                {item.services.map((item, index) => item.quantity)[4] ? item.services.map((item, index) => item.quantity)[4] : null}</Text>
+                        </View>
+                        :
+                        null}
+                    <TouchableOpacity
+                        onPress={() => BuyPlane(item.uid)}
+                        style={{ alignSelf: 'center', borderRadius: 10, backgroundColor: '#1a64ed', paddingHorizontal: 10, paddingVertical: 12 }}
+                    >
+                        <Text style={{ color: '#fff' }}>Start Now</Text>
+                    </TouchableOpacity>
             </View>
+
         )
     }
 
     const TopUpView = ({ item, index }) => {
         return (
-            <View style={{ borderWidth: 0.5, borderRadius: 10, padding: 5 }}>
+
+            <View style={{ borderWidth: 0.5, borderRadius: 10, padding: 5, marginTop: '2%' }}>
                 <Text style={{ fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#020303' }}>{item.title}</Text>
                 <Text style={{ fontSize: 24, textAlign: 'center', color: 'blue' }}>₹{item.amount} </Text>
-                <Text style={{ textAlign: 'center', }}> /{item.duration} Days</Text>
-
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
                     <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[0]}({item.services.map((item, index) => item.quantity)[0]})</Text>
@@ -292,9 +278,7 @@ export default function lead_manager({ navigation }) {
                     <Text style={{ backgroundColor: '#0c5aeb', color: '#0c5aeb', borderRadius: 10, height: 15, width: 15, marginTop: '2%', marginRight: '2%' }}></Text>
                     <Text style={styles.serviceItems}>{item.services.map((item, index) => item.service_name)[1]}({item.services.map((item, index) => item.quantity)[1]})</Text>
                 </View>
-
-                <TouchableOpacity
-                    onPress={() => BuyPlaneTopUp(item.uid)}
+                <TouchableOpacity onPress={() => BuyPlaneTopUp(item.uid)}
                     style={{ alignSelf: 'center', borderRadius: 10, backgroundColor: 'blue', padding: 10 }}
                 >
                     <Text style={{ color: '#fff' }}>Start Now</Text>
@@ -365,17 +349,15 @@ export default function lead_manager({ navigation }) {
                                 <ActivityIndicator size="large" color="#0000ff" /> : null}
                             {Package !== undefined && Package.length > 0 ?
                                 <FlatList
-                                    // horizontal={true}
                                     data={Package}
                                     renderItem={PackView}
-                                    ItemSeparatorComponent={
-                                        () => <View style={{ width: 5 }} />
-                                    }
+                                    ItemSeparatorComponent={() => <View style={{ width: 5 }} />}
+                                    refreshing={refreshing}
+                                    onRefresh={handleRefresh}
                                 />
                                 :
                                 <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
                             }
-
                         </View>
                     }
                 </View>
@@ -398,9 +380,9 @@ export default function lead_manager({ navigation }) {
                                         // horizontal={true}
                                         data={TopUp}
                                         renderItem={TopUpView}
-                                        ItemSeparatorComponent={
-                                            () => <View style={{ width: 5 }} />
-                                        }
+                                        ItemSeparatorComponent={() => <View style={{ width: 5 }} />}
+                                        refreshing={refreshing}
+                                        onRefresh={handleRefresh}
                                     />
                                     :
                                     <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>

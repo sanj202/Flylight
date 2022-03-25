@@ -6,23 +6,12 @@ import {
   Text, Touchable
 } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import {
-  Login,
-  DashBoard,
-  SideMenu,
-  Report,
-  Contacts,
-  Profile
-} from '../../screens/index'
-import { HomeTabs } from '../bottom/homeTab'
-
+import {SideMenu} from '../../screens/index'
+import  BottomTabScreens  from '../bottom/BottomTabScreens'
 const width = Dimensions.get("screen").width;
-
-
 const Drawer = createDrawerNavigator();
 
-export function TopTab(props) {
+export default function MainDrawer (props) {
 
   // console.log("drawer................")
   const toggleDrawer = () => {
@@ -38,11 +27,7 @@ export function TopTab(props) {
         headerShown: false,
       }}
     >
-      <Drawer.Screen name='DashBoard' component={HomeTabs} />
-      {/* <Drawer.Screen name='Report2' component={Report} />
-      <Drawer.Screen name='Contacts2' component={Contacts} /> */}
-      {/* <Drawer.Screen name='Profile2' component={Profile} /> */}
-
+      <Drawer.Screen name='DashBoard' component={BottomTabScreens} />
     </Drawer.Navigator>
   );
 }

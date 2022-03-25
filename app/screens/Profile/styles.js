@@ -12,13 +12,12 @@ const styles = StyleSheet.create({
   inputFields: {
     flexDirection: 'row',
     borderWidth: 1,
-    padding: 10,
-    paddingLeft: 5,
-    borderColor: '#C3C7E5',
+    borderColor: '#000000',
     borderRadius: 10,
-    marginTop: '2%',
-    marginBottom: '2%',
-    height: 43
+    marginVertical: '2%',
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    // height: 43
   },
   icon: {
     height: 24,
@@ -61,6 +60,26 @@ const styles = StyleSheet.create({
     color: '#000000',
     fontFamily: 'Roboto'
   },
+  headerBtn: {
+    alignSelf: 'flex-end',
+    marginTop: '2%',
+    borderColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 15,
+    padding: 5,
+  },
+  headerBtntext: {
+    fontSize: 10,
+    color: '#fff'
+  },
+  avtarStyle: {
+    backgroundColor: '#FFF',
+    width: 104,
+    height: 104,
+    borderRadius: 52,
+    alignSelf: 'center',
+    marginTop: '-5%'
+  }
 });
 
 export default styles

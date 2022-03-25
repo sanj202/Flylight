@@ -2,21 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import {
     Text, ToastAndroid, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
-    ActivityIndicator, Linking, Platform, ScrollView, Alert
+    ActivityIndicator, Linking, Platform
 } from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
-import { BottomSheet, Button, ListItem } from 'react-native-elements';
+import { BottomSheet } from 'react-native-elements';
 import Header from '../../component/header/index'
 import { contactListAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
 import moment from 'moment';
 
 export default function Contacts({ navigation }) {
 
     const { width, height } = Dimensions.get('window');
-    const isFocused = useIsFocused();
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const contactData = useSelector(state => state.contactList.contacts)
@@ -25,9 +23,14 @@ export default function Contacts({ navigation }) {
     const [modalVisible2, setModalVisible2] = useState(false);
     const [modalVisible3, setModalVisible3] = useState(false);
     const [search, setSearch] = useState('');
-    const [IsLodding, setIsLodding] = useState(false)
+    const [IsLodding, setIsLodding] = useState(true)
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
+
+    useEffect(() => {
+        setIsLodding(true)
+        Get_Data()
+    }, [])
 
     const call = (mobileNo) => {
         let phoneNumber = mobileNo;
@@ -46,59 +49,37 @@ export default function Contacts({ navigation }) {
             })
             .catch(err => console.log(err));
     };
-
-
-    useEffect(() => {
-        if (loginData  && isFocused) {
-                setIsLodding(true)
-                const data = {
-                    uid: loginData.data.uid,
-                    profile_id: loginData.data.cProfile,
-                    org_uid: loginData.data.org_uid,
-                }
-                dispatch(contactListAction.contactList(data,loginData.data.token));
+    const Get_Data = () => {
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile,
+            org_uid: loginData.data.org_uid,
         }
-    }, [loginData, isFocused])
+        dispatch(contactListAction.contactList(data, loginData.data.token));
+    }
 
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-
                 setFilteredDataSource(contactData.data)
                 setMasterDataSource(contactData.data)
-
-                if (contactData.data == []) {
-                    setModalVisible2(true)
-                }
-                else {
-                    setModalVisible2(false)
-                }
+                if (contactData.data == []) { setModalVisible2(true) }
+                else { setModalVisible2(false) }
                 setIsLodding(false)
                 dispatch(contactListAction.clearResponse())
             }
-            else if (contactData.status == "failed") {
-                setIsLodding(false)
-            }
-            else {
-                setIsLodding(false)
-            }
-        }
-        else {
-
+            else if (contactData.status == "failed") { setIsLodding(false) }
+            else { setIsLodding(false) }
         }
     }, [contactData])
 
     const searchFilterFunction = (text) => {
-        // Check if searched text is not blank
         if (text) {
-            // Inserted text is not blank
-            // Filter the masterDataSource
-            // Update FilteredDataSource
-            // console.log("SADFsdfsdfs.......", masterDataSource)
             const newData = masterDataSource.filter(
                 function (item) {
-                    const itemData = item.first_name    //|| item.last_name
-                        ? item.first_name.toUpperCase()  //|| item.last_name.toUpperCase()
+                    const itemData = item.first_name
+                        ? item.first_name.toUpperCase()
                         : ''.toUpperCase();
                     const textData = text.toUpperCase();
                     return itemData.indexOf(textData) > -1;
@@ -106,8 +87,6 @@ export default function Contacts({ navigation }) {
             setFilteredDataSource(newData);
             setSearch(text);
         } else {
-            // Inserted text is blank
-            // Update FilteredDataSource with masterDataSource
             setFilteredDataSource(masterDataSource);
             setSearch(text);
         }
@@ -134,44 +113,38 @@ export default function Contacts({ navigation }) {
 
     const ContactView = ({ item }) => {
         return (
-            // <TouchableOpacity onPress={() => navigation.navigate('ContactsTwo')} >
-                <View style={styles.listData} >
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '2%' }}>
-                        <View>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000000', fontFamily: 'Roboto' }}>{item.first_name} {item.last_name}</Text>
-                            <Text style={{ fontSize: 15, color: '#000000', fontFamily: 'Roboto', paddingTop: 3 }}>{item.company}</Text>
-                        </View>
-                        <View>
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity onPress={() => Edit_Contact_Function(item)} >
-                                    <Image style={{ height: 40, width: 40 }}
-                                        source={require('../../images/Group.png')} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => call(item.phone)} >
-                                    <Image style={{ height: 40, width: 40, }}
-                                        source={require('../../images/GroupCall.png')} />
-                                </TouchableOpacity>
-                                {/* <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => newFunction()} >
-                                    <Image style={{ height: 40, width: 40, }}
-                                        source={require('../../images/GroupCall.png')} />
-                                </TouchableOpacity> */}
-                            </View>
-                        </View>
+            <View style={styles.listData} >
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '2%' }}>
+                    <View>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#000000', fontFamily: 'Roboto' }}>{item.first_name} {item.last_name}</Text>
+                        <Text style={{ fontSize: 15, color: '#000000', fontFamily: 'Roboto', paddingTop: 3 }}>{item.company}</Text>
                     </View>
-                    <View style={{ marginTop: '3%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Image style={{ height: 20.7, width: 20.7, }}
-                                source={require('../../images/detailcall.png')} />
-                            <Text style={{ fontSize: 13, marginTop: '2%', color: '#000000', fontFamily: 'Roboto', marginLeft: '2%' }}>{item.phone}</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Image style={{ height: 19, width: 18.47, }}
-                                source={require('../../images/calendar.png')} />
-                            <Text style={{ fontSize: 13, marginTop: '2%', color: '#000000', fontFamily: 'Roboto', marginLeft: '2%' }} >{moment(item.created_at).format('LLL')}</Text>
+                            <TouchableOpacity onPress={() => Edit_Contact_Function(item)} >
+                                <Image style={{ height: 35, width: 35 }}
+                                    source={require('../../images/Group.png')} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => call(item.phone)} >
+                                <Image style={{ height: 35, width: 35, }}
+                                    source={require('../../images/GroupCall.png')} />
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
-            // </TouchableOpacity>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between',marginTop:'1%' }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image style={{ height: 20.7, width: 20.7, }}
+                            source={require('../../images/detailcall.png')} />
+                        <Text style={{ fontSize: 13, marginTop: '2%', color: '#000000', fontFamily: 'Roboto', marginLeft: '2%' }}>{item.phone}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Image style={{ height: 19, width: 18.47, }}
+                            source={require('../../images/calendar.png')} />
+                        <Text style={{ fontSize: 13, marginTop: '2%', color: '#000000', fontFamily: 'Roboto', marginLeft: '2%' }} >{moment(item.created_at).format('LLL')}</Text>
+                    </View>
+                </View>
+            </View>
         );
     }
 
@@ -196,53 +169,48 @@ export default function Contacts({ navigation }) {
         })
     };
 
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        Get_Data()
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: '#FAFAFC' }}>
-            <Header
-                style={{ height: "16%" }}
+            <Header style={{ height: "16%" }}
                 onPressLeft={() => {
                     // navigation.openDrawer()
                     navigation.goBack()
                 }}
                 title='Contacts'
-
-                onPressRight={() => {
-                    navigation.navigate('Notification')
-                }}
+                onPressRight={() => { navigation.navigate('Notification') }}
             />
-            <View>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={[styles.icon, { height: 26, width: 25, margin: '1%', padding: 10 }]}
-                        source={require('../../images/search.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={search}
-                        onChangeText={(text) => searchFilterFunction(text)}
-                        placeholder="Search for contacts"
-                        underlineColorAndroid="transparent"
-                    />
-                </View>
+            <View style={styles.inputFields2}>
+                <Image style={[styles.icon, { height: 26, width: 25, margin: '1%', marginTop: '4%', padding: 10 }]}
+                    source={require('../../images/search.png')} />
+                <TextInput
+                    style={{ flex: 1 }}
+                    value={search}
+                    onChangeText={(text) => searchFilterFunction(text)}
+                    placeholder="Search for contacts"
+                    underlineColorAndroid="transparent"
+                />
             </View>
-
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
-                <View>
-                    {filteredDataSource !== undefined && filteredDataSource.length > 0 ?
-                        <FlatList
-                            data={filteredDataSource}
-                            keyExtractor={(item, index) => index.toString()}
-                            ItemSeparatorComponent={ItemSeparatorView}
-                            renderItem={ContactView}
-                        />
-                        :
-                        <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
-                    }
-                </View>
+                <FlatList
+                    data={filteredDataSource}
+                    keyExtractor={(item, index) => index.toString()}
+                    ItemSeparatorComponent={ItemSeparatorView}
+                    renderItem={ContactView}
+                    refreshing={refreshing}
+                    onRefresh={handleRefresh}
+                    ListEmptyComponent={() => (!filteredDataSource.length ?
+                        <Text style={{ textAlign: 'center', marginTop: '5%', fontSize: 20 }}>Data Not Found</Text>
+                        : null)}
+                />
             }
-
             <View style={{ height: '3%' }}></View>
             <BottomSheet
                 modalProps={{

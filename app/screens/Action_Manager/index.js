@@ -10,7 +10,7 @@ import Header from '../../component/header/index'
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
 
-export default function action_manager({ navigation }) {
+export default function Action_Manager({ navigation }) {
 
     const [isService, setisService] = useState('Status');
     const [isVisible, setIsVisible] = useState(false);

@@ -13,29 +13,44 @@ export default function Campaign({ navigation }) {
     const [CampaignData, setCampaignData] = useState('')
     const [IsLodding, setIsLodding] = useState(false)
     const [askDelete, setaskDelete] = useState(false);
+    const [page, setPage] = useState(0);
+    const [perPageItems, setperPageItems] = useState(10);
+    const [totalItems, settotalItems] = useState('');
     const dispatch = useDispatch()
-    const isFocused = useIsFocused();
 
     const loginData = useSelector(state => state.auth.data)
     const campaignList = useSelector(state => state.campaign.campaign)
 
     useEffect(() => {
-        if (loginData  && isFocused) {
-            setIsLodding(true)
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile,
-                }
-                dispatch(campaignAction.CampaignList(data, loginData.data.token));
+        setIsLodding(true)
+        FetchData(page)
+    }, [])
+
+    const FetchData = (p) => {
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile,
+            pageSize: perPageItems,
+            pageNumber: p,
         }
-    }, [loginData, isFocused])
+        dispatch(campaignAction.CampaignList(data, loginData.data.token));
+    }
 
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "200") {
-                // console.log("datat.....................", campaignList.data)
-                setCampaignData(campaignList.data)
+                // setCampaignData(campaignList.data)
+                console.log('........................',campaignList)
+                settotalItems(campaignList.total_rows)
+                if (page == 0) {
+                    setCampaignData(campaignList.data)
+                } else if (campaignList.data.length != 0) {
+                    let dataLive = campaignList.data;
+                    let listTemp = [...leadList, ...dataLive];
+                    setCampaignData(listTemp)
+                }
                 setIsLodding(false)
                 dispatch(campaignAction.clearResponse())
             }
@@ -92,7 +107,22 @@ export default function Campaign({ navigation }) {
         })
         setaskDelete(!askDelete)
     }
-    // console.log('value...................',Objcet)
+
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        FetchData(0)
+    }
+
+    const fetchNextItems = () => {
+        console.log('load More Items.........',totalItems , CampaignData.length)
+        if (totalItems > CampaignData.length) {
+          let p = page + 1;
+          setPage(p);
+          FetchData(p)
+        }
+    }
+
     const CampaignView = ({ item }) => {
         return (
             <TouchableOpacity
@@ -174,17 +204,18 @@ export default function Campaign({ navigation }) {
                                 +Add
                             </Text>
                         </TouchableOpacity>
-                        {CampaignData
-                            && CampaignData.length > 0 ?
-
-                            <FlatList
-                                style={{ height: "89%", marginTop: '5%' }}
-                                data={CampaignData}
-                                renderItem={CampaignView}
-                            />
-                            :
-                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
-                        }
+                        <FlatList
+                            style={{ height: "89%", marginTop: '5%' }}
+                            data={CampaignData}
+                            renderItem={CampaignView}
+                            ListEmptyComponent={() => (!CampaignData.length ?
+                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                                : null)}
+                            refreshing={refreshing}
+                            onRefresh={handleRefresh}
+                            onEndReached={() => fetchNextItems()}
+                            keyExtractor={item => item.id}
+                        />
                     </View>}
             </View>
 

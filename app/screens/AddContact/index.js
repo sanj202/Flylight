@@ -16,12 +16,10 @@ import { useIsFocused } from "@react-navigation/core"
 export default function AddContact({ navigation }) {
 
   const [LeadOwner, setLeadOwner] = useState(null)
-  const [isFocus3, setIsFocus3] = useState(false);
   const [title, settitle] = useState("")
   const [fname, setfname] = useState("")
   const [lname, setlname] = useState("")
   const [gender, setgender] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
   const [phone, setphone] = useState("")
   const [Aphone, setAphone] = useState("")
   const [email, setemail] = useState("")
@@ -32,17 +30,14 @@ export default function AddContact({ navigation }) {
   const [Address, setAddress] = useState("")
   const [City, setCity] = useState("")
   const [State, setState] = useState(null)
-  const [isFocus5, setIsFocus5] = useState(false);
   const [Country, setCountry] = useState("")
   const [ZipCode, setZipCode] = useState("")
   const [LeadSource, setLeadSource] = useState("")
   const [LeadStatus, setLeadStatus] = useState(null);
-  const [isFocus2, setIsFocus2] = useState(false);
   const [Industry, setIndustry] = useState("")
   const [employee, setemployee] = useState("")
   const [revenue, setrevenue] = useState("")
   const [Campagin, setCampagin] = useState(null);
-  const [isFocus1, setIsFocus1] = useState(false);
   const [modalVisible2, setModalVisible2] = useState(false);
   const [IsLodding, setIsLodding] = useState(false)
   const { width, height } = Dimensions.get('window');
@@ -68,22 +63,27 @@ export default function AddContact({ navigation }) {
   const [text, settext] = useState(true)
 
   const onChangeFrom = (event, selectedDate) => {
+    if (event.type == 'dismissed') {
+      setShow(!show);
+    }
+    else{
     const currentDate = selectedDate || date;
     setShow(Platform.OS === 'ios');
     setDate(currentDate)
+    settext(false)
+    }
   };
   const showMode = (currentMode) => {
     setShow(!show);
     setMode(currentMode);
   };
   const showDatepicker = () => {
-    settext(false)
     showMode('date');
   };
 
   const data = [
-    { label: 'Male', value: 'Male' },
-    { label: 'Female', value: 'Female' },
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
   ];
 
   const AddFunction = () => {
@@ -93,27 +93,27 @@ export default function AddContact({ navigation }) {
   };
 
   useEffect(() => {
-    if (loginData  && isFocused) {
-        const data = {
-          uid: loginData.data.uid,
-          org_uid: loginData.data.org_uid,
-          profile_id: loginData.data.cProfile.toString(),
-        }
-        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-        dispatch(campaignAction.CampaignList(data, loginData.data.token));
-        dispatch(leadAction.LeadStatusList(data, loginData.data.token));
-        dispatch(leadAction.StateList(data, loginData.data.token));
+    if (loginData && isFocused) {
+      const data = {
+        uid: loginData.data.uid,
+        org_uid: loginData.data.org_uid,
+        profile_id: loginData.data.cProfile.toString(),
+      }
+      dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+      dispatch(campaignAction.CampaignList(data, loginData.data.token));
+      dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+      dispatch(leadAction.StateList(data, loginData.data.token));
     }
   }, [loginData, isFocused])
 
   useEffect(() => {
     if (ZipCode) {
       if (ZipCode.length == 6) {
-          const data = {
-            uid: loginData.data.uid,
-            zipcode: ZipCode
-          }
-          dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token))
+        const data = {
+          uid: loginData.data.uid,
+          zipcode: ZipCode
+        }
+        dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token))
       }
       else {
         setState(null)
@@ -209,40 +209,40 @@ export default function AddContact({ navigation }) {
 
   const AddContactFuction = () => {
     if (title == "") {
-      ToastAndroid.show('Enter Contact Title', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter Contact Title', ToastAndroid.SHORT);
     }
     else if (fname == "") {
-      ToastAndroid.show('Enter First Name', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter First Name', ToastAndroid.SHORT);
     }
     else if (lname == "") {
-      ToastAndroid.show('Enter Last Name', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter Last Name', ToastAndroid.SHORT);
     }
     else if (gender == null) {
-      ToastAndroid.show('select gender', ToastAndroid.SHORT); 
+      ToastAndroid.show('select gender', ToastAndroid.SHORT);
     }
     else if (phone == "") {
-      ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);
     }
     else if (Aphone == "") {
-      ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT);
     }
     else if (email == "") {
-      ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT);
     }
     else {
       let formateDate = moment(date).format("YYYY-MM-DD")
-          setIsLodding(true)
-          const data = {
-            profile_id: loginData.data.cProfile.toString(),
-            created_by: loginData.data.cProfile.toString(),       //profile id 
-            modified_by: loginData.data.cProfile.toString(),      //profile id 
-            org_uid: loginData.data.org_uid,
-            first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
-            phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
-            number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-            state: State, country: Country, zip: ZipCode
-          }
-          dispatch(addcontactManuallyAction.M_addContact(data, loginData.data.token));
+      setIsLodding(true)
+      const data = {
+        profile_id: loginData.data.cProfile.toString(),
+        created_by: loginData.data.cProfile.toString(),       //profile id 
+        modified_by: loginData.data.cProfile.toString(),      //profile id 
+        org_uid: loginData.data.org_uid,
+        first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
+        phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
+        number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
+        state: State, country: Country, zip: ZipCode ,campaign : Campagin
+      }
+      dispatch(addcontactManuallyAction.M_addContact(data, loginData.data.token));
     }
   }
 
@@ -259,7 +259,7 @@ export default function AddContact({ navigation }) {
       }
       else if (Data.status == "failed") {
         setIsLodding(false)
-        ToastAndroid.show(Data.message, ToastAndroid.SHORT); 
+        ToastAndroid.show(Data.message, ToastAndroid.SHORT);
         dispatch(addcontactManuallyAction.clearResponse())
       }
       else if (Data.status == "fail") {
@@ -297,16 +297,15 @@ export default function AddContact({ navigation }) {
               selectedTextStyle={styles.selectedTextStyle3}
               iconStyle={styles.iconStyle3}
               data={leadOwnerData}
-              maxHeight={100}
+              search={true}
+              searchPlaceholder='Search'
+              maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='Lead Owner'
               value={LeadOwner}
-              onFocus={() => setIsFocus3(true)}
-              onBlur={() => setIsFocus3(false)}
               onChange={item => {
                 setLeadOwner(item.value);
-                setIsFocus3(false);
               }}
               renderLeftIcon={() => (
                 <View>
@@ -359,7 +358,7 @@ export default function AddContact({ navigation }) {
           <TouchableOpacity
             style={{
               borderWidth: 0.5,
-              borderColor: '#C3C7E5',
+              borderColor: '#000000',
               borderRadius: 10,
               paddingVertical: 11,
               marginTop: '2%'
@@ -367,8 +366,8 @@ export default function AddContact({ navigation }) {
             onPress={showDatepicker} >
             <View style={{ flexDirection: 'row' }}>
               <Image
-               style={Platform.OS == 'ios' ?
-               [styles.icon] : [styles.icon, { marginTop: '1%' }]}
+                style={Platform.OS == 'ios' ?
+                  [styles.icon] : [styles.icon, { marginTop: '1%' }]}
                 source={require('../../images/DOB.png')}
               />
               {show && (
@@ -410,16 +409,15 @@ export default function AddContact({ navigation }) {
               selectedTextStyle={styles.selectedTextStyle3}
               iconStyle={styles.iconStyle3}
               data={data}
-              maxHeight={100}
+              search={true}
+              searchPlaceholder='Search'
+              maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='Select Gender'
               value={gender}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
               onChange={item => {
                 setgender(item.value);
-                setIsFocus(false);
               }}
               renderLeftIcon={() => (
                 <View>
@@ -570,16 +568,15 @@ export default function AddContact({ navigation }) {
               selectedTextStyle={styles.selectedTextStyle3}
               iconStyle={styles.iconStyle3}
               data={stateData}
+              search={true}
+              searchPlaceholder='Search'
               maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='State'
               value={State}
-              onFocus={() => setIsFocus5(true)}
-              onBlur={() => setIsFocus5(false)}
               onChange={item => {
                 setState(item.value);
-                setIsFocus5(false);
               }}
               renderLeftIcon={() => (
                 <View>
@@ -625,16 +622,15 @@ export default function AddContact({ navigation }) {
               selectedTextStyle={styles.selectedTextStyle3}
               iconStyle={styles.iconStyle3}
               data={leadstatusData}
+              search={true}
+              searchPlaceholder='Search'
               maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='Lead Status'
               value={LeadStatus}
-              onFocus={() => setIsFocus2(true)}
-              onBlur={() => setIsFocus2(false)}
               onChange={item => {
                 setLeadStatus(item.value);
-                setIsFocus2(false);
               }}
               renderLeftIcon={() => (
                 <View>
@@ -692,16 +688,15 @@ export default function AddContact({ navigation }) {
               selectedTextStyle={styles.selectedTextStyle3}
               iconStyle={styles.iconStyle3}
               data={campaignData}
-              maxHeight={100}
+              search={true}
+              searchPlaceholder='Search'
+              maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='Select a Campagin'
               value={Campagin}
-              onFocus={() => setIsFocus1(true)}
-              onBlur={() => setIsFocus1(false)}
               onChange={item => {
                 setCampagin(item.value);
-                setIsFocus1(false);
               }}
               renderLeftIcon={() => (
                 <View>

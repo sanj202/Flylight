@@ -286,7 +286,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 20,
-    }
+    },
+    askTitleR: {
+        margin: '5%',
+        marginRight: '3%',
+        marginTop: '-11.5%',
+        alignSelf: 'flex-end',
+        padding: 10
+    },
 });
 
 export default styles

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Text, View, ActivityIndicator, TouchableOpacity, TextInput, Image, Alert, Dimensions, Platform,ToastAndroid
+    Text, View, ActivityIndicator, TouchableOpacity, TextInput, Image, Alert, Dimensions, Platform, ToastAndroid
 } from 'react-native';
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -30,22 +30,23 @@ export default function EditProfile({ navigation, route }) {
 
 
     const onChangeFrom = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-
-        setDate(currentDate)
-        // let formattedDate = moment(currentDate).format('YYYY-MM-DD');
-    };
+        if (event.type == 'dismissed') {
+            setShow(!show);
+        }
+        else {
+            const currentDate = selectedDate || date;
+            setShow(Platform.OS === 'ios');
+            setDate(currentDate)
+            settext(false)
+        }
+    }
     const showMode = (currentMode) => {
         setShow(!show);
         setMode(currentMode);
     };
     const showDatepicker = () => {
-        // setFollowDate(false)
-        settext(false)
         showMode('date');
     };
-
 
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
@@ -79,16 +80,16 @@ export default function EditProfile({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-                    setIsLodding(true)
-                    const data = {
-                        first_name: fname,last_name: lname,
-                        phone: phone,dob: formateDate,street: street,
-                        city: city,state: state,zip: zip,country: country,
-                        uid: loginData.data.uid,
-                        org_uid: loginData.data.org_uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                    }
-                    dispatch(editProfileAction.Eprofile(data, loginData.data.token));
+            setIsLodding(true)
+            const data = {
+                first_name: fname, last_name: lname,
+                phone: phone, dob: formateDate, street: street,
+                city: city, state: state, zip: zip, country: country,
+                uid: loginData.data.uid,
+                org_uid: loginData.data.org_uid,
+                profile_id: loginData.data.cProfile.toString(),
+            }
+            dispatch(editProfileAction.Eprofile(data, loginData.data.token));
         }
     }
 
@@ -134,22 +135,11 @@ export default function EditProfile({ navigation, route }) {
 
             <ScrollView
                 style={{ width: width, height: height }}>
-
-                {/* <Text style={styles.title}>Welcome!</Text> */}
                 <Text style={styles.fieldsLable}>First Name</Text>
-
                 <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 22, width: '5.5%',
-                                margin: '2%'
-                            }]
-                                :
-                                [styles.icon, {
-                                    height: 22, width: '6%',
-                                    margin: '2%', marginTop: '3%'
-                                }]}
+                    <Image style={Platform.OS == 'ios' ? [styles.icon, { height: 22, width: '5.5%', margin: '2%' }]
+                        :
+                        [styles.icon, { height: 22, width: '6%', margin: '2%', marginTop: '3%' }]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
@@ -163,17 +153,10 @@ export default function EditProfile({ navigation, route }) {
                 <Text style={styles.fieldsLable}>Last Name</Text>
 
                 <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 22, width: '5.5%',
-                                margin: '2%'
-                            }]
-                                :
-                                [styles.icon, {
-                                    height: 22, width: '6%',
-                                    margin: '2%', marginTop: '3%'
-                                }]}
+                    <Image style={
+                        Platform.OS == 'ios' ? [styles.icon, { height: 22, width: '5.5%', margin: '2%' }]
+                            :
+                            [styles.icon, { height: 22, width: '6%', margin: '2%', marginTop: '3%' }]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
@@ -187,37 +170,28 @@ export default function EditProfile({ navigation, route }) {
                 <Text style={styles.fieldsLable}>Email </Text>
 
                 <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, { height: 17, width: '6%', margin: '2.5%' }]
-                                :
-                                [styles.icon, { height: 18, width: '6.5%', margin: '2.5%',marginTop:'5%' }]}
+                    <Image style={
+                        Platform.OS == 'ios' ? [styles.icon, { height: 17, width: '6%', margin: '2.5%' }]
+                            :
+                            [styles.icon, { height: 18, width: '6.5%', margin: '2.5%', marginTop: '5%' }]}
                         source={require('../../images/mail.png')}
                     />
                     <TextInput
                         style={{ flex: 1 }}
                         value={email}
                         editable={false}
+                        color='#000000'
                         onChangeText={e2 => setemail(e2)}
                         placeholder="example@gmail.com"
+                        placeholderTextColor='#000000'
                     />
                 </View>
-
                 <Text style={styles.fieldsLable}>Phone</Text>
-
                 <View style={styles.inputFields2}>
                     <Image
-                       style={
-                        Platform.OS == 'ios' ?  [styles.icon,
-                        {
-                            height: 24, width: '4.5%',
-                            margin: '2%'
-                        }] :
-                        [styles.icon,
-                            {
-                                height: 24, width: '4.6%',
-                                margin: '2%',marginTop:'3.5%'
-                            }]}
+                        style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '4.5%', margin: '2%' }]
+                            :
+                            [styles.icon, { height: 24, width: '4.6%', margin: '2%', marginTop: '3.5%' }]}
                         source={require('../../images/mobile.png')}
                     />
                     <TextInput
@@ -225,26 +199,17 @@ export default function EditProfile({ navigation, route }) {
                         value={phone}
                         keyboardType='numeric'
                         editable={false}
+                        color='#000000'
                         onChangeText={e3 => setphone(e3)}
                         placeholder="   Phone"
                     />
                 </View>
-
                 <Text style={styles.fieldsLable}>Dob</Text>
-
-
-                <TouchableOpacity
-                    onPress={showDatepicker} >
-                    <View style={Platform.OS == 'ios' ?
-                        styles.inputFields2 : [styles.inputFields2, { paddingVertical: '2%' }]}>
-                        <Image 
-                        style={Platform.OS == 'ios' ? [styles.icon, {
-                            height: 25, width: '6%', marginLeft: '2%', marginTop: '2%'
-                        }] :
-                        [styles.icon, {
-                            height: 25, width: '6.7%', marginLeft: '2%', marginTop: '2%'
-                        }]}
-
+                <TouchableOpacity onPress={showDatepicker} >
+                    <View style={Platform.OS == 'ios' ? styles.inputFields2 : [styles.inputFields2, { paddingVertical: '2%' }]}>
+                        <Image style={Platform.OS == 'ios' ? [styles.icon, { height: 25, width: '6%', marginLeft: '2%', marginTop: '2%' }]
+                            :
+                            [styles.icon, { height: 25, width: '6.7%', marginLeft: '2%', marginTop: '2%' }]}
                             source={require('../../images/DOB.png')}
                         />
                         {show && (
@@ -254,6 +219,8 @@ export default function EditProfile({ navigation, route }) {
                                 // is24Hour={true}
                                 value={date}
                                 mode={mode}
+                                // minDate={new Date()}
+                                // maxDate={moment().subtract(18, "years")}
                                 display="default"
                                 onChange={onChangeFrom}
                             />
@@ -261,17 +228,17 @@ export default function EditProfile({ navigation, route }) {
                         }
                         {Platform.OS == 'ios' ? <View>
                             {text == true ?
-                                <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Date of Birth</Text>
+                                <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Date of Birth</Text>
                                 :
-                                <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                null
                             }
                         </View>
                             :
                             <View>
                                 {text == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of birth</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of birth</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                 }
                             </View>
                         }
@@ -284,14 +251,14 @@ export default function EditProfile({ navigation, route }) {
                     <Image
                         style={
                             Platform.OS == 'ios' ? [styles.icon, {
-                            height: 24, width: '5.5%',
-                            margin: '1.6%'
-                        }]
-                    :
-                    [styles.icon, {
-                        height: 24, width: '5.5%',
-                        margin: '1.6%',marginTop:'3%'
-                    }]}
+                                height: 24, width: '5.5%',
+                                margin: '1.6%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 24, width: '5.5%',
+                                    margin: '1.6%', marginTop: '3%'
+                                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -305,16 +272,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                      style={
-                        Platform.OS == 'ios' ? [styles.icon, {
-                        height: 24, width: '5.5%',
-                        margin: '1.6%'
-                    }]
-                :
-                [styles.icon, {
-                    height: 24, width: '5.5%',
-                    margin: '1.6%',marginTop:'3%'
-                }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
+                                height: 24, width: '5.5%',
+                                margin: '1.6%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 24, width: '5.5%',
+                                    margin: '1.6%', marginTop: '3%'
+                                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -327,16 +294,16 @@ export default function EditProfile({ navigation, route }) {
                 <Text style={styles.fieldsLable}>State</Text>
                 <View style={styles.inputFields2}>
                     <Image
-                      style={
-                        Platform.OS == 'ios' ? [styles.icon, {
-                        height: 24, width: '5.5%',
-                        margin: '1.6%'
-                    }]
-                :
-                [styles.icon, {
-                    height: 24, width: '5.5%',
-                    margin: '1.6%',marginTop:'3%'
-                }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
+                                height: 24, width: '5.5%',
+                                margin: '1.6%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 24, width: '5.5%',
+                                    margin: '1.6%', marginTop: '3%'
+                                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -349,16 +316,16 @@ export default function EditProfile({ navigation, route }) {
                 <Text style={styles.fieldsLable}>Country</Text>
                 <View style={styles.inputFields2}>
                     <Image
-                      style={
-                        Platform.OS == 'ios' ? [styles.icon, {
-                        height: 24, width: '5.5%',
-                        margin: '1.6%'
-                    }]
-                :
-                [styles.icon, {
-                    height: 24, width: '5.5%',
-                    margin: '1.6%',marginTop:'3%'
-                }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
+                                height: 24, width: '5.5%',
+                                margin: '1.6%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 24, width: '5.5%',
+                                    margin: '1.6%', marginTop: '3%'
+                                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput
@@ -373,16 +340,16 @@ export default function EditProfile({ navigation, route }) {
 
                 <View style={styles.inputFields2}>
                     <Image
-                      style={
-                        Platform.OS == 'ios' ? [styles.icon, {
-                        height: 24, width: '5.5%',
-                        margin: '1.6%'
-                    }]
-                :
-                [styles.icon, {
-                    height: 24, width: '5.5%',
-                    margin: '1.6%',marginTop:'3%'
-                }]}
+                        style={
+                            Platform.OS == 'ios' ? [styles.icon, {
+                                height: 24, width: '5.5%',
+                                margin: '1.6%'
+                            }]
+                                :
+                                [styles.icon, {
+                                    height: 24, width: '5.5%',
+                                    margin: '1.6%', marginTop: '3%'
+                                }]}
                         source={require('../../images/address.png')}
                     />
                     <TextInput

@@ -11,7 +11,7 @@ import { leadAction, opportunityAction, leadmanagerAction } from '../../redux/Ac
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
-export default function lead_manager({ navigation, route }) {
+export default function Lead_manager({ navigation, route }) {
 
   const [isService, setisService] = useState(route.params ? route.params.key : 'All');
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -49,6 +49,14 @@ export default function lead_manager({ navigation, route }) {
   const deleteopportunity = useSelector(state => state.opportunitys.deleteOpportunity)
   const leadOwner = useSelector(state => state.leads.leadOwnerNew)
 
+  
+  useEffect(() => {
+    if (loginData && isFocused) {
+      setIsLodding(true)
+      Get_Data()
+    }
+  }, [loginData, isFocused])
+
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       setShow(!show);
@@ -56,8 +64,8 @@ export default function lead_manager({ navigation, route }) {
     else {
       const currentDate = selectedDate || date;
       setShow(Platform.OS === 'ios');
-      settext(false)
       setDate(currentDate)
+      settext(false)
     }
   };
 
@@ -92,12 +100,6 @@ export default function lead_manager({ navigation, route }) {
     setisService(value)
   }
 
-  useEffect(() => {
-    if (loginData && isFocused) {
-      setIsLodding(true)
-      Get_Data()
-    }
-  }, [loginData, isFocused])
 
   const Get_Data = () => {
     setIsLodding(true)

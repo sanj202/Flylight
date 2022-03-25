@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import {
+    ScrollView, TouchableOpacity,
     Alert, Dimensions, View, Text, ToastAndroid, Image, useWindowDimensions, ImageBackground, StatusBar
 } from 'react-native'
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import styles from './styles'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { profileAction, authAction, varificationAction } from '../../redux/Actions';
 import { useIsFocused } from "@react-navigation/core"
-
+import {
+    DrawerContentScrollView,
+    // DrawerItemList,
+    // DrawerItem,
+} from '@react-navigation/drawer';
 
 export default function SideMenu({ navigation }) {
 
@@ -128,120 +132,141 @@ export default function SideMenu({ navigation }) {
                     </View>
                 </ImageBackground>
             </View>
+            {/* <DrawerContentScrollView {...props}> */}
+            <DrawerContentScrollView>
+                <ScrollView style={{ marginHorizontal: '3%', marginBottom: '10%' }}>
 
+                    <View style={styles.menusTop}>
 
-            <ScrollView style={{ marginHorizontal: '3%', marginBottom: '10%' }}>
-
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('lead_manager')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, {
-                                    marginRight: '4%',
-                                    height: 18, width: 15.75
-                                }]}
-                                source={require('../../images/Lead.png')}
-                            />
-                            <View style={[styles.menus]}>
-                                <Text style={styles.items}>
-                                    Lead Manager
-                                </Text>
-
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Campaign')}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image
-                                    style={[styles.image3, { marginLeft: '33%' }]}
-                                    source={require('../../images/next.png')}
+                                    style={[styles.image2, { marginRight: '2%', width: 23.27, height: 23.27 }]}
+                                    source={require('../../images/language.png')}
                                 />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        Campaigns
+                                    </Text>
+
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '42%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
                             </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.menusTop}>
 
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Task_Manager')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, {
-                                    marginTop: '1.5%',
-                                    marginRight: '3%', height: 15.19, width: 18
-                                }]}
-                                source={require('../../images/TaskManager.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    Task Manager
-                                </Text>
-
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Action_Manager')}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image
-                                    style={[styles.image3, { marginLeft: '34%' }]}
-                                    source={require('../../images/next.png')}
+                                    style={[styles.image2, {
+                                        marginTop: '1.5%',
+                                        marginRight: '3%', height: 15.19, width: 18.56
+                                    }]}
+                                    source={require('../../images/action.png')}
                                 />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        Action Manager
+                                    </Text>
+
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '28%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={styles.menusTop}>
+                    <View style={styles.menusTop}>
 
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Action_Manager')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, {
-                                    marginTop: '1.5%',
-                                    marginRight: '3%', height: 15.19, width: 18.56
-                                }]}
-                                source={require('../../images/action.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    Action Manager
-                                </Text>
-
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Staff_Members')}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image
-                                    style={[styles.image3, { marginLeft: '28%' }]}
-                                    source={require('../../images/next.png')}
+                                    style={[styles.image2, {
+                                        marginRight: '4%',
+                                        height: 18, width: 15.75
+                                    }]}
+                                    source={require('../../images/Lead.png')}
                                 />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        Staff Members
+                                    </Text>
+
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '31%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.menusTop}>
 
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Staff_Members')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, {
-                                    marginRight: '4%',
-                                    height: 18, width: 15.75
-                                }]}
-                                source={require('../../images/Lead.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    Staff Members
-                                </Text>
-
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('lead_manager')}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image
-                                    style={[styles.image3, { marginLeft: '31%' }]}
-                                    source={require('../../images/next.png')}
+                                    style={[styles.image2, {
+                                        marginRight: '4%',
+                                        height: 18, width: 15.75
+                                    }]}
+                                    source={require('../../images/Lead.png')}
                                 />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                                <View style={[styles.menus]}>
+                                    <Text style={styles.items}>
+                                        Lead Manager
+                                    </Text>
 
-                <View style={styles.menusTop}>
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '33%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
+
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.menusTop}>
+
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Task_Manager')}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                <Image
+                                    style={[styles.image2, {
+                                        marginTop: '1.5%',
+                                        marginRight: '3%', height: 15.19, width: 18
+                                    }]}
+                                    source={require('../../images/TaskManager.png')}
+                                />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        Task Manager
+                                    </Text>
+
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '34%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* <View style={styles.menusTop}>
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Meetings')}
@@ -266,35 +291,78 @@ export default function SideMenu({ navigation }) {
                             </View>
                         </View>
                     </TouchableOpacity>
-                </View>
+                </View> */}
+                    <View style={styles.menusTop}>
 
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Campaign')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, { marginRight: '2%', width: 23.27, height: 23.27 }]}
-                                source={require('../../images/language.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    Campaigns
-                                </Text>
-
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('History')}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                                 <Image
-                                    style={[styles.image3, { marginLeft: '42%' }]}
-                                    source={require('../../images/next.png')}
+                                    style={[styles.image2, { marginRight: '2%', height: 20.09, width: 23.44 }]}
+                                    source={require('../../images/history.png')}
                                 />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        History
+                                    </Text>
+
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '53%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.menusTop}>
 
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("Report")}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                <Image
+                                    style={[styles.image2, { marginTop: '1%', marginRight: '2%', height: 16.55, width: 22.06 }]}
+                                    source={require('../../images/report2.png')}
+                                />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        Reports
+                                    </Text>
 
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '52%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.menusTop}>
 
-                <View style={styles.menusTop}>
+                        <TouchableOpacity
+                            onPress={() => LogoutSession()}
+                        >
+                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                <Image
+                                    style={[styles.image2, { marginRight: '2%', height: 19.27, width: 22.03 }]}
+                                    source={require('../../images/logout.png')}
+                                />
+                                <View style={styles.menus}>
+                                    <Text style={styles.items}>
+                                        Logout
+                                    </Text>
+
+                                    <Image
+                                        style={[styles.image3, { marginLeft: '54.5%' }]}
+                                        source={require('../../images/next.png')}
+                                    />
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* <View style={styles.menusTop}>
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('orderHistory')}
@@ -315,57 +383,9 @@ export default function SideMenu({ navigation }) {
                             </View>
                         </View>
                     </TouchableOpacity>
-                </View>
+                </View> */}
 
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('History')}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, { marginRight: '2%', height: 20.09, width: 23.44 }]}
-                                source={require('../../images/history.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    History
-                                </Text>
-
-                                <Image
-                                    style={[styles.image3, { marginLeft: '53%' }]}
-                                    source={require('../../images/next.png')}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Report")}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, { marginTop: '1%', marginRight: '2%', height: 16.55, width: 22.06 }]}
-                                source={require('../../images/report2.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    Reports
-                                </Text>
-
-                                <Image
-                                    style={[styles.image3, { marginLeft: '52%' }]}
-                                    source={require('../../images/next.png')}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-                {/* <View style={styles.menusTop}>
+                    {/* <View style={styles.menusTop}>
                     <TouchableOpacity>
                         <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                             <Image
@@ -384,34 +404,8 @@ export default function SideMenu({ navigation }) {
                         </View>
                     </TouchableOpacity>
                 </View> */}
-
-
-
-                <View style={styles.menusTop}>
-
-                    <TouchableOpacity
-                        onPress={() => LogoutSession()}
-                    >
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                            <Image
-                                style={[styles.image2, { marginRight: '2%', height: 19.27, width: 22.03 }]}
-                                source={require('../../images/logout.png')}
-                            />
-                            <View style={styles.menus}>
-                                <Text style={styles.items}>
-                                    Logout
-                                </Text>
-
-                                <Image
-                                    style={[styles.image3, { marginLeft: '54.5%' }]}
-                                    source={require('../../images/next.png')}
-                                />
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-
-            </ScrollView>
+                </ScrollView>
+            </DrawerContentScrollView>
         </View>
     );
 }

@@ -24,19 +24,19 @@ export default function AddContact({ navigation }) {
     const loginData = useSelector(state => state.auth.data)
 
     useEffect(() => {
-        if (loginData  && isFocused) {
+        if (loginData && isFocused) {
             getProfile()
         }
     }, [loginData, isFocused])
 
     const getProfile = () => {
-            setIsLodding(true)
-            const data = {
-                uid: loginData.data.uid,
-                org_uid: loginData.data.org_uid,
-                profile_id: loginData.data.cProfile,
-            }
-            dispatch(profileAction.profile(data, loginData.data.token));
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile,
+        }
+        dispatch(profileAction.profile(data, loginData.data.token));
     }
     useEffect(() => {
         if (profileData) {
@@ -85,16 +85,16 @@ export default function AddContact({ navigation }) {
                 name: 'photo',
                 size: image.size,
             };
-                setIsLodding(true)
-                var formdata = new FormData();
-                formdata.append('userAvatar', photo)
-                formdata.append('uid', loginData.data.uid)
-                dispatch(profileAction.updateAvatar(formdata, loginData.data.token));
+            setIsLodding(true)
+            var formdata = new FormData();
+            formdata.append('userAvatar', photo)
+            formdata.append('uid', loginData.data.uid)
+            dispatch(profileAction.updateAvatar(formdata, loginData.data.token));
         });
     };
 
     const LogoutSession = () => {
-            dispatch(authAction.clearResponse())
+        dispatch(authAction.clearResponse())
     };
 
     return (
@@ -133,6 +133,7 @@ export default function AddContact({ navigation }) {
                         marginLeft: '10%'
                     }}>My Account</Text>
                     <TouchableOpacity
+                        style={styles.headerBtn}
                         onPress={() => navigation.navigate('EditProfile', {
                             phone: user.phone,
                             email: user.email,
@@ -145,27 +146,18 @@ export default function AddContact({ navigation }) {
                             street: user.street,
                             zip: user.zip
                         })}>
-                        <Text style={{
-                            borderColor: '#fff',
-                            borderWidth: 1,
-                            borderRadius: 15,
-                            fontSize: 10,
-                            color: '#fff',
-                            padding: 5,
-                        }}>Edit Profile</Text>
+                        <Text style={styles.headerBtntext}>Edit Profile</Text>
                     </TouchableOpacity>
                 </SafeAreaView>
-                <View style={{
-                    backgroundColor: '#FFF',
-                    width: 104, height: 104,
-                    borderRadius: 52,
-                    alignSelf: 'center',
-                    marginTop: '5%'
-                }}>
+                <TouchableOpacity 
+                onPress={()=>navigation.navigate('orderHistory')}
+                style={[styles.headerBtn, { marginRight: '3%' }]} >
+                    <Text style={styles.headerBtntext}>Order history</Text>
+                </TouchableOpacity>
+                <View style={styles.avtarStyle}>
                     {user.avatar ?
                         <View style={{ flexDirection: 'row' }}>
                             <Image
-                                // source={require('../../images/avtar.jpg')}
                                 source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
                                 style={{
                                     height: 96, width: 96, borderRadius: 45,
@@ -173,7 +165,6 @@ export default function AddContact({ navigation }) {
                                     alignSelf: 'center'
                                 }}
                             />
-
                         </View>
                         :
                         <View style={{ flexDirection: 'row' }}>
@@ -185,11 +176,6 @@ export default function AddContact({ navigation }) {
                                     alignSelf: 'center'
                                 }}
                             />
-                            <TouchableOpacity
-                                onPress={() => UploadAvtar()}
-                            >
-                                <Text style={{ color: '#fff' }}>edit</Text>
-                            </TouchableOpacity>
                         </View>
                     }
                     <TouchableOpacity
@@ -218,7 +204,7 @@ export default function AddContact({ navigation }) {
                     <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
                     <View style={styles.inputFields}>
                         <Image
-                            style={{ height: 18, width: 17, marginRight: '2%' }}
+                            style={{ height: 19, width: 18, marginRight: '2%' }}
                             source={require('../../images/user.png')}
                         />
                         <Text style={styles.textValues}>{user.name ? user.name : ''}</Text>

@@ -226,7 +226,7 @@ export default function Login({ navigation, route, props }) {
                 onPress={() => checkedFuction()}
               />
             </View>
-            <Text style={{ fontSize: 12, marginLeft: '-10%', fontFamily: 'Roboto', color: '#6B7285' }}>Remember me</Text>
+            <Text style={{ fontSize: 12, marginLeft: '-10%', fontFamily: 'Roboto', color: '#000000' }}>Remember me</Text>
           </View>
           {IsLodding == true ?
             <ActivityIndicator size="small" color="#0000ff" />

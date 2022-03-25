@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   inputFields: {
     flexDirection: 'row',
     borderWidth: 0.5,
-    borderColor: '#C3C7E5',
+    borderColor: '#000000',
     borderRadius: 10,
     marginTop: '3%',
     height: 45
@@ -23,18 +23,7 @@ const styles = StyleSheet.create({
     margin: '2%',
     marginTop: '1%'
   },
-  button: {
-    backgroundColor: '#3373F3',
-    borderRadius: 10,
-    // alignSelf: 'center',
-    margin: '5%',
-  },
-  textButton: {
-    padding: 10,
-    fontSize: 18,
-    color: 'white',
-    textAlign: 'center',
-  },
+
   image2: {
     width: 28,
     height: 28
@@ -86,25 +75,22 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#3373F3',
     borderRadius: 10,
-    // alignSelf: 'center',
-    marginTop: '5%',
-    marginBottom: '10%'
+    margin: '5%',
+    padding: 10,
   },
   textButton: {
-    paddingTop: 15,
-    paddingBottom: 15,
-    color: '#fff',
+    fontSize: 18,
+    color: 'white',
     textAlign: 'center',
-    fontSize: 15,
-    fontFamily: 'Roboto'
   },
+
   container3: {
     backgroundColor: 'white',
     padding: 16,
   },
   dropdown3: {
     height: 45,
-    borderColor: '#C3C7E5',
+    borderColor: '#000000',
     borderWidth: 0.5,
     borderRadius: 10,
     paddingHorizontal: 8,
@@ -122,12 +108,12 @@ const styles = StyleSheet.create({
   },
   placeholderStyle3: {
     fontSize: 13,
-    color: '#B9BAC8',
+    color: '#000000',
     fontFamily: 'Roboto'
   },
   selectedTextStyle3: {
     fontSize: 13,
-    color: '#B9BAC8',
+    color: '#000000',
     fontFamily: 'Roboto'
   },
   iconStyle3: {

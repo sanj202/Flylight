@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     inputFields2: {
         flexDirection: 'row',
         borderWidth: 1,
-        borderColor: '#C3C7E5',
+        borderColor: '#000000',
         borderRadius: 10,
         marginHorizontal: '3%',
         marginVertical: '2%'

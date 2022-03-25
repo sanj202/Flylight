@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default function lead_manager() {
+export default function Meetings() {
 
     const data = [
         { label: 'Not Started', value: 'Not Started', },
