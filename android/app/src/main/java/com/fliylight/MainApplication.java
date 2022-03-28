@@ -15,6 +15,7 @@ import java.util.List;
 import com.razorpay.rn.RazorpayPackage; //<- Add
 import com.facebook.react.bridge.JSIModulePackage; // <- add
 import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
+import com.rt2zz.reactnativecontacts.ReactNativeContacts; // <- add
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;  // <--- Import Package
 public class MainApplication extends Application implements ReactApplication {
 

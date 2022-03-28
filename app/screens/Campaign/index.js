@@ -9,6 +9,7 @@ import moment from 'moment';
 
 export default function Campaign({ navigation }) {
 
+    isFocused = useIsFocused
     const { width, height } = Dimensions.get('window');
     const [CampaignData, setCampaignData] = useState('')
     const [IsLodding, setIsLodding] = useState(false)
@@ -24,7 +25,7 @@ export default function Campaign({ navigation }) {
     useEffect(() => {
         setIsLodding(true)
         FetchData(page)
-    }, [])
+    }, [isFocused])
 
     const FetchData = (p) => {
         setIsLodding(true)
@@ -42,7 +43,7 @@ export default function Campaign({ navigation }) {
         if (campaignList) {
             if (campaignList.status == "200") {
                 // setCampaignData(campaignList.data)
-                console.log('........................',campaignList)
+                console.log('........................', campaignList)
                 settotalItems(campaignList.total_rows)
                 if (page == 0) {
                     setCampaignData(campaignList.data)
@@ -115,11 +116,11 @@ export default function Campaign({ navigation }) {
     }
 
     const fetchNextItems = () => {
-        console.log('load More Items.........',totalItems , CampaignData.length)
+        console.log('load More Items.........', totalItems, CampaignData.length)
         if (totalItems > CampaignData.length) {
-          let p = page + 1;
-          setPage(p);
-          FetchData(p)
+            let p = page + 1;
+            setPage(p);
+            FetchData(p)
         }
     }
 
@@ -170,7 +171,7 @@ export default function Campaign({ navigation }) {
 
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { height: height, width: width }]}>
             <Header
                 style={{ height: "16%" }}
                 onPressLeft={() => {

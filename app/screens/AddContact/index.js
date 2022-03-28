@@ -13,15 +13,17 @@ import { addcontactManuallyAction, leadAction, campaignAction } from '../../redu
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
-export default function AddContact({ navigation }) {
+export default function AddContact({ navigation, route }) {
+
+  console.log(',,,,,,,,,,,,,,,,,,,,,,,,,', route.params)
 
   const [LeadOwner, setLeadOwner] = useState(null)
   const [title, settitle] = useState("")
-  const [fname, setfname] = useState("")
+  const [fname, setfname] = useState(route.params ? route.params.name : '')
   const [lname, setlname] = useState("")
   const [gender, setgender] = useState(null);
-  const [phone, setphone] = useState("")
-  const [Aphone, setAphone] = useState("")
+  const [phone, setphone] = useState(route.params ? route.params.phone : '')
+  const [Aphone, setAphone] = useState(route.params ? route.params.phone2 : '')
   const [email, setemail] = useState("")
   const [Aemail, setAemail] = useState("")
   const [companyName, setcompanyName] = useState("")
@@ -57,20 +59,39 @@ export default function AddContact({ navigation }) {
   const ZipList = useSelector(state => state.leads.ByZip)
 
   const Data = useSelector(state => state.ManuallyAddContact.data)
+
+  useEffect(() => {
+    setfname(route.params ? route.params.name : '')
+    setphone(route.params ? route.params.phone : '')
+    setAphone(route.params ? route.params.phone2 : '')
+  }, [route.params])
+
+  useEffect(() => {
+    const data = {
+      uid: loginData.data.uid,
+      org_uid: loginData.data.org_uid,
+      profile_id: loginData.data.cProfile.toString(),
+    }
+    dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+    dispatch(campaignAction.CampaignList(data, loginData.data.token));
+    dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+    dispatch(leadAction.StateList(data, loginData.data.token));
+  }, [])
+
+
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [text, settext] = useState(true)
-
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       setShow(!show);
     }
-    else{
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate)
-    settext(false)
+    else {
+      const currentDate = selectedDate || date;
+      setShow(Platform.OS === 'ios');
+      setDate(currentDate)
+      settext(false)
     }
   };
   const showMode = (currentMode) => {
@@ -92,19 +113,7 @@ export default function AddContact({ navigation }) {
     navigation.navigate("AddContact")
   };
 
-  useEffect(() => {
-    if (loginData && isFocused) {
-      const data = {
-        uid: loginData.data.uid,
-        org_uid: loginData.data.org_uid,
-        profile_id: loginData.data.cProfile.toString(),
-      }
-      dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-      dispatch(campaignAction.CampaignList(data, loginData.data.token));
-      dispatch(leadAction.LeadStatusList(data, loginData.data.token));
-      dispatch(leadAction.StateList(data, loginData.data.token));
-    }
-  }, [loginData, isFocused])
+
 
   useEffect(() => {
     if (ZipCode) {
@@ -240,7 +249,7 @@ export default function AddContact({ navigation }) {
         first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
         phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
         number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-        state: State, country: Country, zip: ZipCode ,campaign : Campagin
+        state: State, country: Country, zip: ZipCode, campaign: Campagin
       }
       dispatch(addcontactManuallyAction.M_addContact(data, loginData.data.token));
     }
@@ -377,13 +386,14 @@ export default function AddContact({ navigation }) {
                   // is24Hour={true}
                   value={date}
                   mode={mode}
+                  maximumDate={new Date(moment().subtract(20, "years"))}
                   display="default"
                   onChange={onChangeFrom}
                 />
               )}
               {Platform.OS == 'ios' ? <View>
                 {text == true ?
-                  <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Date of Birth</Text>
+                  <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
                   :
                   <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
                 }

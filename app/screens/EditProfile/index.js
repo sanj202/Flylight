@@ -219,8 +219,7 @@ export default function EditProfile({ navigation, route }) {
                                 // is24Hour={true}
                                 value={date}
                                 mode={mode}
-                                // minDate={new Date()}
-                                // maxDate={moment().subtract(18, "years")}
+                                maximumDate={new Date(moment().subtract(20, "years"))}
                                 display="default"
                                 onChange={onChangeFrom}
                             />

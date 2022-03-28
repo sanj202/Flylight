@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header/index'
-import { taskmanagerAction, staffMemberAction, leadAction } from '../../redux/Actions/index'
+import {  staffMemberAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
@@ -15,11 +15,9 @@ export default function Staff_Members({ navigation }) {
 
     const [Email, setEmail] = useState('')
     const [role, setrole] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
     const [account, setaccount] = useState(null);
-    const [isFocus2, setIsFocus2] = useState(false);
-const [Roles,setRoles] = useState([])
-    const [AccountType,setAccountType]= useState([])
+    const [Roles, setRoles] = useState([])
+    const [AccountType, setAccountType] = useState([])
     const [askDelete, setaskDelete] = useState(false);
     const [askDelete1, setaskDelete1] = useState(false);
     const { width, height } = Dimensions.get('window');
@@ -34,18 +32,21 @@ const [Roles,setRoles] = useState([])
     const roleResponse = useSelector(state => state.staffMember.role)
 
     useEffect(() => {
-        if (loginData && isFocused) {
-            setIsLodding(true)
-            const data = {
-                uid: loginData.data.uid,
-                org_uid: loginData.data.org_uid,
-                profile_id: loginData.data.cProfile.toString(),
-            }
+        setIsLodding(true)
+        FetchData(0)
+    }, [isFocused])
 
-            dispatch(staffMemberAction.ProfileRoleList(data, loginData.data.token));
-            dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+    const FetchData = (p) => {
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
         }
-    }, [loginData, isFocused])
+        dispatch(staffMemberAction.ProfileRoleList(data, loginData.data.token));
+        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+    }
+
 
     useEffect(() => {
         if (roleResponse) {
@@ -60,15 +61,13 @@ const [Roles,setRoles] = useState([])
             else if (roleResponse.status == "fail") {
                 setIsLodding(false)
             }
-
-        }
-        else {
         }
     }, [roleResponse])
 
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
+                console.log('.............................', leadOwner)
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
                 setIsLodding(false)
             }
@@ -78,9 +77,6 @@ const [Roles,setRoles] = useState([])
             else if (leadOwner.status == "fail") {
                 setIsLodding(false)
             }
-
-        }
-        else {
         }
     }, [leadOwner])
 
@@ -90,6 +86,9 @@ const [Roles,setRoles] = useState([])
                 ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
                 dispatch(staffMemberAction.clearResponse())
                 setIsLodding(false)
+                setEmail("")
+                setrole(null)
+                setaccount(null)
             }
             else if (inviteResponse.status == "failed") {
                 ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
@@ -106,13 +105,13 @@ const [Roles,setRoles] = useState([])
             }
             setaskDelete(false)
         }
-        else {
-        }
     }, [inviteResponse])
 
     const CencelFunction = () => {
         // settempType('')
         setEmail("")
+        setrole(null)
+        setaccount(null)
         setaskDelete(!askDelete)
     }
 
@@ -124,7 +123,7 @@ const [Roles,setRoles] = useState([])
             ToastAndroid.show('Select Role', ToastAndroid.SHORT);
         }
         else if (account == null) {
-            ToastAndroid.show('Select Role', ToastAndroid.SHORT);
+            ToastAndroid.show('Select Account Type', ToastAndroid.SHORT);
         }
         else {
             setIsLodding(true)
@@ -138,6 +137,13 @@ const [Roles,setRoles] = useState([])
             }
             dispatch(staffMemberAction.Invitation(data, loginData.data.token))
         }
+    }
+
+
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        FetchData(0)
     }
 
     const UserLisView = ({ item }) => {
@@ -204,61 +210,60 @@ const [Roles,setRoles] = useState([])
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { height: height, width: width }]}>
             <Header
                 style={{ height: "16%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                      navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Staff Members'
                 onPressRight={() => {
                     navigation.navigate('Notification')
                 }}
             />
+
+            <TouchableOpacity
+                onPress={() => setaskDelete(!askDelete)}
+                style={{
+                    borderColor: '#fff',
+                    borderWidth: 1,
+                    paddingHorizontal: 10,
+                    paddingVertical: 2,
+                    alignSelf: 'flex-end',
+                    marginHorizontal: '5%',
+                    marginTop: '-12%',
+                    borderRadius: 15
+                }}
+            >
+                <Text style={{ color: "#fff", fontSize: 12 }}>
+                    +Add
+                </Text>
+            </TouchableOpacity>
             <View style={{ marginTop: '3%' }}>
                 {IsLodding == true ?
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                     :
-                    <View>
-                        <TouchableOpacity
-                            onPress={() => setaskDelete(!askDelete)}
-                            style={{
-                                borderColor: '#fff',
-                                borderWidth: 1,
-                                paddingHorizontal: 10,
-                                paddingVertical: 2,
-                                alignSelf: 'flex-end',
-                                marginHorizontal: '5%',
-                                marginTop: '-12%',
-                                borderRadius: 15
-                            }}
-                        >
-                            <Text style={{ color: "#fff", fontSize: 12 }}>
-                                +Add
-                            </Text>
-                        </TouchableOpacity>
-
-                        {leadOwnerData ?
-                            <FlatList
-                                style={{ height: "89%", marginTop: '5%' }}
-                                data={leadOwnerData}
-                                renderItem={UserLisView}
-                            />
-                            :
-                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
-                        }
-
-                    </View>}
-
+                    <FlatList
+                        style={{ height: "89%", marginTop: '5%' }}
+                        data={leadOwnerData}
+                        renderItem={UserLisView}
+                        ListEmptyComponent={() => (!leadOwnerData.length ?
+                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                            : null)}
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        keyExtractor={item => item.id}
+                    />
+                }
             </View>
 
             <Modal animationType="slide" transparent={true} visible={askDelete}
-                onRequestClose={() => { setaskDelete(!askDelete); }}>
+                onRequestClose={() => CencelFunction()}>
                 <View style={styles.askModel}>
                     <Text style={styles.askTitle}> Invite New Member</Text>
-                    <Text style={styles.askSubtitle}>
-                        *Please Enter Active Email Id*</Text>
+                    {/* <Text style={styles.askSubtitle}>
+                        *Please Enter Active Email Id*</Text> */}
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
@@ -280,16 +285,15 @@ const [Roles,setRoles] = useState([])
                         selectedTextStyle={styles.selectedTextStyle3}
                         iconStyle={styles.iconStyle3}
                         data={Roles}
-                        maxHeight={100}
+                        search={true}
+                        searchPlaceholder='Search'
+                        maxHeight={160}
                         labelField="name"
                         valueField="id"
                         placeholder='Role'
                         value={role}
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
                         onChange={item => {
                             setrole(item.id);
-                            setIsFocus(false);
                         }}
                         renderLeftIcon={() => (
                             <View>
@@ -307,16 +311,15 @@ const [Roles,setRoles] = useState([])
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={AccountType}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="name"
                             valueField="id"
                             placeholder='Account Type'
                             value={account}
-                            onFocus={() => setIsFocus2(true)}
-                            onBlur={() => setIsFocus2(false)}
                             onChange={item => {
                                 setaccount(item.id);
-                                setIsFocus2(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -330,12 +333,10 @@ const [Roles,setRoles] = useState([])
                     </View>
 
                     {IsLodding == true ?
-                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
+                        <ActivityIndicator size="large" color="#0000ff" />
                         :
                         <View />
                     }
-
-
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: '3%' }}>
                         <Pressable
                             style={[styles.askBtn, { paddingHorizontal: '5%' }]}

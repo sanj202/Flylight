@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Text, ToastAndroid, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
-    ActivityIndicator, Linking, Platform
+    ActivityIndicator, Linking, Platform, PermissionsAndroid
 } from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
@@ -11,8 +11,10 @@ import Header from '../../component/header/index'
 import { contactListAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import moment from 'moment';
+import Contacts from 'react-native-contacts';
+import { useIsFocused } from "@react-navigation/core"
 
-export default function Contacts({ navigation }) {
+export default function Contact({ navigation }) {
 
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
@@ -20,6 +22,7 @@ export default function Contacts({ navigation }) {
     const contactData = useSelector(state => state.contactList.contacts)
     const [EditcontactId, setEditConatctId] = useState([])
     const [isVisible, setIsVisible] = useState(false);
+    const [isVisible2, setIsVisible2] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
     const [modalVisible3, setModalVisible3] = useState(false);
     const [search, setSearch] = useState('');
@@ -27,10 +30,76 @@ export default function Contacts({ navigation }) {
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
 
+    const [search2, setSearch2] = useState('');
+    const [mob, setmob] = useState([]);
+    const [Filteredmob, setFilteredmob] = useState([]);
+    const isFocused = useIsFocused();
+
     useEffect(() => {
         setIsLodding(true)
         Get_Data()
-    }, [])
+    }, [isFocused])
+
+    const GetContactFromMobile = () => {
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
+                title: 'Contacts',
+                message: 'This app would like to view your contacts.',
+            }).then(() => {
+                // CancelAskForAddContact()
+                // loadContacts();
+                // setIsVisible2(true)
+                // console.log('then block................')
+                Contacts.checkPermission().then(permission => {
+                    // Contacts.PERMISSION_AUTHORIZED || Contacts.PERMISSION_UNDEFINED || Contacts.PERMISSION_DENIED
+                    if (permission === 'undefined') {
+                        Contacts.requestPermission().then(permission => {
+                            // ...
+                        })
+                    }
+                    if (permission === 'authorized') {
+                        // yay!
+                        console.log('authorized...............')
+                        CancelAskForAddContact()
+                        loadContacts();
+                        setIsVisible2(true)
+                        // console.log('then block................')
+                    }
+                    if (permission === 'denied') {
+                        // x.x
+                        console.log('denied...............')
+                        CancelAskForAddContact()
+                    }
+                })
+
+            }).catch(function (e) {
+                setIsVisible2(false)
+                console.error(e.message); // "oh, no!"
+                console.log('catch block................')
+            })
+        } else {
+            loadContacts();
+            console.log('then block... catch Block.............')
+        }
+    }
+
+    const loadContacts = () => {
+        Contacts.getAll()
+            .then(contacts => {
+                contacts.sort(
+                    (a, b) =>
+                        a.givenName.toLowerCase() > b.givenName.toLowerCase(),
+                );
+                console.log('................', contacts.length)
+                setmob(contacts);
+                setFilteredmob(contacts);
+            })
+            .catch(e => {
+                alert('Permission to access contacts was denied');
+                console.warn('Permission to access contacts was denied');
+            });
+    };
 
     const call = (mobileNo) => {
         let phoneNumber = mobileNo;
@@ -92,6 +161,25 @@ export default function Contacts({ navigation }) {
         }
     };
 
+
+    const searchFilterphoneContact = (text) => {
+        if (text) {
+            const newData = mob.filter(
+                function (item) {
+                    const itemData = item.displayName
+                        ? item.displayName.toUpperCase()
+                        : ''.toUpperCase();
+                    const textData = text.toUpperCase();
+                    return itemData.indexOf(textData) > -1;
+                });
+            setFilteredmob(newData);
+            setSearch2(text);
+        } else {
+            setFilteredmob(mob);
+            setSearch2(text);
+        }
+    };
+
     const newFunction = () => {
         navigation.navigate('ReportFeedback')
     }
@@ -101,16 +189,43 @@ export default function Contacts({ navigation }) {
             setModalVisible3(!modalVisible3)
     }
 
-    const ManuallyAdd = () => {
-        setModalVisible3(!modalVisible3)
-        navigation.push("AddContact")
-    }
+
 
     const Edit_Contact_Function = (id) => {
         setEditConatctId(id)
         setIsVisible(true)
     }
 
+    const AskForAddContact = () => {
+        setModalVisible3(!modalVisible3)
+    }
+    const CancelAskForAddContact = () => {
+        setModalVisible3(!modalVisible3)
+    }
+
+    const AddNewContact = (item) => {
+        navigation.navigate('addTab', {
+            name: item.phoneNumbers[0] ? item.phoneNumbers[0].number !== item.displayName ? item.displayName : '' : '',
+            phone: item.phoneNumbers[0] ? item.phoneNumbers[0].number : '',
+            phone2: item.phoneNumbers[1] ? item.phoneNumbers[1].number : ''
+        })
+        setIsVisible2(false)
+    }
+
+    const ManuallyAdd = () => {
+        setModalVisible3(!modalVisible3)
+        navigation.navigate("addTab")
+    }
+
+    const ContactView2 = ({ item }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => AddNewContact(item)}
+                style={{ padding: 5, marginTop: '1%', marginHorizontal: '3%' }}>
+                <Text style={{ fontSize: 16 }}>{item.displayName}</Text>
+            </TouchableOpacity>
+        )
+    }
     const ContactView = ({ item }) => {
         return (
             <View style={styles.listData} >
@@ -132,7 +247,7 @@ export default function Contacts({ navigation }) {
                         </View>
                     </View>
                 </View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between',marginTop:'1%' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '1%' }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Image style={{ height: 20.7, width: 20.7, }}
                             source={require('../../images/detailcall.png')} />
@@ -173,6 +288,7 @@ export default function Contacts({ navigation }) {
     const handleRefresh = () => {
         console.log(refreshing)
         Get_Data()
+        // loadContacts()
     }
 
     return (
@@ -196,6 +312,16 @@ export default function Contacts({ navigation }) {
                     underlineColorAndroid="transparent"
                 />
             </View>
+
+            <TouchableOpacity
+                onPress={() => AskForAddContact()}
+                style={styles.addNewBtn}
+            >
+                <Text style={{ color: "#fff", fontSize: 13 }}>
+                    Import From Storage
+                </Text>
+            </TouchableOpacity>
+
             {IsLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
@@ -264,12 +390,12 @@ export default function Contacts({ navigation }) {
             <Modal animationType="slide"
                 transparent={true}
                 visible={modalVisible2}
-                onRequestClose={() => { setModalVisible2(!modalVisible2) }}>
+                onRequestClose={() => CancelAskForAddContact()}>
                 <View style={styles.centeredViewM}>
                     <View style={styles.modalViewM}>
                         <TouchableOpacity
                             style={{ alignSelf: 'flex-end', }}
-                            onPress={() => setModalVisible2(!modalVisible2)}>
+                            onPress={() => CancelAskForAddContact()}>
                             <Image
                                 style={{ margin: '5%', marginTop: '3%', height: 14, width: 14 }}
                                 source={require('../../images/crossImgR.png')} />
@@ -294,10 +420,10 @@ export default function Contacts({ navigation }) {
             <Modal animationType="slide"
                 transparent={true}
                 visible={modalVisible3}
-                onRequestClose={() => { setModalVisible3(!modalVisible3) }}>
+                onRequestClose={() => CancelAskForAddContact()}>
                 <Card style={[styles.headerViewA, { paddingBottom: '-5%', }]}>
                     <View style={styles.headerView2A}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} >
+                        <TouchableOpacity onPress={() => CancelAskForAddContact()} >
                             <Image
                                 style={{ margin: '5%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
                                 source={require('../../images/crossImgR.png')} />
@@ -305,7 +431,9 @@ export default function Contacts({ navigation }) {
                     </View>
                     <Text style={[styles.titleA, { marginTop: '-5%' }]}>Add Contacts </Text>
                     <View style={{ marginTop: '3%' }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => GetContactFromMobile()}
+                        >
                             <View style={styles.listDataA}>
                                 <Image style={styles.titleImgA}
                                     source={require('../../images/book.png')} />
@@ -317,8 +445,10 @@ export default function Contacts({ navigation }) {
                             </View>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ marginTop: '3%' }}>
-                        <TouchableOpacity onPress={() => navigation.navigate('AddContactUpload')}>
+                    {/* <View style={{ marginTop: '3%' }}>
+                        <TouchableOpacity 
+                        // onPress={() => navigation.navigate('AddContactUpload')}
+                        >
                             <View style={styles.listDataA}>
                                 <Image style={styles.titleImgA}
                                     source={require('../../images/upload.png')} />
@@ -329,10 +459,12 @@ export default function Contacts({ navigation }) {
                                 </View>
                             </View>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
 
                     <View style={{ marginTop: '3%' }}>
-                        <TouchableOpacity onPress={() => ManuallyAdd()} >
+                        <TouchableOpacity
+                            onPress={() => ManuallyAdd()}
+                        >
                             <View style={[styles.listDataA, { borderBottomWidth: 0, }]}>
                                 <Image style={styles.titleImgA}
                                     source={require('../../images/addR.png')} />
@@ -346,6 +478,45 @@ export default function Contacts({ navigation }) {
                     </View>
 
                 </Card>
+            </Modal>
+
+            <Modal animationType="slide"
+                transparent={true}
+                visible={isVisible2}
+                onRequestClose={() => setIsVisible2(false)}>
+                <View style={{ backgroundColor: '#fff', height: height }}>
+                    <TouchableOpacity style={{ margin: '3%', width: '20%', alignSelf: 'flex-end' }} onPress={() => setIsVisible2(false)}>
+                        <Image
+                            style={{ alignSelf: 'flex-end', marginRight: '5%', height: 18, width: 18 }}
+                            source={require('../../images/crossImgR.png')} />
+                    </TouchableOpacity>
+
+                    <Text style={{ textAlign: 'center', marginVertical: '1%', fontSize: 16, fontWeight: 'bold' }}>Select Any One</Text>
+
+                    <View style={{ flexDirection: 'row', marginHorizontal: '3%', paddingHorizontal: '2%', borderWidth: 1, }}>
+                        <Image style={[styles.icon, { height: 22, width: 22, margin: '1%', marginTop: '4%', padding: 10 }]}
+                            source={require('../../images/search.png')} />
+                        <TextInput
+                            style={{ flex: 1 }}
+                            value={search2}
+                            onChangeText={(text) => searchFilterphoneContact(text)}
+                            placeholder="Search for contacts"
+                            underlineColorAndroid="transparent"
+                        />
+                    </View>
+
+                    <FlatList
+                        data={Filteredmob}
+                        keyExtractor={(item, index) => index.toString()}
+                        // ItemSeparatorComponent={ItemSeparatorView}
+                        renderItem={ContactView2}
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        ListEmptyComponent={() => (!Filteredmob.length ?
+                            <Text style={{ textAlign: 'center', marginTop: '5%', fontSize: 20 }}>Data Not Found</Text>
+                            : null)}
+                    />
+                </View>
             </Modal>
         </View>
     );

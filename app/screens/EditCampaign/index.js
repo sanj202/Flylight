@@ -13,67 +13,80 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function EditCampaign({ navigation, route }) {
- 
 
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)
-    const [isFocus3, setIsFocus3] = useState(false);
     const [campaignName, setcampaignName] = useState(route.params.campData ? route.params.campData.campaign_name : "")
     const [Status, setStatus] = useState(route.params.campData ? route.params.campData.status : null);
-    const [isFocus, setIsFocus] = useState(false);
     const [campaignType, setcampaignType] = useState(route.params.campData ? route.params.campData.campaign_type : "")
     const [Description, setDescription] = useState(route.params.campData ? route.params.campData.description : "")
     const [Revenue, setRevenue] = useState(route.params.campData ? route.params.campData.actual_cost : "")
     const [BudgetedCost, setBudgetedCost] = useState(route.params.campData ? route.params.campData.budgeted_cost : "")
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false);
+    useEffect(() => {
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
+        }
+        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
 
-    // const [startdate, setstartDate] = useState(route.params.campData ? route.params.campData.start_date : new Date());
+    }, [isFocused])
+
     const [startdate, setstartDate] = useState(new Date());
     const [startmode, setstartMode] = useState('date');
     const [startshow, setstartShow] = useState(false);
-    // const [starttext, setstarttext] = useState(route.params.campData.start_date ? false : true)
     const [starttext, setstarttext] = useState(true)
 
+
     const onChangeStartDate = (event, selectedDate) => {
-        const currentDate = selectedDate || startdate;
-        setstartShow(Platform.OS === 'ios');
-        setstartDate(currentDate)
+        if (event.type == 'dismissed') {
+            setstartShow(!startshow);
+        }
+        else {
+            const currentDate = selectedDate || startdate;
+            setstartShow(Platform.OS === 'ios');
+            setstartDate(currentDate)
+            setstarttext(false)
+        }
     };
     const setMode = (currentMode) => {
         setstartShow(!startshow);
         setstartMode(currentMode);
     };
     const showDatepicker = () => {
-        setstarttext(false)
         setMode('date');
     };
-    // const [enddate, setendDate] = useState(route.params.campData ? route.params.campData.end_date : new Date());
     const [enddate, setendDate] = useState(new Date());
     const [endmode, setendMode] = useState('date');
     const [endshow, setendShow] = useState(false);
-    // const [endtext, setendtext] = useState(route.params.campData.end_date ? false : true)
     const [endtext, setendtext] = useState(true)
 
     const onChangeEndDate = (event, selectedDate) => {
-        const currentDate = selectedDate || enddate;
-        setendShow(Platform.OS === 'ios');
-        setendDate(currentDate)
+        if (event.type == 'dismissed') {
+            setendShow(!endshow);
+        }
+        else {
+            const currentDate = selectedDate || enddate;
+            setendShow(Platform.OS === 'ios');
+            setendDate(currentDate)
+            setendtext(false)
+        }
     };
     const showMode2 = (currentMode) => {
         setendShow(!endshow);
         setendMode(currentMode);
     };
     const showDatepicker2 = () => {
-        setendtext(false)
         showMode2('date');
     };
 
     const data = [
-        { label: 'Active', value: 'Active' },
-        { label: 'Planing', value: 'Planing' },
-        { label: 'Inactive', value: 'Inctive' },
-        { label: 'Complete', value: 'Complete' },
+        { label: 'active', value: 'active' },
+        { label: 'planning', value: 'planning' },
+        { label: 'inctive', value: 'inctive' },
+        { label: 'complete', value: 'complete' },
     ];
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
@@ -82,21 +95,24 @@ export default function EditCampaign({ navigation, route }) {
     const responseAdd_Edit = useSelector(state => state.campaign.addCampaign)
 
     useEffect(() => {
-        if (loginData  && isFocused) {
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-        }
-    }, [loginData, isFocused])
+        setCampaignOwner(route.params.campData ? route.params.campData.profile_id : null)
+        setcampaignName(route.params.campData ? route.params.campData.campaign_name : "")
+        setStatus(route.params.campData ? route.params.campData.status : null);
+        setcampaignType(route.params.campData ? route.params.campData.campaign_type : "")
+        setDescription(route.params.campData ? route.params.campData.description : "")
+        setRevenue(route.params.campData ? route.params.campData.expected_revenue : "")
+        setBudgetedCost(route.params.campData ? route.params.campData.budgeted_cost : "")
+        setstartDate(route.params.campData ? new Date(route.params.campData.start_date) : new Date());
+        setstarttext(route.params.campData ? route.params.campData.start_date ? false : true : true)
+        setendDate(route.params.campData ? new Date(route.params.campData.end_date) : new Date());
+        setendtext(route.params.campData ? route.params.campData.end_date ? false : true : true)
+    }, [route.params])
 
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.user.id }
+                    let user = { label: ld.user.name, value: ld.id }
                     if (user !== undefined) {
                         setCampaignOwnerList([user])
                     }
@@ -114,7 +130,7 @@ export default function EditCampaign({ navigation, route }) {
 
     useEffect(() => {
         if (responseAdd_Edit) {
-          setIsLodding(false)
+            setIsLodding(false)
             if (responseAdd_Edit.status == "success") {
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(campaignAction.AddEditclearResponse())
@@ -144,22 +160,22 @@ export default function EditCampaign({ navigation, route }) {
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
             let formateEndDate = moment(enddate).format("YYYY-MM-DD")
-                    setIsLodding(true)
-                    const data = {
-                        uid: loginData.data.uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                        org_uid: loginData.data.org_uid,
-                        campaign_id: route.params.campData.id,
-                        campaign_name: campaignName,
-                        campaign_status: Status,
-                        campaign_type: campaignType,
-                        expected_revenue: Revenue,
-                        budgeted_cost: BudgetedCost,
-                        description: Description,
-                        start_date: formateStartDate,
-                        end_date: formateEndDate
-                    }
-                    dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
+            setIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: CampaignOwner ? CampaignOwner : loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+                campaign_id: route.params.campData.id,
+                campaign_name: campaignName,
+                campaign_status: Status,
+                campaign_type: campaignType,
+                expected_revenue: Revenue,
+                budgeted_cost: BudgetedCost,
+                description: Description,
+                start_date: formateStartDate,
+                end_date: formateEndDate
+            }
+            dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
         }
     }
 
@@ -189,16 +205,16 @@ export default function EditCampaign({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={CampaignOwnerList}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Campaign Owner'
                             value={CampaignOwner}
-                            onFocus={() => setIsFocus3(true)}
-                            onBlur={() => setIsFocus3(false)}
                             onChange={item => {
+                                console.log(item)
                                 setCampaignOwner(item.value);
-                                setIsFocus3(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -234,16 +250,15 @@ export default function EditCampaign({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={data}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Campaign Status'
                             value={Status}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
                             onChange={item => {
                                 setStatus(item.value);
-                                setIsFocus(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -259,7 +274,7 @@ export default function EditCampaign({ navigation, route }) {
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
-                            borderColor: '#C3C7E5',
+                            borderColor: '#000000',
                             borderRadius: 10,
                             // marginHorizontal: '3%',
                             paddingVertical: 5,
@@ -270,7 +285,7 @@ export default function EditCampaign({ navigation, route }) {
                             <Image
                                 style={Platform.OS == 'ios' ?
                                     [styles.icon] :
-                                    [styles.icon, { marginTop: '2%' }]}
+                                    [styles.icon, { marginVertical: '2%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {startshow && (
@@ -287,17 +302,17 @@ export default function EditCampaign({ navigation, route }) {
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {starttext == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Start Date</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Start Date</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {starttext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Start Date</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Start Date</Text>
                                         :
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
@@ -307,7 +322,7 @@ export default function EditCampaign({ navigation, route }) {
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
-                            borderColor: '#C3C7E5',
+                            borderColor: '#000000',
                             borderRadius: 10,
                             // marginHorizontal: '3%',
                             paddingVertical: 5,
@@ -318,7 +333,7 @@ export default function EditCampaign({ navigation, route }) {
                             <Image
                                 style={Platform.OS == 'ios' ?
                                     [styles.icon] :
-                                    [styles.icon, { marginTop: '2%' }]}
+                                    [styles.icon, { marginVertical: '2%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {endshow && (
@@ -328,23 +343,24 @@ export default function EditCampaign({ navigation, route }) {
                                     // is24Hour={true}
                                     value={enddate}
                                     mode={endmode}
+                                    minimumDate={new Date()}
                                     display="default"
                                     onChange={onChangeEndDate}
                                 />
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {endtext == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>End Date</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>End Date</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {endtext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>End Date</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>End Date</Text>
                                         :
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(enddate).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(enddate).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
@@ -354,9 +370,9 @@ export default function EditCampaign({ navigation, route }) {
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}
@@ -383,9 +399,9 @@ export default function EditCampaign({ navigation, route }) {
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}
@@ -398,9 +414,9 @@ export default function EditCampaign({ navigation, route }) {
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}

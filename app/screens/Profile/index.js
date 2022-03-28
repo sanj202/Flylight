@@ -14,7 +14,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 export default function AddContact({ navigation }) {
 
     const [user, setUser] = useState('');
+    const [userImage, setuserImage] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
+    const [IsLodding2, setIsLodding2] = useState(false)
     const { width, height } = Dimensions.get('window');
 
     const dispatch = useDispatch()
@@ -24,10 +26,8 @@ export default function AddContact({ navigation }) {
     const loginData = useSelector(state => state.auth.data)
 
     useEffect(() => {
-        if (loginData && isFocused) {
-            getProfile()
-        }
-    }, [loginData, isFocused])
+        getProfile()
+    }, [isFocused])
 
     const getProfile = () => {
         setIsLodding(true)
@@ -42,6 +42,7 @@ export default function AddContact({ navigation }) {
         if (profileData) {
             if (profileData.status == "200") {
                 setUser(profileData.data.user)
+                setuserImage(profileData.data.user.avatar)
                 setIsLodding(false)
                 dispatch(profileAction.clearResponse())
             }
@@ -56,17 +57,18 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (profileImage) {
             if (profileImage.status == "success") {
-                getProfile()
-                setIsLodding(false)
+                // console.log('..........................',profileImage)
+                setIsLodding2(false)
+                setuserImage(profileImage.avatar)
                 ToastAndroid.show(profileImage.message, ToastAndroid.SHORT);
                 dispatch(profileAction.clearprofileImageResponse())
             }
             else if (profileImage == "error") {
-                setIsLodding(false)
+                setIsLodding2(false)
                 console.log('error ..............', profileImage)
             }
             else {
-                setIsLodding(false)
+                setIsLodding2(false)
             }
         }
         else {
@@ -82,10 +84,10 @@ export default function AddContact({ navigation }) {
             let photo = {
                 uri: image.path,
                 type: image.mime,
-                name: 'photo',
+                name: image.path+'photo',
                 size: image.size,
             };
-            setIsLodding(true)
+            setIsLodding2(true)
             var formdata = new FormData();
             formdata.append('userAvatar', photo)
             formdata.append('uid', loginData.data.uid)
@@ -113,7 +115,7 @@ export default function AddContact({ navigation }) {
             >
                 <SafeAreaView
                     style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '5%', marginTop: '5%' }}
-                >
+                 >
                     <TouchableOpacity
                         onPress={() =>
                             // navigation.openDrawer()
@@ -149,50 +151,54 @@ export default function AddContact({ navigation }) {
                         <Text style={styles.headerBtntext}>Edit Profile</Text>
                     </TouchableOpacity>
                 </SafeAreaView>
-                <TouchableOpacity 
-                onPress={()=>navigation.navigate('orderHistory')}
-                style={[styles.headerBtn, { marginRight: '3%' }]} >
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('orderHistory')}
+                    style={[styles.headerBtn, { marginRight: '3%' }]} >
                     <Text style={styles.headerBtntext}>Order history</Text>
                 </TouchableOpacity>
-                <View style={styles.avtarStyle}>
-                    {user.avatar ?
-                        <View style={{ flexDirection: 'row' }}>
-                            <Image
-                                source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + user.avatar }}
-                                style={{
-                                    height: 96, width: 96, borderRadius: 45,
-                                    marginTop: '3%', marginLeft: '4%',
-                                    alignSelf: 'center'
-                                }}
-                            />
-                        </View>
-                        :
-                        <View style={{ flexDirection: 'row' }}>
-                            <Image
-                                source={require('../../images/avtar.jpg')}
-                                style={{
-                                    height: 96, width: 96, borderRadius: 45,
-                                    marginTop: '3%', marginLeft: '4%',
-                                    alignSelf: 'center'
-                                }}
-                            />
-                        </View>
-                    }
-                    <TouchableOpacity
-                        onPress={() => UploadAvtar()}
-                    >
-                        <Image
-                            style={{ height: 22, width: 22, backgroundColor: '#FFF', borderRadius: 10, marginRight: '2%', marginTop: '-25 %' }}
-                            source={require('../../images/edit_Profile.png')}
-                        />
-                    </TouchableOpacity>
 
-                    <Text style={{
-                        marginTop: '5%',
-                        marginBottom: '2%', textAlign: 'center',
-                        fontFamily: 'Roboto', fontWeight: '500', color: '#000000'
-                    }}>{user.name}</Text>
-                </View>
+                {IsLodding2 == true ?
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    :
+                    <View style={styles.avtarStyle}>
+                        {user.avatar ?
+                            <View style={{ flexDirection: 'row' }}>
+                                <Image
+                                    source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + userImage }}
+                                    style={{
+                                        height: 96, width: 96, borderRadius: 45,
+                                        marginTop: '3%', marginLeft: '4%',
+                                        alignSelf: 'center'
+                                    }}
+                                />
+                            </View>
+                            :
+                            <View style={{ flexDirection: 'row' }}>
+                                <Image
+                                    source={require('../../images/avtar.jpg')}
+                                    style={{
+                                        height: 96, width: 96, borderRadius: 45,
+                                        marginTop: '3%', marginLeft: '4%',
+                                        alignSelf: 'center'
+                                    }}
+                                />
+                            </View>
+                        }
+                        <TouchableOpacity
+                            onPress={() => UploadAvtar()}
+                        >
+                            <Image
+                                style={{ height: 22, width: 22, backgroundColor: '#FFF', borderRadius: 10, marginRight: '2%', marginTop: '-25 %' }}
+                                source={require('../../images/edit_Profile.png')}
+                            />
+                        </TouchableOpacity>
+
+                        <Text style={{
+                            marginTop: '5%',
+                            marginBottom: '2%', textAlign: 'center',
+                            fontFamily: 'Roboto', fontWeight: '500', color: '#000000'
+                        }}>{user.name}</Text>
+                    </View>}
 
             </LinearGradient>
 

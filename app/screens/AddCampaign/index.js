@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, ToastAndroid, StatusBar, Dimensions, Platform} from 'react-native';
+import {
+    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
+    Image, Button, ScrollView, Modal, Alert, ToastAndroid, StatusBar, Dimensions, Platform
+} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -14,10 +16,8 @@ export default function AddContact({ navigation }) {
 
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)
-    const [isFocus3, setIsFocus3] = useState(false);
     const [campaignName, setcampaignName] = useState("")
     const [Status, setStatus] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
     const [campaignType, setcampaignType] = useState("")
     const [Description, setDescription] = useState("")
     const [Revenue, setRevenue] = useState("")
@@ -31,16 +31,21 @@ export default function AddContact({ navigation }) {
     const [starttext, setstarttext] = useState(true)
 
     const onChangeStartDate = (event, selectedDate) => {
-        const currentDate = selectedDate || startdate;
-        setstartShow(Platform.OS === 'ios');
-        setstartDate(currentDate)
+        if (event.type == 'dismissed') {
+            setstartShow(!startshow);
+        }
+        else {
+            const currentDate = selectedDate || startdate;
+            setstartShow(Platform.OS === 'ios');
+            setstartDate(currentDate)
+            setstarttext(false)
+        }
     };
     const setMode = (currentMode) => {
         setstartShow(!startshow);
         setstartMode(currentMode);
     };
     const showDatepicker = () => {
-        setstarttext(false)
         setMode('date');
     };
 
@@ -50,25 +55,31 @@ export default function AddContact({ navigation }) {
     const [endtext, setendtext] = useState(true)
 
     const onChangeEndDate = (event, selectedDate) => {
-        const currentDate = selectedDate || enddate;
-        setendShow(Platform.OS === 'ios');
-        setendDate(currentDate)
+        if (event.type == 'dismissed') {
+            setendShow(!endshow);
+        }
+        else {
+            const currentDate = selectedDate || enddate;
+            setendShow(Platform.OS === 'ios');
+            setendDate(currentDate)
+            setendtext(false)
+        }
     };
     const showMode2 = (currentMode) => {
         setendShow(!endshow);
         setendMode(currentMode);
     };
     const showDatepicker2 = () => {
-        setendtext(false)
         showMode2('date');
     };
 
     const data = [
-        { label: 'Active', value: 'Active' },
-        { label: 'Planing', value: 'Planing' },
-        { label: 'Inactive', value: 'Inctive' },
-        { label: 'Complete', value: 'Complete' },
+        { label: 'active', value: 'active' },
+        { label: 'planning', value: 'planning' },
+        { label: 'inctive', value: 'inctive' },
+        { label: 'complete', value: 'complete' },
     ];
+
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
@@ -76,21 +87,19 @@ export default function AddContact({ navigation }) {
     const responseAdd_Edit = useSelector(state => state.campaign.addCampaign)
 
     useEffect(() => {
-        if (loginData  && isFocused) {
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
         }
-    }, [loginData, isFocused])
+        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+    }, [isFocused])
 
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.user.id }
+                    let user = { label: ld.user.name, value: ld.id }
                     if (user !== undefined) {
                         setCampaignOwnerList([user])
                     }
@@ -136,29 +145,29 @@ export default function AddContact({ navigation }) {
 
     const AddNewCampaign = () => {
         if (campaignName == "") {
-            ToastAndroid.show('Enter campaign Name', ToastAndroid.SHORT);      
+            ToastAndroid.show('Enter campaign Name', ToastAndroid.SHORT);
         }
         else if (Status == null) {
-            ToastAndroid.show('Enter campaign Status', ToastAndroid.SHORT);      
+            ToastAndroid.show('Enter campaign Status', ToastAndroid.SHORT);
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
             let formateEndDate = moment(enddate).format("YYYY-MM-DD")
-                    setIsLodding(true)
-                    const data = {
-                        uid: loginData.data.uid,
-                        profile_id: loginData.data.cProfile.toString(),
-                        org_uid: loginData.data.org_uid,
-                        campaign_name: campaignName,
-                        campaign_status: Status,
-                        campaign_type: campaignType,
-                        expected_revenue: Revenue,
-                        budgeted_cost: BudgetedCost,
-                        description: Description,
-                        start_date: formateStartDate,
-                        end_date: formateEndDate
-                    }
-                    dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
+            setIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                profile_id: loginData.data.cProfile.toString(),
+                org_uid: loginData.data.org_uid,
+                campaign_name: campaignName,
+                campaign_status: Status,
+                campaign_type: campaignType,
+                expected_revenue: Revenue,
+                budgeted_cost: BudgetedCost,
+                description: Description,
+                start_date: formateStartDate,
+                end_date: formateEndDate
+            }
+            dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
         }
     }
 
@@ -188,16 +197,15 @@ export default function AddContact({ navigation }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={CampaignOwnerList}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Campaign Owner'
                             value={CampaignOwner}
-                            onFocus={() => setIsFocus3(true)}
-                            onBlur={() => setIsFocus3(false)}
                             onChange={item => {
                                 setCampaignOwner(item.value);
-                                setIsFocus3(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -233,16 +241,15 @@ export default function AddContact({ navigation }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={data}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder="Campaign Status"
                             value={Status}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
                             onChange={item => {
                                 setStatus(item.value);
-                                setIsFocus(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -258,7 +265,7 @@ export default function AddContact({ navigation }) {
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
-                            borderColor: '#C3C7E5',
+                            borderColor: '#000000',
                             borderRadius: 10,
                             // marginHorizontal: '3%',
                             paddingVertical: 5,
@@ -269,7 +276,7 @@ export default function AddContact({ navigation }) {
                             <Image
                                 style={Platform.OS == 'ios' ?
                                     [styles.icon] :
-                                    [styles.icon, { marginTop: '2%' }]}
+                                    [styles.icon, { marginVertical: '2%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {startshow && (
@@ -279,23 +286,24 @@ export default function AddContact({ navigation }) {
                                     // is24Hour={true}
                                     value={startdate}
                                     mode={startmode}
+                                    minimumDate={new Date()}
                                     display="default"
                                     onChange={onChangeStartDate}
                                 />
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {starttext == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Start Date</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Start Date</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                   null
                                 }
                             </View>
                                 :
                                 <View>
                                     {starttext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Start Date</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Start Date</Text>
                                         :
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
@@ -305,7 +313,7 @@ export default function AddContact({ navigation }) {
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
-                            borderColor: '#C3C7E5',
+                            borderColor: '#000000',
                             borderRadius: 10,
                             // marginHorizontal: '3%',
                             paddingVertical: 5,
@@ -316,7 +324,7 @@ export default function AddContact({ navigation }) {
                             <Image
                                 style={Platform.OS == 'ios' ?
                                     [styles.icon] :
-                                    [styles.icon, { marginTop: '2%' }]}
+                                    [styles.icon, { marginVertical: '2%' }]}
                                 source={require('../../images/DOB.png')}
                             />
                             {endshow && (
@@ -326,23 +334,24 @@ export default function AddContact({ navigation }) {
                                     // is24Hour={true}
                                     value={enddate}
                                     mode={endmode}
+                                    minimumDate={new Date()}
                                     display="default"
                                     onChange={onChangeEndDate}
                                 />
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {endtext == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>End Date</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>End Date</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                   null
                                 }
                             </View>
                                 :
                                 <View>
                                     {endtext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>End Date</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>End Date</Text>
                                         :
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(enddate).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(enddate).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
@@ -350,11 +359,11 @@ export default function AddContact({ navigation }) {
                     </TouchableOpacity>
 
                     <View style={styles.inputFields}>
-                        <Image
+                    <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}
@@ -364,11 +373,11 @@ export default function AddContact({ navigation }) {
                     </View>
 
                     <View style={styles.inputFields}>
-                        <Image
+                    <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}
@@ -379,11 +388,11 @@ export default function AddContact({ navigation }) {
                     </View>
 
                     <View style={styles.inputFields}>
-                        <Image
+                    <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}
@@ -396,9 +405,9 @@ export default function AddContact({ navigation }) {
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 27, width: 20,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}

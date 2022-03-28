@@ -11,11 +11,11 @@ const styles = StyleSheet.create({
   },
   inputFields: {
     flexDirection: 'row',
-    borderWidth: 0.5,
-    borderColor: '#C3C7E5',
+    borderWidth: 1,
+    borderColor: '#000000',
     borderRadius: 10,
     marginTop: '3%',
-    height: 45
+    height:50
   },
   icon: {
     height: 20,
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
   },
   dropdown3: {
     height: 50,
-    borderColor: '#C3C7E5',
-    borderWidth: 0.5,
+    borderColor: '#000000',
+    borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 8,
   },
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle3: {
     fontSize: 13,
-    color: '#B9BAC8',
+    color: '#000000',
     fontFamily: 'Roboto'
   },
   iconStyle3: {

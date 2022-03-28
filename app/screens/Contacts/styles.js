@@ -9,6 +9,18 @@ const styles = StyleSheet.create({
     itemStyle: {
         padding: 10,
     },
+    addNewBtn: {
+        borderColor: '#fff',
+        borderWidth: 1,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor: '#2296E4',
+        borderRadius: 10,
+        alignSelf: 'flex-end',
+        marginBottom: '2%',
+        marginTop: '-2%',
+        marginRight: '3%'
+    },
 
 
     inputFields2: {
@@ -33,8 +45,8 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 15,
     },
     listData: {
-        paddingVertical:5,
-        paddingHorizontal:10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
         borderWidth: 1,
         borderRadius: 15,
         borderColor: '#DBDBDB',

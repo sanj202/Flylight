@@ -13,30 +13,29 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function EditContact({ navigation, route }) {
-
-    const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? route.params.Edata.title : null)
-    const [title, settitle] = useState(route.params.Edata ? route.params.Edata.title : "")
-    const [fname, setfname] = useState(route.params.Edata ? route.params.Edata.first_name : "")
-    const [lname, setlname] = useState(route.params.Edata ? route.params.Edata.last_name : "")
-    const [gender, setgender] = useState(route.params.Edata ? route.params.Edata.gender : null);
-    const [phone, setphone] = useState(route.params.Edata ? route.params.Edata.phone : "")
-    const [Aphone, setAphone] = useState(route.params.Edata ? route.params.Edata.phone2 : "")
-    const [email, setemail] = useState(route.params.Edata ? route.params.Edata.email : "")
-    const [Aemail, setAemail] = useState(route.params.Edata ? route.params.Edata.email2 : "")
-    const [companyName, setcompanyName] = useState(route.params.Edata ? route.params.Edata.company : "")
-    const [website, setwebsite] = useState(route.params.Edata ? route.params.Edata.website : "")
-    const [fax, setfax] = useState(route.params.Edata ? route.params.Edata.fax : "")
-    const [Address, setAddress] = useState(route.params.Edata ? route.params.Edata.address : "")
-    const [City, setCity] = useState(route.params.Edata ? route.params.Edata.city : "")
-    const [State, setState] = useState(route.params.Edata ? route.params.Edata.state : null)
-    const [Country, setCountry] = useState(route.params.Edata ? route.params.Edata.country : "")
-    const [ZipCode, setZipCode] = useState(route.params.Edata ? route.params.Edata.zip : "")
-    const [LeadSource, setLeadSource] = useState(route.params.Edata ? route.params.Edata.lead_source : "")
-    const [LeadStatus, setLeadStatus] = useState(route.params.Edata ? route.params.Edata.lead_status : null);
-    const [Industry, setIndustry] = useState(route.params.Edata ? route.params.Edata.industry : "")
-    const [employee, setemployee] = useState(route.params.Edata ? route.params.Edata.number_of_employee : "")
-    const [revenue, setrevenue] = useState(route.params.Edata ? route.params.Edata.annual_revenue : "")
-    const [Campagin, setCampagin] = useState(route.params.Edata ? route.params.Edata.campaign : null);
+    const [LeadOwner, setLeadOwner] = useState(null)
+    const [title, settitle] = useState("")
+    const [fname, setfname] = useState("")
+    const [lname, setlname] = useState("")
+    const [gender, setgender] = useState(null);
+    const [phone, setphone] = useState("")
+    const [Aphone, setAphone] = useState("")
+    const [email, setemail] = useState("")
+    const [Aemail, setAemail] = useState("")
+    const [companyName, setcompanyName] = useState("")
+    const [website, setwebsite] = useState("")
+    const [fax, setfax] = useState("")
+    const [Address, setAddress] = useState("")
+    const [City, setCity] = useState("")
+    const [State, setState] = useState(null)
+    const [Country, setCountry] = useState("")
+    const [ZipCode, setZipCode] = useState("")
+    const [LeadSource, setLeadSource] = useState("")
+    const [LeadStatus, setLeadStatus] = useState(null);
+    const [Industry, setIndustry] = useState("")
+    const [employee, setemployee] = useState("")
+    const [revenue, setrevenue] = useState("")
+    const [Campagin, setCampagin] = useState(null);
     const [IsLodding, setIsLodding] = useState(false)
 
     const { width, height } = Dimensions.get('window');
@@ -56,10 +55,10 @@ export default function EditContact({ navigation, route }) {
 
     const Data = useSelector(state => state.ManuallyAddContact.EditedData)
 
-    const [date, setDate] = useState(route.params.Edata ? new Date(route.params.Edata.dob) : new Date());
+    const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [text, settext] = useState(route.params.Edata ? route.params.Edata.dob ? false : true : true)
+    const [text, settext] = useState(true)
 
 
     const onChangeFrom = (event, selectedDate) => {
@@ -97,6 +96,34 @@ export default function EditContact({ navigation, route }) {
         dispatch(leadAction.LeadStatusList(data, loginData.data.token));
         dispatch(leadAction.StateList(data, loginData.data.token));
     }, [])
+
+    useEffect(() => {
+        setLeadOwner(route.params.Edata ? route.params.Edata.title : null)
+        settitle(route.params.Edata ? route.params.Edata.title : "")
+        setfname(route.params.Edata ? route.params.Edata.first_name : "")
+        setlname(route.params.Edata ? route.params.Edata.last_name : "")
+        setgender(route.params.Edata ? route.params.Edata.gender : null);
+        setphone(route.params.Edata ? route.params.Edata.phone : "")
+        setAphone(route.params.Edata ? route.params.Edata.phone2 : "")
+        setemail(route.params.Edata ? route.params.Edata.email : "")
+        setAemail(route.params.Edata ? route.params.Edata.email2 : "")
+        setcompanyName(route.params.Edata ? route.params.Edata.company : "")
+        setwebsite(route.params.Edata ? route.params.Edata.website : "")
+        setfax(route.params.Edata ? route.params.Edata.fax : "")
+        setAddress(route.params.Edata ? route.params.Edata.address : "")
+        setCity(route.params.Edata ? route.params.Edata.city : "")
+        setState(route.params.Edata ? route.params.Edata.state : null)
+        setCountry(route.params.Edata ? route.params.Edata.country : "")
+        setZipCode(route.params.Edata ? route.params.Edata.zip : "")
+        setLeadSource(route.params.Edata ? route.params.Edata.lead_source : "")
+        setLeadStatus(route.params.Edata ? route.params.Edata.lead_status : null);
+        setIndustry(route.params.Edata ? route.params.Edata.industry : "")
+        setemployee(route.params.Edata ? route.params.Edata.number_of_employee : "")
+        setrevenue(route.params.Edata ? route.params.Edata.annual_revenue : "")
+        setCampagin(route.params.Edata ? route.params.Edata.campaign : null);
+        setDate(route.params.Edata ? new Date(route.params.Edata.dob) : new Date());
+        settext(route.params.Edata ? route.params.Edata.dob ? false : true : true)
+    }, [route.params])
 
 
     useEffect(() => {
@@ -233,7 +260,7 @@ export default function EditContact({ navigation, route }) {
                 first_name: fname, last_name: lname, title: title, email: email, email2: Aemail, dob: formateDate, gender: gender,
                 phone2: Aphone, fax: fax, website: website, lead_source: LeadSource, lead_status: LeadStatus, industry: Industry,
                 phone: phone, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address,
-                city: City, state: State, country: Country, zip: ZipCode,campaign : Campagin
+                city: City, state: State, country: Country, zip: ZipCode, campaign: Campagin
             }
             dispatch(editContactAction.EditContact(data, loginData.data.token));
         }
@@ -373,6 +400,7 @@ export default function EditContact({ navigation, route }) {
                                     // is24Hour={true}
                                     value={date}
                                     mode={mode}
+                                    maximumDate={new Date(moment().subtract(20, "years"))}
                                     display="default"
                                     onChange={onChangeFrom}
                                 />
