@@ -171,8 +171,8 @@ export default function AddContact({ navigation, route }) {
       <Header
         // style={{ height: "16%" }}
         onPressLeft={() => {
-          // navigation.OpenDrawer()
-          navigation.goBack()
+          navigation.OpenDrawer()
+          // navigation.goBack()
         }}
         title='History Feedback'
         onPressRight={() => {

@@ -247,8 +247,7 @@ export default function MeetingsDetail({ navigation, route }) {
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                      navigation.openDrawer()
                 }}
                 title='Meeting Details'
                 onPressRight={() => { navigation.navigate('Notification') }}

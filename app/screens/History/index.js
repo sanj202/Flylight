@@ -13,25 +13,48 @@ import { useIsFocused } from "@react-navigation/core"
 export default function History({ navigation }) {
 
 
-  const [History, setHistory] = useState()
+  const [History, setHistory] = useState([])
   const [IsLodding, setIsLodding] = useState(false)
   const [campList, setcampList] = useState([])
   const [campId, setcampId] = useState(null);
-  const [isFocus, setIsFocus] = useState(false);
   const [statusList, setstatusList] = useState([])
   const [statusId, setstatusId] = useState(null);
   const [status, setstatus] = useState(null);
-  const [isFocus1, setIsFocus1] = useState(false);
   const { width, height } = Dimensions.get('window');
+  const [page, setPage] = useState(0);
+  const [perPageItems, setperPageItems] = useState(10);
+  const [totalItems, settotalItems] = useState('');
 
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
-  const UserData = useSelector(state => state.auth.data)
   const historyData = useSelector(state => state.history.getHistory)
   const CampData = useSelector(state => state.history.campData)
   const LeadData = useSelector(state => state.history.leadData)
-
   const loginData = useSelector(state => state.auth.data)
+
+  useEffect(() => {
+    setIsLodding(true)
+    let data = {
+      uid: loginData.data.uid,
+      org_uid: loginData.data.org_uid,
+      profile_id: loginData.data.cProfile.toString(),
+    }
+    FetchData(page)
+    dispatch(historyAction.LeadStatusList(data, loginData.data.token));
+    dispatch(historyAction.CampaignList(data, loginData.data.token));
+  }, [isFocused])
+
+  const FetchData = (p) => {
+    let data = {
+      uid: loginData.data.uid,
+      org_uid: loginData.data.org_uid,
+      profile_id: loginData.data.cProfile.toString(),
+      pageSize: perPageItems,
+      pageNumber: p,
+      filters: []
+    }
+    dispatch(historyAction.HistoryList(data, loginData.data.token));
+  }
 
   const [startDate, setstartDate] = useState(new Date());
   const [startmode, setstartMode] = useState('date');
@@ -43,7 +66,6 @@ export default function History({ navigation }) {
       setstartshow(!startshow);
     }
     else {
-      console.log('date selected ', event)
       const currentDate = selectedDate || startDate;
       setstartshow(Platform.OS === 'ios' ? true : false);
       setstartDate(currentDate)
@@ -57,8 +79,6 @@ export default function History({ navigation }) {
   const showDatepicker = () => {
     Mode('date');
   };
-
-
 
   const [enddate, setendDate] = useState(new Date());
   const [endmode, setendMode] = useState('date');
@@ -88,60 +108,60 @@ export default function History({ navigation }) {
   const Search = () => {
     let StartDate = moment(startDate).format("YYYY-MM-DD")
     let EndDate = moment(enddate).format("YYYY-MM-DD")
-      if (loginData.status == "success") {
-        let data = {
-          uid: loginData.data.uid,
-          org_uid: loginData.data.org_uid,
-          profile_id: loginData.data.cProfile.toString(),
-          pageSize: '40',
-          pageNumber: '0',
-          filters: []
-        }
-        if (starttext == false || endtext == false || statusId !== null || campId !== null) {
-          if (StartDate !== EndDate) {
-            if (starttext == true) {
-              ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
-            }
-            else if (endtext == true) {
-              ToastAndroid.show('Please Select end Date', ToastAndroid.SHORT);
+    if (loginData.status == "success") {
+      let data = {
+        uid: loginData.data.uid,
+        org_uid: loginData.data.org_uid,
+        profile_id: loginData.data.cProfile.toString(),
+        pageSize: perPageItems,
+        pageNumber: '0',
+        filters: []
+      }
+      if (starttext == false || endtext == false || statusId !== null || campId !== null) {
+        if (StartDate !== EndDate) {
+          if (starttext == true) {
+            ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
+          }
+          else if (endtext == true) {
+            ToastAndroid.show('Please Select end Date', ToastAndroid.SHORT);
+          }
+          else {
+            if (StartDate <= EndDate) {
+              setIsLodding(true)
+              data.filters.push({ gte: StartDate, key: 'created_at' },
+                { lte: EndDate, key: 'created_at' })
+              dispatch(historyAction.HistoryList(data, loginData.data.token));
             }
             else {
-              if (StartDate <= EndDate) {
-                setIsLodding(true)
-                data.filters.push({ gte: StartDate, key: 'created_at' },
-                  { lte: EndDate, key: 'created_at' })
-                  dispatch(historyAction.HistoryList(data, loginData.data.token));
-              }
-              else {
-                ToastAndroid.show('wrong format', ToastAndroid.SHORT);
-              }
+              ToastAndroid.show('wrong format', ToastAndroid.SHORT);
             }
           }
-          else if (StartDate == EndDate && starttext == false && endtext == false){
-            setIsLodding(true)
-            data.filters.push({ gte: StartDate, key: 'created_at' },
-              { lte: EndDate, key: 'created_at' })
-              dispatch(historyAction.HistoryList(data, loginData.data.token));
-          }
-
-          if (statusId !== null && campId !== null) {
-            setIsLodding(true)
-            data.filters.push({ eq: campId, key: 'campaign' },
-              { eq: status, key: 'lead_status' })
-              dispatch(historyAction.HistoryList(data, loginData.data.token));
-          }
-          else if (statusId !== null) {
-            setIsLodding(true)
-            data.filters.push({ eq: status, key: 'lead_status' })
-            dispatch(historyAction.HistoryList(data, loginData.data.token));
-          }
-          else if (campId !== null) {
-            setIsLodding(true)
-            data.filters.push({ eq: campId, key: 'campaign' })
-            dispatch(historyAction.HistoryList(data, loginData.data.token));
-          }
         }
-        // console.log(data)
+        else if (StartDate == EndDate && starttext == false && endtext == false) {
+          setIsLodding(true)
+          data.filters.push({ gte: StartDate, key: 'created_at' },
+            { lte: EndDate, key: 'created_at' })
+          dispatch(historyAction.HistoryList(data, loginData.data.token));
+        }
+
+        if (statusId !== null && campId !== null) {
+          setIsLodding(true)
+          data.filters.push({ eq: campId, key: 'campaign' },
+            { eq: status, key: 'lead_status' })
+          dispatch(historyAction.HistoryList(data, loginData.data.token));
+        }
+        else if (statusId !== null) {
+          setIsLodding(true)
+          data.filters.push({ eq: status, key: 'lead_status' })
+          dispatch(historyAction.HistoryList(data, loginData.data.token));
+        }
+        else if (campId !== null) {
+          setIsLodding(true)
+          data.filters.push({ eq: campId, key: 'campaign' })
+          dispatch(historyAction.HistoryList(data, loginData.data.token));
+        }
+      }
+      // console.log(data)
     }
   }
 
@@ -155,16 +175,17 @@ export default function History({ navigation }) {
     setstartDate(new Date())
     setendDate(new Date())
     setIsLodding(true)
-    if (loginData ) {
-        let data = {
-          uid: loginData.data.uid,
-          org_uid: loginData.data.org_uid,
-          profile_id: loginData.data.cProfile.toString(),
-          pageSize: '40',
-          pageNumber: '0',
-          filters: []
-        }
-        dispatch(historyAction.HistoryList(data, loginData.data.token));
+    setPage(0)
+    if (loginData) {
+      let data = {
+        uid: loginData.data.uid,
+        org_uid: loginData.data.org_uid,
+        profile_id: loginData.data.cProfile.toString(),
+        pageSize: perPageItems,
+        pageNumber: '0',
+        filters: []
+      }
+      dispatch(historyAction.HistoryList(data, loginData.data.token));
     }
   }
 
@@ -172,27 +193,18 @@ export default function History({ navigation }) {
     navigation.navigate('HistoryOne', { id: value })
   }
 
-  useEffect(() => {
-    setIsLodding(true)
-        let data = {
-          uid: loginData.data.uid,
-          org_uid: loginData.data.org_uid,
-          profile_id: loginData.data.cProfile.toString(),
-          pageSize: '40',
-          pageNumber: '0',
-          filters: []
-        }
-        dispatch(historyAction.HistoryList(data, loginData.data.token));
-        dispatch(historyAction.LeadStatusList(data, loginData.data.token));
-        dispatch(historyAction.CampaignList(data, loginData.data.token));
-  
-  }, [loginData ])
+
 
   useEffect(() => {
     if (historyData) {
-
       if (historyData.status == "success") {
-        setHistory(historyData.data)
+        // setHistory(historyData.data)
+        settotalItems(historyData.total_rows)
+        if (historyData.data.length != 0) {
+          let dataLive = historyData.data;
+          let listTemp = [...History, ...dataLive];
+          setHistory(listTemp)
+        }
         setIsLodding(false)
         dispatch(historyAction.clearResponse())
       }
@@ -218,8 +230,6 @@ export default function History({ navigation }) {
           CampData.data !== undefined && CampData.data.map((item, index) =>
             item ? { label: item.campaign_name, value: item.id } : { label: 'None', value: 'None' })
         )
-        // setHistory(CampData.data)
-        setIsLodding(false)
       }
       else if (CampData.status == "failed") {
         setIsLodding(false)
@@ -239,28 +249,20 @@ export default function History({ navigation }) {
 
   useEffect(() => {
     if (LeadData) {
-
       if (LeadData.status == "200") {
         setstatusList(
           LeadData.data !== undefined && LeadData.data.map((item, index) =>
             item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' })
         )
-        // setHistory(LeadData.data)
-        setIsLodding(false)
         dispatch(historyAction.clearResponse())
       }
       else if (LeadData.status == "failed") {
-        setIsLodding(false)
         ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
         dispatch(historyAction.clearResponse())
       }
       else if (LeadData.status == "fail") {
-        setIsLodding(false)
         ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
         dispatch(historyAction.clearResponse())
-      }
-      else {
-
       }
     }
   }, [LeadData])
@@ -270,21 +272,34 @@ export default function History({ navigation }) {
 
   const campaignSelect = (value) => {
     setcampId(value);
-    setIsFocus(false);
   }
 
   const statusSelect = (item) => {
-    // console.log(item)
     setstatus(item.label)
     setstatusId(item.value);
-    setIsFocus1(false);
+  }
+
+
+  const [refreshing, setrefreshing] = useState(false)
+  const handleRefresh = () => {
+    console.log(refreshing)
+    setIsLodding(true)
+    setPage(0)
+    setHistory([])
+    FetchData(0)
+  }
+
+  const fetchNextItems = () => {
+    if (totalItems > History.length) {
+      let p = page + 1;
+      setPage(p);
+      FetchData(p)
+    }
   }
 
   const HistoryView = ({ item }) => {
     return (
-      <TouchableOpacity
-        onPress={() => Detail(item.lead_id)}
-      >
+      <Pressable onPress={() => Detail(item.lead_id)} >
         <Card style={{ marginHorizontal: '3%', marginVertical: '1%', padding: 3 }}>
           <View style={{ flexDirection: 'row', marginVertical: '2%' }}>
             <Image
@@ -318,7 +333,7 @@ export default function History({ navigation }) {
           </View>
         </Card>
 
-      </TouchableOpacity>
+      </Pressable>
     )
   }
 
@@ -339,8 +354,8 @@ export default function History({ navigation }) {
           );
         }}
         onPressLeft={() => {
-          navigation.goBack()
-          // navigation.openDrawer()
+          // navigation.goBack()
+          navigation.openDrawer()
         }}
         renderRight={() => {
           return (
@@ -385,17 +400,17 @@ export default function History({ navigation }) {
                 )}
                 {Platform.OS == 'ios' ? <View>
                   {starttext == true ?
-                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>From Date</Text>
+                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>From Date</Text>
                     :
-                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                    null
                   }
                 </View>
                   :
                   <View>
                     {starttext == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>From Date</Text>
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>From Date</Text>
                       :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(startDate).format('DD/MM/YYYY')}</Text>
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startDate).format('DD/MM/YYYY')}</Text>
                     }
                   </View>
                 }
@@ -425,17 +440,17 @@ export default function History({ navigation }) {
                 )}
                 {Platform.OS == 'ios' ? <View>
                   {endtext == true ?
-                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>To Date</Text>
+                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>To Date</Text>
                     :
-                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                    null
                   }
                 </View>
                   :
                   <View>
                     {endtext == true ?
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>To Date</Text>
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>To Date</Text>
                       :
-                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(enddate).format('DD/MM/YYYY')}</Text>
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(enddate).format('DD/MM/YYYY')}</Text>
                     }
                   </View>
                 }
@@ -445,25 +460,22 @@ export default function History({ navigation }) {
 
           <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%', marginTop: '-2%' }}>
             <Dropdown
-              style={[styles.dropdown, { width: '48%' }, isFocus && { borderColor: '' }]}
+              style={[styles.dropdown, { width: '48%' }]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               // inputSearchStyle={styles.inputSearchStyle3}
               iconStyle={styles.iconStyle}
               data={campList}
-              // search
+              search={true}
+              searchPlaceholder='Search'
               maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='Select Campaign'
               // searchPlaceholder="Search..."
               value={campId}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
               onChange={item => {
                 campaignSelect(item.value)
-                // setcampId(item.value);
-                // setIsFocus(false);
               }}
               renderLeftIcon={() => (
 
@@ -477,26 +489,22 @@ export default function History({ navigation }) {
             />
 
             <Dropdown
-              style={[styles.dropdown, { width: '48%' }, isFocus && { borderColor: '' }]}
+              style={[styles.dropdown, { width: '48%' }]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               // inputSearchStyle={styles.inputSearchStyle3}
               iconStyle={styles.iconStyle}
               data={statusList}
-              // search
+              search={true}
+              searchPlaceholder='Search'
               maxHeight={160}
               labelField="label"
               valueField="value"
               placeholder='Select Status'
               // searchPlaceholder="Search..."
               value={statusId}
-              onFocus={() => setIsFocus1(true)}
-              onBlur={() => setIsFocus1(false)}
               onChange={item => {
-                // console.log(item)
                 statusSelect(item)
-                // setstatusId(item.value);
-                // setIsFocus1(false);
               }}
               renderLeftIcon={() => (
 
@@ -524,17 +532,18 @@ export default function History({ navigation }) {
             </TouchableOpacity>
           </View>
           <View>
-            {History !== undefined && History.length > 0 ?
-              // <Text>nh</Text>
-              <FlatList
-                style={{ height: height / 2 }}
-                data={History}
-                // scrollEnabled={true}
-                renderItem={HistoryView}
-              />
-              :
-              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>No data Found</Text>
-            }
+            <FlatList
+              style={{ height: height / 2 }}
+              data={History}
+              renderItem={HistoryView}
+              ListEmptyComponent={() => (!History.length ?
+                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                : null)}
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+              onEndReached={() => fetchNextItems()}
+              keyExtractor={item => item.id}
+            />
           </View>
           <View style={{ height: 10 }}></View>
         </View>

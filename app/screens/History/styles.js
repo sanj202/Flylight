@@ -6,8 +6,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   pickerStyle: {
-    borderWidth: 0.5,
-    borderColor: '#C3C7E5',
+    borderWidth: 1,
+    borderColor: '#000000',
     borderRadius: 10,
     paddingVertical: 11,
     marginTop: '1%',
@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 48,
-    borderColor: '#C3C7E5',
-    borderWidth: 0.5,
+    borderColor: '#000000',
+    borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
   },
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 12,
-    color: '#111111'
+    color:'#000000'
   },
   iconStyle: {
     width: 20,

@@ -178,8 +178,8 @@ export default function AddContact({ navigation }) {
             <Header
                 // style={{ height: "12%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Add Campaign'
                 onPressRight={() => {

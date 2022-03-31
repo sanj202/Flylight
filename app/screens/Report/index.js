@@ -194,8 +194,8 @@ export default function Report({ navigation }) {
             <Header
                 // style={{ height: "10%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Reports'
                 onPressRight={() => {

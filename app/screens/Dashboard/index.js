@@ -149,12 +149,11 @@ export default function Dashboard({ navigation, route, props }) {
             <Text style={{ fontSize: 12, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.first_name} {item.last_name}</Text>
             <Text style={{ fontSize: 10, fontFamily: 'ROboto', color: '#0F0F0F' }}>{moment(item.scheduled_time).format('lll')}</Text>
           </View>
-          <TouchableOpacity
-          // onPress={() => call(item)}
-          >
+          {/* <TouchableOpacity
+             >
             <Image style={styles.notifyImage}
               source={require('../../images/arrow.png')} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </Card>
     );
@@ -310,7 +309,7 @@ export default function Dashboard({ navigation, route, props }) {
                 <View style={{ marginHorizontal: '3%', marginTop: '3%' }}>
                   <Text style={{ fontFamily: 'Roboto', fontWeight: 'bold', fontSize: 16, color: '#000000' }}>Latest Leads</Text>
                   <FlatList
-                    style={{ flexGrow: 0, maxHeight: '50%' }}
+                    // style={{ flexGrow: 0, maxHeight: '50%' }}
                     data={total.leadList}
                     scrollEnabled={true}
                     renderItem={renderItemLead}
@@ -325,6 +324,7 @@ export default function Dashboard({ navigation, route, props }) {
                     <Text style={{ textAlign: 'center' }}>More...</Text>
                   </TouchableOpacity>
                 </View>
+                <View style={{height:50}}/>
               </View>
             } />
         </View>}

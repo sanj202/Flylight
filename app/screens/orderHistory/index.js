@@ -162,8 +162,8 @@ export default function OrderHistory({ navigation }) {
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                      navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Order History'
                 onPressRight={() => {

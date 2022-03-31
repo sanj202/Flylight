@@ -292,8 +292,8 @@ export default function PackegeTopups({ navigation }) {
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                      navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Package & Topups'
                 onPressRight={() => {

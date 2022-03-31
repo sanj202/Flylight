@@ -20,14 +20,16 @@ export default function Task_Manager({ navigation }) {
     const [modalVisible2, setModalVisible2] = useState(false);
     const [askDelete, setaskDelete] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-    const [allTask, setallTask] = useState()
+    const [allTask, setallTask] = useState([])
     const [Status, setStatus] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
     const [IsLodding, setIsLodding] = useState(false)
     const [EIsLodding, setEIsLodding] = useState(false)
     const [title, settitle] = useState('')
     const { width, height } = Dimensions.get('window');
-
+    const [page, setPage] = useState(0);
+    const [perPageItems, setperPageItems] = useState(10);
+    const [totalItems, settotalItems] = useState('');
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -40,6 +42,17 @@ export default function Task_Manager({ navigation }) {
     const deleteTask = useSelector(state => state.taskmanager.deleteTask)
     const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
     const TaskStatus = useSelector(state => state.taskmanager.taskstatus)
+
+    useEffect(() => {
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+        }
+        Get_Data(page)
+        dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
+    }, [isFocused])
 
 
     useEffect(() => {
@@ -79,55 +92,47 @@ export default function Task_Manager({ navigation }) {
     const checkValue = (value) => {
         setisService(value)
         setIsLodding(true)
-        if (loginData.status == "success") {
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                org_uid: loginData.data.org_uid,
-                pageSize: '40',
-                pageNumber: '0',
-                filters: []
-            }
-            if (value == 'Done') {
-                data.filters.push({ eq: '3', key: 'status' })
-            }
-            else if (value == 'To-Do') {
-                data.filters.push({ eq: '1', key: 'status' })
-            }
-            else {
-
-            }
-            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-        }
-
-        else { }
-    }
-
-    useEffect(() => {
-        if (loginData && isFocused) {
-            Get_Data()
-        }
-    }, [loginData, isFocused])
-
-    const Get_Data = () => {
-
-        setIsLodding(true)
         const data = {
             uid: loginData.data.uid,
             profile_id: loginData.data.cProfile.toString(),
             org_uid: loginData.data.org_uid,
-            pageSize: '40',
+            pageSize: perPageItems,
             pageNumber: '0',
             filters: []
         }
+        if (value == 'Done') {
+            data.filters.push({ eq: '3', key: 'status' })
+        }
+        else if (value == 'To-Do') {
+            data.filters.push({ eq: '1', key: 'status' })
+        }
+        else {
+
+        }
         dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-        dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
+    }
+    const Get_Data = (p) => {
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+            pageSize: perPageItems,
+            pageNumber: p,
+            filters: []
+        }
+        dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
     }
 
     useEffect(() => {
         if (taskList) {
             if (taskList.status == "success") {
-                setallTask(taskList.data)
+                // setallTask(taskList.data)
+                settotalItems(taskList.total_rows)
+                if (taskList.data.length != 0) {
+                    let dataLive = taskList.data;
+                    let listTemp = [...allTask, ...dataLive];
+                    setallTask(listTemp)
+                }
             }
             else if (taskList.status == "failed") {
             }
@@ -163,30 +168,25 @@ export default function Task_Manager({ navigation }) {
             ToastAndroid.show('Select Status', ToastAndroid.SHORT);
         }
         else {
-            // setIsVisible(false)
             let formateStartDate = moment(date).format("YYYY-MM-DD")
-            // console.log('..................................', value.priority)
-            if (loginData) {
-                setEIsLodding(true)
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile,
-                    created_by: loginData.data.cProfile,
-                    modified_by: loginData.data.cProfile,
-                    task_id: value.id ? value.id : '',
-                    title: title,
-                    task_for: value.task_for ? value.task_for : '',
-                    task_related_to: value.related_to ? value.related_to : '',
-                    task_related_to_id: value.what_id ? value.what_id : '',
-                    status: Status,
-                    priority: value.priority ? value.priority : '',
-                    description: value.description ? value.description : '',
-                    due_date: formateStartDate,
-                }
-                dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
-
+            setEIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                org_uid: loginData.data.org_uid,
+                profile_id: loginData.data.cProfile,
+                created_by: loginData.data.cProfile,
+                modified_by: loginData.data.cProfile,
+                task_id: value.id ? value.id : '',
+                title: title,
+                task_for: value.task_for ? value.task_for : '',
+                task_related_to: value.related_to ? value.related_to : '',
+                task_related_to_id: value.what_id ? value.what_id : '',
+                status: Status,
+                priority: value.priority ? value.priority : '',
+                description: value.description ? value.description : '',
+                due_date: formateStartDate,
             }
+            dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
         }
     }
 
@@ -200,7 +200,7 @@ export default function Task_Manager({ navigation }) {
                 settext(true)
                 setStatus(null)
                 settempObject("")
-                Get_Data()
+                Get_Data(0)
                 dispatch(taskmanagerAction.clearResponse())
             }
             else if (responseAdd_Edit.status == "failed") {
@@ -260,8 +260,26 @@ export default function Task_Manager({ navigation }) {
 
     const DeleteSuccessFully = () => {
         dispatch(taskmanagerAction.clearResponse());
-        Get_Data()
+        Get_Data(0)
         setModalVisible2(!modalVisible2)
+    }
+
+
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        setIsLodding(true)
+        setallTask([])
+        setPage(0)
+        Get_Data(0)
+    }
+
+    const fetchNextItems = () => {
+        if (totalItems > allTask.length) {
+            let p = page + 1;
+            setPage(p);
+            Get_Data(p)
+        }
     }
 
     const AllView = ({ item }) => {
@@ -269,17 +287,6 @@ export default function Task_Manager({ navigation }) {
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
-                    {/* <View style={{ backgroundColor: '', justifyContent: 'center', }}>
-                        {item.profile ?
-                            item.profile.user ?
-                                <Image style={{ height: 48, width: 48, borderRadius: 24 }}
-                                    source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + item.profile.user.avatar }}
-                                />
-                                : <Image style={{ height: 48, width: 48, }}
-                                    source={require('../../images/profileCall.png')} />
-                            : ''}
-                    </View> */}
-
                     <View style={{ backgroundColor: '', justifyContent: 'center', }}>
                         <Image style={{ height: 48, width: 48, }}
                             source={require('../../images/profileCall.png')} />
@@ -360,7 +367,7 @@ export default function Task_Manager({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { width: width, height: height }]}>
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
@@ -375,13 +382,10 @@ export default function Task_Manager({ navigation }) {
             <View
                 style={{
                     flexDirection: 'row',
-                    marginLeft: '7%',
-                    marginRight: '7%',
+                    marginHorizontal: '5%',
                     marginTop: '-5%',
                     backgroundColor: '#fff',
-                    height: 35,
                     borderRadius: 20,
-                    flexDirection: 'row',
                     justifyContent: 'space-between'
                 }}>
                 {isService == 'All' ?
@@ -457,6 +461,13 @@ export default function Task_Manager({ navigation }) {
                                 style={{ height: "85%" }}
                                 data={allTask}
                                 renderItem={AllView}
+                                ListEmptyComponent={() => (!allTask.length ?
+                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                                    : null)}
+                                refreshing={refreshing}
+                                onRefresh={handleRefresh}
+                                onEndReached={() => fetchNextItems()}
+                                keyExtractor={item => item.id}
                             />
                             // <Text>test</Text>
                             :
@@ -489,14 +500,14 @@ export default function Task_Manager({ navigation }) {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                        <TouchableOpacity
+                        <Pressable
                             style={{ marginLeft: '3%' }}
-                            onPress={showDatepicker}
+                        // onPress={showDatepicker}
                         >
                             <View style={styles.pickers}>
                                 <Image
                                     style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                                    source={require('../../images/pikerCalander.png')}
+                                    source={require('../../images/DOB.png')}
                                 />
                                 {show && (
                                     <DateTimePicker
@@ -512,22 +523,22 @@ export default function Task_Manager({ navigation }) {
                                 }
                                 {Platform.OS == 'ios' ? <View>
                                     {text == true ?
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', }}>From</Text>
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', }}>From</Text>
                                         :
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                        null
                                     }
                                 </View>
                                     :
                                     <View>
                                         {text == true ?
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', paddingRight: '15%' }}>From</Text>
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', paddingRight: '15%' }}>From</Text>
                                             :
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                         }
                                     </View>
                                 }
                             </View>
-                        </TouchableOpacity>
+                        </Pressable>
 
                         <Dropdown
                             style={styles.dropdown3}
@@ -560,7 +571,6 @@ export default function Task_Manager({ navigation }) {
                     }
 
                     <Pressable
-                        // style={[styles.button2, styles.buttonClose]}
                         style={styles.updateBtn}
                         onPress={() => EditFunction(temObject)} >
                         <Text style={styles.textStyle}>Update</Text>
@@ -607,25 +617,19 @@ export default function Task_Manager({ navigation }) {
                     <Text style={styles.askSubtitle}>
                         you want to delete this{'\n'} Task ?</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-
-                        <Pressable
-                            style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
-                            onPress={() => CencelFunction()}
-                        >
+                        <Pressable style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+                            onPress={() => CencelFunction()}>
                             <Text style={styles.askBtnText}>NO</Text>
                         </Pressable>
                         <View style={{ margin: '5%' }} />
-                        <Pressable
-                            style={[styles.askBtn, { paddingHorizontal: '5%' }]}
-                            onPress={() => DeleteFunction()}
-                        >
+                        <Pressable style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+                            onPress={() => DeleteFunction()}  >
                             <Text style={styles.askBtnText}>YES</Text>
                         </Pressable>
                     </View>
                     <View style={{ margin: '2%' }} />
                 </View>
             </Modal>
-
         </View >
     );
 }

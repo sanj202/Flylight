@@ -87,7 +87,8 @@ export default function Notifications({ navigation, route }) {
                     );
                 }}
                 onPressLeft={() => {
-                    navigation.goBack()
+                    // navigation.goBack()
+                    navigation.OpenDrawer()
                 }}
 
                 renderRight={() => {

@@ -295,8 +295,8 @@ export default function Contact({ navigation }) {
         <View style={{ flex: 1, backgroundColor: '#FAFAFC' }}>
             <Header style={{ height: "16%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Contacts'
                 onPressRight={() => { navigation.navigate('Notification') }}

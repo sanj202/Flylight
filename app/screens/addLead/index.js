@@ -20,7 +20,6 @@ export default function AddContact({ navigation, route }) {
     const [fname, setfname] = useState("")
     const [lname, setlname] = useState("")
     const [gender, setgender] = useState(null);
-    const [isFocus2, setIsFocus2] = useState(false);
     const [phone, setphone] = useState("")
     const [Aphone, setAphone] = useState("")
     const [email, setemail] = useState("")
@@ -31,17 +30,14 @@ export default function AddContact({ navigation, route }) {
     const [Address, setAddress] = useState("")
     const [City, setCity] = useState("")
     const [State, setState] = useState(null)
-    const [isFocus5, setIsFocus5] = useState(false);
-    const [Country, setCountry] = useState("")
+    const [Country, setCountry] = useState("India")
     const [ZipCode, setZipCode] = useState("")
     const [LeadSource, setLeadSource] = useState("")
     const [LeadStatus, setLeadStatus] = useState(null);
-    const [isFocus3, setIsFocus3] = useState(false);
     const [Industry, setIndustry] = useState("")
     const [employee, setemployee] = useState("")
     const [revenue, setrevenue] = useState("")
     const [campaign, setcampaign] = useState(null);
-    const [isFocus4, setIsFocus4] = useState(false);
     const [description, setdescription] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
 
@@ -76,42 +72,44 @@ export default function AddContact({ navigation, route }) {
     const [text, settext] = useState(true)
 
     const onChangeFrom = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(Platform.OS === 'ios');
-        setDate(currentDate)
+        if (event.type == 'dismissed') {
+            setShow(!show);
+        }
+        else {
+            const currentDate = selectedDate || date;
+            setShow(Platform.OS === 'ios');
+            setDate(currentDate)
+            settext(false)
+        }
     };
     const showMode = (currentMode) => {
         setShow(!show);
         setMode(currentMode);
     };
     const showDatepicker = () => {
-        settext(false)
         showMode('date');
     };
 
     useEffect(() => {
-  if (loginData  && isFocused) {
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                // dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-                dispatch(leadAction.CampaignList(data, loginData.data.token));
-                dispatch(leadAction.LeadStatusList(data, loginData.data.token));
-                dispatch(leadAction.StateList(data, loginData.data.token));
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
         }
-    }, [loginData, isFocused])
+        dispatch(leadAction.CampaignList(data, loginData.data.token));
+        dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+        dispatch(leadAction.StateList(data, loginData.data.token));
+    }, [isFocused])
 
     useEffect(() => {
         if (ZipCode) {
             if (ZipCode.length == 6) {
-                    const data = {
-                        uid: loginData.data.uid,
-                        zipcode: ZipCode
-                    }
-                    dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
+                const data = {
+                    uid: loginData.data.uid,
+                    zipcode: ZipCode
                 }
+                dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
+            }
             else {
                 setState(null)
                 setCity('')
@@ -152,8 +150,6 @@ export default function AddContact({ navigation, route }) {
 
             }
         }
-        else {
-        }
     }, [campaignList])
 
     useEffect(() => {
@@ -165,17 +161,12 @@ export default function AddContact({ navigation, route }) {
             else {
             }
         }
-        else {
-        }
     }, [leadstatusList])
 
     useEffect(() => {
         if (stateList) {
-            // console.log("state........................",stateList)
             setstateData(stateList.states && stateList.states.map((item, index) =>
                 item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
-        }
-        else {
         }
     }, [stateList])
 
@@ -194,8 +185,6 @@ export default function AddContact({ navigation, route }) {
                 setState(null)
                 setCity('')
             }
-        }
-        else {
         }
     }, [ZipList])
 
@@ -216,9 +205,9 @@ export default function AddContact({ navigation, route }) {
         else if (phone == "") {
             ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);
         }
-        else if (Aphone == "") {
-            ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT);
-        }
+        // else if (Aphone == "") {
+        //     ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT);
+        // }
         else if (email == "") {
             ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT);
         }
@@ -227,40 +216,40 @@ export default function AddContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-                    const data = {
-                        profile_id: loginData.data.cProfile,
-                        created_by: loginData.data.cProfile,
-                        modified_by: loginData.data.cProfile,
-                        org_uid: loginData.data.org_uid,
-                        uid: loginData.data.uid,
-                        title: title,
-                        first_name: fname,
-                        last_name: lname,
-                        dob: formateDate,
-                        gender: gender,
-                        phone: phone,
-                        phone2: Aphone,
-                        email: email,
-                        email2: Aemail,
-                        company: companyName,
-                        website: website,
-                        fax: fax,
-                        address: Address,
-                        zip: ZipCode,
-                        state: State,
-                        city: City,
-                        country: Country,
-                        lead_source: LeadSource,
-                        lead_status: LeadStatus,
-                        industry: Industry,
-                        number_of_employee: employee,
-                        annual_revenue: revenue,
-                        description: description,
-                        campaign: campaign,
-                    }
-                    dispatch(leadAction.addLaed(data, loginData.data.token,));
-                    setIsLodding(true) 
+            const data = {
+                profile_id: loginData.data.cProfile,
+                created_by: loginData.data.cProfile,
+                modified_by: loginData.data.cProfile,
+                org_uid: loginData.data.org_uid,
+                uid: loginData.data.uid,
+                title: title,
+                first_name: fname,
+                last_name: lname,
+                dob: formateDate,
+                gender: gender,
+                phone: phone,
+                phone2: Aphone,
+                email: email,
+                email2: Aemail,
+                company: companyName,
+                website: website,
+                fax: fax,
+                address: Address,
+                zip: ZipCode,
+                state: State,
+                city: City,
+                country: Country,
+                lead_source: LeadSource,
+                lead_status: LeadStatus,
+                industry: Industry,
+                number_of_employee: employee,
+                annual_revenue: revenue,
+                description: description,
+                campaign: campaign,
             }
+            dispatch(leadAction.addLaed(data, loginData.data.token,));
+            setIsLodding(true)
+        }
     }
 
     useEffect(() => {
@@ -269,9 +258,9 @@ export default function AddContact({ navigation, route }) {
                 setIsLodding(false)
                 setModalVisible(true)
                 setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-                setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-                setZipCode(''), setdescription(''), setcampaign(null),settext(true),setDate(new Date())
+                    setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+                    setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+                    setZipCode(''), setdescription(''), setcampaign(null), settext(true), setDate(new Date())
                 navigation.navigate('lead_manager')
                 dispatch(leadAction.clearResponse());
             }
@@ -298,11 +287,12 @@ export default function AddContact({ navigation, route }) {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 ,height:height,width:width}}>
             <Header
                 // style={{ height: "14%" }}
                 onPressLeft={() => {
-                    navigation.goBack()
+                    // navigation.goBack()
+                    navigation.openDrawer()
                 }}
                 title='Add Lead'
                 onPressRight={() => {
@@ -352,6 +342,9 @@ export default function AddContact({ navigation, route }) {
                             value={title}
                             onChangeText={e1 => settitle(e1)}
                             placeholder="Lead Title" />
+                        {!title.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -364,6 +357,9 @@ export default function AddContact({ navigation, route }) {
                             value={fname}
                             onChangeText={e2 => setfname(e2)}
                             placeholder="First Name" />
+                        {!fname.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -376,12 +372,15 @@ export default function AddContact({ navigation, route }) {
                             value={lname}
                             onChangeText={e3 => setlname(e3)}
                             placeholder="Last Name" />
+                        {!lname.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <TouchableOpacity
                         style={{
-                            borderWidth: 0.5,
-                            borderColor: '#C3C7E5',
+                            borderWidth: 1,
+                            borderColor: '#000000',
                             borderRadius: 10,
                             paddingVertical: 11,
                             marginTop: '2%'
@@ -400,23 +399,27 @@ export default function AddContact({ navigation, route }) {
                                     // is24Hour={true}
                                     value={date}
                                     mode={mode}
+                                    maximumDate={new Date(moment().subtract(20, "years"))}
                                     display="default"
                                     onChange={onChangeFrom}
                                 />
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {text == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Date of Birth</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Date of Birth</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {text == true ?
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of Birth</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of Birth</Text>
+                                            <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                                        </View>
                                         :
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
@@ -429,16 +432,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={data}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Select Gender'
                             value={gender}
-                            onFocus={() => setIsFocus2(true)}
-                            onBlur={() => setIsFocus2(false)}
                             onChange={item => {
                                 setgender(item.value);
-                                setIsFocus2(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -446,6 +448,13 @@ export default function AddContact({ navigation, route }) {
                                         style={[styles.icon, { height: 22, width: 22 }]}
                                         source={require('../../images/transgender.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {gender == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
@@ -465,6 +474,9 @@ export default function AddContact({ navigation, route }) {
                             keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
+                        {!phone.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -483,6 +495,9 @@ export default function AddContact({ navigation, route }) {
                             onChangeText={e6 => setAphone(e6)}
                             placeholder="Alternate Mobile Number"
                         />
+                        {/* {!Aphone.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null} */}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -498,6 +513,9 @@ export default function AddContact({ navigation, route }) {
                             value={email}
                             onChangeText={e7 => setemail(e7)}
                             placeholder="Enter Email" />
+                        {!email.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -513,6 +531,9 @@ export default function AddContact({ navigation, route }) {
                             value={Aemail}
                             onChangeText={e8 => setAemail(e8)}
                             placeholder="Enter Alternate Email" />
+                        {/* {!Aemail.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null} */}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -596,16 +617,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={stateData}
+                            search={true}
+                            searchPlaceholder='Search'
                             maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='State'
                             value={State}
-                            onFocus={() => setIsFocus5(true)}
-                            onBlur={() => setIsFocus5(false)}
                             onChange={item => {
                                 setState(item.value);
-                                setIsFocus5(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -651,16 +671,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={leadstatusData}
+                            search={true}
+                            searchPlaceholder='Search'
                             maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Lead Status'
                             value={LeadStatus}
-                            onFocus={() => setIsFocus3(true)}
-                            onBlur={() => setIsFocus3(false)}
                             onChange={item => {
                                 setLeadStatus(item.value);
-                                setIsFocus3(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -668,6 +687,14 @@ export default function AddContact({ navigation, route }) {
                                         style={[styles.icon, { height: 18, width: 25, marginRight: '-0.5%', marginTop: '5%' }]}
                                         source={require('../../images/leadDetail.png')}
                                     />
+                                </View>
+                            )}
+
+                            renderRightIcon={() => (
+                                <View>
+                                    {LeadStatus == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
@@ -735,11 +762,8 @@ export default function AddContact({ navigation, route }) {
                             valueField="value"
                             placeholder='Campaign'
                             value={campaign}
-                            onFocus={() => setIsFocus4(true)}
-                            onBlur={() => setIsFocus4(false)}
                             onChange={item => {
                                 setcampaign(item.value);
-                                setIsFocus4(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>

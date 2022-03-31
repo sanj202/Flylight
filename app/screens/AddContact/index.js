@@ -283,12 +283,12 @@ export default function AddContact({ navigation, route }) {
   }, [Data])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, height: height, width: width }}>
       <Header
         // style={{ height: "12%" }}
         onPressLeft={() => {
-          // navigation.openDrawer()
-          navigation.goBack()
+          navigation.openDrawer()
+          // navigation.goBack()
         }}
         title='Add Contact'
         onPressRight={() => {
@@ -338,6 +338,9 @@ export default function AddContact({ navigation, route }) {
               value={title}
               onChangeText={e1 => settitle(e1)}
               placeholder="Contact Title" />
+            {!title.length ?
+              <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+              : null}
           </View>
 
           <View style={styles.inputFields}>
@@ -350,6 +353,9 @@ export default function AddContact({ navigation, route }) {
               value={fname}
               onChangeText={e2 => setfname(e2)}
               placeholder="First Name" />
+            {!fname.length ?
+              <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+              : null}
           </View>
 
           <View style={styles.inputFields}>
@@ -362,11 +368,14 @@ export default function AddContact({ navigation, route }) {
               value={lname}
               onChangeText={e3 => setlname(e3)}
               placeholder="Last Name" />
+            {!lname.length ?
+              <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+              : null}
           </View>
 
           <TouchableOpacity
             style={{
-              borderWidth: 0.5,
+              borderWidth: 1,
               borderColor: '#000000',
               borderRadius: 10,
               paddingVertical: 11,
@@ -393,17 +402,20 @@ export default function AddContact({ navigation, route }) {
               )}
               {Platform.OS == 'ios' ? <View>
                 {text == true ?
-                  <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                  <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}></Text>
                   :
-                  <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                  mull
                 }
               </View>
                 :
                 <View>
                   {text == true ?
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of Birth</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of Birth</Text>
+                      <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                    </View>
                     :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                   }
                 </View>
               }
@@ -437,6 +449,13 @@ export default function AddContact({ navigation, route }) {
                   />
                 </View>
               )}
+              renderRightIcon={() => (
+                <View>
+                    {gender == null ?
+                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                        : null}
+                </View>
+            )}
             />
           </View>
 
@@ -452,6 +471,9 @@ export default function AddContact({ navigation, route }) {
               maxLength={14}
               onChangeText={e5 => setphone(e5)}
               placeholder="Enter Mobile Number" />
+               {!phone.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
           </View>
 
           <View style={styles.inputFields}>
@@ -482,6 +504,9 @@ export default function AddContact({ navigation, route }) {
               value={email}
               onChangeText={e7 => setemail(e7)}
               placeholder="Enter Email" />
+               {!email.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
           </View>
 
           <View style={styles.inputFields}>
@@ -650,6 +675,13 @@ export default function AddContact({ navigation, route }) {
                   />
                 </View>
               )}
+              renderRightIcon={() => (
+                <View>
+                    {LeadStatus == null ?
+                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                        : null}
+                </View>
+            )}
             />
           </View>
 

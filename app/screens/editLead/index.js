@@ -21,7 +21,6 @@ export default function AddContact({ navigation, route }) {
     const [fname, setfname] = useState("")
     const [lname, setlname] = useState("")
     const [gender, setgender] = useState(null);
-    const [isFocus2, setIsFocus2] = useState(false);
     const [phone, setphone] = useState("")
     const [Aphone, setAphone] = useState("")
     const [email, setemail] = useState("")
@@ -32,17 +31,14 @@ export default function AddContact({ navigation, route }) {
     const [Address, setAddress] = useState("")
     const [City, setCity] = useState("")
     const [State, setState] = useState(null)
-    const [isFocus5, setIsFocus5] = useState(false);
     const [Country, setCountry] = useState("")
     const [ZipCode, setZipCode] = useState("")
     const [LeadSource, setLeadSource] = useState("")
     const [LeadStatus, setLeadStatus] = useState(null);
-    const [isFocus3, setIsFocus3] = useState(false);
     const [Industry, setIndustry] = useState("")
     const [employee, setemployee] = useState("")
     const [revenue, setrevenue] = useState("")
     const [campaign, setcampaign] = useState(null);
-    const [isFocus4, setIsFocus4] = useState(false);
     const [description, setdescription] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
 
@@ -91,15 +87,10 @@ export default function AddContact({ navigation, route }) {
 
     useEffect(() => {
         setIsLodding(true)
-        UpdateStates()
-    }, [route.params?.Edata])
-
-    const UpdateStates = () => {
         settitle(route.params.Edata ? route.params.Edata.title : "")
         setfname(route.params.Edata ? route.params.Edata.first_name : "")
         setlname(route.params.Edata ? route.params.Edata.last_name : "")
         setgender(route.params.Edata ? route.params.Edata.gender : null);
-        setIsFocus2(route.params.Edata.gender ? true : false);
         setphone(route.params.Edata ? route.params.Edata.phone : "")
         setAphone(route.params.Edata ? route.params.Edata.phone2 : "")
         setemail(route.params.Edata ? route.params.Edata.email : "")
@@ -110,51 +101,45 @@ export default function AddContact({ navigation, route }) {
         setAddress(route.params.Edata ? route.params.Edata.address : "")
         setCity(route.params.Edata ? route.params.Edata.city : "")
         setState(route.params.Edata ? route.params.Edata.state : null)
-        setIsFocus5(route.params.Edata.state ? true : false);
         setCountry(route.params.Edata ? route.params.Edata.country : "")
         setZipCode(route.params.Edata ? route.params.Edata.zip : "")
         setLeadSource(route.params.Edata ? route.params.Edata.lead_source : "")
         setLeadStatus(route.params.Edata ? route.params.Edata.lead_status : null);
-        setIsFocus3(route.params.Edata.lead_status ? true : false);
         setIndustry(route.params.Edata ? route.params.Edata.industry : "")
         setemployee(route.params.Edata ? route.params.Edata.number_of_employee : "")
         setrevenue(route.params.Edata ? route.params.Edata.annual_revenue : "")
         setcampaign(route.params.Edata ? route.params.Edata.campaign : null);
-        setIsFocus4(route.params.Edata.campaign ? true : false);
         setdescription(route.params.Edata ? route.params.Edata.description : '');
-        setDate(route.params.Edata ?  new Date(route.params.Edata.dob)  : new Date())
+        setDate(route.params.Edata ? new Date(route.params.Edata.dob) : new Date())
         settext(route.params.Edata.dob ? false : true)
         setIsLodding(false)
-    }
+    }, [route.params])
+
     useEffect(() => {
-        if (loginData  && isFocused) {
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                // dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-                dispatch(leadAction.CampaignList(data, loginData.data.token));
-                dispatch(leadAction.LeadStatusList(data, loginData.data.token));
-                dispatch(leadAction.StateList(data, loginData.data.token));
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
         }
-    }, [loginData, isFocused])
+        // dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+        dispatch(leadAction.CampaignList(data, loginData.data.token));
+        dispatch(leadAction.LeadStatusList(data, loginData.data.token));
+        dispatch(leadAction.StateList(data, loginData.data.token));
+    }, [isFocused])
 
     useEffect(() => {
         if (ZipCode) {
             if (ZipCode.length == 6) {
-                    const data = {
-                        uid: loginData.data.uid,
-                        zipcode: ZipCode
-                    }
-                    dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
+                const data = {
+                    uid: loginData.data.uid,
+                    zipcode: ZipCode
+                }
+                dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
             }
             else {
                 setState(null)
                 setCity('')
             }
-        }
-        else {
         }
     }, [ZipCode])
 
@@ -189,8 +174,6 @@ export default function AddContact({ navigation, route }) {
 
             }
         }
-        else {
-        }
     }, [campaignList])
 
     useEffect(() => {
@@ -202,8 +185,6 @@ export default function AddContact({ navigation, route }) {
             else {
             }
         }
-        else {
-        }
     }, [leadstatusList])
 
     useEffect(() => {
@@ -211,8 +192,6 @@ export default function AddContact({ navigation, route }) {
             // console.log("state........................",stateList)
             setstateData(stateList.states && stateList.states.map((item, index) =>
                 item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
-        }
-        else {
         }
     }, [stateList])
 
@@ -231,8 +210,6 @@ export default function AddContact({ navigation, route }) {
                 setState(null)
                 setCity('')
             }
-        }
-        else {
         }
     }, [ZipList])
 
@@ -264,39 +241,39 @@ export default function AddContact({ navigation, route }) {
         }
         else {
             let formateDate = moment(date).format("YYYY-MM-DD")
-                    const data = {
-                        profile_id: loginData.data.cProfile,
-                        created_by: loginData.data.cProfile,
-                        modified_by: loginData.data.cProfile,
-                        org_uid: loginData.data.org_uid,
-                        uid: loginData.data.uid,
-                        lead_id: route.params.Edata.id, first_name: fname, last_name: lname, title: title, email: email,
-                        email2: Aemail, dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website,
-                        lead_source: LeadSource, lead_status: LeadStatus, industry: Industry, number_of_employee: employee,
-                        annual_revenue: revenue, company: companyName, address: Address, city: City, state: State, country: Country,
-                        zip: ZipCode, description: description, campaign: campaign,
-                    }
-                    dispatch(leadAction.addLaed(data, loginData.data.token,));
-                    // }
-                    // else {
-                    //     const data = {
-                    //         profile_id: loginData.data.cProfile,
-                    //         created_by: loginData.data.cProfile,
-                    //         modified_by: loginData.data.cProfile,
-                    //         org_uid: loginData.data.org_uid,
-                    //         uid: loginData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
-                    //         dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
-                    //         lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-                    //         state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
-                    //     }
-                    //     dispatch(leadAction.addLaed(data, loginData.data.token,));
-                    //     // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                    //     //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-                    //     //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-                    //     //     setZipCode(''), setdescription(''), setcampaign(null)
-                    // }
-                    setIsLodding(true)
-                }
+            const data = {
+                profile_id: loginData.data.cProfile,
+                created_by: loginData.data.cProfile,
+                modified_by: loginData.data.cProfile,
+                org_uid: loginData.data.org_uid,
+                uid: loginData.data.uid,
+                lead_id: route.params.Edata.id, first_name: fname, last_name: lname, title: title, email: email,
+                email2: Aemail, dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website,
+                lead_source: LeadSource, lead_status: LeadStatus, industry: Industry, number_of_employee: employee,
+                annual_revenue: revenue, company: companyName, address: Address, city: City, state: State, country: Country,
+                zip: ZipCode, description: description, campaign: campaign,
+            }
+            dispatch(leadAction.addLaed(data, loginData.data.token,));
+            // }
+            // else {
+            //     const data = {
+            //         profile_id: loginData.data.cProfile,
+            //         created_by: loginData.data.cProfile,
+            //         modified_by: loginData.data.cProfile,
+            //         org_uid: loginData.data.org_uid,
+            //         uid: loginData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
+            //         dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
+            //         lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
+            //         state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
+            //     }
+            //     dispatch(leadAction.addLaed(data, loginData.data.token,));
+            //     // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
+            //     //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+            //     //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+            //     //     setZipCode(''), setdescription(''), setcampaign(null)
+            // }
+            setIsLodding(true)
+        }
     }
 
     useEffect(() => {
@@ -305,9 +282,9 @@ export default function AddContact({ navigation, route }) {
                 setIsLodding(false)
                 setModalVisible(true)
                 setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-                setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-                setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-                setZipCode(''), setdescription(''), setcampaign(null),settext(true),setDate(new Date())
+                    setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
+                    setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
+                    setZipCode(''), setdescription(''), setcampaign(null), settext(true), setDate(new Date())
                 navigation.navigate('lead_manager')
                 dispatch(leadAction.clearResponse());
             }
@@ -322,9 +299,6 @@ export default function AddContact({ navigation, route }) {
                 dispatch(leadAction.clearResponse());
             }
         }
-        else {
-            setIsLodding(false)
-        }
     }, [leadData])
 
     const addLeadSuccesfully = () => {
@@ -334,11 +308,12 @@ export default function AddContact({ navigation, route }) {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 ,width:width ,height:height}}>
             <Header
                 // style={{ height: "14%" }}
                 onPressLeft={() => {
-                    navigation.goBack()
+                    // navigation.goBack()
+                    navigation.openDrawer()
                 }}
                 title='Edit Lead'
                 onPressRight={() => {
@@ -347,37 +322,7 @@ export default function AddContact({ navigation, route }) {
             />
 
             <ScrollView style={{ width: width, height: height }}>
-                <View style={{ margin: '3%', marginTop: '2%' }}>
-
-                    {/* <View style={{ marginTop: '2%' }}>
-                        <Dropdown
-                            style={styles.dropdown3}
-                            placeholderStyle={styles.placeholderStyle3}
-                            selectedTextStyle={styles.selectedTextStyle3}
-                            iconStyle={styles.iconStyle3}
-                            data={leadOwnerData}
-                            maxHeight={80}
-                            labelField="label"
-                            valueField="value"
-                            placeholder={!isFocus ? 'Lead Owner' : '...'}
-                            value={LeadOwner}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
-                            onChange={item => {
-                                setLeadOwner(item.value);
-                                setIsFocus(false);
-                            }}
-                            renderLeftIcon={() => (
-                                <View>
-                                    <Image
-                                        style={[styles.icon, { height: 26, width: 20 }]}
-                                        source={require('../../images/list.png')}
-                                    />
-                                </View>
-                            )}
-                        />
-                    </View> */}
-
+                <View style={{ marginHorizontal: '3%', marginBottom: '2%' }}>
                     <View style={styles.inputFields}>
                         <Image
                             style={styles.icon}
@@ -388,6 +333,9 @@ export default function AddContact({ navigation, route }) {
                             value={title}
                             onChangeText={e1 => settitle(e1)}
                             placeholder="Lead Title" />
+                        {!title.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -400,6 +348,9 @@ export default function AddContact({ navigation, route }) {
                             value={fname}
                             onChangeText={e2 => setfname(e2)}
                             placeholder="First Name" />
+                        {!fname.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -412,12 +363,15 @@ export default function AddContact({ navigation, route }) {
                             value={lname}
                             onChangeText={e3 => setlname(e3)}
                             placeholder="Last Name" />
+                        {!lname.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <TouchableOpacity
                         style={{
-                            borderWidth: 0.5,
-                            borderColor: '#C3C7E5',
+                            borderWidth: 1,
+                            borderColor: '#000000',
                             borderRadius: 10,
                             paddingVertical: 11,
                             marginTop: '2%'
@@ -442,17 +396,20 @@ export default function AddContact({ navigation, route }) {
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {text == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Date of Birth</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Date of Birth</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {text == true ?
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Date of Birth</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of Birth</Text>
+                                            <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                                        </View>
                                         :
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
@@ -465,16 +422,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={data}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Select Gender'
                             value={gender}
-                            onFocus={() => setIsFocus2(true)}
-                            onBlur={() => setIsFocus2(false)}
                             onChange={item => {
                                 setgender(item.value);
-                                setIsFocus2(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -482,6 +438,13 @@ export default function AddContact({ navigation, route }) {
                                         style={[styles.icon, { height: 22, width: 22 }]}
                                         source={require('../../images/transgender.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {gender == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
@@ -501,6 +464,9 @@ export default function AddContact({ navigation, route }) {
                             keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
+                        {!phone.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -534,6 +500,9 @@ export default function AddContact({ navigation, route }) {
                             value={email}
                             onChangeText={e7 => setemail(e7)}
                             placeholder="Enter Email" />
+                        {!email.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -632,16 +601,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={stateData}
+                            search={true}
+                            searchPlaceholder='Search'
                             maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='State'
                             value={State}
-                            onFocus={() => setIsFocus5(true)}
-                            onBlur={() => setIsFocus5(false)}
                             onChange={item => {
                                 setState(item.value);
-                                setIsFocus5(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -687,16 +655,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={leadstatusData}
+                            search={true}
+                            searchPlaceholder='Search'
                             maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Lead Status'
                             value={LeadStatus}
-                            onFocus={() => setIsFocus3(true)}
-                            onBlur={() => setIsFocus3(false)}
                             onChange={item => {
                                 setLeadStatus(item.value);
-                                setIsFocus3(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -704,6 +671,14 @@ export default function AddContact({ navigation, route }) {
                                         style={[styles.icon, { height: 18, width: 25, marginRight: '-0.5%', marginTop: '5%' }]}
                                         source={require('../../images/leadDetail.png')}
                                     />
+                                </View>
+                            )}
+
+                            renderRightIcon={() => (
+                                <View>
+                                    {LeadStatus == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
@@ -766,16 +741,15 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={campaignData}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Campaign'
                             value={campaign}
-                            onFocus={() => setIsFocus4(true)}
-                            onBlur={() => setIsFocus4(false)}
                             onChange={item => {
                                 setcampaign(item.value);
-                                setIsFocus4(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>

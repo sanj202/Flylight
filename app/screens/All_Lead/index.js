@@ -417,8 +417,8 @@ export default function LeadAll({ navigation, route }) {
           );
         }}
         onPressLeft={() => {
-          navigation.goBack()
-          // navigation.openDrawer()
+          // navigation.goBack()
+          navigation.openDrawer()
         }}
 
         renderRight={() => {

@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#3373F3',
     borderRadius: 10,
     // alignSelf: 'center',
-    marginLeft:'10%',
-    marginRight:'10%'
+    marginLeft: '10%',
+    marginRight: '10%'
   },
   textButton: {
     padding: 10,
@@ -164,14 +164,69 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C3C7E5',
     borderRadius: 10,
+    marginHorizontal:'3%',
+    marginBottom:'3%'
   },
   icon: {
     height: 24,
     width: 22,
     marginRight: '2%',
-    marginTop:'3%',
-    marginLeft:'2%'
+    marginTop: '3%',
+    marginLeft: '2%'
   },
+  bottomSheet: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    marginHorizontal: '3%',
+    justifyContent:'center'
+  },
+  askModel: {
+    marginHorizontal: '2%',
+    marginTop: '40%',
+    backgroundColor: "white",
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+},
+askTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor: '#3373F3',
+    color: 'white',
+    textAlign: "center",
+    paddingVertical: '3%'
+},
+askSubtitle: {
+    fontSize: 15,
+    color: 'red',
+    textAlign: "center"
+},
+askBtn: {
+    paddingVertical: '2%',
+    borderRadius: 10,
+    backgroundColor: "#2196F3",
+},
+askBtnText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20,
+},
+askTitleR: {
+    margin: '5%',
+    marginRight: '3%',
+    marginTop: '-11.5%',
+    alignSelf: 'flex-end',
+    padding: 10
+},
+DetailCampTitle: {
+  fontSize: 14,
+  color: '#000000',
+  fontFamily: 'Roboto'
+},
 
 });
 

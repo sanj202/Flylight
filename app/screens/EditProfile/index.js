@@ -122,8 +122,8 @@ export default function EditProfile({ navigation, route }) {
             <Header
                 // style={{ height: "16%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Edit Profile'
 

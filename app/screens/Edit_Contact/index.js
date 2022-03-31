@@ -298,8 +298,8 @@ export default function EditContact({ navigation, route }) {
         <View style={{ flex: 1 }}>
             <Header
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Edit Contact'
                 onPressRight={() => {
@@ -348,6 +348,9 @@ export default function EditContact({ navigation, route }) {
                             value={title}
                             onChangeText={e1 => settitle(e1)}
                             placeholder="Contact Title" />
+                        {!title.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -362,6 +365,9 @@ export default function EditContact({ navigation, route }) {
                             value={fname}
                             onChangeText={e2 => setfname(e2)}
                             placeholder="First Name" />
+                        {!fname.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -376,6 +382,9 @@ export default function EditContact({ navigation, route }) {
                             value={lname}
                             onChangeText={e3 => setlname(e3)}
                             placeholder="Last Name" />
+                        {!lname.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <TouchableOpacity
@@ -415,7 +424,10 @@ export default function EditContact({ navigation, route }) {
                                 :
                                 <View>
                                     {text == true ?
-                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of Birth</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of Birth</Text>
+                                            <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                                        </View>
                                         :
                                         <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                     }
@@ -449,6 +461,13 @@ export default function EditContact({ navigation, route }) {
                                     />
                                 </View>
                             )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {gender == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
+                                </View>
+                            )}
                         />
                     </View>
 
@@ -464,6 +483,9 @@ export default function EditContact({ navigation, route }) {
                             keyboardType='numeric'
                             onChangeText={e5 => setphone(e5)}
                             placeholder="Enter Mobile Number" />
+                        {!phone.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -494,6 +516,9 @@ export default function EditContact({ navigation, route }) {
                             value={email}
                             onChangeText={e7 => setemail(e7)}
                             placeholder="Enter Email" />
+                        {!email.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={styles.inputFields}>
@@ -666,6 +691,13 @@ export default function EditContact({ navigation, route }) {
                                         style={[styles.icon, { height: 19, width: 25, }]}
                                         source={require('../../images/leadDetail.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {LeadStatus == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />

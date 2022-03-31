@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
   },
   dropdown3: {
     height: 50,
-    borderColor: 'gray',
-    borderWidth: 0.5,
+    borderColor: '#000000',
+    borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
   },
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle3: {
     fontSize: 16,
+    color:'#000000'
   },
   iconStyle3: {
     width: 20,

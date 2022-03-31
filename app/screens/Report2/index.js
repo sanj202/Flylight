@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ActivityIndicator, ScrollView, View, Text, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import { ActivityIndicator, ScrollView, View, Text, TouchableOpacity, Dimensions, Image, ToastAndroid } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper'
 import styles from "./styles";
@@ -7,10 +7,10 @@ import Header from '../../component/header'
 import { reportAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 
-export default function Report({ navigation }) {
+export default function Report2({ navigation }) {
     const [value, setValue] = useState(null);
     const [IsLodding, setIsLodding] = useState(true)
-
+    const { width, height } = Dimensions.get('window');
     const [Report, setReport] = useState()
     const [campaignData, setcampaignData] = useState([])
 
@@ -46,9 +46,6 @@ export default function Report({ navigation }) {
             else {
                 setIsLodding(false)
             }
-        }
-        else {
-
         }
     }, [reportData])
 
@@ -101,11 +98,12 @@ export default function Report({ navigation }) {
         dispatch(reportAction.reportList(data, loginData.data.token));
     }
     return (
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
+        <View style={{ flex: 1, backgroundColor: '#fff', width: width, height: height }}>
             <Header
-                onPressLeft={() => {
-                    navigation.goBack()
-                }}
+                onPressLeft={() => 
+                    // navigation.goBack()
+                    navigation.openDrawer() 
+                }
                 title='Reports'
                 onPressRight={() => {
                     navigation.navigate('Notification')
@@ -129,7 +127,7 @@ export default function Report({ navigation }) {
                         placeholder='Select Campaign'
                         // searchPlaceholder="Search..."
                         value={value}
-                        onChange={item => {setValue(item.value)}}
+                        onChange={item => { setValue(item.value) }}
                         renderLeftIcon={() => (
 
                             <View>
@@ -175,7 +173,7 @@ export default function Report({ navigation }) {
 
                     <Card style={[styles.card, { backgroundColor: '#6FD3F5' }]}>
                         <TouchableOpacity
-                         onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}
+                            onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}
                         >
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
@@ -218,7 +216,7 @@ export default function Report({ navigation }) {
 
                     <Card style={[styles.card, { backgroundColor: '#2AEF4B' }]}>
                         <TouchableOpacity
-                         onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}
+                            onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}
                         >
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>
@@ -261,7 +259,7 @@ export default function Report({ navigation }) {
 
                     <Card style={[styles.card, { backgroundColor: '#EF2AE2' }]}>
                         <TouchableOpacity
-                         onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}
+                            onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}
                         >
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                                 <View>

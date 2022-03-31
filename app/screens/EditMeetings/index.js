@@ -330,8 +330,8 @@ export default function AddContact({ navigation, route }) {
             <Header
                 // style={{ height: "12%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Edit Meeting'
                 onPressRight={() => {

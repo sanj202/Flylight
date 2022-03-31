@@ -132,8 +132,8 @@ export default function Organization({ navigation }) {
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
-                    //   navigation.openDrawer()
-                    navigation.goBack()
+                      navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Organizations'
                 onPressRight={() => {

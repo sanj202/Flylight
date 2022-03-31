@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
   inputFields: {
     flexDirection: 'row',
-    borderWidth: 0.5,
+    borderWidth: 1,
     borderColor: '#000000',
     borderRadius: 10,
     marginTop: '3%',
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   dropdown3: {
     height: 45,
     borderColor: '#000000',
-    borderWidth: 0.5,
+    borderWidth:1,
     borderRadius: 10,
     paddingHorizontal: 8,
   },

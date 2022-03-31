@@ -229,8 +229,8 @@ export default function AddContact({ navigation, route }) {
       <Header
 
         onPressLeft={() => {
-          // navigation.openDrawer()
-          navigation.goBack()
+          navigation.openDrawer()
+          // navigation.goBack()
         }}
         title='Record Feedback'
 

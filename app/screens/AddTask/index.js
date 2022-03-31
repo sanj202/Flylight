@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import {
-    ActivityIndicator, Text, View, StyleSheet, TouchableOpacity, TextInput, FlatList,
-    Image, Button, ScrollView, Modal, Alert, Pressable, StatusBar, Dimensions, Platform, ToastAndroid
-} from 'react-native';
+import {ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList,Image, ScrollView, Modal, Dimensions,
+    Platform, ToastAndroid} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import { leadmanagerAction, leadAction, contactListAction, taskmanagerAction } from '../../redux/Actions/index'
-import { useDispatch, useSelector, connect } from 'react-redux';
+import { leadmanagerAction, contactListAction, taskmanagerAction } from '../../redux/Actions/index'
+import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation }) {
 
     const [modalVisible2, setModalVisible2] = useState(false);
-    const [ListValues, setListValues] = useState(true)
+    const [ListValues, setListValues] = useState([])
     const [TaskOwnerList, setTaskOwnerList] = useState([])
     const [TaskOwner, setTaskOwner] = useState(null)
-    const [isFocus3, setIsFocus3] = useState(false);
     const [title, settitle] = useState("")
     const [releetedToId, setreleetedToId] = useState('')
     const [releetedTo, setreleetedTo] = useState('')
@@ -26,14 +23,12 @@ export default function AddContact({ navigation }) {
     const [releetedToLname, setreleetedToLname] = useState('Person')
     const [StatusList, setStatusList] = useState([]);
     const [Status, setStatus] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
     const [TaskForList, setTaskForList] = useState([])
     const [TaskFor, setTaskFor] = useState(null)
-    const [isFocus2, setIsFocus2] = useState(false);
     const [PriorityList, setPriorityList] = useState([])
     const [Priority, setPriority] = useState(null)
-    const [isFocus1, setIsFocus1] = useState(false);
     const [Description, setDescription] = useState("")
+
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false);
     const [startdate, setstartDate] = useState(new Date());
@@ -70,23 +65,18 @@ export default function AddContact({ navigation }) {
     const contactData = useSelector(state => state.taskmanager.taskcontact)
     const TaskStatus = useSelector(state => state.taskmanager.taskstatus)
 
-
     useEffect(() => {
-        if (loginData  && isFocused) {
-                const data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
-                dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
         }
-    }, [loginData, isFocused])
+        dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
+        dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
+    }, [isFocused])
 
     useEffect(() => {
         if (leadOwner) {
-
-            // console.log('leadOwner............................................',leadOwner)
             if (leadOwner.status == "200") {
                 let userData = leadOwner.data && leadOwner.data.map((ld) => {
                     let user = { label: ld.user.name, value: ld.id }
@@ -101,10 +91,7 @@ export default function AddContact({ navigation }) {
             else if (leadOwner.status == "fail") {
             }
         }
-        else {
-        }
     }, [leadOwner])
-
 
     useEffect(() => {
         if (TaskStatus) {
@@ -118,10 +105,7 @@ export default function AddContact({ navigation }) {
             else if (TaskStatus.status == "fail") {
             }
         }
-        else {
-        }
     }, [TaskStatus])
-
 
     useEffect(() => {
         if (contactData) {
@@ -136,9 +120,6 @@ export default function AddContact({ navigation }) {
             else {
                 setIsLodding(false)
             }
-        }
-        else {
-
         }
     }, [contactData])
 
@@ -156,34 +137,41 @@ export default function AddContact({ navigation }) {
                 setIsLodding(false)
             }
         }
-        else {
-        }
     }, [Lead_OpportunityList])
 
 
     const selectOneFile = (value) => {
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                org_uid: loginData.data.org_uid,
-            }
-            if (value == 'lead') {
-                dispatch(taskmanagerAction.TaskleadList(data, loginData.data.token));
-            }
-            else if (value == 'contact') {
-                dispatch(taskmanagerAction.TaskcontactList(data, loginData.data.token));
-            }
-            else {
-                console.log('account APi..........account........................ ')
-            }
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+        }
+        if (value == 'lead') {
+            dispatch(taskmanagerAction.TaskleadList(data, loginData.data.token));
+        }
+        else if (value == 'contact') {
+            dispatch(taskmanagerAction.TaskcontactList(data, loginData.data.token));
+        }
+        else {
+            console.log('account APi..........account........................ ')
+        }
     }
 
     const AddNewCampaign = () => {
         if (title == "") {
             ToastAndroid.show("Enter Title", ToastAndroid.SHORT);
         }
+        else if (TaskFor == null) {
+            ToastAndroid.show("Select TaskFor", ToastAndroid.SHORT);
+        }
         else if (releetedTo == "") {
             ToastAndroid.show("Enter Related To", ToastAndroid.SHORT);
+        }
+        else if (releetedToId == "") {
+            ToastAndroid.show("TaskFor contact person not selected", ToastAndroid.SHORT);
+        }
+        else if (starttext == true) {
+            ToastAndroid.show("Select Due Date", ToastAndroid.SHORT);
         }
         else if (Status == null) {
             ToastAndroid.show("Select Status", ToastAndroid.SHORT);
@@ -193,24 +181,23 @@ export default function AddContact({ navigation }) {
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
-                    setIsLodding(true)
-                    const data = {
-                        uid: loginData.data.uid,
-                        org_uid: loginData.data.org_uid,
-                        profile_id:TaskOwner !== null ? TaskOwner :loginData.data.cProfile,
-                        created_by: loginData.data.cProfile,
-                        modified_by: loginData.data.cProfile,
-                        title: title,
-                        task_for: TaskFor,                               //drop lead,account
-                        task_related_to: releetedTo,                      // leead ya contact ka title
-                        task_related_to_id: releetedToId,                 // lead ya contact ki Id
-                        status: Status,
-                        priority: Priority,
-                        description: Description,
-                        due_date: formateStartDate,
-                    }
-                    dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
-           
+            setIsLodding(true)
+            const data = {
+                uid: loginData.data.uid,
+                org_uid: loginData.data.org_uid,
+                profile_id: TaskOwner !== null ? TaskOwner : loginData.data.cProfile,
+                created_by: loginData.data.cProfile,
+                modified_by: loginData.data.cProfile,
+                title: title,
+                task_for: TaskFor,                               //drop lead,account
+                task_related_to: releetedTo,                      // leead ya contact ka title
+                task_related_to_id: releetedToId,                 // lead ya contact ki Id
+                status: Status,
+                priority: Priority,
+                description: Description,
+                due_date: formateStartDate,
+            }
+            dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
         }
     }
 
@@ -233,12 +220,9 @@ export default function AddContact({ navigation }) {
             }
             setIsLodding(false)
         }
-        else {
-        }
     }, [responseAdd_Edit])
 
     const RadioSelect = (value) => {
-        // console.log('.....................', value.id, value.title, value.first_name, value.last_name)
         setreleetedToFname(value.first_name)
         setreleetedToLname(value.last_name)
         setreleetedToId(value.id)
@@ -248,18 +232,13 @@ export default function AddContact({ navigation }) {
 
     const AllView = ({ item }) => {
         return (
-            // console.log('value of ...........................', item),
             <ScrollView style={
                 releetedToId !== undefined && releetedToId == item.id ?
                     { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', backgroundColor: '#24BCFF' }
                     :
                     { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', }
             }>
-                <TouchableOpacity
-                    onPress={() => RadioSelect(item
-                        // { id: item.id, title: item.title }
-                    )}
-                >
+                <TouchableOpacity onPress={() => RadioSelect(item)}>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ width: '20%', marginLeft: '1%' }}>
                             <Text>Name</Text>
@@ -284,9 +263,8 @@ export default function AddContact({ navigation }) {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, height: height, width: width }}>
             <Header
-                // style={{ height: "12%" }}
                 onPressLeft={() => {
                     navigation.openDrawer()
                     // navigation.goBack()
@@ -296,11 +274,8 @@ export default function AddContact({ navigation }) {
                     navigation.navigate('Notification')
                 }}
             />
-
-
             <ScrollView style={{ width: width, height: height }}>
-
-                <View style={{ margin: '5%' }}>
+                <View style={{ marginHorizontal: '3%' }}>
                     <View style={{ marginTop: '2%' }}>
                         <Dropdown
                             style={styles.dropdown3}
@@ -308,16 +283,15 @@ export default function AddContact({ navigation }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={TaskOwnerList}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Task Owner'
                             value={TaskOwner}
-                            onFocus={() => setIsFocus3(true)}
-                            onBlur={() => setIsFocus3(false)}
                             onChange={item => {
                                 setTaskOwner(item.value);
-                                setIsFocus3(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
@@ -329,7 +303,6 @@ export default function AddContact({ navigation }) {
                             )}
                         />
                     </View>
-
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
@@ -342,36 +315,28 @@ export default function AddContact({ navigation }) {
                             value={title}
                             onChangeText={e1 => settitle(e1)}
                             placeholder="Title" />
+                        {!title.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
-
                     <View style={{ marginTop: '2%' }}>
-                        {/* {renderLabel()} */}
-
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={TaskForList}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="task_for"
                             valueField="task_for"
                             placeholder='Task For'
                             value={TaskFor}
-                            onFocus={() => setIsFocus2(true)}
-                            onBlur={() => setIsFocus2(false)}
-                            // onChange={item => {
-                            //     setTaskFor(item.value);
-                            //     setIsFocus2(false);
-                            // }}
-
                             onChange={item => {
-
                                 selectOneFile(item.task_for)
                                 setTaskFor(item.task_for);
-                                setIsFocus2(false);
                             }}
-
                             renderLeftIcon={() => (
                                 <View>
                                     <Image
@@ -380,60 +345,25 @@ export default function AddContact({ navigation }) {
                                     />
                                 </View>
                             )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {TaskFor == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
+                                </View>
+                            )}
                         />
                     </View>
-                    {/* {modalVisible2 == true ? null : */}
-                    {/* //  <Text style={{ paddingVertical: '1%', textAlign: 'right' }}>Name :{releetedToFname} {releetedToLname}</Text> */}
                     <View style={styles.inputFields}>
                         <Image
-                            style={[styles.icon, {
-                                height: 20, width: 18,
-                            }]}
+                            style={[styles.icon, { height: 20, width: 18 }]}
                             source={require('../../images/user.png')}
                         />
                         <Text style={{ marginTop: '4%' }}>{releetedToFname} {releetedToLname}</Text>
                     </View>
-                    {/* } */}
-
-                    {/* {modalVisible2 == true ?
-                        <View>
-                            <View style={styles.askModel}>
-
-                            <Text style={styles.askTitle}>Select</Text>
-                            <TouchableOpacity
-                                onPress={() => setModalVisible2(false)}
-                            >
-                                <Image
-                                    style={styles.askTitleR}
-                                    source={require('../../images/cross.png')}
-                                />
-                            </TouchableOpacity>
-                            {ListValues !== undefined && ListValues.length > 0 ?
-                                <View >
-                                    <FlatList
-                                        data={ListValues}
-                                        ScrollView={true}
-                                    
-                                        renderItem={AllView}
-                                    />
-                                </View>
-                                :
-                                <View>
-                                    <Text style={{ marginVertical: '10%', textAlign: 'center' }}>Data Not Available</Text>
-                                </View>
-                            }
-                            </View>
-                        </View>
-                        :
-                        <View>
-                            <Text style={{ paddingVertical: '1%' }}>{releetedToFname} {releetedToLname}</Text>
-                        </View>} */}
-
                     <View style={styles.inputFields}>
                         <Image
-                            style={[styles.icon, {
-                                height: 20, width: 18,
-                            }]}
+                            style={[styles.icon, { height: 20, width: 18 }]}
                             source={require('../../images/user.png')}
                         />
                         <TextInput
@@ -441,13 +371,14 @@ export default function AddContact({ navigation }) {
                             value={releetedTo}
                             onChangeText={e2 => setreleetedTo(e2)}
                             placeholder="Related To" />
+                        {!releetedTo.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
-
-
                     <TouchableOpacity
                         style={{
                             borderWidth: 1,
-                            borderColor: '#C3C7E5',
+                            borderColor: '#000000',
                             borderRadius: 10,
                             // marginHorizontal: '3%',
                             paddingVertical: 8,
@@ -468,104 +399,115 @@ export default function AddContact({ navigation }) {
                                     // is24Hour={true}
                                     value={startdate}
                                     mode={startmode}
+                                    minimumDate={new Date()}
                                     display="default"
                                     onChange={onChangeStartDate}
                                 />
                             )}
                             {Platform.OS == 'ios' ? <View>
                                 {starttext == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}>Due Date</Text>
+                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Due Date</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC' }}></Text>
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {starttext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>Due Date</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Due Date</Text>
+                                            <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                                        </View>
                                         :
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#BCBCBC', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
+                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
                                     }
                                 </View>
                             }
                         </View>
                     </TouchableOpacity>
-
                     <View style={{ marginTop: '2%' }}>
-                        {/* {renderLabel()} */}
-
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={StatusList}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="status"
                             valueField="id"
                             placeholder='Status'
                             value={Status}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
                             onChange={item => {
-
                                 setStatus(item.id);
-                                setIsFocus(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
                                     <Image
-                                        style={[styles.icon, { height: 22, width: 22 }]}
-                                        source={require('../../images/transgender.png')}
+                                        style={[styles.icon, { height: 25, width: 18 }]}
+                                        source={require('../../images/list.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {Status == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
                     </View>
-
                     <View style={{ marginTop: '2%' }}>
-                        {/* {renderLabel()} */}
-
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={PriorityList}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="priority"
                             valueField="id"
                             placeholder='Priority'
                             value={Priority}
-                            onFocus={() => setIsFocus1(true)}
-                            onBlur={() => setIsFocus1(false)}
                             onChange={item => {
                                 setPriority(item.id);
-                                setIsFocus1(false);
                             }}
                             renderLeftIcon={() => (
                                 <View>
                                     <Image
-                                        style={[styles.icon, { height: 22, width: 22 }]}
-                                        source={require('../../images/transgender.png')}
+                                        style={[styles.icon, { height: 25, width: 18 }]}
+                                        source={require('../../images/list.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {Priority == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
                     </View>
-
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
-                                height: 20, width: 18,
+                                height: 25, width: 18,
                             }]}
-                            source={require('../../images/user.png')}
+                            source={require('../../images/list.png')}
                         />
                         <TextInput
                             style={{ flex: 1 }}
                             value={Description}
                             onChangeText={e5 => setDescription(e5)}
                             placeholder="Description" />
+                        {!Description.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
 
@@ -573,44 +515,30 @@ export default function AddContact({ navigation }) {
                     {IsLodding == true ?
                         <ActivityIndicator size="small" color="#0000ff" />
                         :
-                        <View />}
+                        null}
 
-                    <TouchableOpacity style={styles.button}
-                        // onPress={() => setModalVisible2(!modalVisible2)}
-                        onPress={() => AddNewCampaign()}
-                    >
+                    <TouchableOpacity style={styles.button} onPress={() => AddNewCampaign()} >
                         <Text style={[styles.textButton, { fontWeight: 'bold' }]}>ADD</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-
-
             <Modal animationType="slide" transparent={true} visible={modalVisible2}
                 onRequestClose={() => { setModalVisible2(!modalVisible2); }}>
                 <View style={styles.askModel}>
-
                     <Text style={styles.askTitle}>Select</Text>
-                    <TouchableOpacity
-                        onPress={() => setModalVisible2(false)}
-                    >
-                        <Image
-                            style={styles.askTitleR}
-                            source={require('../../images/cross.png')}
-                        />
+                    <TouchableOpacity onPress={() => setModalVisible2(false)}>
+                        <Image style={styles.askTitleR}
+                            source={require('../../images/cross.png')} />
                     </TouchableOpacity>
-                    {ListValues !== undefined && ListValues.length > 0 ?
-                        <View>
-                            <FlatList
-                                data={ListValues}
-                                style={{ height: '75%' }}
-                                renderItem={AllView}
-                            />
-                        </View>
-                        :
-                        <View>
-                            <Text style={{ marginVertical: '10%', textAlign: 'center' }}>Data Not Available</Text>
-                        </View>
-                    }
+                    <FlatList
+                        data={ListValues}
+                        // style={{ height: '75%' }}
+                        renderItem={AllView}
+                        ListEmptyComponent={() => (!ListValues.length ?
+                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                            : null)}
+                        keyExtractor={item => item.id}
+                    />
                 </View>
             </Modal >
         </View >

@@ -186,8 +186,8 @@ export default function EditCampaign({ navigation, route }) {
             <Header
                 // style={{ height: "12%" }}
                 onPressLeft={() => {
-                    // navigation.openDrawer()
-                    navigation.goBack()
+                    navigation.openDrawer()
+                    // navigation.goBack()
                 }}
                 title='Edit Campaign'
                 onPressRight={() => {

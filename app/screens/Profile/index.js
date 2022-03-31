@@ -118,8 +118,8 @@ export default function AddContact({ navigation }) {
                  >
                     <TouchableOpacity
                         onPress={() =>
-                            // navigation.openDrawer()
-                            navigation.goBack()
+                            navigation.openDrawer()
+                            // navigation.goBack()
                         }
                     >
                         <Image

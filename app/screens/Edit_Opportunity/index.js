@@ -382,7 +382,8 @@ export default function AddContact({ navigation, route }) {
             <Header
                 // style={{ height: "14%" }}
                 onPressLeft={() => {
-                    navigation.goBack()
+                    // navigation.goBack()
+                    navigation.openDrawer()
                 }}
                 title={route.params.title}
                 onPressRight={() => {

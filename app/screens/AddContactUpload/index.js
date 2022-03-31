@@ -133,8 +133,8 @@ export default function UploadContact({ navigation }) {
             <Header
                 // style={{ height: "16%" }}
                 onPressLeft={() => {
-                    // navigation.OpenDrawer()
-                    navigation.goBack()
+                    navigation.OpenDrawer()
+                    // navigation.goBack()
                 }}
                 title='Upload Contact File'
                 onPressRight={() => {
