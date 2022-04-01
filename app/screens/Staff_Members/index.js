@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header/index'
-import {  staffMemberAction, leadAction } from '../../redux/Actions/index'
+import { staffMemberAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
@@ -67,7 +67,6 @@ export default function Staff_Members({ navigation }) {
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
-                console.log('.............................', leadOwner)
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
                 setIsLodding(false)
             }
@@ -214,10 +213,10 @@ export default function Staff_Members({ navigation }) {
             <Header
                 style={{ height: "16%" }}
                 onPressLeft={() => {
-                      navigation.openDrawer()
+                    navigation.openDrawer()
                     // navigation.goBack()
                 }}
-                title='Staff Members'
+                title='Users'
                 onPressRight={() => {
                     navigation.navigate('Notification')
                 }}
@@ -339,14 +338,14 @@ export default function Staff_Members({ navigation }) {
                     }
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: '3%' }}>
                         <Pressable
-                            style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+                            style={[styles.askBtn]}
                             onPress={() => CencelFunction()}
                         >
                             <Text style={styles.askBtnText}>Cancel</Text>
                         </Pressable>
                         <View style={{ margin: '5%' }} />
                         <Pressable
-                            style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+                            style={[styles.askBtn]}
                             onPress={() => invite_Members()}
                         >
                             <Text style={styles.askBtnText}>Send</Text>

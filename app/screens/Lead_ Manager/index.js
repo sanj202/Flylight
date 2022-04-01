@@ -13,7 +13,6 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function Lead_manager({ navigation, route }) {
 
-  const [isService, setisService] = useState(route.params ? route.params.key : 'All');
   const [modalVisible2, setModalVisible2] = useState(false);
   const [askDelete, setaskDelete] = useState(false);
   const [ImportFiles, setImportFiles] = useState(false)
@@ -21,9 +20,7 @@ export default function Lead_manager({ navigation, route }) {
   const [leadOwnerData, setleadOwnerData] = useState('')
   const [SelectedFile, setSelectedFile] = useState('')
   const [temarray, settemarray] = useState([])
-  const [AllList, setAllList] = useState('')
   const [Lead, setLead] = useState([])
-  const [Opportunity, setOpportunity] = useState('')
   const [IsLodding, setIsLodding] = useState(false)
   const [IsULodding, setIsULodding] = useState(false)
   const [IsALodding, setIsALodding] = useState(false)
@@ -47,17 +44,58 @@ export default function Lead_manager({ navigation, route }) {
   const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
   const importLead = useSelector(state => state.leads.importLead)
-  const importOpportunity = useSelector(state => state.opportunitys.ImportOpportunity)
   const Lead_OpportunityList = useSelector(state => state.leadmanager.GetList)
   const AssignLead = useSelector(state => state.leadmanager.assign)
   const deletelead = useSelector(state => state.leads.deleteLead)
-  const deleteopportunity = useSelector(state => state.opportunitys.deleteOpportunity)
   const leadOwner = useSelector(state => state.leads.leadOwnerNew)
 
   useEffect(() => {
     setIsLodding(true)
     Get_Data(page)
-  }, [isFocused])
+  }, [])
+
+  useEffect(() => {
+    if (Lead_OpportunityList) {
+      if (Lead_OpportunityList.status == "success") {
+        // console.log('.................................................', Lead_OpportunityList)
+        // setLead(Lead.concat(Lead_OpportunityList.data))
+        settotalItems(Lead_OpportunityList.total_rows)
+        let listTemp = [...Lead, ...Lead_OpportunityList.data];
+        setLead(listTemp)
+        // if (page == 0) {
+        //   setLead(Lead_OpportunityList.data)
+        // }
+        // else if (Lead_OpportunityList.data.length != 0) {
+        //   let dataLive = Lead_OpportunityList.data;
+        //   let listTemp = [...Lead, ...dataLive];
+        //   setLead(listTemp)
+        // }
+        dispatch(leadmanagerAction.clearResponse())
+        setIsLodding(false)
+      }
+      else if (Lead_OpportunityList.status == "failed") {
+        setIsLodding(false)
+      }
+    }
+  }, [Lead_OpportunityList])
+
+  const fetchNextItems = () => {
+    console.log('...............................', totalItems, Lead.length)
+    if (totalItems > Lead.length) {
+      let p = page + 1;
+      setPage(p);
+      Get_Data(p)
+    }
+  }
+
+  const [refreshing, setrefreshing] = useState(false)
+  const handleRefresh = () => {
+    console.log(refreshing)
+    // setIsLodding(true)
+    setLead([])
+    setPage(0)
+    Get_Data(0)
+  }
 
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
@@ -98,14 +136,9 @@ export default function Lead_manager({ navigation, route }) {
     showModes('date');
   };
 
-  const checkValue = (value) => {
-    setisService(value)
-  }
-
-
   const Get_Data = (p) => {
     // setIsLodding(true)
-    console.log('..........................',p)
+    console.log('..........................', p)
     const data = {
       uid: loginData.data.uid,
       profile_id: loginData.data.cProfile.toString(),
@@ -117,85 +150,46 @@ export default function Lead_manager({ navigation, route }) {
     dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
   }
 
-  const [refreshing, setrefreshing] = useState(false)
-  const handleRefresh = () => {
-    console.log(refreshing)
-    // setIsLodding(true)
-    setLead([])
-    setPage(0)
-    Get_Data(0)
-  }
-
-  const fetchNextItems = () => {
-    console.log('...............................',totalItems , Lead.length)
-    if (totalItems > Lead.length) {
-      let p = page + 1;
-      setPage(p);
-      Get_Data(p)
-    }
-  }
-
-  useEffect(() => {
-    if (Lead_OpportunityList) {
-      if (Lead_OpportunityList.status == "success") {
-        // setLead(Lead.concat(Lead_OpportunityList.data))
-        settotalItems(Lead_OpportunityList.total_rows)
-         if (Lead_OpportunityList.data.length != 0) {
-          let dataLive = Lead_OpportunityList.data;
-          let listTemp = [...Lead, ...dataLive];
-          setLead(listTemp)
-        }
-        dispatch(leadmanagerAction.clearResponse())
-        setIsLodding(false)
-      }
-      else if (Lead_OpportunityList.status == "failed") {
-        setIsLodding(false)
-      }
-    }
-  }, [Lead_OpportunityList])
-
   const Search = () => {
     let StartDate = moment(date).format("YYYY-MM-DD")
     let EndDate = moment(dates).format("YYYY-MM-DD")
     // setIsLodding(true)
-    if (loginData.status == "success") {
-      let data = {
-        uid: loginData.data.uid,
-        profile_id: loginData.data.cProfile.toString(),
-        org_uid: loginData.data.org_uid,
-        filters: [],
-        pageSize: '30',
-        pageNumber: '0',
-      }
-      if (text == false || texts == false) {
-        if (StartDate !== EndDate) {
-          if (text == true) {
-            ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
-          }
-          else if (texts == true) {
-            ToastAndroid.show('Please Select End Date', ToastAndroid.SHORT);
+    let data = {
+      uid: loginData.data.uid,
+      profile_id: loginData.data.cProfile.toString(),
+      org_uid: loginData.data.org_uid,
+      filters: [],
+      pageSize: '30',
+      pageNumber: '0',
+    }
+    if (text == false || texts == false) {
+      if (StartDate !== EndDate) {
+        if (text == true) {
+          ToastAndroid.show('Please Select Start Date', ToastAndroid.SHORT);
+        }
+        else if (texts == true) {
+          ToastAndroid.show('Please Select End Date', ToastAndroid.SHORT);
+        }
+        else {
+          if (StartDate <= EndDate) {
+            setIsLodding(true)
+            data.filters.push({ gte: StartDate, key: 'created_at' },
+              { lte: EndDate, key: 'created_at' })
+            dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
           }
           else {
-            if (StartDate <= EndDate) {
-              setIsLodding(true)
-              data.filters.push({ gte: StartDate, key: 'created_at' },
-                { lte: EndDate, key: 'created_at' })
-              dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
-            }
-            else {
-              ToastAndroid.show('wrong format', ToastAndroid.SHORT);
-            }
+            ToastAndroid.show('wrong format', ToastAndroid.SHORT);
           }
         }
-        else if (StartDate == EndDate && text == false && texts == false) {
-          setIsLodding(true)
-          data.filters.push({ gte: StartDate, key: 'created_at' },
-            { lte: EndDate, key: 'created_at' })
-          dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
-        }
-
-        console.log(data)
       }
+      else if (StartDate == EndDate && text == false && texts == false) {
+        setIsLodding(true)
+        data.filters.push({ gte: StartDate, key: 'created_at' },
+          { lte: EndDate, key: 'created_at' })
+        dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+      }
+
+      console.log(data)
     }
   }
 
@@ -221,11 +215,9 @@ export default function Lead_manager({ navigation, route }) {
       else if (leadOwner.status == "fail") {
       }
     }
-    else {
-    }
   }, [leadOwner])
 
-  
+
 
   const [tempId, settempId] = useState('')
   const [tempType, settempType] = useState('')
@@ -243,34 +235,15 @@ export default function Lead_manager({ navigation, route }) {
   }
 
   const DeleteFunction = () => {
-    if (tempType == "Lead") {
-      setIsLodding(true)
-      if (loginData.status == "success") {
-        setaskDelete(!askDelete)
-        const data = {
-          uid: loginData.data.uid,
-          profile_id: loginData.data.cProfile.toString(),
-          org_uid: loginData.data.org_uid,
-          lead_id: tempId
-        }
-        dispatch(leadAction.deleteLead(data, loginData.data.token));
-      }
+    setIsLodding(true)
+    setaskDelete(!askDelete)
+    const data = {
+      uid: loginData.data.uid,
+      profile_id: loginData.data.cProfile.toString(),
+      org_uid: loginData.data.org_uid,
+      lead_id: tempId
     }
-    else if (tempType == "Opportunity") {
-      if (loginData.status == "success") {
-        setaskDelete(!askDelete)
-        const data = {
-          uid: loginData.data.uid,
-          profile_id: loginData.data.cProfile.toString(),
-          org_uid: loginData.data.org_uid,
-          Opportinity_id: tempId
-        }
-        dispatch(opportunityAction.deleteOpportunity(data, loginData.data.token));
-      }
-
-    }
-    else {
-    }
+    dispatch(leadAction.deleteLead(data, loginData.data.token));
   }
 
   useEffect(() => {
@@ -286,27 +259,7 @@ export default function Lead_manager({ navigation, route }) {
         setIsLodding(false)
       }
     }
-    else {
-    }
   }, [deletelead])
-
-  useEffect(() => {
-    if (deleteopportunity) {
-      if (deleteopportunity.status == "200") {
-        setModalVisible2(!modalVisible2)
-        setIsLodding(false)
-      }
-      else if (deleteopportunity.status == "failed") {
-        setIsLodding(false)
-      }
-      else if (deleteopportunity.status == 'fail') {
-        setIsLodding(false)
-      }
-
-    }
-    else {
-    }
-  }, [deleteopportunity])
 
   const DeleteSuccessFully = () => {
     dispatch(leadAction.clearResponse());
@@ -317,7 +270,6 @@ export default function Lead_manager({ navigation, route }) {
 
 
   const [singleFile, setSingleFile] = useState(null);
-  const [tempUploadingType, settempUploadingType] = useState()
 
   const OpenFilePicker = async () => {
     try {
@@ -340,7 +292,6 @@ export default function Lead_manager({ navigation, route }) {
     setSelectedFile('choose-file')
     setSingleFile(null)
     setImportFiles(!ImportFiles)
-    settempUploadingType(value)
   }
 
   const UploadFile = (value) => {
@@ -348,7 +299,6 @@ export default function Lead_manager({ navigation, route }) {
       ToastAndroid.show('Please Select File', ToastAndroid.SHORT);
     }
     else {
-
       let file = {
         name: singleFile[0].name,
         type: singleFile[0].type,
@@ -356,29 +306,18 @@ export default function Lead_manager({ navigation, route }) {
         size: singleFile[0].size
       }
       setIsULodding(true)
-      if (tempUploadingType == 'Opportunity') {
-        const formdata = new FormData;
-        formdata.append('CSVFILE', file);
-        formdata.append('uid', loginData.data.uid);
-        formdata.append('profile_id', loginData.data.cProfile);
-        formdata.append('org_uid', loginData.data.org_uid);
-        dispatch(opportunityAction.importOpportunity(formdata, loginData.data.token));
-      }
-      else {
-        const formdata = new FormData;
-        formdata.append('CSVFILE', file);
-        formdata.append('uid', loginData.data.uid);
-        formdata.append('profile_id', loginData.data.cProfile);
-        formdata.append('org_uid', loginData.data.org_uid);
-        dispatch(leadAction.importLead(formdata, loginData.data.token));
-      }
+      const formdata = new FormData;
+      formdata.append('CSVFILE', file);
+      formdata.append('uid', loginData.data.uid);
+      formdata.append('profile_id', loginData.data.cProfile);
+      formdata.append('org_uid', loginData.data.org_uid);
+      dispatch(leadAction.importLead(formdata, loginData.data.token));
     }
   }
 
   const UploadFileCancel = (value) => {
     setImportFiles(!ImportFiles)
     setSelectedFile('')
-    settempUploadingType('')
     setIsULodding(false)
   }
 
@@ -403,32 +342,7 @@ export default function Lead_manager({ navigation, route }) {
       }
       else { }
     }
-    else {
-    }
   }, [importLead])
-
-  useEffect(() => {
-    if (importOpportunity) {
-
-      if (importOpportunity.status == "success") {
-        // CombineArrayData()
-        Get_Data()
-        setImportFiles(false)
-        ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
-        setSingleFile(null)
-        setIsULodding(false)
-        // dispatch(opportunityAction.clearResponse())
-      }
-      else if (importOpportunity.status == "fail") {
-        ToastAndroid.show(importOpportunity.message, ToastAndroid.SHORT);
-        dispatch(opportunityAction.clearResponse())
-        setIsULodding(false)
-      }
-      else if (importOpportunity == "error") {
-        UploadFile()
-      }
-    }
-  }, [importOpportunity])
 
   useEffect(() => {
     if (AssignLead) {
@@ -450,8 +364,6 @@ export default function Lead_manager({ navigation, route }) {
       else {
 
       }
-    }
-    else {
     }
   }, [AssignLead])
 
@@ -547,7 +459,7 @@ export default function Lead_manager({ navigation, route }) {
                   color: 'black', fontFamily: 'Roboto',
                   fontSize: 12, color: '#0F0F0F', flexShrink: 1
                 }}>
-                {item.company ? item.company : "not available"}</Text>
+                {item.company ? item.company : null}</Text>
             </View>
             {item.is_assign == '1' ?
               <View
@@ -606,9 +518,7 @@ export default function Lead_manager({ navigation, route }) {
 
   const AssignVIew = ({ item }) => {
     return (
-      <Pressable
-        onPress={() => UserAssignLead(item.id)}
-      >
+      <Pressable onPress={() => UserAssignLead(item.id)}>
         <View style={[styles.listData, { flexDirection: 'column' }]} >
           <Text style={styles.AssignTitle}>{item.user.name}</Text>
           <Text style={styles.AssignTitle}>{item.user.phone}</Text>
@@ -626,7 +536,7 @@ export default function Lead_manager({ navigation, route }) {
         onPressLeft={() => {
           navigation.OpenDrawer()
           // navigation.goBack()
-          
+
 
         }}
         title='Lead Manager'
@@ -662,7 +572,7 @@ export default function Lead_manager({ navigation, route }) {
                 {text == true ?
                   <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
                   :
-                 null
+                  null
                 }
               </View>
                 :
@@ -700,7 +610,7 @@ export default function Lead_manager({ navigation, route }) {
                 {texts == true ?
                   <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
                   :
-             null
+                  null
                 }
               </View>
                 :
@@ -903,19 +813,18 @@ export default function Lead_manager({ navigation, route }) {
               source={require('../../images/cross.png')}
             />
           </TouchableOpacity>
-          {IsALodding == true ?
-            <ActivityIndicator size="large" color="#0000ff" />
-            :
-            <View />}
+          {IsALodding == true ? <ActivityIndicator size="large" color="#0000ff" /> : null}
           <FlatList
             style={{ height: '70%', marginVertical: '1%' }}
             data={leadOwnerData}
             renderItem={AssignVIew}
+            ListEmptyComponent={() => (!Lead.leadOwnerData ?
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+              : null)}
           />
           <View style={{ margin: '2%' }} />
         </View>
       </Modal>
-
     </View >
   );
 }

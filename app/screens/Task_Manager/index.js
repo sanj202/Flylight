@@ -13,16 +13,15 @@ import { useIsFocused } from "@react-navigation/core"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
 
-export default function Task_Manager({ navigation }) {
+export default function Task_Manager({ navigation ,route }) {
 
     const [StatusList, setStatusList] = useState([]);
-    const [isService, setisService] = useState('All');
+    const [isService, setisService] = useState(route.params ? route.params.type : 'All');
     const [modalVisible2, setModalVisible2] = useState(false);
     const [askDelete, setaskDelete] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [allTask, setallTask] = useState([])
     const [Status, setStatus] = useState(null);
-    const [isFocus, setIsFocus] = useState(false);
     const [IsLodding, setIsLodding] = useState(false)
     const [EIsLodding, setEIsLodding] = useState(false)
     const [title, settitle] = useState('')
@@ -52,8 +51,7 @@ export default function Task_Manager({ navigation }) {
         }
         Get_Data(page)
         dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
-    }, [isFocused])
-
+    }, [])
 
     useEffect(() => {
         if (TaskStatus) {
@@ -64,8 +62,6 @@ export default function Task_Manager({ navigation }) {
             }
             else if (TaskStatus.status == "fail") {
             }
-        }
-        else {
         }
     }, [TaskStatus])
 
@@ -90,6 +86,7 @@ export default function Task_Manager({ navigation }) {
     };
 
     const checkValue = (value) => {
+        setallTask([])
         setisService(value)
         setIsLodding(true)
         const data = {
@@ -102,15 +99,18 @@ export default function Task_Manager({ navigation }) {
         }
         if (value == 'Done') {
             data.filters.push({ eq: '3', key: 'status' })
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
         else if (value == 'To-Do') {
             data.filters.push({ eq: '1', key: 'status' })
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
-        else {
-
+        else if (value == 'All') {
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
-        dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
     }
+
+
     const Get_Data = (p) => {
         const data = {
             uid: loginData.data.uid,
@@ -128,22 +128,29 @@ export default function Task_Manager({ navigation }) {
             if (taskList.status == "success") {
                 // setallTask(taskList.data)
                 settotalItems(taskList.total_rows)
-                if (taskList.data.length != 0) {
-                    let dataLive = taskList.data;
-                    let listTemp = [...allTask, ...dataLive];
+                let listTemp = [...allTask, ...taskList.data];
+                if (page == 0){
+                    setallTask(taskList.data)  
+                }
+                else if (taskList.total_rows > taskList.data.length){
                     setallTask(listTemp)
                 }
+                setIsLodding(false)
+                // if (taskList.data.length != 0) {
+                //     let dataLive = taskList.data;
+                //     let listTemp = [...allTask, ...dataLive];
+                //     setallTask(listTemp)
+                // }
             }
             else if (taskList.status == "failed") {
+                setIsLodding(false)
             }
             else if (taskList.status == "fail") {
                 ToastAndroid.show(taskList.message, ToastAndroid.SHORT);
+                setIsLodding(false)
             }
             else {
-            }
-            setIsLodding(false)
-        }
-        else {
+            }    
         }
     }, [taskList])
 
@@ -247,14 +254,14 @@ export default function Task_Manager({ navigation }) {
         if (deleteTask) {
             if (deleteTask.status == "200") {
                 setModalVisible2(!modalVisible2)
+                setIsLodding(false)
             }
             else if (deleteTask.status == "failed") {
+                setIsLodding(false)
             }
             else if (deleteTask.status == 'fail') {
+                setIsLodding(false)
             }
-            setIsLodding(false)
-        }
-        else {
         }
     }, [deleteTask])
 
@@ -263,7 +270,6 @@ export default function Task_Manager({ navigation }) {
         Get_Data(0)
         setModalVisible2(!modalVisible2)
     }
-
 
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
@@ -283,7 +289,6 @@ export default function Task_Manager({ navigation }) {
     }
 
     const AllView = ({ item }) => {
-
         return (
             <View style={{ marginTop: '1%' }}>
                 <View style={styles.listData}>
@@ -365,7 +370,6 @@ export default function Task_Manager({ navigation }) {
             </View >
         )
     }
-
     return (
         <View style={[styles.container, { width: width, height: height }]}>
             <Header
@@ -550,11 +554,8 @@ export default function Task_Manager({ navigation }) {
                             valueField="id"
                             placeholder='Status'
                             value={Status}
-                            onFocus={() => setIsFocus(true)}
-                            onBlur={() => setIsFocus(false)}
                             onChange={item => {
                                 setStatus(item.id);
-                                setIsFocus(false);
                             }}
                             renderLeftIcon={() => (
                                 <Image

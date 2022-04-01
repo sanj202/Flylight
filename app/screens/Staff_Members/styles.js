@@ -272,6 +272,7 @@ const styles = StyleSheet.create({
     },
     askBtn: {
         paddingVertical: '2%',
+        paddingHorizontal:'5%',
         borderRadius: 10,
         backgroundColor: "#2196F3",
     },

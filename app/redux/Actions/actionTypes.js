@@ -38,6 +38,12 @@ export const Dashboard = 'Dashboard'
 export const Dashboard_Success = 'Dashboard_Success'
 export const Dashboard_Clear = 'Dashboard_Clear'
 
+//
+export const Dashboard_Chart = 'Dashboard_Chart'
+export const Dashboard_Chart_Success = 'Dashboard_Chart_Success'
+export const Dashboard_Chart_Clear = 'Dashboard_Chart_Clear'
+
+
 // Profile
 export const Get_Profile = 'Get_Profile'
 export const Profile_Suceess = 'Profile_Suceess'
