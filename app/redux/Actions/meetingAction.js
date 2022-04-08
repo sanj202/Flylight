@@ -6,7 +6,7 @@ import {
     MeetingLeads,MeetingLeads_Success,MeetingContact_Clear,
     MeetingContact,MeetingContact_Success,MeetingLeads_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 
 export const add_Edit_Meeting = (data, token) => {

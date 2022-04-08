@@ -4,7 +4,7 @@ import {
     Delete_Opportunity, Delete_Opportunity_Success, Delete_Opportunity_Clear,
     Add_Edit_Opportunity, Add_Edit_Opportunity_Success, Add_Edit_Opportunity_Clear,
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const importOpportunity = (data, token) => {
     return (dispatch) => {

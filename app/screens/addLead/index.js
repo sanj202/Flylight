@@ -287,7 +287,7 @@ export default function AddContact({ navigation, route }) {
     }
 
     return (
-        <View style={{ flex: 1 ,height:height,width:width}}>
+        <View style={{ flex: 1, height: height, width: width }}>
             <Header
                 // style={{ height: "14%" }}
                 onPressLeft={() => {
@@ -415,9 +415,10 @@ export default function AddContact({ navigation, route }) {
                                 <View>
                                     {text == true ?
                                         <View style={{ flexDirection: 'row' }}>
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of Birth</Text>
-                                            <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                                            <Text style={{ marginTop: '2%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>Date of Birth</Text>
+                                            <Text style={{ fontSize: 15, color: 'red', marginTop: '-3%' }}>*</Text>
                                         </View>
+
                                         :
                                         <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                     }
@@ -689,7 +690,6 @@ export default function AddContact({ navigation, route }) {
                                     />
                                 </View>
                             )}
-
                             renderRightIcon={() => (
                                 <View>
                                     {LeadStatus == null ?
@@ -757,7 +757,9 @@ export default function AddContact({ navigation, route }) {
                             selectedTextStyle={styles.selectedTextStyle3}
                             iconStyle={styles.iconStyle3}
                             data={campaignData}
-                            maxHeight={100}
+                            search={true}
+                            searchPlaceholder='Search'
+                            maxHeight={160}
                             labelField="label"
                             valueField="value"
                             placeholder='Campaign'

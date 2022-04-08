@@ -7,7 +7,7 @@ import {
     TopUp_Order, TopUp_Order_Success, TopUp_Order_Clear,
     TopUp_Order_Verify, TopUp_Order_Verify_Success, TopUp_Order_Verify_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const packageList = (data, token) => {
     return (dispatch) => {

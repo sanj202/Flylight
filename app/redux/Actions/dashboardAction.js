@@ -1,43 +1,45 @@
 
 import {
-    Dashboard, Dashboard_Success, Dashboard_Clear,
+    // Dashboard, Dashboard_Success, Dashboard_Clear,
     Dashboard_Chart, Dashboard_Chart_Success, Dashboard_Chart_Clear,
     Update_Token, Update_Token_Success, Update_Token_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
-export const dashboard = (uid, org_uid, profile_id, Token,) => {
-    return (dispatch) => {
-        dispatch({ type: Dashboard })
-        fetch(`${BaseUrl}/dashboard`,
-            {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + Token,
-                },
-                body: JSON.stringify({
-                    uid: uid,
-                    org_uid: org_uid,
-                    profile_id: profile_id
-                }),
-            })
-            .then(response => response.json())
-            .then(responseData => {
-                dispatch({ type: Dashboard_Success, payload: responseData })
-            })
-            .catch((error) => {
-                console.log("error" + error);
-            })
-    }
-};
+import { BaseUrl, Base_NodeUrl } from '../../../const'
+// export const dashboard = (uid, org_uid, profile_id, Token,) => {
+//     return (dispatch) => {
+//         dispatch({ type: Dashboard })
+//         fetch(`${BaseUrl}/dashboard`,
+//             {
+//                 method: "POST",
+//                 headers: {
+//                     'Accept': 'application/json',
+//                     'Content-Type': 'application/json',
+//                     'Authorization': 'Bearer ' + Token,
+//                 },
+//                 body: JSON.stringify({
+//                     uid: uid,
+//                     org_uid: org_uid,
+//                     profile_id: profile_id
+//                 }),
+//             })
+//             .then(response => response.json())
+//             .then(responseData => {
+
+//                 console.log("...................",responseData)
+//                 dispatch({ type: Dashboard_Success, payload: responseData })
+//             })
+//             .catch((error) => {
+//                 console.log("error" + error);
+//             })
+//     }
+// };
 
 
 export const dashboardCount = (uid, org_uid, profile_id, Token,days) => {
     return (dispatch) => {
         dispatch({ type: Dashboard_Chart })
         // fetch(`${BaseUrl}/dashboard`,
-        fetch(`http://3.23.113.168:3000/leadChart`,
+        fetch(`${Base_NodeUrl}/leadChart`,
             {
                 method: "POST",
                 headers: {
@@ -49,7 +51,6 @@ export const dashboardCount = (uid, org_uid, profile_id, Token,days) => {
                     uid: uid,
                     org_uid: org_uid,
                     profile_id: profile_id,
-                    days:days
                 }),
             })
             .then(response => response.json())
@@ -91,7 +92,7 @@ export const UpdateToken = (uid, fcmtoken, Token) => {
 
 export const clearResponse = () => {
     return {
-        type: Dashboard_Clear,
+        // type: Dashboard_Clear,
         type: Update_Token_Clear,
         type: Dashboard_Chart_Clear
     };

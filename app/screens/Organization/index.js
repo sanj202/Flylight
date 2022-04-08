@@ -18,7 +18,6 @@ export default function Organization({ navigation }) {
     const orgList = useSelector(state => state.organization.getList)
 
     useEffect(() => {
-        if (loginData && isFocused) {
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile,
@@ -27,50 +26,42 @@ export default function Organization({ navigation }) {
             setcurrentOrg(loginData.data.org_uid)
             dispatch(organizationAction.OrganizationList(data, loginData.data.token));
             setIsLodding(true)
-        }
-    }, [loginData, isFocused])
+    }, [ isFocused])
 
     useEffect(() => {
         if (orgList) {
-            // console.log("orgList...........", orgList.data)
             if (orgList.status == "200") {
                 setallOrg(orgList.data)
                 dispatch(organizationAction.clearResponse())
+                setIsLodding(false)
             }
             else if (orgList.status == "failed") {
+                setIsLodding(false)
             }
             else if (orgList.status == "fail") {
                 ToastAndroid.show(orgList.message, ToastAndroid.SHORT);
-            }
-            else {
-            }
-            setIsLodding(false)
-        }
-        else {
-
+                setIsLodding(false)
+            }        
         }
     }, [orgList])
 
     const ChangeOrg = (value) => {
         setIsLodding(true)
         dispatch(authAction.SwitchOrg(loginData, value.cProfile, value.orgUid));
+        navigation.navigate('Home')
     }
 
-
-    useEffect(() => {
-        if (loginData) {
-            if (loginData.status == "success") {
-                setIsLodding(false)
-                // navigation.navigate('Home')
-            }
-            else if (loginData.status == "failed") {
-                setIsLodding(false)
-                ToastAndroid.show(loginData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
-            }
-        }
-        else {
-        }
-    }, [loginData])
+    // useEffect(() => {
+    //     if (loginData) {
+    //         if (loginData.status == "success") {
+    //             setIsLodding(false)
+    //         }
+    //         else if (loginData.status == "failed") {
+    //             setIsLodding(false)
+    //             ToastAndroid.show(loginData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
+    //         }
+    //     }
+    // }, [loginData])
 
 
 

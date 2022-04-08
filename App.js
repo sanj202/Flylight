@@ -15,9 +15,9 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
+        {/* <NavigationContainer> */}
           <RootNavigation />
-        </NavigationContainer>
+        {/* </NavigationContainer> */}
       </PersistGate>
     </Provider>
   );

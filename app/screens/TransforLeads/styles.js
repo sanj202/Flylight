@@ -1,20 +1,17 @@
 
 import { StyleSheet } from 'react-native';
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff'
-  },
   listData: {
     padding: 5,
     borderWidth: 1,
     borderRadius: 10,
-    borderColor: '#DBDBDB',
-    margin: '3%',
-    marginTop: '-0.5%',
+    borderColor: '#000000',
+    marginHorizontal: '3%',
+    marginVertical: '1%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   headerView: {
     backgroundColor: '#3373F3',
@@ -70,30 +67,35 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     borderRadius: 10
   },
+
   pickers: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     borderWidth: 1,
+    borderColor: '#000000',
     padding: 10,
     paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 15
+    paddingRight: 50,
+    borderRadius: 10
   },
+
 
   //  -------------------------------------------------------
 
   centeredView3: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
+    // alignItems: "center",
+    // marginTop: 22
+    margin: '10%',
+    marginTop: '0%'
   },
   modalView3: {
     // margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 15,
-    // alignItems: "center",
+    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -106,8 +108,8 @@ const styles = StyleSheet.create({
   button3: {
     borderRadius: 5,
     padding: 5,
-    paddingRight: 10,
-    paddingLeft: 10,
+    paddingRight: 20,
+    paddingLeft: 20,
     elevation: 2
   },
   buttonOpen3: {
@@ -116,15 +118,9 @@ const styles = StyleSheet.create({
   buttonClose3: {
     backgroundColor: '#3373F3',
     borderRadius: 10,
-    padding: 5,
-    paddingTop:10,
-    paddingBottom:10,
+    // alignSelf: 'center',
     margin: '5%',
-    marginBottom:'0%',
-    marginLeft: '20%',
-    marginRight: '20%',
-    // marginBottom: '-25%',
-    backgroundColor: "#3373F3",
+    backgroundColor: "#2196F3",
   },
   textStyle3: {
     color: "white",
@@ -135,67 +131,96 @@ const styles = StyleSheet.create({
     paddingRight: 15
   },
   modalText3: {
-    fontSize: 21,
-    fontWeight: 'bold',
     marginBottom: 15,
+    fontSize: 21,
+    color: '#000000',
+    textAlign: "center"
+  },
+  btn: { borderRadius: 20, width: '30%', paddingVertical: 1.5, },
+  btnText: { padding: 5, textAlign: 'center' },
+
+  askModel: {
+    marginHorizontal: '5%',
+    marginTop: '80%',
+    backgroundColor: "white",
+    borderRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  askTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor: '#3373F3',
+    color: 'white',
     textAlign: "center",
-    color: '#000000'
+    paddingVertical: '3%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20
   },
-
-  // ----------------------------------------------------------------------------
-
-  container3: {
-    backgroundColor: 'white',
-    padding: 16,
+  askSubtitle: {
+    margin: '5%',
+    fontSize: 21,
+    color: '#000000',
+    textAlign: "center"
   },
-  dropdown3: {
-    height: 50,
-    borderColor: '#B9BAC8',
-    borderWidth: 0.5,
-    borderRadius: 8,
-    paddingHorizontal: 8,
+  askBtn: {
+    paddingVertical: '2%',
+    borderRadius: 10,
+    backgroundColor: "#2196F3",
   },
-  icon3: {
-    marginRight: 5,
+  askBtnText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20,
   },
-  label3: {
-    // position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
+  addNewBtn: {
+    borderColor: '#fff',
+    borderWidth: 1,
+    backgroundColor: '#3373F3',
+    borderRadius: 15,
+    marginHorizontal:'2%'
   },
-  placeholderStyle3: {
-    fontSize: 16,
-  },
-  selectedTextStyle3: {
-    fontSize: 16,
-   
-  },
-  iconStyle3: {
-    width: 20,
+  radio: {
+    marginTop: '6%',
+    marginHorizontal: '1%',
     height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 1
   },
-  inputSearchStyle3: {
-    height: 40,
-    fontSize: 16,
+  AssignTitle: {
+    fontSize: 14,
+    color: '#0F0F0F',
+    fontFamily: 'Roboto'
+  },
+  askTitleR: {
+    margin: '5%',
+    marginRight: '3%',
+    marginTop: '-12%',
+    alignSelf: 'flex-end',
+    padding:'3%'
+    // height: 14,
+    // width: 14
   },
   button: {
     backgroundColor: '#3373F3',
-    borderRadius: 15,
-    padding: 10,
-    // margin: '5%',
-    marginTop: '0%',
-    marginBottom: '1%'
+    borderRadius: 10,
+    marginHorizontal: '3%',
+    marginTop:'1%',
+    padding: 7
   },
-  textButton: {
-    padding: 5,
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 18
+  btnText: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: '#fff',
+    textAlign: 'center'
   },
+
+
 });
 
 export default styles

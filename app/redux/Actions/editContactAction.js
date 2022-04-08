@@ -3,7 +3,7 @@
 
 
 import { Edit_Contact ,Edit_Contact_Suceess,Edit_Contact_Clear} from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const EditContact = (data ,Token) => {
     // console.log(" credentails..................", data ,Token)

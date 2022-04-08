@@ -1,7 +1,7 @@
 
 
 import { LOGIN, LOGIN_CLEAR, FGET_OTP, } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const forgotPassword = (loginID, Password) => {
     // console.log(" credentails..................", loginID)

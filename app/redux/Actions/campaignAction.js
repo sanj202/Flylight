@@ -3,13 +3,13 @@ import {
     Campaign, Campaign_Clear, Campaign_Success,
     Add_Edit_Campaign, Add_Edit_Campaign_Clear, Add_Edit_Campaign_Success
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const CampaignList = (data, token,) => {
     // console.log("dskanfgsdfgjh.......................", data)
     return (dispatch) => {
         dispatch({ type: Campaign })
-        fetch(`${BaseUrl}/campaign-list`,
+        fetch(`${Base_NodeUrl}/getCampaignList`,
             {
                 method: "POST",
                 headers: {

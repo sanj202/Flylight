@@ -14,8 +14,15 @@ export default function Action_Manager({ navigation }) {
 
     const [isService, setisService] = useState('Status');
     const [isVisible, setIsVisible] = useState(false);
-    const [IsLodding, setIsLodding] = useState(false)
     const [IsLoddingNew, setIsLoddingNew] = useState(false)
+    const [IsLodding, setIsLodding] = useState({
+        actionLodding: true,
+        statusLodding: true,
+        addActionLodding: false,
+        addStausLodding: false,
+        editDeteteActionLodding: false,
+        editDeteteStatusLodding: false,
+    })
 
     const checkValue = (value) => {
         setisService(value)
@@ -55,22 +62,26 @@ export default function Action_Manager({ navigation }) {
         if (actionList) {
             if (actionList.status == "200") {
                 setallAction(actionList.data)
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    actionLodding: false,
+                })
                 dispatch(actionmanagerAction.clearActionResponse())
             }
             else if (actionList.status == "failed") {
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    actionLodding: false,
+                })
                 ToastAndroid.show(leadList.message, ToastAndroid.SHORT);
             }
             else if (actionList.status == "fail") {
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    actionLodding: false,
+                })
                 ToastAndroid.show(leadList.message, ToastAndroid.SHORT);
             }
-            else {
-                setIsLodding(false)
-            }
-        }
-        else {
         }
     }, [actionList])
 
@@ -78,27 +89,30 @@ export default function Action_Manager({ navigation }) {
         if (statusList) {
             if (statusList.status == "200") {
                 setallStatus(statusList.data)
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    statusLodding: false,
+                })
                 dispatch(actionmanagerAction.clearStatusResponse())
             }
             else if (statusList.status == "failed") {
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    statusLodding: false,
+                })
                 ToastAndroid.show(statusList.message, ToastAndroid.SHORT);
             }
             else if (statusList.status == "fail") {
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    statusLodding: false,
+                })
                 ToastAndroid.show(statusList.message, ToastAndroid.SHORT);
             }
-            else {
-                setIsLodding(false)
-            }
-        }
-        else {
         }
     }, [statusList])
 
     const Get_ActionStatus = () => {
-
         const data = {
             uid: loginData.data.uid,
             profile_id: loginData.data.cProfile.toString(),
@@ -106,29 +120,44 @@ export default function Action_Manager({ navigation }) {
         }
         dispatch(actionmanagerAction.getAction(data, loginData.data.token));
         dispatch(actionmanagerAction.getStatus(data, loginData.data.token));
-        setIsLodding(true)
     }
 
     const AddActionFunction = (text) => {
         if (text == "Status") {
-            setIsLoddingNew(true)
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                status: newStatus,
-                org_uid: loginData.data.org_uid,
+            if (newStatus == '') {
+                ToastAndroid.show(`Please Enter New ${text}`, ToastAndroid.SHORT);
             }
-            dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
+            else {
+                setIsLodding({
+                    ...IsLodding,
+                    addStausLodding: true,
+                })
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    status: newStatus,
+                    org_uid: loginData.data.org_uid,
+                }
+                dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
+            }
         }
         else {
-            setIsLoddingNew(true)
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile.toString(),
-                action: newAction,
-                org_uid: loginData.data.org_uid,
+            if (newAction == '') {
+                ToastAndroid.show(`Please Enter New ${text}`, ToastAndroid.SHORT);
             }
-            dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token,));
+            else {
+                setIsLodding({
+                    ...IsLodding,
+                    addActionLodding: true,
+                })
+                const data = {
+                    uid: loginData.data.uid,
+                    profile_id: loginData.data.cProfile.toString(),
+                    action: newAction,
+                    org_uid: loginData.data.org_uid,
+                }
+                dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token,));
+            }
         }
     }
 
@@ -136,28 +165,31 @@ export default function Action_Manager({ navigation }) {
         if (addActionData) {
             if (addActionData.status == "success") {
                 ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
-                // setIsLodding(false)
-                setIsLoddingNew(false)
                 setnewAction('')
+                setIsLodding({
+                    ...IsLodding,
+                    addActionLodding: false,
+                    editDeteteActionLodding: false
+                })
                 dispatch(actionmanagerAction.clearAddActionResponse())
                 Get_ActionStatus()
             }
             else if (addActionData.status == "failed") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    addActionLodding: false,
+                    editDeteteActionLodding: false
+                })
                 ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
             }
             else if (addActionData.status == "fail") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    addActionLodding: false,
+                    editDeteteActionLodding: false
+                })
                 ToastAndroid.show(addActionData.message, ToastAndroid.SHORT);
             }
-            else {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
-            }
-        }
-        else {
         }
     }, [addActionData])
 
@@ -166,27 +198,30 @@ export default function Action_Manager({ navigation }) {
             if (addStatusData.status == "success") {
                 ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
                 setnewStatus('')
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    addStausLodding: false,
+                    editDeteteStatusLodding: false
+                })
                 dispatch(actionmanagerAction.clearAddStatusResponse())
                 Get_ActionStatus()
             }
             else if (addStatusData.status == "failed") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    addStausLodding: false,
+                    editDeteteStatusLodding: false
+                })
                 ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
             }
             else if (addStatusData.status == "fail") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    addStausLodding: false,
+                    editDeteteStatusLodding: false
+                })
                 ToastAndroid.show(addStatusData.message, ToastAndroid.SHORT);
             }
-            else {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
-            }
-        }
-        else {
         }
     }, [addStatusData])
 
@@ -199,8 +234,11 @@ export default function Action_Manager({ navigation }) {
 
     const EditData = () => {
         setIsVisible(!isVisible)
-        setIsLoddingNew(true)
         if (type == "Action") {
+            setIsLodding({
+                ...IsLodding,
+                editDeteteActionLodding: true,
+            })
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
@@ -211,6 +249,10 @@ export default function Action_Manager({ navigation }) {
             dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
         }
         else {
+            setIsLodding({
+                ...IsLodding,
+                editDeteteStatusLodding: true,
+            })
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
@@ -239,8 +281,12 @@ export default function Action_Manager({ navigation }) {
     }
 
     const deleteData = () => {
-        setIsLoddingNew(true)
+        // setIsLoddingNew(true)
         if (tempType == "Action") {
+            setIsLodding({
+                ...IsLodding,
+                editDeteteActionLodding: true
+            })
             setaskDelete(!askDelete)
             const data = {
                 uid: loginData.data.uid,
@@ -251,6 +297,10 @@ export default function Action_Manager({ navigation }) {
             dispatch(actionmanagerAction.delete_Action(data, loginData.data.token));
         }
         else if (tempType == "status") {
+            setIsLodding({
+                ...IsLodding,
+                editDeteteStatusLodding: true
+            })
             setaskDelete(!askDelete)
             const data = {
                 uid: loginData.data.uid,
@@ -260,16 +310,16 @@ export default function Action_Manager({ navigation }) {
             }
             dispatch(actionmanagerAction.delete_Status(data, loginData.data.token));
         }
-        else {
-        }
     }
 
     useEffect(() => {
         if (deleteaction) {
             if (deleteaction.status == "200") {
                 ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    editDeteteActionLodding: false
+                })
                 dispatch(actionmanagerAction.clearDeleteActionResponse())
                 Get_ActionStatus()
             }
@@ -279,44 +329,41 @@ export default function Action_Manager({ navigation }) {
                 ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
             }
             else if (deleteaction.status == "fail") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    editDeteteActionLodding: false
+                })
                 ToastAndroid.show(deleteaction.message, ToastAndroid.SHORT);
             }
-            else {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
-            }
-        }
-        else {
         }
     }, [deleteaction])
 
     useEffect(() => {
         if (deletestatus) {
+            console.log('................',deletestatus)
             if (deletestatus.status == "200") {
                 ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    editDeteteStatusLodding: false
+                })
                 dispatch(actionmanagerAction.clearDeleteStatusResponse())
                 Get_ActionStatus()
             }
             else if (deletestatus.status == "failed") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    editDeteteStatusLodding: false
+                })
                 ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
             }
             else if (deletestatus.status == "fail") {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
+                setIsLodding({
+                    ...IsLodding,
+                    editDeteteStatusLodding: false
+                })
                 ToastAndroid.show(deletestatus.message, ToastAndroid.SHORT);
             }
-            else {
-                // setIsLodding(false)
-                setIsLoddingNew(false)
-            }
-        }
-        else {
         }
     }, [deletestatus])
 
@@ -415,7 +462,7 @@ export default function Action_Manager({ navigation }) {
                     </TouchableOpacity>
                 }
             </View>
-            {IsLodding == true ?
+            {IsLodding.statusLodding && IsLodding.actionLodding == true ?
                 <ActivityIndicator size="small" color="#0000ff" />
                 :
                 <View style={{ marginHorizontal: '3%' }}>
@@ -438,26 +485,31 @@ export default function Action_Manager({ navigation }) {
                                             placeholder="Enter Status"
                                         />
                                     </View>
-                                    <View style={{ height: '8%' }} />
+                                    {IsLodding.addStausLodding == true ?
+                                        <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
+                                        :
+                                        <View style={{ height: '8%' }} />}
                                 </View>
                                 <TouchableOpacity onPress={() => AddActionFunction("Status")} style={styles.buttonClose3} >
                                     <Text style={styles.textStyle3}>Save Status</Text>
                                 </TouchableOpacity>
-                                {IsLoddingNew == true ?
-                                    <ActivityIndicator size="small" color="#0000ff" />
-                                    : null}
+
                                 <View style={[styles.listData1, { height: '58%' }]}>
                                     <Text style={styles.title}>Status</Text>
-                                    <FlatList
-                                        data={allStatus}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        renderItem={StatusView}
-                                        ListEmptyComponent={() => (!allStatus.length ?
-                                            <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
-                                            : null)}
-                                        refreshing={refreshing}
-                                        onRefresh={handleRefresh}
-                                    />
+                                    {IsLodding.editDeteteStatusLodding == true ?
+                                        <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
+                                        :
+                                        <FlatList
+                                            data={allStatus}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            renderItem={StatusView}
+                                            ListEmptyComponent={() => (!allStatus.length ?
+                                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                                                : null)}
+                                            refreshing={refreshing}
+                                            onRefresh={handleRefresh}
+                                        />
+                                    }
                                     <View style={{ marginVertical: '1%' }} />
                                 </View>
 
@@ -481,7 +533,10 @@ export default function Action_Manager({ navigation }) {
                                                 placeholder="Enter Action"
                                             />
                                         </View>
-                                        <View style={{ height: '8%' }} />
+                                        {IsLodding.addActionLodding == true ?
+                                            <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
+                                            :
+                                            <View style={{ height: '8%' }} />}
                                     </View>
                                     <TouchableOpacity onPress={() => AddActionFunction("Action")} style={styles.buttonClose3} >
                                         <Text style={styles.textStyle3}>Save Status</Text>
@@ -489,16 +544,20 @@ export default function Action_Manager({ navigation }) {
 
                                     <View style={[styles.listData1, { height: '58%' }]}>
                                         <Text style={styles.title}>Actions</Text>
-                                        <FlatList
-                                            data={allAction}
-                                            keyExtractor={(item, index) => index.toString()}
-                                            renderItem={ActionView}
-                                            ListEmptyComponent={() => (!allAction.length ?
-                                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
-                                                : null)}
-                                            refreshing={refreshing}
-                                            onRefresh={handleRefresh}
-                                        />
+                                        {IsLodding.editDeteteActionLodding == true ?
+                                            <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
+                                            :
+                                            <FlatList
+                                                data={allAction}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                renderItem={ActionView}
+                                                ListEmptyComponent={() => (!allAction.length ?
+                                                    <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                                                    : null)}
+                                                refreshing={refreshing}
+                                                onRefresh={handleRefresh}
+                                            />
+                                        }
                                         <View style={{ marginVertical: '1%' }} />
                                     </View>
                                 </View>

@@ -1,7 +1,7 @@
 
 import { Get_Profile ,Profile_Suceess,Profile_Clear,
          Edit_ProfileImage,Edit_ProfileImage_Suceess,Edit_ProfileImage_Clear,Edit_ProfileImage_Error } from './actionTypes';
-import BaseUrl from '../../../const'
+         import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const profile = (data, Token,) => {
     return (dispatch) => {

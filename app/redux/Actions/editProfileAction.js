@@ -1,6 +1,6 @@
 
 import {  Edit_Profile ,Edit_Profile_Suceess,Edit_Profile_Clear } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const Eprofile = (data,token)=> {
     return (dispatch) => {

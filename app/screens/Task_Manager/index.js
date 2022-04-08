@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Text, View, StyleSheet, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image, Button, ActivityIndicator,
-    Modal, Alert, Pressable, StatusBar, Dimensions
-} from 'react-native';
+import {Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image, ActivityIndicator,
+    Modal, Pressable, Dimensions} from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
 import moment from 'moment';
 import Header from '../../component/header/index'
@@ -28,7 +26,7 @@ export default function Task_Manager({ navigation ,route }) {
     const { width, height } = Dimensions.get('window');
     const [page, setPage] = useState(0);
     const [perPageItems, setperPageItems] = useState(10);
-    const [totalItems, settotalItems] = useState('');
+    const [totalItems, settotalItems] = useState(0);
     const [date, setDate] = useState(new Date(1598051730000));
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
@@ -64,53 +62,6 @@ export default function Task_Manager({ navigation ,route }) {
             }
         }
     }, [TaskStatus])
-
-    const onChangeFrom = (event, selectedDate) => {
-        if (event.type == 'dismissed') {
-            setShow(!show);
-        }
-        else {
-            console.log('date selected ')
-            const currentDate = selectedDate || date;
-            setShow(Platform.OS === 'ios');
-            setDate(currentDate)
-            settext(false)
-        }
-    };
-    const showMode = (currentMode) => {
-        setShow(!show);
-        setMode(currentMode);
-    };
-    const showDatepicker = () => {
-        showMode('date');
-    };
-
-    const checkValue = (value) => {
-        setallTask([])
-        setisService(value)
-        setIsLodding(true)
-        const data = {
-            uid: loginData.data.uid,
-            profile_id: loginData.data.cProfile.toString(),
-            org_uid: loginData.data.org_uid,
-            pageSize: perPageItems,
-            pageNumber: '0',
-            filters: []
-        }
-        if (value == 'Done') {
-            data.filters.push({ eq: '3', key: 'status' })
-            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-        }
-        else if (value == 'To-Do') {
-            data.filters.push({ eq: '1', key: 'status' })
-            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-        }
-        else if (value == 'All') {
-            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
-        }
-    }
-
-
     const Get_Data = (p) => {
         const data = {
             uid: loginData.data.uid,
@@ -122,25 +73,12 @@ export default function Task_Manager({ navigation ,route }) {
         }
         dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
     }
-
     useEffect(() => {
         if (taskList) {
             if (taskList.status == "success") {
-                // setallTask(taskList.data)
                 settotalItems(taskList.total_rows)
-                let listTemp = [...allTask, ...taskList.data];
-                if (page == 0){
-                    setallTask(taskList.data)  
-                }
-                else if (taskList.total_rows > taskList.data.length){
-                    setallTask(listTemp)
-                }
+                setallTask([...allTask, ...taskList.data])
                 setIsLodding(false)
-                // if (taskList.data.length != 0) {
-                //     let dataLive = taskList.data;
-                //     let listTemp = [...allTask, ...dataLive];
-                //     setallTask(listTemp)
-                // }
             }
             else if (taskList.status == "failed") {
                 setIsLodding(false)
@@ -148,12 +86,24 @@ export default function Task_Manager({ navigation ,route }) {
             else if (taskList.status == "fail") {
                 ToastAndroid.show(taskList.message, ToastAndroid.SHORT);
                 setIsLodding(false)
-            }
-            else {
-            }    
+            }   
         }
     }, [taskList])
-
+    const fetchNextItems = () => {
+        if (totalItems > allTask.length) {
+            let p = page + 1;
+            setPage(p);
+            Get_Data(p)
+        }
+    }
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        setIsLodding(true)
+        setallTask([])
+        setPage(0)
+        Get_Data(0)
+    }
     const [temObject, settempObject] = useState('')
     const CheckEditTask = (value) => {
         settitle(value.title)
@@ -166,7 +116,6 @@ export default function Task_Manager({ navigation ,route }) {
         settempObject(value)
         setIsVisible(true)
     };
-
     const EditFunction = (value) => {
         if (title == "") {
             ToastAndroid.show('Enter Title', ToastAndroid.SHORT);
@@ -196,11 +145,11 @@ export default function Task_Manager({ navigation ,route }) {
             dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
         }
     }
-
     useEffect(() => {
         if (responseAdd_Edit) {
             if (responseAdd_Edit.status == "success") {
                 setIsVisible(false)
+                setEIsLodding(false)
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 settitle('')
                 setDate(new Date())
@@ -208,36 +157,28 @@ export default function Task_Manager({ navigation ,route }) {
                 setStatus(null)
                 settempObject("")
                 Get_Data(0)
+                setallTask([])
                 dispatch(taskmanagerAction.clearResponse())
             }
             else if (responseAdd_Edit.status == "failed") {
-            }
-            else if (responseAdd_Edit.status == "fail") {
+                setEIsLodding(false)
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(taskmanagerAction.clearResponse())
             }
-            setEIsLodding(false)
-        }
-        else {
         }
     }, [responseAdd_Edit])
-
-
     const [tempId, settempId] = useState('')
     const [tempType, settempType] = useState('')
-
     const CencelFunction = () => {
         settempType('')
         settempId('')
         setaskDelete(!askDelete)
     }
-
     const CheckDeleteFunction = (value) => {
         settempId(value.id)
         settempType(value.type)
         setaskDelete(!askDelete)
     }
-
     const DeleteFunction = () => {
         setaskDelete(!askDelete)
         const data = {
@@ -249,7 +190,6 @@ export default function Task_Manager({ navigation ,route }) {
         dispatch(taskmanagerAction.deleteTask(data, loginData.data.token));
         setIsLodding(true)
     }
-
     useEffect(() => {
         if (deleteTask) {
             if (deleteTask.status == "200") {
@@ -264,30 +204,55 @@ export default function Task_Manager({ navigation ,route }) {
             }
         }
     }, [deleteTask])
-
     const DeleteSuccessFully = () => {
         dispatch(taskmanagerAction.clearResponse());
         Get_Data(0)
+        setallTask([])
         setModalVisible2(!modalVisible2)
     }
-
-    const [refreshing, setrefreshing] = useState(false)
-    const handleRefresh = () => {
-        console.log(refreshing)
-        setIsLodding(true)
+    const onChangeFrom = (event, selectedDate) => {
+        if (event.type == 'dismissed') {
+            setShow(!show);
+        }
+        else {
+            console.log('date selected ')
+            const currentDate = selectedDate || date;
+            setShow(Platform.OS === 'ios');
+            setDate(currentDate)
+            settext(false)
+        }
+    };
+    const showMode = (currentMode) => {
+        setShow(!show);
+        setMode(currentMode);
+    };
+    const showDatepicker = () => {
+        showMode('date');
+    };
+    const checkValue = (value) => {
         setallTask([])
-        setPage(0)
-        Get_Data(0)
-    }
-
-    const fetchNextItems = () => {
-        if (totalItems > allTask.length) {
-            let p = page + 1;
-            setPage(p);
-            Get_Data(p)
+        setisService(value)
+        setIsLodding(true)
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile.toString(),
+            org_uid: loginData.data.org_uid,
+            pageSize: perPageItems,
+            pageNumber: '0',
+            filters: []
+        }
+        if (value == 'Done') {
+            data.filters.push({ eq: '3', key: 'status' })
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
+        }
+        else if (value == 'To-Do') {
+            data.filters.push({ eq: '1', key: 'status' })
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
+        }
+        else if (value == 'All') {
+            dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
     }
-
     const AllView = ({ item }) => {
         return (
             <View style={{ marginTop: '1%' }}>
@@ -589,7 +554,7 @@ export default function Task_Manager({ navigation ,route }) {
                     <View style={styles.modalView3}>
                         <TouchableOpacity
                             style={{ alignSelf: 'flex-end' }}
-                            onPress={() => setModalVisible2(!modalVisible2)}
+                            onPress={() =>  DeleteSuccessFully()}
                         >
                             <Image
                                 style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}

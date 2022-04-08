@@ -6,7 +6,7 @@ import {
     lead_status, lead_status_Success, lead_status_Clear,
     historyDetail, historyDetail_Success, historyDetail_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const AddCallHistory = (data, token,) => {
     return (dispatch) => {
@@ -37,7 +37,7 @@ export const HistoryList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: callhistory })
         // fetch(`http://3.23.113.168:3000/getCallHistoryList`,
-        fetch(`http://3.23.113.168:3000/getFeedbackList`,
+        fetch(`${Base_NodeUrl}/getFeedbackList`,
             {
                 method: "POST",
                 headers: {
@@ -49,7 +49,7 @@ export const HistoryList = (data, token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log(responseData)
+                console.log(responseData)
                 dispatch({ type: callhistory_Success, payload: responseData })
             })
             .catch((error) => {
@@ -61,7 +61,7 @@ export const HistoryList = (data, token,) => {
 export const CampaignList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Campaign })
-        fetch(`${BaseUrl}/campaign-list`,
+        fetch(`${Base_NodeUrl}/getCampaignList`,
             {
                 method: "POST",
                 headers: {
@@ -73,7 +73,7 @@ export const CampaignList = (data, token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log(responseData)
+                console.log(responseData)
                 dispatch({ type: Campaign_Success, payload: responseData })
             })
             .catch((error) => {
@@ -108,7 +108,7 @@ export const LeadStatusList = (data, token,) => {
 export const HistoryDetail = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: historyDetail })
-        fetch(`http://3.23.113.168:3000/getCallHistoryList`,
+        fetch(`${Base_NodeUrl}/getCallHistoryList`,
             {
                 method: "POST",
                 headers: {

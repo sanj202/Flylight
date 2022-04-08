@@ -34,7 +34,9 @@ import {
   addLead,
   packegeTopups,
   Edit_Contact,
-  orderHistory
+  orderHistory,
+  TransforLeads,
+  LeadFilterScreen
 } from '../../screens/index'
 
 const Tab = createBottomTabNavigator();
@@ -439,6 +441,27 @@ export default function BottomTabScreens() {
           tabBarButton: () => null,
         }}
       />
+        <Tab.Screen
+        name='LeadFilterScreen'
+        component={LeadFilterScreen}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+<Tab.Screen
+        name='TransforLeads'
+        component={TransforLeads}
+        options={{
+          tabBarHideOnKeyboard: true,
+          tabBarIcon: () => null,
+          tabBarButton: () => null,
+        }}
+      />
+
+
 
     </Tab.Navigator >
   );

@@ -1,6 +1,6 @@
 
 import { Contact_List ,Contact_List_Suceess ,Contact_Clear ,Record_Feedback,Record_Feedback_Sucess,Record_Feedback_Clear}  from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const contactList = (data,token) => {
     // console.log(" credentails..................", token,uid,profile_id,org_uid )

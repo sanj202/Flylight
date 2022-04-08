@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, FlatList, Image, Alert, Platform, ActivityIndicator, Pressable, Dimensions, ToastAndroid } from 'react-native';
+import { Text, View, TouchableOpacity, FlatList, Image, Platform, ActivityIndicator, Pressable, Dimensions, ToastAndroid } from 'react-native';
 import styles from "./styles";
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -12,7 +12,6 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function History({ navigation }) {
 
-
   const [History, setHistory] = useState([])
   const [IsLodding, setIsLodding] = useState(false)
   const [campList, setcampList] = useState([])
@@ -23,7 +22,15 @@ export default function History({ navigation }) {
   const { width, height } = Dimensions.get('window');
   const [page, setPage] = useState(0);
   const [perPageItems, setperPageItems] = useState(10);
-  const [totalItems, settotalItems] = useState('');
+  const [totalItems, settotalItems] = useState(0);
+  const [startDate, setstartDate] = useState(new Date());
+  const [startmode, setstartMode] = useState('date');
+  const [startshow, setstartshow] = useState(false);
+  const [starttext, setstarttext] = useState(true)
+  const [enddate, setendDate] = useState(new Date());
+  const [endmode, setendMode] = useState('date');
+  const [endshow, setendShow] = useState(false);
+  const [endtext, setendtext] = useState(true)
 
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
@@ -42,8 +49,50 @@ export default function History({ navigation }) {
     FetchData(page)
     dispatch(historyAction.LeadStatusList(data, loginData.data.token));
     dispatch(historyAction.CampaignList(data, loginData.data.token));
-  }, [isFocused])
-
+  }, [])
+  useEffect(() => {
+    if (historyData) {
+      if (historyData.status == "success") {
+        settotalItems(historyData.total_rows)
+        setHistory([...History, ...historyData.data])
+        setIsLodding(false)
+        dispatch(historyAction.clearResponse())
+      }
+      else if (historyData.status == "failed") {
+        setIsLodding(false)
+        ToastAndroid.show(historyData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+    }
+  }, [historyData])
+  useEffect(() => {
+    if (CampData) {
+      if (CampData.status == "success") {
+        setcampList(CampData.data.rows)
+      }
+      else if (CampData.status == "failed") {
+        setIsLodding(false)
+        ToastAndroid.show(CampData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+    }
+  }, [CampData])
+  useEffect(() => {
+    if (LeadData) {
+      if (LeadData.status == "200") {
+        setstatusList(LeadData.data)
+        dispatch(historyAction.clearResponse())
+      }
+      else if (LeadData.status == "failed") {
+        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+      else if (LeadData.status == "fail") {
+        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
+        dispatch(historyAction.clearResponse())
+      }
+    }
+  }, [LeadData])
   const FetchData = (p) => {
     let data = {
       uid: loginData.data.uid,
@@ -55,12 +104,21 @@ export default function History({ navigation }) {
     }
     dispatch(historyAction.HistoryList(data, loginData.data.token));
   }
-
-  const [startDate, setstartDate] = useState(new Date());
-  const [startmode, setstartMode] = useState('date');
-  const [startshow, setstartshow] = useState(false);
-  const [starttext, setstarttext] = useState(true)
-
+  const fetchNextItems = () => {
+    if (totalItems > History.length) {
+      let p = page + 1;
+      setPage(p);
+      FetchData(p)
+    }
+  }
+  const [refreshing, setrefreshing] = useState(false)
+  const handleRefresh = () => {
+    console.log(refreshing)
+    setIsLodding(true)
+    setPage(0)
+    setHistory([])
+    FetchData(0)
+  }
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       setstartshow(!startshow);
@@ -79,12 +137,6 @@ export default function History({ navigation }) {
   const showDatepicker = () => {
     Mode('date');
   };
-
-  const [enddate, setendDate] = useState(new Date());
-  const [endmode, setendMode] = useState('date');
-  const [endshow, setendShow] = useState(false);
-  const [endtext, setendtext] = useState(true)
-
   const onChangeendDate = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       console.log('date not selected end ')
@@ -104,7 +156,6 @@ export default function History({ navigation }) {
   const showEDatepicker = () => {
     setEMode('date');
   };
-
   const Search = () => {
     let StartDate = moment(startDate).format("YYYY-MM-DD")
     let EndDate = moment(enddate).format("YYYY-MM-DD")
@@ -143,7 +194,6 @@ export default function History({ navigation }) {
             { lte: EndDate, key: 'created_at' })
           dispatch(historyAction.HistoryList(data, loginData.data.token));
         }
-
         if (statusId !== null && campId !== null) {
           setIsLodding(true)
           data.filters.push({ eq: campId, key: 'campaign' },
@@ -160,13 +210,15 @@ export default function History({ navigation }) {
           data.filters.push({ eq: campId, key: 'campaign' })
           dispatch(historyAction.HistoryList(data, loginData.data.token));
         }
+        //  console.log(data)
       }
-      // console.log(data)
+      else {
+        ToastAndroid.show('Please Select Search Criteria', ToastAndroid.SHORT);
+      }
     }
   }
-
   const Reset = () => {
-    console.log('reser')
+    setIsLodding(true)
     setstarttext(true)
     setendtext(true)
     setcampId(null)
@@ -174,129 +226,20 @@ export default function History({ navigation }) {
     setstatus(null)
     setstartDate(new Date())
     setendDate(new Date())
-    setIsLodding(true)
+    setHistory([])
     setPage(0)
-    if (loginData) {
-      let data = {
-        uid: loginData.data.uid,
-        org_uid: loginData.data.org_uid,
-        profile_id: loginData.data.cProfile.toString(),
-        pageSize: perPageItems,
-        pageNumber: '0',
-        filters: []
-      }
-      dispatch(historyAction.HistoryList(data, loginData.data.token));
-    }
+    FetchData(0)
   }
-
   const Detail = (value) => {
     navigation.navigate('HistoryOne', { id: value })
   }
-
-
-
-  useEffect(() => {
-    if (historyData) {
-      if (historyData.status == "success") {
-        // setHistory(historyData.data)
-        settotalItems(historyData.total_rows)
-        if (historyData.data.length != 0) {
-          let dataLive = historyData.data;
-          let listTemp = [...History, ...dataLive];
-          setHistory(listTemp)
-        }
-        setIsLodding(false)
-        dispatch(historyAction.clearResponse())
-      }
-      else if (historyData.status == "failed") {
-        setIsLodding(false)
-        ToastAndroid.show(historyData.message, ToastAndroid.SHORT);
-        dispatch(historyAction.clearResponse())
-      }
-      else if (historyData.status == "fail") {
-        setIsLodding(false)
-        ToastAndroid.show(historyData.message, ToastAndroid.SHORT);
-        dispatch(historyAction.clearResponse())
-      }
-      else {
-      }
-    }
-  }, [historyData])
-
-  useEffect(() => {
-    if (CampData) {
-      if (CampData.status == "200") {
-        setcampList(
-          CampData.data !== undefined && CampData.data.map((item, index) =>
-            item ? { label: item.campaign_name, value: item.id } : { label: 'None', value: 'None' })
-        )
-      }
-      else if (CampData.status == "failed") {
-        setIsLodding(false)
-        ToastAndroid.show(CampData.message, ToastAndroid.SHORT);
-        dispatch(historyAction.clearResponse())
-      }
-      else if (CampData.status == "fail") {
-        setIsLodding(false)
-        ToastAndroid.show(CampData.message, ToastAndroid.SHORT);
-        dispatch(historyAction.clearResponse())
-      }
-      else {
-
-      }
-    }
-  }, [CampData])
-
-  useEffect(() => {
-    if (LeadData) {
-      if (LeadData.status == "200") {
-        setstatusList(
-          LeadData.data !== undefined && LeadData.data.map((item, index) =>
-            item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' })
-        )
-        dispatch(historyAction.clearResponse())
-      }
-      else if (LeadData.status == "failed") {
-        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
-        dispatch(historyAction.clearResponse())
-      }
-      else if (LeadData.status == "fail") {
-        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
-        dispatch(historyAction.clearResponse())
-      }
-    }
-  }, [LeadData])
-
-
-  const [fileterType, setfileterType] = useState([])
-
   const campaignSelect = (value) => {
     setcampId(value);
   }
-
   const statusSelect = (item) => {
-    setstatus(item.label)
-    setstatusId(item.value);
+    setstatus(item.name)
+    setstatusId(item.id);
   }
-
-
-  const [refreshing, setrefreshing] = useState(false)
-  const handleRefresh = () => {
-    console.log(refreshing)
-    setIsLodding(true)
-    setPage(0)
-    setHistory([])
-    FetchData(0)
-  }
-
-  const fetchNextItems = () => {
-    if (totalItems > History.length) {
-      let p = page + 1;
-      setPage(p);
-      FetchData(p)
-    }
-  }
-
   const HistoryView = ({ item }) => {
     return (
       <Pressable onPress={() => Detail(item.lead_id)} >
@@ -332,7 +275,6 @@ export default function History({ navigation }) {
             </View>
           </View>
         </Card>
-
       </Pressable>
     )
   }
@@ -469,13 +411,13 @@ export default function History({ navigation }) {
               search={true}
               searchPlaceholder='Search'
               maxHeight={160}
-              labelField="label"
-              valueField="value"
+              labelField="campaign_name"
+              valueField="id"
               placeholder='Select Campaign'
               // searchPlaceholder="Search..."
               value={campId}
               onChange={item => {
-                campaignSelect(item.value)
+                campaignSelect(item.id)
               }}
               renderLeftIcon={() => (
 
@@ -498,8 +440,8 @@ export default function History({ navigation }) {
               search={true}
               searchPlaceholder='Search'
               maxHeight={160}
-              labelField="label"
-              valueField="value"
+              labelField="name"
+              valueField="id"
               placeholder='Select Status'
               // searchPlaceholder="Search..."
               value={statusId}

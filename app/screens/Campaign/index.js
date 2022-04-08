@@ -25,14 +25,14 @@ export default function Campaign({ navigation }) {
     useEffect(() => {
         setIsLodding(true)
         FetchData(page)
-    }, [isFocused])
+    }, [])
 
     const FetchData = (p) => {
         setIsLodding(true)
         const data = {
             uid: loginData.data.uid,
             org_uid: loginData.data.org_uid,
-            profile_id: loginData.data.cProfile,
+            profile_id: loginData.data.cProfile.toString(),
             pageSize: perPageItems,
             pageNumber: p,
         }
@@ -41,28 +41,15 @@ export default function Campaign({ navigation }) {
 
     useEffect(() => {
         if (campaignList) {
-            if (campaignList.status == "200") {
-                // setCampaignData(campaignList.data)
-                console.log('........................', campaignList)
+            if (campaignList.status == "success") {
                 settotalItems(campaignList.total_rows)
-                if (page == 0) {
-                    setCampaignData(campaignList.data)
-                } else if (campaignList.data.length != 0) {
-                    let dataLive = campaignList.data;
-                    let listTemp = [...leadList, ...dataLive];
-                    setCampaignData(listTemp)
-                }
+                setCampaignData(campaignList.data.rows)
                 setIsLodding(false)
                 dispatch(campaignAction.clearResponse())
             }
             else if (campaignList.status == "failed") {
                 setIsLodding(false)
             }
-            else if (campaignList.status == "fail") {
-                setIsLodding(false)
-            }
-        }
-        else {
         }
     }, [campaignList])
 
@@ -126,9 +113,6 @@ export default function Campaign({ navigation }) {
 
     const CampaignView = ({ item }) => {
         return (
-            <TouchableOpacity
-                onPress={() => Details(item)}
-            >
                 <View style={styles.listData}>
                     <View>
                         <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
@@ -141,30 +125,22 @@ export default function Campaign({ navigation }) {
                         <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_type}</Text>
                     </View>
 
-                    <View style={{ marginLeft: '-10%' }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity
-                            // onPress={() => navigation.navigate('EditCampaign', {  campData: item})}
-                            >
-                                <Text style={{ color: '#fff', marginHorizontal: '8%' }}></Text>
-                                {/* <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
-                                    source={require('../../images/deleteCall.png')} /> */}
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate('EditCampaign', { campData: item })}
-                            >
-                                <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
-                                    source={require('../../images/editCall.png')} />
-                            </TouchableOpacity>
-
-                        </View>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}></Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}></Text>
-                        {/* <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}></Text> */}
-                        {/* <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('lll')}</Text> */}
+                    <View style={{alignSelf:'flex-end'}}>
+                        <TouchableOpacity
+                        style={{alignItems:'flex-end'}}
+                            onPress={() => navigation.navigate('EditCampaign', { campData: item })}
+                        >
+                            <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
+                                source={require('../../images/editCall.png')} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                        style={{alignItems:'flex-end',marginTop:'20%'}}
+                        onPress={() => Details(item)}
+                        >
+                            <Text style={{color:'#000000',padding:2}}>More details</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            </TouchableOpacity>
         )
     }
 
@@ -246,7 +222,7 @@ export default function Campaign({ navigation }) {
                             <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Budgeted Cost</Text>
                             <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Description</Text>
                             <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>created Date</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>updated Date</Text>
+                            {/* <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>updated Date</Text> */}
                         </View>
                         <View style={{ marginLeft: '3%', width: '60%' }}>
                             <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.CampaignName}</Text>
@@ -258,7 +234,7 @@ export default function Campaign({ navigation }) {
                             <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.BudgetedCost}</Text>
                             <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {Objcet.Description}</Text>
                             <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {moment(Objcet.created_at).format('lll')}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {moment(Objcet.updated_at).format('lll')}</Text>
+                            {/* <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>:       {moment(Objcet.updated_at).format('lll')}</Text> */}
                         </View>
                     </View>
                 </View>

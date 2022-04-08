@@ -3,13 +3,13 @@ import {
     Add_Edit_Status, Add_Edit_Status_Success, Add_Edit_Status_Clear,
     Get_Action, Action_Success, Action_Clear,
     Get_Status, Status_Success, Status_Clear,
-    Get_Action_Delete,Action_Delete_Success,Action_Delete_Clear,
-    Get_Status_Delete,Status_Delete_Success,Status_Delete_Clear,
+    Get_Action_Delete, Action_Delete_Success, Action_Delete_Clear,
+    Get_Status_Delete, Status_Delete_Success, Status_Delete_Clear,
 
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
-export const add_EditStatus = (data,token) => {
+export const add_EditStatus = (data, token) => {
 
     return (dispatch) => {
         dispatch({ type: Add_Edit_Status })
@@ -39,7 +39,7 @@ export const clearAddStatusResponse = () => {
     };
 };
 
-export const getStatus = (data,token) => {
+export const getStatus = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Get_Status })
         fetch(`${BaseUrl}/status-list`,
@@ -69,7 +69,7 @@ export const clearStatusResponse = () => {
     };
 };
 
-export const delete_Status = (data,token) => {
+export const delete_Status = (data, token) => {
 
     return (dispatch) => {
         dispatch({ type: Get_Status_Delete })
@@ -99,7 +99,7 @@ export const clearDeleteStatusResponse = () => {
     };
 };
 
-export const add_EditAction = (data ,token,) => {
+export const add_EditAction = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Add_Edit_Action })
         fetch(`${BaseUrl}/addedit-action`,
@@ -128,7 +128,7 @@ export const clearAddActionResponse = () => {
     };
 };
 
-export const getAction = (data,token) => {
+export const getAction = (data, token) => {
     return (dispatch) => {
         dispatch({ type: Get_Action })
         fetch(`${BaseUrl}/action-list`,
@@ -159,7 +159,7 @@ export const clearActionResponse = () => {
     };
 };
 
-export const delete_Action = (data,token) => {
+export const delete_Action = (data, token) => {
 
     return (dispatch) => {
         dispatch({ type: Get_Action_Delete })

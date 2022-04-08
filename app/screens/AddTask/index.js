@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList,Image, ScrollView, Modal, Dimensions,
-    Platform, ToastAndroid} from 'react-native';
+import {
+    ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList, Image, ScrollView, Modal, Dimensions,
+    Platform, ToastAndroid
+} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -209,7 +211,7 @@ export default function AddContact({ navigation }) {
                 settitle(''), setTaskFor(null), setreleetedTo(''),
                     setreleetedToId(), setreleetedToFname('Contact'), setreleetedToLname('Person'),
                     setStatus(null), setPriority(null),
-                    setDescription(), setstartDate(new Date()), setstarttext(true)
+                    setDescription(""), setstartDate(new Date()), setstarttext(true)
                 dispatch(taskmanagerAction.clearResponse())
             }
             else if (responseAdd_Edit.status == "failed") {
@@ -415,8 +417,8 @@ export default function AddContact({ navigation }) {
                                 <View>
                                     {starttext == true ?
                                         <View style={{ flexDirection: 'row' }}>
-                                            <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Due Date</Text>
-                                            <Text style={{ fontSize: 15, color: 'red' }}>*</Text>
+                                            <Text style={{ marginTop: '2%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>Due Date</Text>
+                                            <Text style={{ fontSize: 15, color: 'red', marginTop: '-2%' }}>*</Text>
                                         </View>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>

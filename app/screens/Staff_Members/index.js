@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Text, View, ToastAndroid, TouchableOpacity, TextInput, Picker, FlatList, Image, Button, ActivityIndicator,
-    Modal, Alert, Pressable, StatusBar, Dimensions
+    Modal, Pressable, StatusBar, Dimensions
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header/index'
@@ -22,7 +22,11 @@ export default function Staff_Members({ navigation }) {
     const [askDelete1, setaskDelete1] = useState(false);
     const { width, height } = Dimensions.get('window');
     const [leadOwnerData, setleadOwnerData] = useState('')
-    const [IsLodding, setIsLodding] = useState(false)
+    const [IsLodding, setIsLodding] = useState({
+        userLodding: true,
+        inviteLodding: false,
+        roleLodding: true
+    })
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
 
@@ -32,12 +36,15 @@ export default function Staff_Members({ navigation }) {
     const roleResponse = useSelector(state => state.staffMember.role)
 
     useEffect(() => {
-        setIsLodding(true)
         FetchData(0)
-    }, [isFocused])
+    }, [])
 
-    const FetchData = (p) => {
-        setIsLodding(true)
+    const FetchData = () => {
+        setIsLodding({
+            ...IsLodding,
+            userLodding: true,
+            roleLodding: true
+        })
         const data = {
             uid: loginData.data.uid,
             org_uid: loginData.data.org_uid,
@@ -53,13 +60,22 @@ export default function Staff_Members({ navigation }) {
             if (roleResponse.status == "200") {
                 setAccountType(roleResponse.data.acTypes)
                 setRoles(roleResponse.data.rolelist)
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    roleLodding: false
+                })
             }
             else if (roleResponse.status == "failed") {
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    roleLodding: false
+                })
             }
             else if (roleResponse.status == "fail") {
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    roleLodding: false
+                })
             }
         }
     }, [roleResponse])
@@ -68,13 +84,22 @@ export default function Staff_Members({ navigation }) {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 setleadOwnerData(leadOwner.data.map((item, index) => item.user))
-                setIsLodding(false)
+                  setIsLodding({
+                    ...IsLodding,
+                    roleLodding: false
+                })
             }
             else if (leadOwner.status == "failed") {
-                setIsLodding(false)
+                  setIsLodding({
+                    ...IsLodding,
+                    roleLodding: false
+                })
             }
             else if (leadOwner.status == "fail") {
-                setIsLodding(false)
+                  setIsLodding({
+                    ...IsLodding,
+                    roleLodding: false
+                })
             }
         }
     }, [leadOwner])
@@ -82,32 +107,30 @@ export default function Staff_Members({ navigation }) {
     useEffect(() => {
         if (inviteResponse) {
             if (inviteResponse.status == "success") {
+                setaskDelete(false)
                 ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
                 dispatch(staffMemberAction.clearResponse())
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    inviteLodding: false
+                })
                 setEmail("")
                 setrole(null)
                 setaccount(null)
             }
             else if (inviteResponse.status == "failed") {
+                setaskDelete(false)
                 ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
                 dispatch(staffMemberAction.clearResponse())
-                setIsLodding(false)
+                setIsLodding({
+                    ...IsLodding,
+                    inviteLodding: false
+                })
             }
-            else if (inviteResponse.status == "fail") {
-                ToastAndroid.show(inviteResponse.message, ToastAndroid.SHORT);
-                dispatch(staffMemberAction.clearResponse())
-                setIsLodding(false)
-            }
-            else {
-                setIsLodding(false)
-            }
-            setaskDelete(false)
         }
     }, [inviteResponse])
 
     const CencelFunction = () => {
-        // settempType('')
         setEmail("")
         setrole(null)
         setaccount(null)
@@ -125,7 +148,10 @@ export default function Staff_Members({ navigation }) {
             ToastAndroid.show('Select Account Type', ToastAndroid.SHORT);
         }
         else {
-            setIsLodding(true)
+            setIsLodding({
+                ...IsLodding,
+                inviteLodding: true
+            })
             const data = {
                 uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
@@ -138,34 +164,35 @@ export default function Staff_Members({ navigation }) {
         }
     }
 
-
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
         console.log(refreshing)
-        FetchData(0)
+        FetchData()
     }
 
     const UserLisView = ({ item }) => {
         return (
-            <TouchableOpacity
-                onPress={() => Details(item)}
-            >
-                <View style={styles.listData}>
-                    <View>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Mobile </Text>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Email  </Text>
-                    </View>
-                    <View style={{ marginLeft: '2%', width: '58%' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.phone}</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.email}</Text>
-                    </View>
-                    <View style={{ marginLeft: '-18%' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('lll')}</Text>
-                    </View>
+            <View style={styles.listData}>
+                <View>
+                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
+                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Mobile </Text>
+                    <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Email  </Text>
                 </View>
-            </TouchableOpacity>)
+                <View style={{ marginLeft: '2%', width: '58%' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.name}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.phone}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.email}</Text>
+                </View>
+                <View style={{ marginLeft: '-18%' }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('lll')}</Text>
+                    <TouchableOpacity
+                        onPress={() => Details(item)}
+                        style={{ alignSelf: 'flex-end', marginTop: '15%' }}>
+                        <Text style={{ color: '#000000' }}>More...</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
     }
 
     const [Objcet, setObjcet] = useState({
@@ -209,9 +236,9 @@ export default function Staff_Members({ navigation }) {
     }
 
     return (
-        <View style={[styles.container, { height: height, width: width }]}>
+        <View style={[styles.container, { height: height, width: width, position: 'absolute' }]}>
             <Header
-                style={{ height: "16%" }}
+                style={{ height: "14%" }}
                 onPressLeft={() => {
                     navigation.openDrawer()
                     // navigation.goBack()
@@ -221,7 +248,6 @@ export default function Staff_Members({ navigation }) {
                     navigation.navigate('Notification')
                 }}
             />
-
             <TouchableOpacity
                 onPress={() => setaskDelete(!askDelete)}
                 style={{
@@ -231,7 +257,7 @@ export default function Staff_Members({ navigation }) {
                     paddingVertical: 2,
                     alignSelf: 'flex-end',
                     marginHorizontal: '5%',
-                    marginTop: '-12%',
+                    marginTop: '-10%',
                     borderRadius: 15
                 }}
             >
@@ -240,7 +266,7 @@ export default function Staff_Members({ navigation }) {
                 </Text>
             </TouchableOpacity>
             <View style={{ marginTop: '3%' }}>
-                {IsLodding == true ?
+                {IsLodding.userLodding && IsLodding.roleLodding ?
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                     :
                     <FlatList
@@ -256,13 +282,10 @@ export default function Staff_Members({ navigation }) {
                     />
                 }
             </View>
-
             <Modal animationType="slide" transparent={true} visible={askDelete}
                 onRequestClose={() => CencelFunction()}>
                 <View style={styles.askModel}>
                     <Text style={styles.askTitle}> Invite New Member</Text>
-                    {/* <Text style={styles.askSubtitle}>
-                        *Please Enter Active Email Id*</Text> */}
                     <View style={styles.inputFields}>
                         <Image
                             style={[styles.icon, {
@@ -277,7 +300,6 @@ export default function Staff_Members({ navigation }) {
                             onChangeText={e1 => setEmail(e1)}
                             placeholder="Enter Email" />
                     </View>
-
                     <Dropdown
                         style={styles.dropdown3}
                         placeholderStyle={styles.placeholderStyle3}
@@ -331,10 +353,10 @@ export default function Staff_Members({ navigation }) {
                         />
                     </View>
 
-                    {IsLodding == true ?
+                    {IsLodding.inviteLodding == true ?
                         <ActivityIndicator size="large" color="#0000ff" />
                         :
-                        <View />
+                       null
                     }
                     <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: '3%' }}>
                         <Pressable
@@ -353,7 +375,6 @@ export default function Staff_Members({ navigation }) {
                     </View>
                 </View>
             </Modal>
-
             <Modal animationType="slide" transparent={true} visible={askDelete1}
                 onRequestClose={() => { setaskDelete1(false); }}>
                 <View style={styles.askModel}>
@@ -367,7 +388,6 @@ export default function Staff_Members({ navigation }) {
                             source={require('../../images/cross.png')}
                         />
                     </TouchableOpacity>
-
                     <View style={[styles.inputFields, { padding: 10 }]}>
                         <View>
                             <Text style={styles.DetailCampTitle}>Name </Text>
@@ -392,7 +412,6 @@ export default function Staff_Members({ navigation }) {
                     </View>
                 </View>
             </Modal>
-
         </View >
     );
 }

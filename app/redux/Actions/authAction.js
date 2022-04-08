@@ -1,6 +1,6 @@
 
 import { LOGIN, LOGIN_CLEAR, LOGIN_SUCCESS, } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const login = (loginID, Password) => {
     return (dispatch) => {

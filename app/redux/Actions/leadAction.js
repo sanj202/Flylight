@@ -7,10 +7,10 @@ import {
     Campaign, Campaign_Success, Campaign_Clear,
     LeadStatus, LeadStatus_Success, LeadStatus_Clear,
     All_State, All_State_Success, All_State_Clear, ZipData, ZipData_Success, ZipData_Clear,
-    LeadOwnerNew,LeadOwnerNew_Success,LeadOwnerNew_Clear
+    LeadOwnerNew, LeadOwnerNew_Success, LeadOwnerNew_Clear,
+    LeadTranferOwnerNew, LeadTranferOwnerNew_Success, LeadTranferOwnerNew_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
-import axios from 'axios';
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const addLaed = (data, token) => {
     return (dispatch) => {
@@ -131,7 +131,7 @@ export const LeadStatusList = (data, token,) => {
 export const CampaignList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Campaign })
-        fetch(`${BaseUrl}/campaign-list`,
+        fetch(`${Base_NodeUrl}/getCampaignList`,
             {
                 method: "POST",
                 headers: {
@@ -224,6 +224,29 @@ export const importLead = (data, token) => {
     }
 };
 
+export const LeadTranferOwneList = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: LeadTranferOwnerNew })
+        fetch(`${BaseUrl}/getOrgUserList`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: LeadTranferOwnerNew_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
 export const clearResponse = () => {
     return {
         type: Add_Edit_Lead_Clear,
@@ -232,7 +255,8 @@ export const clearResponse = () => {
         type: LeadStatus_Clear,
         type: All_State_Clear,
         type: ZipData_Clear,
-        type: LeadOwnerNew_Clear
+        type: LeadOwnerNew_Clear,
+        type: LeadTranferOwnerNew_Clear
     };
 };
 

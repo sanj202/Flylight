@@ -157,6 +157,12 @@ export default function EditCampaign({ navigation, route }) {
         else if (Status == null) {
             ToastAndroid.show('Enter campaign Status', ToastAndroid.SHORT);
         }
+        else if (starttext == true) {
+            ToastAndroid.show('Select Start Date', ToastAndroid.SHORT);
+        }
+        else if (endtext == true) {
+            ToastAndroid.show('Select End Date', ToastAndroid.SHORT);
+        }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
             let formateEndDate = moment(enddate).format("YYYY-MM-DD")
@@ -239,6 +245,9 @@ export default function EditCampaign({ navigation, route }) {
                             value={campaignName}
                             onChangeText={e1 => setcampaignName(e1)}
                             placeholder="Campaign Name" />
+                        {!campaignName.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={{ marginTop: '2%' }}>
@@ -266,6 +275,13 @@ export default function EditCampaign({ navigation, route }) {
                                         style={[styles.icon, { height: 22, width: 22 }]}
                                         source={require('../../images/transgender.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {Status == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
@@ -310,7 +326,10 @@ export default function EditCampaign({ navigation, route }) {
                                 :
                                 <View>
                                     {starttext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Start Date</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '4%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>Start Date</Text>
+                                            <Text style={{ fontSize: 15, color: 'red', marginTop: '-1%' }}>*</Text>
+                                        </View>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
                                     }
@@ -358,7 +377,10 @@ export default function EditCampaign({ navigation, route }) {
                                 :
                                 <View>
                                     {endtext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>End Date</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '4%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>End Date</Text>
+                                            <Text style={{ fontSize: 15, color: 'red', marginTop: '-1%' }}>*</Text>
+                                        </View>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(enddate).format('MM/DD/YYYY')}</Text>
                                     }

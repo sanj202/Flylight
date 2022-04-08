@@ -1,6 +1,6 @@
 
 import { REGISTER_SUCCESS ,REGISTER_CLEAR ,REGISTER ,} from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const register = (data) => {
     return (dispatch) => {

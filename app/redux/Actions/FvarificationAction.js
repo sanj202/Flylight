@@ -1,6 +1,6 @@
 
 import { FVERIFY_OTP, LOGIN_CLEAR, REGISTER, } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const varification = (otp, uid) => {
     // console.log(" credentails................./.",     otp,uid)

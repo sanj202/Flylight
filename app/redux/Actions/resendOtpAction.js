@@ -1,6 +1,6 @@
 
 import { VERIFY_OTP, LOGIN_CLEAR, RESEND_OTP, } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const resend = ( uid) => {
     // console.log(" credentails..................", uid)

@@ -64,7 +64,7 @@ export default function OrderHistory({ navigation }) {
     const DetailPackAPI = (item) => {
         console.log('.......................', item.order_id)
         // setaskDelete1(true)
-        return fetch(`http://3.23.113.168/admin/public/api/mobile/v1/PackageInvoice/
+        return fetch(`http://13.235.42.46/admin/public/api/mobile/v1/PackageInvoice/
         uid=${loginData.data.uid}/profile_id=${loginData.data.cProfile.toString()}/org_uid=${loginData.data.org_uid}/
         order_id=${item.order_id}`, {
             method: 'GET',

@@ -1,6 +1,6 @@
 
 import { VERIFY_OTP, LOGIN_CLEAR, RESEND_OTP,SET_PASSWORD } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const setPassword = (email, state ,state1) => {
     // console.log(" setPassword..................", state ,state1)

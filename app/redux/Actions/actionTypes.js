@@ -113,6 +113,7 @@ export const History_Feedback_Clear = "History_Feedback_Clear"
 // export const Import_Lead = "Import_Lead"
 // export const Add_Edit_Lead = "Add_Edit_Lead"
 export const Get_Report = 'Get_Report'
+export const Report_Success = 'Report_Success'
 export const Report_Clear = 'Report_Clear'
 
 
@@ -362,3 +363,18 @@ export const TopUp_Order_Verify_Clear = 'TopUp_Order_Verify_Clear'
 export const LeadOwnerNew = "LeadOwnerNew"
 export const LeadOwnerNew_Success = "LeadOwnerNew_Success"
 export const LeadOwnerNew_Clear = 'LeadOwnerNew_Clear'
+
+//LeadOwnerList
+export const LeadTranferOwnerNew = "LeadTranferOwnerNew"
+export const LeadTranferOwnerNew_Success = "LeadTranferOwnerNew_Success"
+export const LeadTranferOwnerNew_Clear = 'LeadTranferOwnerNew_Clear'
+
+//
+export const TLead_Opportunity = "TLead_Opportunity"
+export const TLead_Opportunity_Success = "TLead_Opportunity_Success"
+export const TLead_Opportunity_Clear = "TLead_Opportunity_Success"
+
+//
+export const LeadTransfer = "LeadTransfer"
+export const LeadTransfer_Success = "LeadTransfer_Success"
+export const LeadTransfer_Clear = "LeadTransfer_Success"

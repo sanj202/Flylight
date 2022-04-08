@@ -1,6 +1,6 @@
 import {
     Get_Notification,Notification_Suceess,Notification_Clear } from './actionTypes';
-import BaseUrl from '../../../const'
+    import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const notification = (data, Token,) => {
     return (dispatch) => {

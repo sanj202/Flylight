@@ -28,7 +28,7 @@ export default function Lead_manager({ navigation, route }) {
 
   const [page, setPage] = useState(0);
   const [perPageItems, setperPageItems] = useState(10);
-  const [totalItems, settotalItems] = useState('');
+  const [totalItems, settotalItems] = useState(0);
 
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
@@ -57,30 +57,19 @@ export default function Lead_manager({ navigation, route }) {
   useEffect(() => {
     if (Lead_OpportunityList) {
       if (Lead_OpportunityList.status == "success") {
-        // console.log('.................................................', Lead_OpportunityList)
-        // setLead(Lead.concat(Lead_OpportunityList.data))
         settotalItems(Lead_OpportunityList.total_rows)
-        let listTemp = [...Lead, ...Lead_OpportunityList.data];
-        setLead(listTemp)
-        // if (page == 0) {
-        //   setLead(Lead_OpportunityList.data)
-        // }
-        // else if (Lead_OpportunityList.data.length != 0) {
-        //   let dataLive = Lead_OpportunityList.data;
-        //   let listTemp = [...Lead, ...dataLive];
-        //   setLead(listTemp)
-        // }
+        setLead([...Lead, ...Lead_OpportunityList.data])
         dispatch(leadmanagerAction.clearResponse())
         setIsLodding(false)
       }
       else if (Lead_OpportunityList.status == "failed") {
         setIsLodding(false)
+        ToastAndroid.show('wrong format', ToastAndroid.SHORT);
       }
     }
   }, [Lead_OpportunityList])
 
   const fetchNextItems = () => {
-    console.log('...............................', totalItems, Lead.length)
     if (totalItems > Lead.length) {
       let p = page + 1;
       setPage(p);
@@ -90,13 +79,22 @@ export default function Lead_manager({ navigation, route }) {
 
   const [refreshing, setrefreshing] = useState(false)
   const handleRefresh = () => {
-    console.log(refreshing)
-    // setIsLodding(true)
+    setIsLodding(true)
     setLead([])
     setPage(0)
     Get_Data(0)
   }
-
+  const Get_Data = (p) => {
+    const data = {
+      uid: loginData.data.uid,
+      profile_id: loginData.data.cProfile.toString(),
+      org_uid: loginData.data.org_uid,
+      filters: [],
+      pageSize: perPageItems,
+      pageNumber: p,
+    }
+    dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+  }
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       setShow(!show);
@@ -108,7 +106,6 @@ export default function Lead_manager({ navigation, route }) {
       settext(false)
     }
   };
-
   const showMode = (currentMode) => {
     setShow(!show);
     setMode(currentMode);
@@ -116,7 +113,6 @@ export default function Lead_manager({ navigation, route }) {
   const showDatepicker = () => {
     showMode('date');
   };
-
   const onChangeTo = (event, selectedDates) => {
     if (event.type == 'dismissed') {
       setShows(!shows);
@@ -135,31 +131,15 @@ export default function Lead_manager({ navigation, route }) {
   const showDatepickers = () => {
     showModes('date');
   };
-
-  const Get_Data = (p) => {
-    // setIsLodding(true)
-    console.log('..........................', p)
-    const data = {
-      uid: loginData.data.uid,
-      profile_id: loginData.data.cProfile.toString(),
-      org_uid: loginData.data.org_uid,
-      filters: [],
-      pageSize: perPageItems,
-      pageNumber: p,
-    }
-    dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
-  }
-
   const Search = () => {
     let StartDate = moment(date).format("YYYY-MM-DD")
     let EndDate = moment(dates).format("YYYY-MM-DD")
-    // setIsLodding(true)
     let data = {
       uid: loginData.data.uid,
       profile_id: loginData.data.cProfile.toString(),
       org_uid: loginData.data.org_uid,
       filters: [],
-      pageSize: '30',
+      pageSize: perPageItems,
       pageNumber: '0',
     }
     if (text == false || texts == false) {
@@ -188,21 +168,24 @@ export default function Lead_manager({ navigation, route }) {
           { lte: EndDate, key: 'created_at' })
         dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
       }
-
+      setLead([])
       console.log(data)
     }
+    else {
+      ToastAndroid.show('Please Select Search Criteria', ToastAndroid.SHORT);
+    }
   }
-
   const Reset = () => {
     settext(true)
     settexts(true)
     setDate(new Date())
     setDates(new Date())
     setIsLodding(true)
-    Get_Data()
+    setPage(0)
+    Get_Data(0)
+    setLead([])
     settemarray([])
   }
-
   useEffect(() => {
     if (leadOwner) {
       if (leadOwner.status == "200") {
@@ -216,24 +199,18 @@ export default function Lead_manager({ navigation, route }) {
       }
     }
   }, [leadOwner])
-
-
-
   const [tempId, settempId] = useState('')
   const [tempType, settempType] = useState('')
-
   const CencelFunction = () => {
     settempType('')
     settempId('')
     setaskDelete(!askDelete)
   }
-
   const CheckDeleteFunction = (value) => {
     settempId(value.id)
     settempType(value.type)
     setaskDelete(!askDelete)
   }
-
   const DeleteFunction = () => {
     setIsLodding(true)
     setaskDelete(!askDelete)
@@ -245,7 +222,6 @@ export default function Lead_manager({ navigation, route }) {
     }
     dispatch(leadAction.deleteLead(data, loginData.data.token));
   }
-
   useEffect(() => {
     if (deletelead) {
       if (deletelead.status == "200") {
@@ -260,17 +236,13 @@ export default function Lead_manager({ navigation, route }) {
       }
     }
   }, [deletelead])
-
   const DeleteSuccessFully = () => {
     dispatch(leadAction.clearResponse());
     dispatch(opportunityAction.clearResponse());
     Get_Data()
     setModalVisible2(!modalVisible2)
   }
-
-
   const [singleFile, setSingleFile] = useState(null);
-
   const OpenFilePicker = async () => {
     try {
       const results = await DocumentPicker.pickMultiple({
@@ -287,13 +259,11 @@ export default function Lead_manager({ navigation, route }) {
       }
     }
   }
-
   const CheckImportType = (value) => {
     setSelectedFile('choose-file')
     setSingleFile(null)
     setImportFiles(!ImportFiles)
   }
-
   const UploadFile = (value) => {
     if (singleFile == null) {
       ToastAndroid.show('Please Select File', ToastAndroid.SHORT);
@@ -314,13 +284,11 @@ export default function Lead_manager({ navigation, route }) {
       dispatch(leadAction.importLead(formdata, loginData.data.token));
     }
   }
-
   const UploadFileCancel = (value) => {
     setImportFiles(!ImportFiles)
     setSelectedFile('')
     setIsULodding(false)
   }
-
   useEffect(() => {
     if (importLead) {
       if (importLead.status == "success") {
@@ -343,7 +311,6 @@ export default function Lead_manager({ navigation, route }) {
       else { }
     }
   }, [importLead])
-
   useEffect(() => {
     if (AssignLead) {
       if (AssignLead.status == "success") {
@@ -361,12 +328,8 @@ export default function Lead_manager({ navigation, route }) {
         dispatch(leadmanagerAction.clearResponse())
         setIsALodding(false)
       }
-      else {
-
-      }
     }
   }, [AssignLead])
-
   const onPressRadioBtn = (value, type) => {
     // console.log(type, value)
     if (type == true) {
@@ -386,7 +349,6 @@ export default function Lead_manager({ navigation, route }) {
     })
     setLead(filterArray)
   }
-
   const onPressSendItem = (value, type) => {
     if (temarray.length == 0) {
       ToastAndroid.show('Please Select atlest Lead', ToastAndroid.SHORT);
@@ -401,7 +363,6 @@ export default function Lead_manager({ navigation, route }) {
       // console.log('press..................')
     }
   }
-
   const UserAssignLead = (value) => {
     setIsALodding(true)
     const data = {
@@ -413,31 +374,19 @@ export default function Lead_manager({ navigation, route }) {
     }
     dispatch(leadmanagerAction.AssignLead(data, loginData.data.token));
   }
-
   const LeadView = ({ item, index }) => {
     return (
       <View style={styles.listData}>
         {item.is_assign == '1' ?
-          <Image
-            style={[styles.radio,]}
-            source={require('../../images/disableCall.png')}
-          />
+          <Image style={[styles.radio,]} source={require('../../images/disableCall.png')} />
           :
-          <Pressable
-            style={styles.radio}
-            onPress={() =>
-              onPressRadioBtn(item.id, !item.selected)}
-          >
+          <Pressable style={styles.radio} onPress={() => onPressRadioBtn(item.id, !item.selected)} >
             {item.selected == true ?
-              <Image
-                style={[styles.radio, { marginTop: '-5%', marginLeft: '-5%' }]}
+              <Image style={[styles.radio, { marginTop: '-5%', marginLeft: '-5%' }]}
                 source={require('../../images/okCall.png')}
               />
               :
-              <View
-              //  style={styles.radio}
-              >
-              </View>}
+              null}
           </Pressable>
         }
         <View style={{ backgroundColor: '', justifyContent: 'center', }}>
@@ -507,10 +456,10 @@ export default function Lead_manager({ navigation, route }) {
             />
             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
           </View>
-          <Text style={{
+          {/* <Text style={{
             marginTop: '40%', textAlign: 'right',
             color: 'black', fontSize: 11
-          }}>Call Pending</Text>
+          }}>Call Pending</Text> */}
         </View>
       </View>
     );
@@ -529,15 +478,16 @@ export default function Lead_manager({ navigation, route }) {
 
   return (
     <View
-      style={{ flex: 1, backgroundColor: '#FAFAFC', width: width, height: height, }}
+      style={{ flex: 1, width: width, height: height, }}
     >
       <Header
-        style={{ height: "16%" }}
+        style={Platform.OS == 'ios' ?
+          { height: "16%" } :
+          // { height: "16%" }}
+          {}}
         onPressLeft={() => {
-          navigation.OpenDrawer()
+          navigation.openDrawer()
           // navigation.goBack()
-
-
         }}
         title='Lead Manager'
         onPressRight={() => {

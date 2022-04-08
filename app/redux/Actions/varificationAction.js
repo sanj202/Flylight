@@ -1,6 +1,6 @@
 
 import { VERIFY_OTP,VERIFY_OTP_CLEAR,VERIFY_OTP_SUCCESS } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const varification = (otp, uid) => {
     return (dispatch) => {

@@ -3,7 +3,7 @@
 
 
 import { Add_Contact_Manually_Success, Add_Contact_Manually_Clear, Add_Contact_Manually } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const M_addContact = (data ,Token) => {
     // console.log(" credentails..................", data ,Token)

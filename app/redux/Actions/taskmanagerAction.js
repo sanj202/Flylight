@@ -8,7 +8,7 @@ import {
     TaskLeads, TaskLeads_Success, TaskLeads_Clear,
     TaskStatus, TaskStatus_Success, TaskStatus_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const Add_EditTask = (data, token) => {
     return (dispatch) => {
@@ -43,7 +43,7 @@ export const TaskList = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: Get_Task_Todo_Done })
 
-        fetch(`http://3.23.113.168:3000/postTaskList`,
+        fetch(`${Base_NodeUrl}/postTaskList`,
             {
                 method: "POST",
                 headers: {

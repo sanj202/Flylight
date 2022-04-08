@@ -20,13 +20,13 @@ export default function Notifications({ navigation, route }) {
 
     useEffect(() => {
         setIsLodding(true)
-        if (loginData  && isFocused) {
-                let data = {
-                    uid: loginData.data.uid,
-                    org_uid: loginData.data.org_uid,
-                    profile_id: loginData.data.cProfile.toString(),
-                }
-                dispatch(notificationAction.notification(data, loginData.data.token));
+        if (loginData && isFocused) {
+            let data = {
+                uid: loginData.data.uid,
+                org_uid: loginData.data.org_uid,
+                profile_id: loginData.data.cProfile.toString(),
+            }
+            dispatch(notificationAction.notification(data, loginData.data.token));
         }
     }, [loginData, isFocused])
 
@@ -44,13 +44,11 @@ export default function Notifications({ navigation, route }) {
             else {
             }
         }
-        else {
-        }
     }, [notificationInfo])
 
     const renderItem = ({ item }) => {
         return (
-            <View style={{marginBottom:'1%'}} >
+            <View style={{ marginBottom: '1%' }} >
                 <TouchableOpacity style={styles.notify} >
                     <Image
                         style={{ width: 45, height: 45 }}
@@ -78,29 +76,11 @@ export default function Notifications({ navigation, route }) {
                     // { height: "16%" }}
                     {}}
                 title='Notifications'
-                renderLeft={() => {
-                    return (
-                        <Image
-                            // style={styles.image2}
-                            source={require('../../images/home.png')}
-                            style={{ width: 28, height: 28 }} />
-                    );
-                }}
                 onPressLeft={() => {
+                    navigation.openDrawer()
                     // navigation.goBack()
-                    navigation.OpenDrawer()
-                }}
-
-                renderRight={() => {
-                    return (
-                        <Image
-                            // style={styles.image2}
-                            source={require('../../images/Notifications.png')}
-                            style={{ width: 28, height: 28 }} />
-                    );
                 }}
                 onPressRight={() => {
-                    // navigation.navigate('Notification')
                     navigation.goBack()
                 }}
             />

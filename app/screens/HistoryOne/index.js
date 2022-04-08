@@ -15,7 +15,7 @@ export default function HistoryOne({ navigation, route }) {
     const [IsLodding, setIsLodding] = useState(false)
     const [page, setPage] = useState(0);
     const [perPageItems, setperPageItems] = useState(10);
-    const [totalItems, settotalItems] = useState('');
+    const [totalItems, settotalItems] = useState(0);
 
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
@@ -25,8 +25,23 @@ export default function HistoryOne({ navigation, route }) {
     useEffect(() => {
         setIsLodding(true)
         GetHistoryDetail(page)
-    }, [isFocused])
-
+    }, [])
+    useEffect(() => {
+        if (DetailData) {
+            if (DetailData.status == "success") {
+                settotalItems(DetailData.total_rows)
+                setUser(DetailData.data[0].lead)
+                setData([...Data,...DetailData.data])
+                setIsLodding(false)
+                dispatch(historyAction.clearResponse())
+            }
+            else if (DetailData.status == "failed") {
+                ToastAndroid.show(DetailData.message, ToastAndroid.SHORT);
+                setIsLodding(false)
+                dispatch(historyAction.clearResponse())
+            }
+        }
+    }, [DetailData])
     const GetHistoryDetail = (p) => {
         let data = {
             uid: loginData.data.uid,
@@ -39,36 +54,13 @@ export default function HistoryOne({ navigation, route }) {
         }
         dispatch(historyAction.HistoryDetail(data, loginData.data.token));
     }
-
-    useEffect(() => {
-        if (DetailData) {
-            if (DetailData.status == "success") {
-                settotalItems(DetailData.total_rows)
-                setUser(DetailData.data[0].lead)
-                // setData(DetailData.data)
-                if (DetailData.data.length != 0) {
-                    let dataLive = DetailData.data;
-                    let listTemp = [...Data, ...dataLive];
-                    setData(listTemp)
-                }
-                setIsLodding(false)
-                dispatch(historyAction.clearResponse())
-            }
-            else if (DetailData.status == "failed") {
-                ToastAndroid.show(DetailData.message, ToastAndroid.SHORT);
-                setIsLodding(false)
-                dispatch(historyAction.clearResponse())
-            }
-            else if (DetailData.status == "fail") {
-                ToastAndroid.show(DetailData.message, ToastAndroid.SHORT);
-                setIsLodding(false)
-                dispatch(historyAction.clearResponse())
-            }
-            else {
-            }
+    const LoadMore = () => {
+        if (totalItems > Data.length) {
+            let p = page + 1;
+            setPage(p);
+            GetHistoryDetail(p)
         }
-    }, [DetailData])
-
+    }
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
         console.log(refreshing)
@@ -77,17 +69,6 @@ export default function HistoryOne({ navigation, route }) {
         setData([])
         GetHistoryDetail(0)
     }
-
-    const LoadMore = () => {
-        // console.log('load More Items................', Data.length, totalItems)
-        if (totalItems > Data.length) {
-            let p = page + 1;
-            setPage(p);
-            GetHistoryDetail(p)
-        }
-    }
-
-
     const [bottom, setbottom] = useState({
         isVisible4: false,
         audio: '',
@@ -120,7 +101,6 @@ export default function HistoryOne({ navigation, route }) {
             } : '',
         })
     }
-
     const CloseBottomSheet = (item) => {
         setbottom({
             isVisible4: false,
@@ -133,31 +113,15 @@ export default function HistoryOne({ navigation, route }) {
             businessCard: ''
         })
     }
-
-
     const DetailView = ({ item }) => {
-
-        // console.log(item)
         return (
-            <TouchableOpacity
-                onPress={() => OpenDetail(item)}
-            >
-                <View style={{
-                    paddingHorizontal: 10, borderWidth: 1, borderRadius: 10,
-                    borderColor: '#DBDBDB', margin: '3%', marginTop: '0%'
-                }}>
-                    <View style={{
-                        flexDirection: 'row', justifyContent: 'space-between',
-                        paddingTop: '3%'
-                    }}>
+            <TouchableOpacity onPress={() => OpenDetail(item)} >
+                <View style={{ paddingHorizontal: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', margin: '3%', marginTop: '0%' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between',paddingTop: '3%'}}>
                         <View>
-                            <Text style={{
-                                fontWeight: 'bold', fontSize: 18,
-                                color: '#0F0F0F', fontFamily: 'Roboto'
+                            <Text style={{ fontWeight: 'bold', fontSize: 18,color: '#0F0F0F', fontFamily: 'Roboto'
                             }}>{moment(item.created_at).format("HH:mm A")}</Text>
-
-                            <Text style={{
-                                color: '#0F0F0F', paddingBottom: '2%',
+                            <Text style={{ color: '#0F0F0F', paddingBottom: '2%',
                                 fontSize: 12, fontFamily: 'Roboto'
                             }}>Call On - {moment(item.created_at).format("YYYY-MM-DD")}</Text>
                         </View>
@@ -177,21 +141,13 @@ export default function HistoryOne({ navigation, route }) {
             </TouchableOpacity>
         )
     }
-
-
-
     return (
         <View style={styles.container}>
-            <Header
-                style={Platform.OS == 'ios' ?
-                    { height: "20%" } :
-                    // { height: "16%" }}
-                    {}}
+            <Header style={Platform.OS == 'ios' ?{ height: "20%" } :{}}
                 title='History'
                 renderLeft={() => {
                     return (
                         <Image
-                            // style={styles.image2}
                             source={require('../../images/home.png')}
                             style={{ width: 28, height: 28 }} />
                     );
@@ -204,7 +160,6 @@ export default function HistoryOne({ navigation, route }) {
                 renderRight={() => {
                     return (
                         <Image
-                            // style={styles.image2}
                             source={require('../../images/Notifications.png')}
                             style={{ width: 28, height: 28 }} />
                     );
@@ -237,7 +192,6 @@ export default function HistoryOne({ navigation, route }) {
                             </View>
                         </View>
                     </View>
-
                     <FlatList
                         style={{ height: '65%' }}
                         data={Data}

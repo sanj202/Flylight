@@ -10,6 +10,7 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { profileAction, authAction, varificationAction } from '../../redux/Actions';
 import { useIsFocused } from "@react-navigation/core"
 import ImagePicker from 'react-native-image-crop-picker';
+import { Base_ImageUrl } from '../../../const'
 
 export default function AddContact({ navigation }) {
 
@@ -41,6 +42,7 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (profileData) {
             if (profileData.status == "200") {
+                // console.log('................',profileData.data.user)
                 setUser(profileData.data.user)
                 setuserImage(profileData.data.user.avatar)
                 setIsLodding(false)
@@ -84,7 +86,7 @@ export default function AddContact({ navigation }) {
             let photo = {
                 uri: image.path,
                 type: image.mime,
-                name: image.path+'photo',
+                name: image.path + 'photo',
                 size: image.size,
             };
             setIsLodding2(true)
@@ -115,7 +117,7 @@ export default function AddContact({ navigation }) {
             >
                 <SafeAreaView
                     style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '5%', marginTop: '5%' }}
-                 >
+                >
                     <TouchableOpacity
                         onPress={() =>
                             navigation.openDrawer()
@@ -163,8 +165,7 @@ export default function AddContact({ navigation }) {
                     <View style={styles.avtarStyle}>
                         {user.avatar ?
                             <View style={{ flexDirection: 'row' }}>
-                                <Image
-                                    source={{ uri: 'http://3.23.113.168/admin/public/uploads/avatar/' + userImage }}
+                                <Image source={{ uri: `${Base_ImageUrl}` + userImage }}
                                     style={{
                                         height: 96, width: 96, borderRadius: 45,
                                         marginTop: '3%', marginLeft: '4%',
@@ -174,8 +175,7 @@ export default function AddContact({ navigation }) {
                             </View>
                             :
                             <View style={{ flexDirection: 'row' }}>
-                                <Image
-                                    source={require('../../images/avtar.jpg')}
+                                <Image source={require('../../images/avtar.jpg')}
                                     style={{
                                         height: 96, width: 96, borderRadius: 45,
                                         marginTop: '3%', marginLeft: '4%',

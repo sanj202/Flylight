@@ -117,7 +117,6 @@ export default function AddContact({ navigation }) {
 
     useEffect(() => {
         if (responseAdd_Edit) {
-            // console.log("dsfvghf.......................",responseAdd_Edit)
             if (responseAdd_Edit.status == "success") {
                 setcampaignName(""),
                     setStatus(null),
@@ -149,6 +148,12 @@ export default function AddContact({ navigation }) {
         }
         else if (Status == null) {
             ToastAndroid.show('Enter campaign Status', ToastAndroid.SHORT);
+        }
+        else if (starttext == true) {
+            ToastAndroid.show('Select Start Date', ToastAndroid.SHORT);
+        }
+        else if (endtext == true) {
+            ToastAndroid.show('Select End Date', ToastAndroid.SHORT);
         }
         else {
             let formateStartDate = moment(startdate).format("YYYY-MM-DD")
@@ -230,6 +235,9 @@ export default function AddContact({ navigation }) {
                             value={campaignName}
                             onChangeText={e1 => setcampaignName(e1)}
                             placeholder="Campaign Name" />
+                        {!campaignName.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
 
                     <View style={{ marginTop: '2%' }}>
@@ -257,6 +265,13 @@ export default function AddContact({ navigation }) {
                                         style={[styles.icon, { height: 22, width: 22 }]}
                                         source={require('../../images/transgender.png')}
                                     />
+                                </View>
+                            )}
+                            renderRightIcon={() => (
+                                <View>
+                                    {Status == null ?
+                                        <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                        : null}
                                 </View>
                             )}
                         />
@@ -295,13 +310,16 @@ export default function AddContact({ navigation }) {
                                 {starttext == true ?
                                     <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Start Date</Text>
                                     :
-                                   null
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {starttext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Start Date</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '4%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>Start Date</Text>
+                                            <Text style={{ fontSize: 15, color: 'red', marginTop: '-1%' }}>*</Text>
+                                        </View>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(startdate).format('MM/DD/YYYY')}</Text>
                                     }
@@ -343,13 +361,16 @@ export default function AddContact({ navigation }) {
                                 {endtext == true ?
                                     <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>End Date</Text>
                                     :
-                                   null
+                                    null
                                 }
                             </View>
                                 :
                                 <View>
                                     {endtext == true ?
-                                        <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>End Date</Text>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{ marginTop: '4%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>End Date</Text>
+                                            <Text style={{ fontSize: 15, color: 'red', marginTop: '-1%' }}>*</Text>
+                                        </View>
                                         :
                                         <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(enddate).format('MM/DD/YYYY')}</Text>
                                     }
@@ -359,7 +380,7 @@ export default function AddContact({ navigation }) {
                     </TouchableOpacity>
 
                     <View style={styles.inputFields}>
-                    <Image
+                        <Image
                             style={[styles.icon, {
                                 height: 27, width: 20,
                             }]}
@@ -373,7 +394,7 @@ export default function AddContact({ navigation }) {
                     </View>
 
                     <View style={styles.inputFields}>
-                    <Image
+                        <Image
                             style={[styles.icon, {
                                 height: 27, width: 20,
                             }]}
@@ -388,7 +409,7 @@ export default function AddContact({ navigation }) {
                     </View>
 
                     <View style={styles.inputFields}>
-                    <Image
+                        <Image
                             style={[styles.icon, {
                                 height: 27, width: 20,
                             }]}

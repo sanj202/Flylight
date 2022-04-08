@@ -3,7 +3,7 @@ import {
     Invite_Member,Invite_Member_Success,Invite_Member_Clear,
     profileRole,profileRole_Success,profileRole_Clear
 } from './actionTypes';
-import BaseUrl from '../../../const'
+import { BaseUrl, Base_NodeUrl } from '../../../const'
 
 export const Invitation = (data,token) => {
     return (dispatch) => {
