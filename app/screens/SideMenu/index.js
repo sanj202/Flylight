@@ -101,9 +101,9 @@ export default function SideMenu(props) {
                                 />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>Campaigns</Text>
-                                    <Image style={[styles.image3]}
+                                    {/* <Image style={[styles.image3]}
                                         source={require('../../images/next.png')}
-                                    />
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -116,8 +116,8 @@ export default function SideMenu(props) {
                                 />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>Action Manager</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')}
-                                    />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')}
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -130,7 +130,7 @@ export default function SideMenu(props) {
                                 />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>Users</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')} />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')} /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -143,8 +143,8 @@ export default function SideMenu(props) {
                                 />
                                 <View style={[styles.menus]}>
                                     <Text style={styles.items}>Lead Manager</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')}
-                                    />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')}
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -157,8 +157,8 @@ export default function SideMenu(props) {
                                 />
                                 <View style={[styles.menus]}>
                                     <Text style={styles.items}>Lead Transfer</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')}
-                                    />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')}
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -171,8 +171,8 @@ export default function SideMenu(props) {
                                 />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>Task Manager</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')}
-                                    />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')}
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -198,8 +198,8 @@ export default function SideMenu(props) {
                                     source={require('../../images/history.png')} />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>History</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')}
-                                    />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')}
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -212,9 +212,9 @@ export default function SideMenu(props) {
                                 />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>Reports</Text>
-                                    <Image style={[styles.image3]}
+                                    {/* <Image style={[styles.image3]}
                                         source={require('../../images/next.png')}
-                                    />
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>
@@ -228,8 +228,8 @@ export default function SideMenu(props) {
                                 />
                                 <View style={styles.menus}>
                                     <Text style={styles.items}>Logout</Text>
-                                    <Image style={[styles.image3]} source={require('../../images/next.png')}
-                                    />
+                                    {/* <Image style={[styles.image3]} source={require('../../images/next.png')}
+                                    /> */}
                                 </View>
                             </View>
                         </Pressable>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, FlatList, Image, Platform, ActivityIndicator, Pressable, Dimensions, ToastAndroid } from 'react-native';
+import { Text, View, TouchableOpacity,SafeAreaView, FlatList, Image, Platform, ActivityIndicator, Pressable, Dimensions, ToastAndroid } from 'react-native';
 import styles from "./styles";
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -210,6 +210,7 @@ export default function History({ navigation }) {
           data.filters.push({ eq: campId, key: 'campaign' })
           dispatch(historyAction.HistoryList(data, loginData.data.token));
         }
+        setHistory([])
         //  console.log(data)
       }
       else {
@@ -473,9 +474,9 @@ export default function History({ navigation }) {
                 style={{ height: 24, width: 24 }} />
             </TouchableOpacity>
           </View>
-          <View>
+          <SafeAreaView>
             <FlatList
-              style={{ height: height / 2 }}
+              // style={{ height: height / 2 }}
               data={History}
               renderItem={HistoryView}
               ListEmptyComponent={() => (!History.length ?
@@ -486,7 +487,7 @@ export default function History({ navigation }) {
               onEndReached={() => fetchNextItems()}
               keyExtractor={item => item.id}
             />
-          </View>
+          </SafeAreaView>
           <View style={{ height: 10 }}></View>
         </View>
       }

@@ -630,10 +630,10 @@ export default function Lead_manager({ navigation, route }) {
         {IsLodding == true ?
           <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
           :
-          <View>
+          <View > 
             {Lead !== undefined && Lead.length > 0 ?
               <FlatList
-                style={{ height: "65%" }}
+                style={{ height: height /1.9}}
                 data={Lead}
                 renderItem={LeadView}
                 ListEmptyComponent={() => (!Lead.length ?

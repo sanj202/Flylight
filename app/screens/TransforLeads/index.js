@@ -444,7 +444,7 @@ export default function TransforLeads({ navigation, route }) {
           <View>
             {Lead !== undefined && Lead.length > 0 ?
               <FlatList
-                style={{ height: "72%" }}
+              style={{ height: height /1.9}}
                 data={Lead}
                 renderItem={LeadView}
                 ListEmptyComponent={() => (!Lead.length ?

@@ -52,11 +52,17 @@ export default function Dashboard({ navigation, route, props }) {
       loginData.data.cProfile.toString(),
       loginData.data.token,
     ));
+
+    console.log('................payload', loginData.data.uid,
+    loginData.data.org_uid,
+    loginData.data.cProfile.toString(),
+    loginData.data.token,)
   }
 
   useEffect(() => {
     if (dashboardDataCount) {
       if (dashboardDataCount.status == "success") {
+        console.log('......................',dashboardDataCount.data)
         let total = dashboardDataCount.data.calledLeads + dashboardDataCount.data.pendingLeads
         settotalChart({
           opportunitys: dashboardDataCount.data.totalOpportunities,
@@ -78,9 +84,7 @@ export default function Dashboard({ navigation, route, props }) {
   const [refreshing, setrefreshing] = useState(false)
   const handleRefresh = () => {
     console.log(refreshing)
-    settotalChart({
-      IsLodding:true
-    })
+    settotalChart({ IsLodding: true})
     Get_DataCount()
   }
 
@@ -166,7 +170,8 @@ export default function Dashboard({ navigation, route, props }) {
         <View>
           <View style={styles.reView}>
             <Pressable style={{ width: '49%' }}
-              onPress={() => navigation.navigate('lead_manager', { key: 'Opportunity' })}  >
+            // onPress={() => navigation.navigate('lead_manager', { key: 'Opportunity' })} 
+            >
               <Card style={[styles.cardBox, { borderColor: '#FE2EA4', }]} >
                 <Text style={styles.cardTitle}>Total Opportunity</Text>
                 <Text style={[styles.counter, { color: '#3072F2' }]}>{totalChart.opportunitys}</Text>
@@ -181,7 +186,8 @@ export default function Dashboard({ navigation, route, props }) {
             </Pressable >
           </View>
           <View style={[styles.reView, { marginTop: 0 }]}>
-            <Pressable style={{ width: '49%' }} >
+            <Pressable style={{ width: '49%' }} 
+            onPress={() => navigation.navigate('Staff_Members')} >
               <Card style={[styles.cardBox, { borderColor: '#FE2EA4', }]} >
                 <Text style={styles.cardTitle}>Total User</Text>
                 <Text style={[styles.counter, { color: '#3072F2' }]}>{totalChart.users}</Text>

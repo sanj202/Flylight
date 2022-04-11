@@ -18,15 +18,15 @@ export default function Organization({ navigation }) {
     const orgList = useSelector(state => state.organization.getList)
 
     useEffect(() => {
-            const data = {
-                uid: loginData.data.uid,
-                profile_id: loginData.data.cProfile,
-                org_uid: loginData.data.org_uid,
-            }
-            setcurrentOrg(loginData.data.org_uid)
-            dispatch(organizationAction.OrganizationList(data, loginData.data.token));
-            setIsLodding(true)
-    }, [ isFocused])
+        const data = {
+            uid: loginData.data.uid,
+            profile_id: loginData.data.cProfile,
+            org_uid: loginData.data.org_uid,
+        }
+        setcurrentOrg(loginData.data.org_uid)
+        dispatch(organizationAction.OrganizationList(data, loginData.data.token));
+        setIsLodding(true)
+    }, [isFocused])
 
     useEffect(() => {
         if (orgList) {
@@ -41,7 +41,7 @@ export default function Organization({ navigation }) {
             else if (orgList.status == "fail") {
                 ToastAndroid.show(orgList.message, ToastAndroid.SHORT);
                 setIsLodding(false)
-            }        
+            }
         }
     }, [orgList])
 
@@ -66,11 +66,13 @@ export default function Organization({ navigation }) {
 
 
     const AllView = ({ item }) => {
+
+        // console.log('.m.....................',item)
         return (
             <TouchableOpacity
                 onPress={() => ChangeOrg({
                     orgUid: item.organization.org_unique_id,
-                    cProfile: item.organization.profile_id
+                    cProfile: item.id
                 })}
             >
                 <View style={{ marginTop: '1%' }}>
@@ -123,7 +125,7 @@ export default function Organization({ navigation }) {
             <Header
                 style={{ height: "14%" }}
                 onPressLeft={() => {
-                      navigation.openDrawer()
+                    navigation.openDrawer()
                     // navigation.goBack()
                 }}
                 title='Organizations'
