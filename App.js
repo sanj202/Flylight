@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-  SafeAreaView, ScrollView, StatusBar, StyleSheet,
-  Text, useColorScheme, View,
-} from 'react-native';
 import { Provider } from 'react-redux';
-import { store, persistor } from './app/redux/store';
-import { NavigationContainer } from '@react-navigation/native';
+import { store, persistor } from './src/redux/store';
 import { PersistGate } from 'redux-persist/integration/react'
-
-
-import RootNavigation from './app/navigations/index'
+import RootNavigation from './src/navigation/index'
 
 export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {/* <NavigationContainer> */}
-          <RootNavigation />
-        {/* </NavigationContainer> */}
+        <RootNavigation />
       </PersistGate>
     </Provider>
   );
