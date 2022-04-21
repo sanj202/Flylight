@@ -12,18 +12,17 @@ export default function Campaign({ navigation }) {
     isFocused = useIsFocused
     const { width, height } = Dimensions.get('window');
     const [CampaignData, setCampaignData] = useState('')
-    const [IsLodding, setIsLodding] = useState(false)
+    const [IsLodding, setIsLodding] = useState(true)
     const [askDelete, setaskDelete] = useState(false);
     const [page, setPage] = useState(0);
     const [perPageItems, setperPageItems] = useState(10);
-    const [totalItems, settotalItems] = useState('');
+    const [totalItems, settotalItems] = useState(0);
     const dispatch = useDispatch()
 
     const loginData = useSelector(state => state.auth.data)
     const campaignList = useSelector(state => state.campaign.campaign)
 
     useEffect(() => {
-        setIsLodding(true)
         FetchData(page)
     }, [])
 

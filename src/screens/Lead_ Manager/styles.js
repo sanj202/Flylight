@@ -221,6 +221,20 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
 
+  askBtnFixed: {
+    // paddingVertical: '2%',
+    borderRadius: 10,
+    backgroundColor: "#2196F3",
+  },
+  askBtnTextFixed: {
+    marginHorizontal:'2%',
+    marginVertical:'10%',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 20,
+  },
+
 
 });
 

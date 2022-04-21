@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#000000',
         flexDirection: 'row',
-        marginHorizontal:'3%',
-        marginVertical:'1%'
+        marginHorizontal: '3%',
+        marginVertical: '1%'
     },
     headerView: {
         backgroundColor: '#3373F3',
@@ -271,12 +271,11 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     askBtn: {
-        paddingVertical: '2%',
-        paddingHorizontal:'5%',
         borderRadius: 10,
         backgroundColor: "#2196F3",
     },
     askBtnText: {
+        margin:'5%',
         color: "white",
         fontWeight: "bold",
         textAlign: "center",

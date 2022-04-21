@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image, ActivityIndicator,
-    Modal, Pressable, Dimensions
-} from 'react-native';
-import { BottomSheet, ListItem } from 'react-native-elements';
+import {Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image,
+     ActivityIndicator,Modal, Pressable} from 'react-native';
+import { BottomSheet } from 'react-native-elements';
 import moment from 'moment';
 import Header from '../../component/header/index'
 import { taskmanagerAction } from '../../redux/Actions/index'
-import { useDispatch, useSelector, connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles'
-import { useIsFocused } from "@react-navigation/core"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -25,7 +22,6 @@ export default function Task_Manager({ navigation, route }) {
     const [IsLodding, setIsLodding] = useState(false)
     const [EIsLodding, setEIsLodding] = useState(false)
     const [title, settitle] = useState('')
-    const { width, height } = Dimensions.get('window');
     const [page, setPage] = useState(0);
     const [perPageItems, setperPageItems] = useState(10);
     const [totalItems, settotalItems] = useState(0);
@@ -35,7 +31,6 @@ export default function Task_Manager({ navigation, route }) {
     const [text, settext] = useState(true)
 
     const dispatch = useDispatch()
-    const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const taskList = useSelector(state => state.taskmanager.getList)
     const deleteTask = useSelector(state => state.taskmanager.deleteTask)
@@ -52,7 +47,6 @@ export default function Task_Manager({ navigation, route }) {
         Get_Data(page)
         dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
     }, [])
-
     useEffect(() => {
         if (TaskStatus) {
             if (TaskStatus.status == "200") {
@@ -83,9 +77,6 @@ export default function Task_Manager({ navigation, route }) {
                 setIsLodding(false)
             }
             else if (taskList.status == "failed") {
-                setIsLodding(false)
-            }
-            else if (taskList.status == "fail") {
                 ToastAndroid.show(taskList.message, ToastAndroid.SHORT);
                 setIsLodding(false)
             }
@@ -290,7 +281,6 @@ export default function Task_Manager({ navigation, route }) {
                                 {item.subject}</Text>
                         </View>
                     </View>
-
                     <View style={{ flexDirection: 'row', marginTop: '10%' }}>
                         {item.status == 'completed' ?
                             < TouchableOpacity >
@@ -320,7 +310,6 @@ export default function Task_Manager({ navigation, route }) {
                             />
                         </TouchableOpacity>
                     </View>
-
                     <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
                         <View style={{ flexDirection: 'row' }}>
                             <Image style={{ height: 10, width: 10, marginRight: '2%' }}
@@ -365,7 +354,6 @@ export default function Task_Manager({ navigation, route }) {
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>All</Text>
                     </TouchableOpacity>
                 }
-
                 {isService == 'To-Do' ?
                     <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
                         onPress={() => checkValue("To-Do")}
@@ -379,7 +367,6 @@ export default function Task_Manager({ navigation, route }) {
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>To-Do</Text>
                     </TouchableOpacity>
                 }
-
                 {isService == 'Done' ?
 
                     <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}
@@ -395,7 +382,6 @@ export default function Task_Manager({ navigation, route }) {
                     </TouchableOpacity>
                 }
             </View>
-
             <View style={{ marginVertical: '3%', flex: 1 }}>
                 {IsLodding == true ?
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
@@ -433,14 +419,8 @@ export default function Task_Manager({ navigation, route }) {
                     </View>
                 }
             </View>
-
-            <BottomSheet modalProps={{
-                animationType: 'fade',
-                hardwareAccelerated: true,
-                onRequestClose: () => { setIsVisible(false); },
-            }}
-                isVisible={isVisible}>
-
+            <BottomSheet modalProps={{animationType: 'fade',hardwareAccelerated: true,
+                onRequestClose: () => { setIsVisible(false); }}} isVisible={isVisible}>
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>Edit Task Manager</Text>
                     <View style={styles.inputFields}>
@@ -455,11 +435,8 @@ export default function Task_Manager({ navigation, route }) {
                             style={{ paddingRight: '20%', flex: 1, }}
                         />
                     </View>
-
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-
-                        <Pressable
-                            style={{ marginLeft: '3%' }}
+                        <Pressable  style={{ marginLeft: '3%' }}
                         // onPress={showDatepicker}
                         >
                             <View style={styles.pickers}>
@@ -497,7 +474,6 @@ export default function Task_Manager({ navigation, route }) {
                                 }
                             </View>
                         </Pressable>
-
                         <Dropdown
                             style={styles.dropdown3}
                             placeholderStyle={styles.placeholderStyle3}
@@ -508,23 +484,13 @@ export default function Task_Manager({ navigation, route }) {
                             valueField="id"
                             placeholder='Status'
                             value={Status}
-                            onChange={item => {
-                                setStatus(item.id);
-                            }}
+                            onChange={item => {setStatus(item.id); }}
                             renderLeftIcon={() => (
-                                <Image
-                                    style={[styles.icon, { height: 22, width: 22 }]}
-                                    source={require('../../images/transgender.png')}
-                                />)}
+                                <Image style={[styles.icon, { height: 22, width: 22 }]}
+                                    source={require('../../images/transgender.png')} />)}
                         />
                     </View>
-
-                    {EIsLodding == true ?
-                        <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '5%' }} />
-                        :
-                        <View />
-                    }
-
+                    {EIsLodding == true ? <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '5%' }} />:null}
                     <Pressable
                         style={styles.updateBtn}
                         onPress={() => EditFunction(temObject)} >
@@ -532,19 +498,11 @@ export default function Task_Manager({ navigation, route }) {
                     </Pressable>
                 </View>
             </BottomSheet>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible2}
-                onRequestClose={() => { setModalVisible2(!modalVisible2); }}
-            >
+            <Modal animationType="slide" transparent={true} visible={modalVisible2}
+                onRequestClose={() => { setModalVisible2(!modalVisible2); }} >
                 <View style={styles.centeredView3}>
                     <View style={styles.modalView3}>
-                        <TouchableOpacity
-                            style={{ alignSelf: 'flex-end' }}
-                            onPress={() => DeleteSuccessFully()}
-                        >
+                        <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => DeleteSuccessFully()} >
                             <Image
                                 style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
                                 source={require('../../images/crossImgR.png')}
@@ -557,14 +515,12 @@ export default function Task_Manager({ navigation, route }) {
                         <Text style={[styles.modalText3, { fontWeight: 'bold' }]} >Successfully{'\n'}Deleted</Text>
                         <Pressable
                             style={[styles.button3, styles.buttonClose3, { paddingLeft: '10%', paddingRight: '10%' }]}
-                            onPress={() => DeleteSuccessFully()}
-                        >
+                            onPress={() => DeleteSuccessFully()}>
                             <Text style={styles.textStyle3}>OK</Text>
                         </Pressable>
                     </View>
                 </View>
             </Modal>
-
             <Modal animationType="slide" transparent={true} visible={askDelete}
                 onRequestClose={() => { setaskDelete(!askDelete); }}>
                 <View style={styles.askModel}>
@@ -588,5 +544,3 @@ export default function Task_Manager({ navigation, route }) {
         </View >
     );
 }
-
-

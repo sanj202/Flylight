@@ -48,7 +48,7 @@ export default function Organization({ navigation }) {
     const ChangeOrg = (value) => {
         setIsLodding(true)
         dispatch(authAction.SwitchOrg(loginData, value.cProfile, value.orgUid));
-        navigation.navigate('Home')
+        navigation.navigate('DashboardStack')
     }
 
     // useEffect(() => {

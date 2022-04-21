@@ -98,23 +98,14 @@ export default function EditProfile({ navigation, route }) {
             if (UpdatedData.status == "success") {
                 setIsLodding(false)
                 ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
-                navigation.navigate("Profile", {
-                })
+                navigation.navigate("ProfileStack")
                 dispatch(editProfileAction.clearResponse())
             }
             else if (UpdatedData.status == "failed") {
                 setIsLodding(false)
                 ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
             }
-            else if (UpdatedData.status == "fail") {
-                setIsLodding(false)
-                ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
-            }
         }
-        else {
-            setIsLodding(false)
-        }
-
     }, [UpdatedData])
 
     return (

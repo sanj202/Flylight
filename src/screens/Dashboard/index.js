@@ -25,15 +25,16 @@ export default function Dashboard({ navigation, route, props }) {
   const [isService, setisService] = useState('Leads')
   const { width, height } = Dimensions.get('window');
   const dispatch = useDispatch()
+  const isFocused = useIsFocused()
   const loginData = useSelector(state => state.auth.data)
   const TokenData = useSelector(state => state.dashboard.tokenData)
   const dashboardDataCount = useSelector(state => state.dashboard.count)
 
   useEffect(() => {
-    if (loginData) {
+    if (loginData && isFocused) {
       Get_DataCount(30)
     }
-  }, [loginData])
+}, [loginData, isFocused])
 
   useEffect(() => {
     if (loginData) {
@@ -181,7 +182,7 @@ export default function Dashboard({ navigation, route, props }) {
               </Card>
             </Pressable >
             <Pressable style={{ width: '49%' }}
-              onPress={() => navigation.navigate('AddContact')}>
+              onPress={() => navigation.navigate('ContactList')}>
               <Card style={[styles.cardBox, { borderColor: '#3373F3' }]}>
                 <Text style={styles.cardTitle}>Total Contacts</Text>
                 <Text style={[styles.counter, { color: '#FE2EA4', }]}>{totalChart.contacts}</Text>

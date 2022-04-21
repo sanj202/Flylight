@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid, Pressable, Dimensions, Platform,
-} from 'react-native';
+import {Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
+        Pressable, Dimensions, Platform,} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import styles from './styles'
@@ -21,7 +20,7 @@ export default function Lead_manager({ navigation, route }) {
   const [SelectedFile, setSelectedFile] = useState('')
   const [temarray, settemarray] = useState([])
   const [Lead, setLead] = useState([])
-  const [IsLodding, setIsLodding] = useState(false)
+  const [IsLodding, setIsLodding] = useState(true)
   const [IsULodding, setIsULodding] = useState(false)
   const [IsALodding, setIsALodding] = useState(false)
   const { width, height } = Dimensions.get('window');
@@ -50,7 +49,8 @@ export default function Lead_manager({ navigation, route }) {
   const leadOwner = useSelector(state => state.leads.leadOwnerNew)
 
   useEffect(() => {
-    setIsLodding(true)
+    // setIsLodding(true)
+    setLead([])
     Get_Data(page)
   }, [])
 
@@ -65,11 +65,13 @@ export default function Lead_manager({ navigation, route }) {
       else if (Lead_OpportunityList.status == "failed") {
         setIsLodding(false)
         ToastAndroid.show('wrong format', ToastAndroid.SHORT);
+        dispatch(leadmanagerAction.clearResponse())
       }
     }
   }, [Lead_OpportunityList])
 
   const fetchNextItems = () => {
+    console.log('loadmoeew.................')
     if (totalItems > Lead.length) {
       let p = page + 1;
       setPage(p);
@@ -181,10 +183,10 @@ export default function Lead_manager({ navigation, route }) {
     setDate(new Date())
     setDates(new Date())
     setIsLodding(true)
-    setPage(0)
-    Get_Data(0)
     setLead([])
     settemarray([])
+    setPage(0)
+    Get_Data(0)
   }
   useEffect(() => {
     if (leadOwner) {
@@ -322,7 +324,7 @@ export default function Lead_manager({ navigation, route }) {
     if (AssignLead) {
       if (AssignLead.status == "success") {
         setAssignOwner(false)
-        Get_Data()
+        Get_Data(0)
         ToastAndroid.show(AssignLead.message, ToastAndroid.SHORT);
         settemarray([])
         dispatch(leadmanagerAction.clearResponse())
@@ -712,18 +714,18 @@ export default function Lead_manager({ navigation, route }) {
             <View />}
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Pressable
-              style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
+              style={[styles.askBtnFixed, { paddingHorizontal: '6.5%' }]}
               onPress={() => UploadFileCancel()}
             >
-              <Text style={styles.askBtnText}>NO</Text>
+              <Text style={styles.askBtnTextFixed}>NO</Text>
             </Pressable>
             <View style={{ margin: '5%' }} />
 
             <Pressable
-              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
+              style={[styles.askBtnFixed, { paddingHorizontal: '5%' }]}
               onPress={() => UploadFile()}
             >
-              <Text style={styles.askBtnText}>YES</Text>
+              <Text style={styles.askBtnTextFixed}>YES</Text>
             </Pressable>
           </View>
           <View style={{ margin: '2%' }} />

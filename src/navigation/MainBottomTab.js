@@ -39,6 +39,12 @@ import {
     LeadFilterScreen
 } from '../screens/index'
 
+import ProfileStack from './customStacks/ProfileStack'
+import ContactStack from './customStacks/contactStack'
+import ReportStack from './customStacks/ReportStack'
+import DashboardStack from './customStacks/DashboardStack'
+import AddTabStack from './customStacks/AddTab';
+
 const Tab = createBottomTabNavigator();
 
 export default function MainBottomTab({ route }) {
@@ -51,7 +57,7 @@ export default function MainBottomTab({ route }) {
                 tabBarStyle: { height: height * 8 / 100, backgroundColor: '#2296E4', paddingBottom: '1%' },
                 tabBarOptions: { activeTintColor: '#fff', inactiveTintColor: 'lightgray' }
             }}>
-            <Tab.Screen name="Home" component={DashBoard}
+            <Tab.Screen name="Home" component={DashboardStack}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: { fontSize: 12, fontFamily: 'Roboto', color: '#fff' },
@@ -71,7 +77,7 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="Report" component={Report2}
+            <Tab.Screen name="Report" component={ReportStack}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -94,7 +100,7 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="addTab" component={AddContact}
+            <Tab.Screen name="addTab" component={AddTabStack}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -119,7 +125,7 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="AddContact" component={Contacts}
+            <Tab.Screen name="ContactList" component={ContactStack}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -142,7 +148,7 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="Profile" component={Profile}
+            <Tab.Screen name="Profile" component={ProfileStack}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -165,23 +171,23 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="All_Lead"
                 component={All_Lead}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="lead_manager"
                 component={lead_manager}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="addLead"
                 component={addLead}
                 options={{
@@ -189,8 +195,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="editLead"
                 component={editLead}
                 options={{
@@ -198,8 +204,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="Edit_Opportunity"
                 component={Edit_Opportunity}
                 options={{
@@ -207,24 +213,24 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="ReportFeedback"
                 component={ReportFeedback}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="Task_Manager"
                 component={Task_Manager}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="AddTask"
                 component={AddTask}
                 options={{
@@ -232,8 +238,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="Action_Manager"
                 component={Action_Manager}
                 options={{
@@ -241,24 +247,24 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="History"
                 component={History}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="HistoryOne"
                 component={HistoryOne}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="History_Feedback"
                 component={History_Feedback}
                 options={{
@@ -266,7 +272,7 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
+            /> */}
 
             {/* <Tab.Screen
         name="Report2"
@@ -276,23 +282,23 @@ export default function MainBottomTab({ route }) {
           tabBarButton: () => null,
         }}
       /> */}
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Organization"
                 component={Organization}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="Campaign"
                 component={Campaign}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="AddCampaign"
                 component={AddCampaign}
                 options={{
@@ -300,8 +306,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name="EditCampaign"
                 component={EditCampaign}
                 options={{
@@ -309,16 +315,16 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='Notification'
                 component={Notification}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='EditProfile'
                 component={EditProfile}
                 options={{
@@ -326,8 +332,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='packegeTopups'
                 component={packegeTopups}
                 options={{
@@ -335,8 +341,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='Staff_Members'
                 component={Staff_Members}
                 options={{
@@ -344,8 +350,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='Edit_Contact'
                 component={Edit_Contact}
                 options={{
@@ -353,8 +359,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='Meetings'
                 component={Meetings}
                 options={{
@@ -380,8 +386,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='orderHistory'
                 component={orderHistory}
                 options={{
@@ -389,8 +395,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='MeetingsDetail'
                 component={MeetingsDetail}
                 options={{
@@ -398,8 +404,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='LeadFilterScreen'
                 component={LeadFilterScreen}
                 options={{
@@ -407,8 +413,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
-            <Tab.Screen
+            /> */}
+            {/* <Tab.Screen
                 name='TransforLeads'
                 component={TransforLeads}
                 options={{
@@ -416,7 +422,7 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            />
+            /> */}
 
         </Tab.Navigator>
     );

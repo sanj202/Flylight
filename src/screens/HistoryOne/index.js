@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, FlatList, Image, Modal, ActivityIndicator, ToastAndroid } from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions, FlatList, Image, Modal, ActivityIndicator, ToastAndroid } from 'react-native';
 import moment from 'moment';
 import styles from './styles'
 import Header from '../../component/header/index'
@@ -16,6 +16,7 @@ export default function HistoryOne({ navigation, route }) {
     const [page, setPage] = useState(0);
     const [perPageItems, setperPageItems] = useState(10);
     const [totalItems, settotalItems] = useState(0);
+    const { width, height } = Dimensions.get('window');
 
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
@@ -152,24 +153,45 @@ export default function HistoryOne({ navigation, route }) {
                 {IsLodding == true ?
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                     :
-                    <View style={{flex: 1 }}>
-                        <View style={styles.listData}>
+                    <View style={{ flex: 1 }}>
+                        {/* <View style={styles.listData}>
                             <Image style={{ height: 53, width: 53, margin: '2%' }}
                                 source={require('../../images/profileCall.png')}
                             />
                             <View style={{ marginHorizontal: '2%', width: '50%' }}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 19, fontFamily: 'Roboto', marginTop: '5%', color: '#0F0F0F' }}>{User.first_name} {User.last_name}</Text>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'row',backgroundColor:'green' }}>
                                     <Image style={{ height: 12, width: 12, marginRight: '3%', marginTop: '8%' }}
                                         source={require('../../images/material-call.png')}
                                     />
-                                    <Text style={{ fontWeight: 'bold', marginTop: '5%', fontSize: 12, color: '#0F0F0F' }}>+91 {User.phone}</Text>
+                                    <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#0F0F0F' }}>+91 {User.phone}</Text>
                                 </View>
                             </View>
                             <View style={{ width: '25%' }}>
                                 <Text style={{ color: '#565656', fontFamily: 'Roboto', fontSize: 12, marginRight: '2%', marginTop: '35%' }}>{User.company}</Text>
                             </View>
+                        </View> */}
+
+
+                        <View style={styles.listData}>
+                            <Image style={{ height: 53, width: 53, marginHorizontal: '2%' }}
+                                source={require('../../images/profileCall.png')}
+                            />
+                            <View style={{ marginHorizontal: '2%', width: width * 60 / 100, }}>
+                                <Text style={{ fontWeight: 'bold', fontSize: 19, fontFamily: 'Roboto', color: '#0F0F0F' }}>{User.first_name} {User.last_name}</Text>
+                                <View style={{ flexDirection: 'row', }}>
+                                    <Image style={{ height: 12, width: 12,marginTop:height*0.4/100,marginRight:'3%' }}
+                                        source={require('../../images/material-call.png')}
+                                    />
+                                    <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#0F0F0F' }}>+91-{User.phone}</Text>
+                                </View>
+                            </View>
+                            <View>
+                                <Text style={{ color: '#565656',marginTop:height*2/100, fontFamily: 'Roboto', fontSize: 12}}>{User.company}</Text>
+                            </View>
                         </View>
+
+
                         <FlatList
                             data={Data}
                             renderItem={DetailView}

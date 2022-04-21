@@ -25,7 +25,9 @@ export default function LeadFilterScreen({ navigation, route }) {
   const [filterKeys, setfilterKeys] = useState(route.params ? route.params.filters : [])
 
   useEffect(() => {
+    setleadList([])
     FetchData(page)
+    setfilterKeys([])
   }, [])
 
   const FetchData = (p) => {

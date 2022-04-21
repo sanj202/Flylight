@@ -1,21 +1,35 @@
 
-import { StyleSheet } from 'react-native';
-
+import { StyleSheet ,Dimensions} from 'react-native';
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFC'
   },
+  // listData: {
+  //   padding: 5,
+  //   borderWidth: 1,
+  //   borderRadius: 10,
+  //   borderColor: '#DBDBDB',
+  //   margin: '3%',
+  //   marginTop: '-0.5%',
+  //   flexDirection: 'row',
+  //   // justifyContent: 'space-between',
+  // },
+
+
   listData: {
-    padding: 5,
     borderWidth: 1,
-    borderRadius: 10,
-    borderColor: '#DBDBDB',
-    margin: '3%',
-    marginTop: '-0.5%',
+    borderRadius: 10, margin: '2%',
     flexDirection: 'row',
-    // justifyContent: 'space-between',
+    width: width * 95 / 100,
+    // backgroundColor: 'yellow',
+    borderColor: '#DBDBDB',
+    padding: 5,
   },
+
+
+
   listDataDetail: {
     padding: 5,
     borderWidth: 1,
@@ -164,8 +178,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#C3C7E5',
     borderRadius: 10,
-    marginHorizontal:'3%',
-    marginBottom:'3%'
+    marginHorizontal: '3%',
+    marginBottom: '3%'
   },
   icon: {
     height: 24,
@@ -178,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 20,
     marginHorizontal: '3%',
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   askModel: {
     marginHorizontal: '2%',
@@ -190,43 +204,43 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5
-},
-askTitle: {
+  },
+  askTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     backgroundColor: '#3373F3',
     color: 'white',
     textAlign: "center",
     paddingVertical: '3%'
-},
-askSubtitle: {
+  },
+  askSubtitle: {
     fontSize: 15,
     color: 'red',
     textAlign: "center"
-},
-askBtn: {
+  },
+  askBtn: {
     paddingVertical: '2%',
     borderRadius: 10,
     backgroundColor: "#2196F3",
-},
-askBtnText: {
+  },
+  askBtnText: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 20,
-},
-askTitleR: {
+  },
+  askTitleR: {
     margin: '5%',
     marginRight: '3%',
     marginTop: '-11.5%',
     alignSelf: 'flex-end',
     padding: 10
-},
-DetailCampTitle: {
-  fontSize: 14,
-  color: '#000000',
-  fontFamily: 'Roboto'
-},
+  },
+  DetailCampTitle: {
+    fontSize: 14,
+    color: '#000000',
+    fontFamily: 'Roboto'
+  },
 
 });
 

@@ -108,7 +108,7 @@ export default function AddContact({ navigation, route }) {
   const AddFunction = () => {
     setModalVisible2(!modalVisible2)
     dispatch(addcontactManuallyAction.clearResponse());
-    navigation.navigate("AddContact")
+    navigation.navigate("ContactList")
   };
 
 

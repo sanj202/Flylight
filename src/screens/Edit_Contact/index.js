@@ -242,7 +242,7 @@ export default function EditContact({ navigation, route }) {
                 ToastAndroid.show(Data.message, ToastAndroid.SHORT);
                 setIsLodding(false)
                 dispatch(editContactAction.clearResponse());
-                navigation.navigate('AddContact')
+                navigation.navigate('ContactStack')
                 // setfname(''),setlname(''), settitle(''),setemail(''), setAemail(''),setgender(null),
                 // setAphone(''),setfax(''),setwebsite(''),setLeadSource(''),setLeadStatus(null),setIndustry(''),
                 // setphone(''),setemployee(''),setrevenue(''),setcompanyName(''),setAddress(''),

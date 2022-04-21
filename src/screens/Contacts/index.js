@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import {Text, ToastAndroid, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
-    ActivityIndicator, Linking, Platform, PermissionsAndroid} from 'react-native';
+import {
+    Text, ToastAndroid, View, FlatList, TextInput, TouchableOpacity, Image, Modal, Dimensions,
+    ActivityIndicator, Linking, Platform, PermissionsAndroid
+} from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
 import { BottomSheet } from 'react-native-elements';
@@ -189,8 +191,7 @@ export default function Contact({ navigation }) {
     }
     const ContactView2 = ({ item }) => {
         return (
-            <TouchableOpacity
-                onPress={() => AddNewContact(item)}
+            <TouchableOpacity onPress={() => AddNewContact(item)}
                 style={{ padding: 5, marginTop: '1%', marginHorizontal: '3%' }}>
                 <Text style={{ fontSize: 16 }}>{item.displayName}</Text>
             </TouchableOpacity>
