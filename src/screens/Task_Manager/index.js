@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image,
-     ActivityIndicator,Modal, Pressable} from 'react-native';
+import {
+    Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image,
+    ActivityIndicator, Modal, Pressable
+} from 'react-native';
 import { BottomSheet } from 'react-native-elements';
 import moment from 'moment';
 import Header from '../../component/header/index'
@@ -73,7 +75,14 @@ export default function Task_Manager({ navigation, route }) {
         if (taskList) {
             if (taskList.status == "success") {
                 settotalItems(taskList.total_rows)
-                setallTask([...allTask, ...taskList.data])
+                // setallTask([...allTask, ...taskList.data])
+                if (page == 0 && taskList.data.length != 0) {
+                    setallTask(taskList.data)
+                } else if (taskList.data.length != 0) {
+                    let dataLive = taskList.data;
+                    let listTemp = [...allTask, ...dataLive];
+                    setallTask(listTemp)
+                }
                 setIsLodding(false)
             }
             else if (taskList.status == "failed") {
@@ -419,8 +428,10 @@ export default function Task_Manager({ navigation, route }) {
                     </View>
                 }
             </View>
-            <BottomSheet modalProps={{animationType: 'fade',hardwareAccelerated: true,
-                onRequestClose: () => { setIsVisible(false); }}} isVisible={isVisible}>
+            <BottomSheet modalProps={{
+                animationType: 'fade', hardwareAccelerated: true,
+                onRequestClose: () => { setIsVisible(false); }
+            }} isVisible={isVisible}>
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>Edit Task Manager</Text>
                     <View style={styles.inputFields}>
@@ -436,7 +447,7 @@ export default function Task_Manager({ navigation, route }) {
                         />
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Pressable  style={{ marginLeft: '3%' }}
+                        <Pressable style={{ marginLeft: '3%' }}
                         // onPress={showDatepicker}
                         >
                             <View style={styles.pickers}>
@@ -484,13 +495,13 @@ export default function Task_Manager({ navigation, route }) {
                             valueField="id"
                             placeholder='Status'
                             value={Status}
-                            onChange={item => {setStatus(item.id); }}
+                            onChange={item => { setStatus(item.id); }}
                             renderLeftIcon={() => (
                                 <Image style={[styles.icon, { height: 22, width: 22 }]}
                                     source={require('../../images/transgender.png')} />)}
                         />
                     </View>
-                    {EIsLodding == true ? <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '5%' }} />:null}
+                    {EIsLodding == true ? <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '5%' }} /> : null}
                     <Pressable
                         style={styles.updateBtn}
                         onPress={() => EditFunction(temObject)} >

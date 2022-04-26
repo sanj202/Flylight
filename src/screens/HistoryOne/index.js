@@ -31,7 +31,14 @@ export default function HistoryOne({ navigation, route }) {
             if (DetailData.status == "success") {
                 settotalItems(DetailData.total_rows)
                 setUser(DetailData.data[0].lead)
-                setData([...Data, ...DetailData.data])
+                // setData([...Data, ...DetailData.data])
+                if (page == 0 && DetailData.data.length != 0) {
+                    setData(DetailData.data)
+                } else if (DetailData.data.length != 0) {
+                    let dataLive = DetailData.data;
+                    let listTemp = [...Data, ...dataLive];
+                    setData(listTemp)
+                }
                 setIsLodding(false)
                 dispatch(historyAction.clearResponse())
             }
@@ -71,7 +78,7 @@ export default function HistoryOne({ navigation, route }) {
     }
     const [bottom, setbottom] = useState({
         isVisible4: false,
-        audio: '',
+        note: '',
         callDate: '',
         callTime: '',
         status: '',
@@ -82,9 +89,9 @@ export default function HistoryOne({ navigation, route }) {
     const OpenDetail = (item) => {
         setbottom({
             isVisible4: true,
-            audio: item.audio_file,
-            callDate: moment(item.created_at).format("YYYY-MM-DD"),
-            callTime: moment(item.created_at).format("LT"),
+            note: item.description,
+            callDate: moment(item.created_at).utc().format("YYYY-MM-DD"),
+            callTime: moment(item.created_at).utc().format("LT"),
             status: item.feedbackStatus ? item.feedbackStatus.status : '',
             callAction: item.callAction ? item.callAction.action : '',
             message: item.feedbackMessage ? {
@@ -121,11 +128,11 @@ export default function HistoryOne({ navigation, route }) {
                         <View>
                             <Text style={{
                                 fontWeight: 'bold', fontSize: 18, color: '#0F0F0F', fontFamily: 'Roboto'
-                            }}>{moment(item.created_at).format("HH:mm A")}</Text>
+                            }}>{moment(item.created_at).utc().format("LT")}</Text>
                             <Text style={{
                                 color: '#0F0F0F', paddingBottom: '2%',
                                 fontSize: 12, fontFamily: 'Roboto'
-                            }}>Call On - {moment(item.created_at).format("YYYY-MM-DD")}</Text>
+                            }}>Call On - {moment(item.created_at).utc().format("YYYY-MM-DD")}</Text>
                         </View>
                         <View>
                             {item.feedbackStatus ?
@@ -180,14 +187,14 @@ export default function HistoryOne({ navigation, route }) {
                             <View style={{ marginHorizontal: '2%', width: width * 60 / 100, }}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 19, fontFamily: 'Roboto', color: '#0F0F0F' }}>{User.first_name} {User.last_name}</Text>
                                 <View style={{ flexDirection: 'row', }}>
-                                    <Image style={{ height: 12, width: 12,marginTop:height*0.4/100,marginRight:'3%' }}
+                                    <Image style={{ height: 12, width: 12, marginTop: height * 0.4 / 100, marginRight: '3%' }}
                                         source={require('../../images/material-call.png')}
                                     />
                                     <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#0F0F0F' }}>+91-{User.phone}</Text>
                                 </View>
                             </View>
                             <View>
-                                <Text style={{ color: '#565656',marginTop:height*2/100, fontFamily: 'Roboto', fontSize: 12}}>{User.company}</Text>
+                                <Text style={{ color: '#565656', marginTop: height * 2 / 100, fontFamily: 'Roboto', fontSize: 12 }}>{User.company}</Text>
                             </View>
                         </View>
 
@@ -225,6 +232,8 @@ export default function HistoryOne({ navigation, route }) {
                                 Call Action
                                 {'\n'}
                                 Call Status
+                                {'\n'}
+                                {bottom.note ? "Note" : null}
                                 {bottom.message ? '\n' + 'Message' : null}
                                 {bottom.businessCard ? '\n' + 'businessCard' : null}
                             </Text>
@@ -238,6 +247,8 @@ export default function HistoryOne({ navigation, route }) {
                                 :   {bottom.callAction}
                                 {'\n'}
                                 :   {bottom.status}
+                                {'\n'}
+                                :   {bottom.note ? bottom.note  : null}
                                 {bottom.message ? '\n' + ':   ' + bottom.message.messageT + '\n' + ':   ' + bottom.message.phoneT + '\n' + ':   ' + bottom.message.emailT : null}
                                 {bottom.businessCard ? '\n' + ':   ' + bottom.businessCard.contactName + '\n' + ':   ' + bottom.businessCard.mobile
                                     + '\n' + ':   ' + bottom.businessCard.orgName + '\n' + ':   ' + bottom.businessCard.orgLink + '\n' + ':   ' + bottom.businessCard.orgAddress : null}

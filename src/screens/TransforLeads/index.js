@@ -47,7 +47,14 @@ export default function TransforLeads({ navigation, route }) {
     if (Lead_OpportunityList) {
       if (Lead_OpportunityList.status == "success") {
         settotalItems(Lead_OpportunityList.total_rows)
-        setLead([...Lead, ...Lead_OpportunityList.data])
+        // setLead([...Lead, ...Lead_OpportunityList.data])
+        if (page == 0 && Lead_OpportunityList.data.length != 0) {
+          setLead(Lead_OpportunityList.data)
+        } else if (Lead_OpportunityList.data.length != 0) {
+          let dataLive = Lead_OpportunityList.data;
+          let listTemp = [...Lead, ...dataLive];
+          setLead(listTemp)
+        }
         dispatch(leadmanagerAction.clearResponse())
         setIsLodding(false)
       }
@@ -436,7 +443,7 @@ export default function TransforLeads({ navigation, route }) {
             null}
         </View>
       </View>
-      <View style={{ flex: 3, marginBottom: '2%'}}>
+      <View style={{ flex: 3, marginBottom: '2%' }}>
         {IsLodding == true ?
           <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
           :

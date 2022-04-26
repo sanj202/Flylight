@@ -186,8 +186,8 @@ export default function Staff_Members({ navigation }) {
                     <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{moment(item.created_at).format('lll')}</Text>
                     <TouchableOpacity
                         onPress={() => Details(item)}
-                        style={{ alignSelf: 'flex-end', marginTop: '15%' }}>
-                        <Text style={{ color: '#000000' }}>More...</Text>
+                        style={{  alignSelf: 'flex-end', paddingHorizontal:'5%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '10%' }}>
+                        <Text style={{ textAlign: 'center', color: '#fff', }}>More...</Text>
                     </TouchableOpacity>
                 </View>
             </View>

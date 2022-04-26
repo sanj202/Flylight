@@ -50,16 +50,23 @@ export default function Lead_manager({ navigation, route }) {
 
   useEffect(() => {
     // setIsLodding(true)
-    setLead([])
     Get_Data(page)
+    setLead([])
   }, [])
+
 
   useEffect(() => {
     if (Lead_OpportunityList) {
+      console.log('leadmanager.................',Lead_OpportunityList)
       if (Lead_OpportunityList.status == "success") {
         settotalItems(Lead_OpportunityList.total_rows)
-        setLead([...Lead, ...Lead_OpportunityList.data])
-        dispatch(leadmanagerAction.clearResponse())
+        if (page == 0 && Lead_OpportunityList.data.length != 0) {
+          setLead(Lead_OpportunityList.data)
+        } else if (Lead_OpportunityList.data.length != 0) {
+          let dataLive = Lead_OpportunityList.data;
+          let listTemp = [...Lead, ...dataLive];
+          setLead(listTemp)
+        }
         setIsLodding(false)
       }
       else if (Lead_OpportunityList.status == "failed") {
@@ -71,7 +78,7 @@ export default function Lead_manager({ navigation, route }) {
   }, [Lead_OpportunityList])
 
   const fetchNextItems = () => {
-    console.log('loadmoeew.................')
+    // console.log('loadmoeew.................',totalItems)
     if (totalItems > Lead.length) {
       let p = page + 1;
       setPage(p);
@@ -86,7 +93,9 @@ export default function Lead_manager({ navigation, route }) {
     setPage(0)
     Get_Data(0)
   }
+
   const Get_Data = (p) => {
+    console.log('<><>><.........',p)
     const data = {
       uid: loginData.data.uid,
       profile_id: loginData.data.cProfile.toString(),
@@ -97,6 +106,7 @@ export default function Lead_manager({ navigation, route }) {
     }
     dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
   }
+
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       setShow(!show);
@@ -171,7 +181,7 @@ export default function Lead_manager({ navigation, route }) {
         dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
       }
       setLead([])
-      console.log(data)
+      // console.log(data)
     }
     else {
       ToastAndroid.show('Please Select Search Criteria', ToastAndroid.SHORT);
@@ -307,7 +317,7 @@ export default function Lead_manager({ navigation, route }) {
         ToastAndroid.show(importLead.message, ToastAndroid.SHORT);
         setSingleFile(null)
         setIsULodding(false)
-        // dispatch(leadAction.clearImportLeadResponse())
+        dispatch(leadAction.clearImportLeadResponse())
       }
       else if (importLead.status == "fail") {
         ToastAndroid.show(importLead.message, ToastAndroid.SHORT);

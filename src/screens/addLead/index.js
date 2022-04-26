@@ -139,12 +139,15 @@ export default function AddLead({ navigation, route }) {
 
     useEffect(() => {
         if (campaignList) {
-            if (campaignList.status == "200") {
-                let campList = campaignList.data && campaignList.data.map((ld) => {
-                    let user = { label: ld.campaign_name, value: ld.id }
-                    return user;
-                })
-                setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
+            // console.log('campaignList.......................',campaignList)
+            if (campaignList.status == "success") {
+                //    console.log('campaignList.......................',campaignList.data.rows)
+                   setcampaignData(campaignList.data.rows)
+                // let campList = campaignList.data && campaignList.data.map((ld) => {
+                //     let user = { label: ld.campaign_name, value: ld.id }
+                //     return user;
+                // })
+                // setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
             }
             else {
 
@@ -746,12 +749,12 @@ export default function AddLead({ navigation, route }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="campaign_name"
+                        valueField="id"
                         placeholder='Campaign'
                         value={campaign}
                         onChange={item => {
-                            setcampaign(item.value);
+                            setcampaign(item.id);
                         }}
                         renderLeftIcon={() => (
                             <View>

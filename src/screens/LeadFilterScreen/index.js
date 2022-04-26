@@ -54,10 +54,17 @@ export default function LeadFilterScreen({ navigation, route }) {
 
   useEffect(() => {
     if (Leads) {
-      console.log('......................', Leads)
+      // console.log('......................', Leads)
       if (Leads.status == "success") {
         settotalItems(Leads.total_rows)
-        setleadList([...leadList, ...Leads.data])
+        // setleadList([...leadList, ...Leads.data])
+        if (page == 0 && Leads.data.length != 0) {
+          setleadList(Leads.data)
+        } else if (Leads.data.length != 0) {
+          let dataLive = Leads.data;
+          let listTemp = [...leadList, ...dataLive];
+          setleadList(listTemp)
+        }
         setIsLodding({
           ...IsLodding,
           leadLodding: false
@@ -140,7 +147,7 @@ export default function LeadFilterScreen({ navigation, route }) {
         title='Leads'
         onPressRight={() => { navigation.navigate('Notification') }}
       />
-      <View style={{ flex: 1, marginVertical: '2%',marginHorizontal:'3%' }}>
+      <View style={{ flex: 1, marginVertical: '2%', marginHorizontal: '3%' }}>
         {IsLodding.leadLodding == true ?
           <ActivityIndicator size="small" color="#0000ff" />
           :

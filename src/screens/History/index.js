@@ -53,7 +53,14 @@ export default function History({ navigation }) {
     if (historyData) {
       if (historyData.status == "success") {
         settotalItems(historyData.total_rows)
-        setHistory([...History, ...historyData.data])
+        // setHistory([...History, ...historyData.data])
+        if (page == 0 && historyData.data.length != 0) {
+          setHistory(historyData.data)
+        } else if (historyData.data.length != 0) {
+          let dataLive = historyData.data;
+          let listTemp = [...allTask, ...dataLive];
+          setHistory(listTemp)
+        }
         setIsLodding(false)
         dispatch(historyAction.clearResponse())
       }
@@ -263,7 +270,7 @@ export default function History({ navigation }) {
               </View>
               <Text style={{ fontWeight: '500', fontSize: 11, color: '#0F0F0F' }}>
                 {/* Last Call: Sep 17, 15:24PM */}
-                Last Call: {moment(item.created_at).format('lll')}
+                Last Call: {moment(item.created_at).utc().format('lll')}
               </Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
@@ -285,13 +292,13 @@ export default function History({ navigation }) {
         title='History'
         onPressRight={() => { navigation.navigate('Notification') }}
       />
-      <View style={{ flex: 1, marginBottom: '2%'}}>
+      <View style={{ flex: 1, marginBottom: '2%' }}>
         {IsLodding == true ?
           <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
           :
           <View style={{ flex: 1 }}>
-            <View style={{ flex: 0.45,}}>
-              <View style={{ flexDirection: 'row',paddingVertical:'1%',paddingHorizontal:"2%", justifyContent: 'space-around'}}>
+            <View style={{ flex: 0.45, }}>
+              <View style={{ flexDirection: 'row', paddingVertical: '1%', paddingHorizontal: "2%", justifyContent: 'space-around' }}>
 
                 <Pressable
                   style={styles.pickerStyle}
