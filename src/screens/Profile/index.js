@@ -71,8 +71,6 @@ export default function AddContact({ navigation }) {
                 setIsLodding2(false)
             }
         }
-        else {
-        }
     }, [profileImage])
 
     const UploadAvtar = () => {
@@ -212,8 +210,7 @@ export default function AddContact({ navigation }) {
                             <Text style={styles.textValues}>{user.state ? user.street + ',' + user.city + ',' + user.state + ',' + user.country + ',' + user.zip : ''}</Text>
                         </View>
                         <TouchableOpacity style={styles.button}
-                            onPress={() => LogoutSession()}
-                        >
+                            onPress={() => LogoutSession()} >
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                 <Text style={styles.textButton}>Logout</Text>
                                 <Image

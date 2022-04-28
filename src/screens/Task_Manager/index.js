@@ -255,6 +255,45 @@ export default function Task_Manager({ navigation, route }) {
             dispatch(taskmanagerAction.TaskList(data, loginData.data.token));
         }
     }
+    const [detail, setDetail] = useState(false)
+    const [detailObject, setdetailObject] = useState({
+        name: '',
+        title: '',
+        taskFor: '',
+        reletedTo: '',
+        status: '',
+        priority: '',
+        DueData: '',
+    })
+    const ShowDetail = (item) => {
+        setDetail(true)
+        setdetailObject({
+            name: item.profile.user.name,
+            title: item.title,
+            taskFor: item.task_for,
+            reletedTo: item.related_to,
+            status: item.taskstatus.status,
+            priority: item.taskpriority.priority,
+            DueData: item.due_date
+        })
+    }
+    const HideDetail = (item) => {
+        setDetail(false)
+        setdetailObject({
+            name: '',
+            title: '',
+            taskFor: '',
+            reletedTo: '',
+            status: '',
+            priority: '',
+            DueData: '',
+        })
+    }
+
+
+
+
+
     const AllView = ({ item }) => {
         return (
             <View style={{ marginTop: '1%' }}>
@@ -326,10 +365,15 @@ export default function Task_Manager({ navigation, route }) {
                             />
                             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
                         </View>
-                        <Text style={{
+                        {/* <Text style={{
                             marginTop: '30%', textAlign: 'right',
                             color: 'black', fontSize: 11
-                        }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text>
+                        }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text> */}
+                        <TouchableOpacity
+                            style={{ backgroundColor: '#3373F3', borderRadius: 20, marginTop: '30%', }}
+                            onPress={() => ShowDetail(item)}>
+                            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View >
@@ -548,6 +592,44 @@ export default function Task_Manager({ navigation, route }) {
                             onPress={() => DeleteFunction()}  >
                             <Text style={styles.askBtnText}>YES</Text>
                         </Pressable>
+                    </View>
+                    <View style={{ margin: '2%' }} />
+                </View>
+            </Modal>
+
+            <Modal animationType="slide" transparent={true} visible={detail}
+                onRequestClose={() => { setDetail(!detail); }}>
+                <View style={styles.askModel}>
+                    <Text style={styles.askTitle}>Task Detail</Text>
+                    <Pressable
+                        style={styles.askTitleR}
+                        onPress={() => HideDetail()}
+                    >
+                        <Image
+                            style={{ height: 14, width: 14, }}
+                            source={require('../../images/cross.png')}
+                        />
+                    </Pressable>
+                    <View style={[styles.inputFields, { padding: 10 }]}>
+                        <View>
+                            <Text style={styles.DetailCampTitle}>Task Owner </Text>
+                            <Text style={styles.DetailCampTitle}>Title</Text>
+                            <Text style={styles.DetailCampTitle}>Task For</Text>
+                            <Text style={styles.DetailCampTitle}>Related To</Text>
+                            <Text style={styles.DetailCampTitle}>Due Date</Text>
+                            <Text style={styles.DetailCampTitle}>Status</Text>
+                            <Text style={styles.DetailCampTitle}>Priority</Text>
+                        </View>
+
+                        <View style={{ marginLeft: '3%', width: '70%' }}>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.name}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.title}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.taskFor}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.reletedTo}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.DueData}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.status}</Text>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{detailObject.priority}</Text>
+                        </View>
                     </View>
                     <View style={{ margin: '2%' }} />
                 </View>

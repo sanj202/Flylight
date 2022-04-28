@@ -26,12 +26,14 @@ export default function SideMenu(props) {
     const { width, height } = Dimensions.get('window');
 
     useEffect(() => {
+        console.log('..........')
         const data = {
             uid: loginData.data.uid,
             org_uid: loginData.data.org_uid,
             profile_id: loginData.data.cProfile.toString(),
         }
         dispatch(profileAction.profile(data, loginData.data.token));
+        dispatch(profileAction.GetPermission(data, loginData.data.token));
     }, [isFocused])
 
     useEffect(() => {

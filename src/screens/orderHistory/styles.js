@@ -15,10 +15,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         paddingHorizontal: 10,
         paddingVertical: 5,
-        marginHorizontal: '30%',
+        // marginHorizontal: '30%',
+        marginRight:'5%',
         marginVertical: '2%',
         backgroundColor: '#2296E4',
-        borderRadius: 15
+        borderRadius: 15,
+        alignSelf:'flex-end'
     },
 
 

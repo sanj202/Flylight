@@ -24,7 +24,8 @@ import {
     MeetingsDetail,
     Action_Manager,
     Task_Manager,
-    AddTask
+    AddTask,
+    Lead_ManagerDetail
 } from '../../screens/index'
 
 const Stack = createNativeStackNavigator();
@@ -52,6 +53,7 @@ function DashboardStack() {
             <Stack.Screen name="AddMeetings" component={AddMeetings} />
             <Stack.Screen name="EditMeetings" component={EditMeetings} />
             <Stack.Screen name='MeetingsDetail' component={MeetingsDetail} />
+            <Stack.Screen name='Lead_ManagerDetail' component={Lead_ManagerDetail} />
         </Stack.Navigator>
         // </NavigationContainer>
     );

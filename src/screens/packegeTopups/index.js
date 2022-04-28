@@ -10,10 +10,10 @@ import RazorpayCheckout from 'react-native-razorpay';
 export default function PackegeTopups({ navigation }) {
 
     const [isService, setisService] = useState('Package');
-    const [IsLodding, setIsLodding] = useState(false)
+    const [IsLodding, setIsLodding] = useState(true)
     const [IsLoddingBuy, setIsLoddingBuy] = useState(false)
     const { width, height } = Dimensions.get('window');
-
+    const isFocused = useIsFocused();
     const [Package, setPackage] = useState('')
     const [TopUp, setTopUp] = useState('')
     const dispatch = useDispatch()
@@ -25,7 +25,6 @@ export default function PackegeTopups({ navigation }) {
     const topOrderVerify = useSelector(state => state.organization.verifytoporder)
 
     useEffect(() => {
-        setIsLodding(true)
         Get_Data()
     }, [])
 

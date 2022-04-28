@@ -124,8 +124,6 @@ export default function EditCampaign({ navigation, route }) {
             else if (leadOwner.status == "fail") {
             }
         }
-        else {
-        }
     }, [leadOwner])
 
     useEffect(() => {

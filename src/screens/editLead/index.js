@@ -14,7 +14,7 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function EditLead({ navigation, route }) {
 
-    console.log("route data...................", route.params)
+    // console.log("route data...................", route.params.Edata.campaign)
     // const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
     // const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState("")
@@ -163,12 +163,8 @@ export default function EditLead({ navigation, route }) {
 
     useEffect(() => {
         if (campaignList) {
-            if (campaignList.status == "200") {
-                let campList = campaignList.data && campaignList.data.map((ld) => {
-                    let user = { label: ld.campaign_name, value: ld.id }
-                    return user;
-                })
-                setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
+            if (campaignList.status == "success") {
+                setcampaignData(campaignList.data.rows)
             }
             else {
 
@@ -728,12 +724,12 @@ export default function EditLead({ navigation, route }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="campaign_name"
+                        valueField="id"
                         placeholder='Campaign'
                         value={campaign}
                         onChange={item => {
-                            setcampaign(item.value);
+                            setcampaign(item.id);
                         }}
                         renderLeftIcon={() => (
                             <View>

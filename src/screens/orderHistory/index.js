@@ -21,15 +21,15 @@ export default function OrderHistory({ navigation }) {
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const OrderDetail = useSelector(state => state.organization.getpackHistory)
+    const isFocused = useIsFocused();
 
     const checkValue = (value) => {
         setisService(value)
     }
 
     useEffect(() => {
-        setIsLodding(true)
         Get_Data()
-    }, [])
+    }, [isFocused])
 
     const Get_Data = () => {
         setIsLodding(true)

@@ -12,16 +12,16 @@ const styles = StyleSheet.create({
         width: 28,
         height: 28
     },
-    notify:{
+    notify: {
         flexDirection: 'row',
         // justifyContent: 'space-between',
-        borderWidth: 1, 
-        borderColor:'#DBDBDB',
+        borderWidth: 1,
+        borderColor: '#DBDBDB',
         borderRadius: 10,
-        paddingVertical:5,
-        paddingHorizontal:2
-
-     },
+        paddingVertical: 5,
+        paddingHorizontal: 2,
+        marginBottom: '1%'
+    },
 
 })
 

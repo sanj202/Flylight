@@ -3,8 +3,33 @@ import {
     LeadAssign, LeadAssign_Success, LeadAssign_Clear,
     TLead_Opportunity, TLead_Opportunity_Success, TLead_Opportunity_Clear,
     LeadTransfer, LeadTransfer_Success, LeadTransfer_Clear,
+    LeadDetail, LeadDetail_Success, LeadDetail_Clear
 } from './actionTypes'
 import { BaseUrl, Base_NodeUrl } from '../../../const';
+
+export const GetDetail = (data, token,) => {
+    return (dispatch) => {
+        dispatch({ type: LeadDetail })
+        fetch(`${BaseUrl}/getleadDetails`,
+            {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                dispatch({ type: LeadDetail_Success, payload: responseData })
+            })
+            .catch((error) => {
+                console.log("error" + error);
+            })
+    }
+};
+
 
 export const lead_OpprtunityList = (data, token) => {
     return (dispatch) => {
@@ -100,5 +125,6 @@ export const clearResponse = () => {
         type: LeadAssign_Clear,
         type: TLead_Opportunity_Clear,
         type: LeadTransfer_Clear,
+        type: LeadDetail_Clear
     };
 };

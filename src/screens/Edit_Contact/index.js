@@ -14,6 +14,7 @@ import { useIsFocused } from "@react-navigation/core"
 
 export default function EditContact({ navigation, route }) {
 
+    console.log('................',route.params.Edata.campaign)
     const [LeadOwner, setLeadOwner] = useState(null)
     const [title, settitle] = useState("")
     const [fname, setfname] = useState("")
@@ -146,22 +147,19 @@ export default function EditContact({ navigation, route }) {
                 setState(null)
                 setCity('')
             }
-            else if (ZipList.status == "fail") {
-                setState(null)
-                setCity('')
-            }
         }
     }, [ZipList])
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
-                let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.user.id }
-                    if (user !== undefined) {
-                        setleadOwnerData([user])
-                    }
-                    return user;
-                })
+                // let userData = leadOwner.data && leadOwner.data.map((ld) => {
+                //     let user = { label: ld.user.name, value: ld.user.id }
+                //     if (user !== undefined) {
+                //         setleadOwnerData([user])
+                //     }
+                //     return user;
+                // })
+                setleadOwnerData(leadOwner.data.map((item, index) => item.user))
             }
             else if (leadOwner.status == "failed") {
             }
@@ -172,12 +170,8 @@ export default function EditContact({ navigation, route }) {
 
     useEffect(() => {
         if (campaignList) {
-            if (campaignList.status == "200") {
-                let campList = campaignList.data && campaignList.data.map((ld) => {
-                    let user = { label: ld.campaign_name, value: ld.id }
-                    return user;
-                })
-                setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
+            if (campaignList.status == "success") {
+                setcampaignData(campaignList.data.rows)
             }
             else if (campaignList.status == "failed") {
             }
@@ -271,11 +265,11 @@ export default function EditContact({ navigation, route }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="id"
                         placeholder='Lead Owner'
                         value={LeadOwner}
-                        onChange={item => { setLeadOwner(item.value); }}
+                        onChange={item => { setLeadOwner(item.id); }}
                         renderLeftIcon={() => (
                             <View>
                                 <Image
@@ -337,7 +331,7 @@ export default function EditContact({ navigation, route }) {
                 <TouchableOpacity style={styles.pickerStyle} onPress={showDatepicker} >
                     <View style={{ flexDirection: 'row' }}>
                         <Image style={Platform.OS == 'ios' ?
-                                [styles.icon] : [styles.icon, { marginTop: '1%' }]}
+                            [styles.icon] : [styles.icon, { marginTop: '1%' }]}
                             source={require('../../images/DOB.png')}
                         />
                         {show && (
@@ -664,12 +658,12 @@ export default function EditContact({ navigation, route }) {
                         maxHeight={160}
                         search={true}
                         searchPlaceholder='Search'
-                        labelField="label"
-                        valueField="value"
+                        labelField="campaign_name"
+                        valueField="id"
                         placeholder='Select a Campagin'
                         value={Campagin}
                         onChange={item => {
-                            setCampagin(item.value);
+                            setCampagin(item.id);
                         }}
                         renderLeftIcon={() => (
                             <View>

@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { Card } from 'react-native-paper';
-import { BottomSheet } from 'react-native-elements';
 import Header from '../../component/header/index'
 import { contactListAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -20,8 +19,6 @@ export default function Contact({ navigation }) {
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const contactData = useSelector(state => state.contactList.contacts)
-    const [EditcontactId, setEditConatctId] = useState([])
-    const [isVisible, setIsVisible] = useState(false);
     const [isVisible2, setIsVisible2] = useState(false);
     const [modalVisible2, setModalVisible2] = useState(false);
     const [modalVisible3, setModalVisible3] = useState(false);
@@ -160,16 +157,13 @@ export default function Contact({ navigation }) {
             setSearch2(text);
         }
     };
-    const newFunction = () => {
-        navigation.navigate('ReportFeedback')
-    }
+
     const addContacts = () => {
         setModalVisible2(!modalVisible2),
             setModalVisible3(!modalVisible3)
     }
     const Edit_Contact_Function = (id) => {
-        setEditConatctId(id)
-        setIsVisible(true)
+        navigation.navigate("Edit_Contact", { Edata: id })
     }
     const AskForAddContact = () => {
         setModalVisible3(!modalVisible3)
@@ -207,13 +201,14 @@ export default function Contact({ navigation }) {
                     </View>
                     <View>
                         <View style={{ flexDirection: 'row' }}>
-                            <TouchableOpacity onPress={() => Edit_Contact_Function(item)} >
-                                <Image style={{ height: 35, width: 35 }}
-                                    source={require('../../images/Group.png')} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => call(item.phone)} >
+                            <TouchableOpacity  onPress={() => call(item.phone)} >
                                 <Image style={{ height: 35, width: 35, }}
                                     source={require('../../images/GroupCall.png')} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => Edit_Contact_Function(item)} >
+                                <Image style={{ height: 35, width: 35 }}
+                                source={require('../../images/editConatct.png')}
+                                />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -244,13 +239,6 @@ export default function Contact({ navigation }) {
                 }}
             />
         );
-    };
-    const AddFunction = (key, id) => {
-        setIsVisible(!isVisible)
-        // console.log("Add fuction...............", key, id)
-        navigation.navigate("Edit_Contact", {
-            Edata: id
-        })
     };
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
@@ -302,56 +290,6 @@ export default function Contact({ navigation }) {
                     />
                 }
             </View>
-            <View style={{ height: '3%' }}></View>
-            <BottomSheet
-                modalProps={{
-                    animationType: 'fade',
-                    hardwareAccelerated: true,
-                    onRequestClose: () => { setIsVisible(false); },
-                }}
-                isVisible={isVisible}>
-                <View style={
-                    Platform.OS == 'ios' ?
-                        { width: width, height: height / 6 }
-                        :
-                        { width: width, height: height / 5.1 }
-                }>
-                    <View style={styles.headerView2}>
-                        <TouchableOpacity
-                            onPress={() => AddFunction('Call Next', EditcontactId)}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '2%' }}>
-                                <Text style={styles.title3}>Call Next</Text>
-                                <Image
-                                    style={{ height: 13.5, width: 20.24, marginRight: '2%' }}
-                                    source={require('../../images/arrowforward.png')} />
-                            </View>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => AddFunction('Shift Up', EditcontactId)}>
-                            <View style={{ borderWidth: 0.3, borderColor: '#B9BAC8', margin: '2%' }}></View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '3%' }}>
-                                <Text style={styles.title3}>Shift Up</Text>
-                                <Image
-                                    style={{ height: 13.5, width: 20.24, marginRight: '2%' }}
-                                    source={require('../../images/arrowforward.png')}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => AddFunction('Shift Down', EditcontactId)}>
-                            <View style={{ borderWidth: 0.3, borderColor: '#B9BAC8', margin: '2%' }}></View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: '3%' }}>
-                                <Text style={styles.title3}>Shift Down</Text>
-                                <Image
-                                    style={{ height: 13.5, width: 20.24, marginRight: '2%' }}
-                                    source={require('../../images/arrowforward.png')} />
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </BottomSheet>
-
             <Modal animationType="slide"
                 transparent={true}
                 visible={modalVisible2}
@@ -449,7 +387,7 @@ export default function Contact({ navigation }) {
                 transparent={true}
                 visible={isVisible2}
                 onRequestClose={() => setIsVisible2(false)}>
-                <View style={{ backgroundColor: '#fff', height: height }}>
+                <View style={{ backgroundColor: '#fff', height: height*85/100,margin:'3%' }}>
                     <TouchableOpacity style={{ margin: '3%', width: '20%', alignSelf: 'flex-end' }} onPress={() => setIsVisible2(false)}>
                         <Image
                             style={{ alignSelf: 'flex-end', marginRight: '5%', height: 18, width: 18 }}

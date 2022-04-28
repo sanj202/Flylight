@@ -9,7 +9,7 @@ import moment from 'moment';
 
 export default function Campaign({ navigation }) {
 
-    isFocused = useIsFocused
+    const isFocused = useIsFocused();
     const { width, height } = Dimensions.get('window');
     const [CampaignData, setCampaignData] = useState('')
     const [IsLodding, setIsLodding] = useState(true)
@@ -24,7 +24,7 @@ export default function Campaign({ navigation }) {
 
     useEffect(() => {
         FetchData(page)
-    }, [])
+    }, [isFocused])
 
     const FetchData = (p) => {
         setIsLodding(true)
@@ -133,10 +133,9 @@ export default function Campaign({ navigation }) {
                             source={require('../../images/editCall.png')} />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={{ alignItems: 'flex-end', marginTop: '20%' }}
-                        onPress={() => Details(item)}
-                    >
-                        <Text style={{ color: '#000000', padding: 2 }}>More details</Text>
+                        style={{ alignItems: 'flex-end', marginTop: '20%', backgroundColor: '#3373F3', borderRadius: 20 }}
+                        onPress={() => Details(item)} >
+                        <Text style={{ color: '#fff', padding: '1%' }}>More Detail</Text>
                     </TouchableOpacity>
                 </View>
             </View>

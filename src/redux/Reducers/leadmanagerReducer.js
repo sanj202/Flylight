@@ -3,12 +3,14 @@ import {
     LeadAssign, LeadAssign_Success, LeadAssign_Clear,
     TLead_Opportunity, TLead_Opportunity_Success, TLead_Opportunity_Clear,
     LeadTransfer, LeadTransfer_Success, LeadTransfer_Clear,
+    LeadDetail, LeadDetail_Success, LeadDetail_Clear
 } from '../Actions/actionTypes'
 const initialState = {
     GetList: [],
     assign: [],
-    GetListT:[],
+    GetListT: [],
     transfer: [],
+    GetDetail: []
 };
 const lead_OpprtunityR = (state = initialState, action) => {
     switch (action.type) {
@@ -56,20 +58,35 @@ const lead_OpprtunityR = (state = initialState, action) => {
                 assign: []
             };
 
-            case LeadTransfer:
-                return {
-                    ...state,
-                };
-            case LeadTransfer_Success:
-                return {
-                    ...state,
-                    transfer: action.payload
-                };
-            case LeadTransfer_Clear:
-                return {
-                    ...state,
-                    transfer: []
-                };
+        case LeadTransfer:
+            return {
+                ...state,
+            };
+        case LeadTransfer_Success:
+            return {
+                ...state,
+                transfer: action.payload
+            };
+        case LeadTransfer_Clear:
+            return {
+                ...state,
+                transfer: []
+            };
+        case LeadDetail:
+            return {
+                ...state,
+            };
+        case LeadDetail_Success:
+            return {
+                ...state,
+                GetDetail: action.payload
+            };
+        case LeadDetail_Clear:
+            return {
+                ...state,
+                GetDetail: []
+            };
+
         default:
             return state;
     }

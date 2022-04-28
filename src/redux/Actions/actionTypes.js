@@ -285,8 +285,16 @@ export const LeadTranferOwnerNew_Clear = 'LeadTranferOwnerNew_Clear'
 //
 export const TLead_Opportunity = "TLead_Opportunity"
 export const TLead_Opportunity_Success = "TLead_Opportunity_Success"
-export const TLead_Opportunity_Clear = "TLead_Opportunity_Success"
+export const TLead_Opportunity_Clear = "TLead_Opportunity_Clear"
 //
 export const LeadTransfer = "LeadTransfer"
 export const LeadTransfer_Success = "LeadTransfer_Success"
-export const LeadTransfer_Clear = "LeadTransfer_Success"
+export const LeadTransfer_Clear = "LeadTransfer_Clear"
+//
+export const LeadDetail = "LeadDetail"
+export const LeadDetail_Success = "LeadDetail_Success"
+export const LeadDetail_Clear = "LeadDetail_Clear"
+//
+export const Permissions = "Permissions"
+export const Permissions_Success = "Permissions_Success"
+export const Permissions_Clear = "Permissions_Clear"

@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginVertical: '1%',
     borderRadius: 15,
+    marginHorizontal:'3%'
   },
   tabTextStyle: {
     fontSize: 16,

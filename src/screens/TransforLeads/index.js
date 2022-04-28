@@ -300,10 +300,11 @@ export default function TransforLeads({ navigation, route }) {
             />
             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
           </View>
-          {/* <Text style={{
-            marginTop: '30%', textAlign: 'right',
-            color: 'black', fontSize: 11
-          }}>Call Pending</Text> */}
+          <TouchableOpacity 
+          style={{ backgroundColor: '#3373F3',borderRadius:20, marginTop: '30%', }}
+          onPress={()=>navigation.navigate('Lead_ManagerDetail',{item:item})}>
+            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );

@@ -166,6 +166,10 @@ export const packclearResponse = () => {
     return {
         type: packegeTopups_Clear,
         type: Package_Order_Clear,
-        typeof: TopUp_Order_Clear
+        type: TopUp_Order_Clear,
+        type: packegeTopups_history_Clear,
+        type: Package_Order_Verify_Clear,
+        type: TopUp_Order_Verify_Clear,
+
     };
 };

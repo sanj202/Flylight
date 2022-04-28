@@ -127,8 +127,6 @@ export default function AddContact({ navigation, route }) {
         setCity('')
       }
     }
-    else {
-    }
   }, [ZipCode])
 
   useEffect(() => {
@@ -155,38 +153,33 @@ export default function AddContact({ navigation, route }) {
         setCity('')
       }
     }
-    else {
-    }
   }, [ZipList])
 
   useEffect(() => {
     if (leadOwner) {
       if (leadOwner.status == "200") {
-        let userData = leadOwner.data && leadOwner.data.map((ld) => {
-          let user = { label: ld.user.name, value: ld.user.id }
-          if (user !== undefined) {
-            setleadOwnerData([user])
-          }
-          return user;
-        })
+        // console.log(',.................',leadOwner.data)
+        // let userData = leadOwner.data && leadOwner.data.map((ld) => {
+        //   let user = { label: ld.user.name, value: ld.user.id }
+        //   if (user !== undefined) {
+        //     setleadOwnerData([user])
+        //     console.log('............',user)
+        //   }
+        //   return user;
+        // })
+        setleadOwnerData(leadOwner.data.map((item, index) => item.user))
       }
       else if (leadOwner.status == "failed") {
       }
       else if (leadOwner.status == "fail") {
       }
     }
-    else {
-    }
   }, [leadOwner])
 
   useEffect(() => {
     if (campaignList) {
-      if (campaignList.status == "200") {
-        let campList = campaignList.data && campaignList.data.map((ld) => {
-          let user = { label: ld.campaign_name, value: ld.id }
-          return user;
-        })
-        setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
+      if (campaignList.status == "success") {
+        setcampaignData(campaignList.data.rows)
       }
       else if (campaignList.status == "failed") {
       }
@@ -297,11 +290,11 @@ export default function AddContact({ navigation, route }) {
             search={true}
             searchPlaceholder='Search'
             maxHeight={160}
-            labelField="label"
-            valueField="value"
+            labelField="name"
+            valueField="id"
             placeholder='Lead Owner'
             value={LeadOwner}
-            onChange={item => {setLeadOwner(item.value); }}
+            onChange={item => { setLeadOwner(item.id); }}
             renderLeftIcon={() => (
               <View>
                 <Image style={styles.icon}
@@ -311,7 +304,7 @@ export default function AddContact({ navigation, route }) {
           />
         </View>
         <View style={styles.inputFields}>
-          <Image style={[styles.icon, {height: 20, width: 18 }]}
+          <Image style={[styles.icon, { height: 20, width: 18 }]}
             source={require('../../images/user.png')}
           />
           <TextInput
@@ -393,7 +386,7 @@ export default function AddContact({ navigation, route }) {
           </View>
         </TouchableOpacity>
         <View style={{ marginTop: '2%' }}>
-              <Dropdown
+          <Dropdown
             style={styles.dropdown3}
             placeholderStyle={styles.placeholderStyle3}
             selectedTextStyle={styles.selectedTextStyle3}
@@ -681,12 +674,12 @@ export default function AddContact({ navigation, route }) {
             search={true}
             searchPlaceholder='Search'
             maxHeight={160}
-            labelField="label"
-            valueField="value"
+            labelField="campaign_name"
+            valueField="id"
             placeholder='Select a Campagin'
             value={Campagin}
             onChange={item => {
-              setCampagin(item.value);
+              setCampagin(item.id);
             }}
             renderLeftIcon={() => (
               <View>
@@ -698,56 +691,56 @@ export default function AddContact({ navigation, route }) {
             )}
           />
         </View>
-        {IsLodding == true ?<ActivityIndicator size="small" color="#0000ff" />:null}
+        {IsLodding == true ? <ActivityIndicator size="small" color="#0000ff" /> : null}
         <TouchableOpacity style={styles.button} onPress={() => AddContactFuction()} >
           <Text style={[styles.textButton, { fontWeight: 'bold' }]}>ADD</Text>
         </TouchableOpacity>
       </ScrollView >
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible2}
-      onRequestClose={() => {
-        setModalVisible2(!modalVisible2);
-      }}
-    >
-      <Card style={styles.headerView2}>
-        <View style={styles.headerView3}>
-          <TouchableOpacity
-            onPress={() => setModalVisible2(!modalVisible2)}
-          >
-            <Image
-              style={{ margin: '5%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
-              source={require('../../images/crossImgR.png')}
-            />
-          </TouchableOpacity>
-        </View>
-        <Image
-          source={require('../../images/checkmark-circle.png')}
-          style={{ width: 38, height: 38, alignSelf: 'center' }}
-        />
-        <Text style={styles.title3}>
-          Contacts Imported {'\n'} Successfully
-        </Text>
-        <View style={{
-          flexDirection: 'row', justifyContent: 'space-around',
-          marginBottom: '2%'
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible2}
+        onRequestClose={() => {
+          setModalVisible2(!modalVisible2);
         }}
-        >
-          <TouchableOpacity
-            onPress={() => AddFunction()}
-            style={styles.btn3}
-          >
-            <Text
-              style={styles.btnText3}
+      >
+        <Card style={styles.headerView2}>
+          <View style={styles.headerView3}>
+            <TouchableOpacity
+              onPress={() => setModalVisible2(!modalVisible2)}
             >
-              OK
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ marginBottom: '3%' }}></View>
-      </Card>
-    </Modal>
+              <Image
+                style={{ margin: '5%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
+                source={require('../../images/crossImgR.png')}
+              />
+            </TouchableOpacity>
+          </View>
+          <Image
+            source={require('../../images/checkmark-circle.png')}
+            style={{ width: 38, height: 38, alignSelf: 'center' }}
+          />
+          <Text style={styles.title3}>
+            Contacts Imported {'\n'} Successfully
+          </Text>
+          <View style={{
+            flexDirection: 'row', justifyContent: 'space-around',
+            marginBottom: '2%'
+          }}
+          >
+            <TouchableOpacity
+              onPress={() => AddFunction()}
+              style={styles.btn3}
+            >
+              <Text
+                style={styles.btnText3}
+              >
+                OK
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginBottom: '3%' }}></View>
+        </Card>
+      </Modal>
     </View >
   );
 }

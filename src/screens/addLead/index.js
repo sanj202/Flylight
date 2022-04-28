@@ -61,8 +61,8 @@ export default function AddLead({ navigation, route }) {
     const [modalVisible, setModalVisible] = useState(false);
 
     const data = [
-        { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
     ];
 
     // const [date, setDate] = useState(new Date(1598051730000));

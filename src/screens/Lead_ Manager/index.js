@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
-        Pressable, Dimensions, Platform,} from 'react-native';
+import {
+  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
+  Pressable, Dimensions, Platform,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import styles from './styles'
@@ -49,15 +51,15 @@ export default function Lead_manager({ navigation, route }) {
   const leadOwner = useSelector(state => state.leads.leadOwnerNew)
 
   useEffect(() => {
-    // setIsLodding(true)
+    setIsLodding(true)
     Get_Data(page)
     setLead([])
-  }, [])
+  }, [isFocused])
 
 
   useEffect(() => {
     if (Lead_OpportunityList) {
-      console.log('leadmanager.................',Lead_OpportunityList)
+      // console.log('leadmanager.................', Lead_OpportunityList)
       if (Lead_OpportunityList.status == "success") {
         settotalItems(Lead_OpportunityList.total_rows)
         if (page == 0 && Lead_OpportunityList.data.length != 0) {
@@ -95,7 +97,7 @@ export default function Lead_manager({ navigation, route }) {
   }
 
   const Get_Data = (p) => {
-    console.log('<><>><.........',p)
+    console.log('<><>><.........', p)
     const data = {
       uid: loginData.data.uid,
       profile_id: loginData.data.cProfile.toString(),
@@ -467,7 +469,7 @@ export default function Lead_manager({ navigation, route }) {
           </View>
         </View>
 
-        <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
+        <View style={{ marginLeft: '2%', marginTop: '1%' }}>
           <View style={{ flexDirection: 'row' }}>
             <Image
               style={{ height: 10, width: 10, marginRight: '2%' }}
@@ -475,10 +477,11 @@ export default function Lead_manager({ navigation, route }) {
             />
             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
           </View>
-          {/* <Text style={{
-            marginTop: '40%', textAlign: 'right',
-            color: 'black', fontSize: 11
-          }}>Call Pending</Text> */}
+          <TouchableOpacity 
+          style={{ backgroundColor: '#3373F3',borderRadius:20, marginTop: '30%', }}
+          onPress={()=>navigation.navigate('Lead_ManagerDetail',{item:item})}>
+            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -501,7 +504,7 @@ export default function Lead_manager({ navigation, route }) {
         title='Lead Manager'
         onPressRight={() => { navigation.navigate('Notification') }}
       />
-      <View style={{ flex: 1}}>
+      <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
           <TouchableOpacity
             style={{ width: '48%' }}
@@ -630,7 +633,7 @@ export default function Lead_manager({ navigation, route }) {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ flex: 3,marginBottom: '2%' }}>
+      <View style={{ flex: 3, marginBottom: '2%' }}>
         {IsLodding == true ?
           <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
           :
