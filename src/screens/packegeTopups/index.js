@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
 import RazorpayCheckout from 'react-native-razorpay';
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function PackegeTopups({ navigation }) {
 
     const [isService, setisService] = useState('Package');
@@ -132,7 +132,7 @@ export default function PackegeTopups({ navigation }) {
                 setIsLoddingBuy(false)
                 ToastAndroid.show(packOrderVerify.message, ToastAndroid.SHORT);
                 dispatch(organizationAction.packclearResponse());
-                navigation.navigate('orderHistory')
+                navigation.navigate(navigationStrings.orderHistory)
             }
             else if (packOrderVerify.status == "failed") {
                 ToastAndroid.show(packOrderVerify.message, ToastAndroid.SHORT);
@@ -196,7 +196,7 @@ export default function PackegeTopups({ navigation }) {
                 setIsLoddingBuy(false)
                 ToastAndroid.show(topOrderVerify.message, ToastAndroid.SHORT);
                 dispatch(organizationAction.packclearResponse());
-                navigation.navigate('orderHistory')
+                navigation.navigate(navigationStrings.orderHistory)
             }
             else if (topOrderVerify.status == "failed") {
                 ToastAndroid.show(topOrderVerify.message, ToastAndroid.SHORT);

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {ActivityIndicator, Text, View, TouchableOpacity, TextInput, 
-    Image,  ScrollView,   ToastAndroid,  Dimensions, Platform} from 'react-native';
+import {
+    ActivityIndicator, Text, View, TouchableOpacity, TextInput,
+    Image, ScrollView, ToastAndroid, Dimensions, Platform
+} from 'react-native';
 import styles from './styles';
 import { Dropdown } from 'react-native-element-dropdown';
 import Header from '../../component/header';
@@ -8,10 +10,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { addcontactManuallyAction, leadAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function AddContact({ navigation }) {
-
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)
     const [campaignName, setcampaignName] = useState("")
@@ -22,55 +23,14 @@ export default function AddContact({ navigation }) {
     const [BudgetedCost, setBudgetedCost] = useState("")
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false);
-
     const [startdate, setstartDate] = useState(new Date());
     const [startmode, setstartMode] = useState('date');
     const [startshow, setstartShow] = useState(false);
     const [starttext, setstarttext] = useState(true)
-
-    const onChangeStartDate = (event, selectedDate) => {
-        if (event.type == 'dismissed') {
-            setstartShow(!startshow);
-        }
-        else {
-            const currentDate = selectedDate || startdate;
-            setstartShow(Platform.OS === 'ios');
-            setstartDate(currentDate)
-            setstarttext(false)
-        }
-    };
-    const setMode = (currentMode) => {
-        setstartShow(!startshow);
-        setstartMode(currentMode);
-    };
-    const showDatepicker = () => {
-        setMode('date');
-    };
-
     const [enddate, setendDate] = useState(new Date());
     const [endmode, setendMode] = useState('date');
     const [endshow, setendShow] = useState(false);
     const [endtext, setendtext] = useState(true)
-
-    const onChangeEndDate = (event, selectedDate) => {
-        if (event.type == 'dismissed') {
-            setendShow(!endshow);
-        }
-        else {
-            const currentDate = selectedDate || enddate;
-            setendShow(Platform.OS === 'ios');
-            setendDate(currentDate)
-            setendtext(false)
-        }
-    };
-    const showMode2 = (currentMode) => {
-        setendShow(!endshow);
-        setendMode(currentMode);
-    };
-    const showDatepicker2 = () => {
-        showMode2('date');
-    };
-
     const data = [
         { label: 'active', value: 'active' },
         { label: 'planning', value: 'planning' },
@@ -90,48 +50,38 @@ export default function AddContact({ navigation }) {
             org_uid: loginData.data.org_uid,
             profile_id: loginData.data.cProfile.toString(),
         }
-        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
+        isFocused ? dispatch(leadAction.LeadOwnerList(data, loginData.data.token)) : null
     }, [isFocused])
-
     useEffect(() => {
         if (leadOwner) {
-            if (leadOwner.status == "200") {
-                let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.id }
-                    if (user !== undefined) {
-                        setCampaignOwnerList([user])
-                    }
-                    return user;
-                })
-            }
-            else if (leadOwner.status == "failed") {
-            }
-            else if (leadOwner.status == "fail") {
-            }
+            if (leadOwner.status == "200") { setCampaignOwnerList(leadOwner.data.map((item, index) => item.user)) }
+            else if (leadOwner.status == "fail") { ToastAndroid.show(leadOwner.message, ToastAndroid.SHORT); }
         }
     }, [leadOwner])
-
     useEffect(() => {
         if (responseAdd_Edit) {
             if (responseAdd_Edit.status == "success") {
-                setcampaignName(""),
-                    setStatus(null),
-                    setcampaignType(""),
-                    setRevenue(""),
-                    setBudgetedCost(""),
-                    setDescription(""),
-                    setstarttext(true),
-                    setendtext(true)
-                setCampaignOwner(null)
-                setIsLodding(false)
+                initialstate()
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
-                navigation.navigate('Campaign')
+                navigation.navigate(navigationStrings.Campaign)
             }
-            else if (responseAdd_Edit.status == "failed") {
+            else if (responseAdd_Edit.status == "failed") { 
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
             }
         }
     }, [responseAdd_Edit])
-
+    const initialstate = () => {
+        setcampaignName(""),
+        setStatus(null),
+        setcampaignType(""),
+        setRevenue(""),
+        setBudgetedCost(""),
+        setDescription(""),
+        setstarttext(true),
+        setendtext(true)
+        setCampaignOwner(null)
+        setIsLodding(false)
+    }
     const AddNewCampaign = () => {
         if (campaignName == "") {
             ToastAndroid.show('Enter campaign Name', ToastAndroid.SHORT);
@@ -165,6 +115,42 @@ export default function AddContact({ navigation }) {
             dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
         }
     }
+    const onChangeStartDate = (event, selectedDate) => {
+        if (event.type == 'dismissed') {
+            setstartShow(!startshow);
+        }
+        else {
+            const currentDate = selectedDate || startdate;
+            setstartShow(Platform.OS === 'ios');
+            setstartDate(currentDate)
+            setstarttext(false)
+        }
+    };
+    const setMode = (currentMode) => {
+        setstartShow(!startshow);
+        setstartMode(currentMode);
+    };
+    const showDatepicker = () => {
+        setMode('date');
+    };
+    const onChangeEndDate = (event, selectedDate) => {
+        if (event.type == 'dismissed') {
+            setendShow(!endshow);
+        }
+        else {
+            const currentDate = selectedDate || enddate;
+            setendShow(Platform.OS === 'ios');
+            setendDate(currentDate)
+            setendtext(false)
+        }
+    };
+    const showMode2 = (currentMode) => {
+        setendShow(!endshow);
+        setendMode(currentMode);
+    };
+    const showDatepicker2 = () => {
+        showMode2('date');
+    };
     return (
         <View style={{ flex: 1 }}>
             <Header onPressLeft={() => { navigation.openDrawer() }}
@@ -182,28 +168,20 @@ export default function AddContact({ navigation }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="id"
                         placeholder='Campaign Owner'
                         value={CampaignOwner}
-                        onChange={item => {
-                            setCampaignOwner(item.value);
-                        }}
+                        onChange={item => { setCampaignOwner(item.id); }}
                         renderLeftIcon={() => (
                             <View>
-                                <Image
-                                    style={styles.icon}
-                                    source={require('../../images/user.png')}
-                                />
+                                <Image style={styles.icon} source={require('../../images/user.png')}/>
                             </View>
                         )}
                     />
                 </View>
                 <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, {
-                            height: 20, width: 18,
-                        }]}
+                    <Image style={[styles.icon, {height: 20, width: 18,}]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput

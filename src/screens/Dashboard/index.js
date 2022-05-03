@@ -8,7 +8,7 @@ import { dashboardAction, profileAction } from '../../redux/Actions/index'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import { useIsFocused } from "@react-navigation/core"
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function Dashboard({ navigation, route, props }) {
   const [totalChart, settotalChart] = useState({
     calledLeads: 0,
@@ -29,11 +29,11 @@ export default function Dashboard({ navigation, route, props }) {
   const loginData = useSelector(state => state.auth.data)
   const TokenData = useSelector(state => state.dashboard.tokenData)
   const dashboardDataCount = useSelector(state => state.dashboard.count)
+  const PermissionData = useSelector(state => state.profile.permission)
 
   useEffect(() => {
     if (loginData && isFocused) {
       Get_DataCount(30)
-
     }
   }, [loginData, isFocused])
 
@@ -53,7 +53,7 @@ export default function Dashboard({ navigation, route, props }) {
       loginData.data.org_uid,
       loginData.data.cProfile.toString(),
       loginData.data.token));
-    // dispatch(profileAction.GetPermission({ account_id: loginData.data.acId.toString() }, loginData.data.token));
+    dispatch(profileAction.GetPermission({ account_id: loginData.data.acId.toString() }, loginData.data.token));
   }
 
   useEffect(() => {
@@ -77,9 +77,44 @@ export default function Dashboard({ navigation, route, props }) {
     }
   }, [dashboardDataCount])
 
+  const [leadPermission, setleadPermission] = useState(false);
+  const [userPermission, setuserPermission] = useState(false);
+  const [contactPermission, setcontactPermission] = useState(false);
+  useEffect(() => {
+    if (PermissionData) {
+      if (PermissionData.status == "success") {
+        if (PermissionLead(JSON.parse(PermissionData.permissions)).includes('view')) {setleadPermission(true)}
+        if (PermissionUser(JSON.parse(PermissionData.permissions)).includes('view')) {setuserPermission(true)}
+        if (PermissionContacts(JSON.parse(PermissionData.permissions)).includes('view')) {setcontactPermission(true)}
+      }
+      else if (PermissionData.status == "failed") {
+        ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT);
+      }
+    }
+  }, [PermissionData])
+
+  const PermissionContacts = (permiss, account) => {
+    return permiss.contacts.map((el) => {
+      return el.value;
+    })
+  }
+  const PermissionLead = (permiss, account) => {
+    return permiss.leads.map((el) => {
+      return el.value;
+    })
+  }
+  const PermissionUser = (permiss, account) => {
+    return permiss.users.map((el) => {
+      return el.value;
+    })
+  }
+
   const [refreshing, setrefreshing] = useState(false)
   const handleRefresh = () => {
     console.log(refreshing)
+    setleadPermission(false);
+    setcontactPermission(false);
+    setuserPermission(false);
     settotalChart({ IsLodding: true })
     Get_DataCount()
   }
@@ -91,7 +126,7 @@ export default function Dashboard({ navigation, route, props }) {
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('HistoryOne', { id: item.lead_id })}>
+      <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.HistoryOne, { id: item.lead_id })}>
         <Card style={{ marginTop: '1%' }}>
           <View style={{ flexDirection: 'row', padding: 3 }}>
             <View>
@@ -113,7 +148,7 @@ export default function Dashboard({ navigation, route, props }) {
 
   const renderItemTask = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('Task_Manager')}>
+      <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.Task_Manager)}>
         <Card style={{ marginTop: '1%' }}>
           <View style={{ flexDirection: 'row', padding: 3 }}>
             <View>
@@ -134,7 +169,7 @@ export default function Dashboard({ navigation, route, props }) {
 
   const renderItemLead = ({ item }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('Lead_ManagerDetail', { item: item })}>
+      <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
         <Card style={{ marginTop: '1%' }}>
           <View style={{ flexDirection: 'row', padding: 3 }}>
             <View>
@@ -152,7 +187,6 @@ export default function Dashboard({ navigation, route, props }) {
       </TouchableOpacity>
     );
   }
-
   return (
     <View style={{ flex: 1 }} >
       <Header style={Platform.OS == 'ios' ? { height: "18%" } : { height: height * 12 / 100 }}
@@ -173,29 +207,59 @@ export default function Dashboard({ navigation, route, props }) {
                 <Text style={[styles.counter, { color: '#3072F2' }]}>{totalChart.opportunitys}</Text>
               </Card>
             </Pressable >
+            {leadPermission ? 
             <Pressable style={{ width: '49%' }}
-              onPress={() => navigation.navigate('lead_manager', { key: 'Lead' })}>
+              onPress={() => navigation.navigate(navigationStrings.lead_manager, { key: 'Lead' })}>
               <Card style={[styles.cardBox, { borderColor: '#3373F3' }]}>
                 <Text style={styles.cardTitle}>Total Leads</Text>
                 <Text style={[styles.counter, { color: '#FE2EA4', }]}>{totalChart.totalLeads}</Text>
               </Card>
             </Pressable >
+            :
+            <Pressable style={{ width: '49%' }}
+              // onPress={() => navigation.navigate(navigationStrings.lead_manager, { key: 'Lead' })}
+              >
+              <Card style={[styles.cardBox, { borderColor: '#3373F3' }]}>
+                <Text style={styles.cardTitle}>Total Leads</Text>
+                <Text style={[styles.counter, { color: '#FE2EA4', }]}>{totalChart.totalLeads}</Text>
+              </Card>
+            </Pressable >}
           </View>
           <View style={[styles.reView, { marginTop: 0 }]}>
+            {userPermission?
             <Pressable style={{ width: '49%' }}
-              onPress={() => navigation.navigate('Staff_Members')} >
+              onPress={() => navigation.navigate(navigationStrings.Staff_Members)} >
               <Card style={[styles.cardBox, { borderColor: '#FE2EA4', }]} >
                 <Text style={styles.cardTitle}>Total User</Text>
                 <Text style={[styles.counter, { color: '#3072F2' }]}>{totalChart.users}</Text>
               </Card>
             </Pressable >
+            :
             <Pressable style={{ width: '49%' }}
-              onPress={() => navigation.navigate('ContactList')}>
-              <Card style={[styles.cardBox, { borderColor: '#3373F3' }]}>
-                <Text style={styles.cardTitle}>Total Contacts</Text>
-                <Text style={[styles.counter, { color: '#FE2EA4', }]}>{totalChart.contacts}</Text>
-              </Card>
-            </Pressable >
+            // onPress={() => navigation.navigate(navigationStrings.Staff_Members)} 
+            >
+            <Card style={[styles.cardBox, { borderColor: '#FE2EA4', }]} >
+              <Text style={styles.cardTitle}>Total User</Text>
+              <Text style={[styles.counter, { color: '#3072F2' }]}>{totalChart.users}</Text>
+            </Card>
+          </Pressable >}
+            {contactPermission ?
+              <Pressable style={{ width: '49%' }}
+                onPress={() => navigation.navigate(navigationStrings.Contacts)}>
+                <Card style={[styles.cardBox, { borderColor: '#3373F3' }]}>
+                  <Text style={styles.cardTitle}>Total Contacts</Text>
+                  <Text style={[styles.counter, { color: '#FE2EA4', }]}>{totalChart.contacts}</Text>
+                </Card>
+              </Pressable >
+              :
+              <Pressable style={{ width: '49%' }}
+              // onPress={() => navigation.navigate(navigationStrings.Contacts)}
+              >
+                <Card style={[styles.cardBox, { borderColor: '#3373F3' }]}>
+                  <Text style={styles.cardTitle}>Total Contacts</Text>
+                  <Text style={[styles.counter, { color: '#FE2EA4', }]}>{totalChart.contacts}</Text>
+                </Card>
+              </Pressable >}
           </View>
           <View style={styles.tabHeader}>
             {isService == 'Leads' ?
@@ -258,7 +322,7 @@ export default function Dashboard({ navigation, route, props }) {
                         keyExtractor={item => item.id}
                       />
                       {totalChart.taskList.length ? <TouchableOpacity
-                        onPress={() => navigation.navigate('Task_Manager', { type: 'All' })}
+                        onPress={() => navigation.navigate(navigationStrings.Task_Manager, { type: 'All' })}
                         style={{ alignSelf: 'flex-end', width: '20%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '2%' }}>
                         <Text style={{ textAlign: 'center', color: '#fff', paddingVertical: '2%' }}>More...</Text>
                       </TouchableOpacity> : null}
@@ -277,7 +341,7 @@ export default function Dashboard({ navigation, route, props }) {
                         keyExtractor={item => item.id}
                       />
                       {totalChart.feedbacklist.length ? <TouchableOpacity
-                        onPress={() => navigation.navigate('History')}
+                        onPress={() => navigation.navigate(navigationStrings.History)}
                         style={{ alignSelf: 'flex-end', width: '20%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '2%' }}>
                         <Text style={{ textAlign: 'center', color: '#fff', paddingVertical: '2%' }}>More...</Text>
                       </TouchableOpacity> : null}
@@ -295,7 +359,7 @@ export default function Dashboard({ navigation, route, props }) {
                         keyExtractor={item => item.id}
                       />
                       {totalChart.leadList.length ? <TouchableOpacity
-                        onPress={() => navigation.navigate('lead_manager')}
+                        onPress={() => navigation.navigate(navigationStrings.lead_manager)}
                         style={{ alignSelf: 'flex-end', width: '20%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '2%' }}>
                         <Text style={{ textAlign: 'center', color: '#fff', paddingVertical: '2%' }}>More...</Text>
                       </TouchableOpacity> : null}
@@ -304,9 +368,7 @@ export default function Dashboard({ navigation, route, props }) {
             />
           </View>
         </View>
-
       }
-
     </View>
   );
 }

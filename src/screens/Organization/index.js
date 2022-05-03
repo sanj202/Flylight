@@ -5,7 +5,7 @@ import { organizationAction, authAction, varificationAction } from '../../redux/
 import { useDispatch, useSelector, connect } from 'react-redux';
 import styles from './styles'
 import { useIsFocused } from "@react-navigation/core"
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function Organization({ navigation }) {
 
     const { width, height } = Dimensions.get('window');
@@ -48,7 +48,7 @@ export default function Organization({ navigation }) {
     const ChangeOrg = (value) => {
         setIsLodding(true)
         dispatch(authAction.SwitchOrg(loginData, value.cProfile, value.orgUid));
-        navigation.navigate('DashboardStack')
+        navigation.navigate(navigationStrings.DashBoard)
     }
 
     // useEffect(() => {

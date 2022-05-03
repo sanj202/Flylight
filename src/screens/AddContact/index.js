@@ -12,7 +12,7 @@ import moment from 'moment';
 import { addcontactManuallyAction, leadAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function AddContact({ navigation, route }) {
 
   const [LeadOwner, setLeadOwner] = useState(null)
@@ -108,7 +108,7 @@ export default function AddContact({ navigation, route }) {
   const AddFunction = () => {
     setModalVisible2(!modalVisible2)
     dispatch(addcontactManuallyAction.clearResponse());
-    navigation.navigate("ContactList")
+    navigation.navigate(navigationStrings.Contacts)
   };
 
 
@@ -169,8 +169,6 @@ export default function AddContact({ navigation, route }) {
         // })
         setleadOwnerData(leadOwner.data.map((item, index) => item.user))
       }
-      else if (leadOwner.status == "failed") {
-      }
       else if (leadOwner.status == "fail") {
       }
     }
@@ -183,10 +181,6 @@ export default function AddContact({ navigation, route }) {
       }
       else if (campaignList.status == "failed") {
       }
-      else if (campaignList.status == "fail") {
-      }
-    }
-    else {
     }
   }, [campaignList])
 
@@ -197,12 +191,8 @@ export default function AddContact({ navigation, route }) {
         setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
           item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' }))
       }
-      else if (leadstatusList.status == "failed") {
-      }
       else if (leadstatusList.status == "fail") {
       }
-    }
-    else {
     }
   }, [leadstatusList])
 
@@ -696,52 +686,26 @@ export default function AddContact({ navigation, route }) {
           <Text style={[styles.textButton, { fontWeight: 'bold' }]}>ADD</Text>
         </TouchableOpacity>
       </ScrollView >
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible2}
-        onRequestClose={() => {
-          setModalVisible2(!modalVisible2);
-        }}
-      >
+      <Modal animationType="slide" transparent={true} visible={modalVisible2}
+        onRequestClose={() => {setModalVisible2(!modalVisible2);}}>
         <Card style={styles.headerView2}>
           <View style={styles.headerView3}>
-            <TouchableOpacity
-              onPress={() => setModalVisible2(!modalVisible2)}
-            >
-              <Image
-                style={{ margin: '5%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
-                source={require('../../images/crossImgR.png')}
-              />
+            <TouchableOpacity onPress={() => AddFunction()}>
+              <Image style={{ margin: '5%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
+                source={require('../../images/crossImgR.png')}/>
             </TouchableOpacity>
           </View>
-          <Image
-            source={require('../../images/checkmark-circle.png')}
-            style={{ width: 38, height: 38, alignSelf: 'center' }}
-          />
-          <Text style={styles.title3}>
-            Contacts Imported {'\n'} Successfully
-          </Text>
-          <View style={{
-            flexDirection: 'row', justifyContent: 'space-around',
-            marginBottom: '2%'
-          }}
-          >
-            <TouchableOpacity
-              onPress={() => AddFunction()}
-              style={styles.btn3}
-            >
-              <Text
-                style={styles.btnText3}
-              >
-                OK
-              </Text>
+          <Image source={require('../../images/checkmark-circle.png')}
+            style={{ width: 38, height: 38, alignSelf: 'center' }}/>
+          <Text style={styles.title3}>Contacts Imported {'\n'} Successfully</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-around',marginBottom: '2%'}}>
+            <TouchableOpacity onPress={() => AddFunction()} style={styles.btn3}>
+              <Text style={styles.btnText3}>OK</Text>
             </TouchableOpacity>
           </View>
           <View style={{ marginBottom: '3%' }}></View>
         </Card>
       </Modal>
-    </View >
-  );
+    </View >);
 }
 

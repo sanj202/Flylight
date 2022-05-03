@@ -1,6 +1,20 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+
+    infoText: {
+        fontSize: 15,
+        color: '#000000',
+        fontFamily: 'Roboto'
+    },
+
+
+
+
+
+
+
+
     container: {
         flex: 1,
     },

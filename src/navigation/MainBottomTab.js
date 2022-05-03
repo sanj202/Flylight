@@ -6,20 +6,16 @@ import {
     Task_Manager,
     AddTask,
     Action_Manager,
-    ReportFeedback,
-    Edit_Opportunity,
     editLead,
     lead_manager,
-    All_Lead,
-    Report,
+    Lead_ManagerDetail,
+    TransforLeads,
     AddContact,
     Profile,
     Contacts,
     History,
     HistoryOne,
-    History_Feedback,
     Report2,
-    Notification,
     EditProfile,
     Staff_Members,
     DashBoard,
@@ -27,23 +23,31 @@ import {
     Campaign,
     AddCampaign,
     EditCampaign,
-    Meetings,
-    AddMeetings,
-    EditMeetings,
-    MeetingsDetail,
     addLead,
     packegeTopups,
     Edit_Contact,
     orderHistory,
-    TransforLeads,
     LeadFilterScreen
+    // Meetings,
+    // AddMeetings,
+    // EditMeetings,
+    // MeetingsDetail,
+    // All_Lead,
+    // Report,
+    // ReportFeedback,
+    // Edit_Opportunity,
+    // History_Feedback,
+    // Notification,
 } from '../screens/index'
 
 import ProfileStack from './customStacks/ProfileStack'
 import ContactStack from './customStacks/contactStack'
 import ReportStack from './customStacks/ReportStack'
 import DashboardStack from './customStacks/DashboardStack'
-import AddTabStack from './customStacks/AddTab';
+// import AddTabStack from './customStacks/AddTab';
+
+import navigationStrings from '../constant/navigationStrings';
+import { event } from 'react-native-reanimated';
 
 const Tab = createBottomTabNavigator();
 
@@ -57,7 +61,13 @@ export default function MainBottomTab({ route }) {
                 tabBarStyle: { height: height * 8 / 100, backgroundColor: '#2296E4', paddingBottom: '1%' },
                 tabBarOptions: { activeTintColor: '#fff', inactiveTintColor: 'lightgray' }
             }}>
-            <Tab.Screen name="Home" component={DashboardStack}
+            <Tab.Screen name={navigationStrings.DashBoard} component={DashboardStack}
+                listeners={({ navigation }) => ({
+                    tabPress: (event) => {
+                        event.preventDefault();
+                        navigation.navigate(navigationStrings.DashBoard, { screen: navigationStrings.DashBoard });
+                    }
+                })}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: { fontSize: 12, fontFamily: 'Roboto', color: '#fff' },
@@ -77,7 +87,13 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="Report" component={ReportStack}
+            <Tab.Screen name={navigationStrings.Report} component={ReportStack}
+                listeners={({ navigation }) => ({
+                    tabPress: (event) => {
+                        event.preventDefault();
+                        navigation.navigate(navigationStrings.Report, { screen: navigationStrings.Report });
+                    }
+                })}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -100,7 +116,7 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="addTab" component={AddTabStack}
+            <Tab.Screen name={navigationStrings.AddContact} component={AddContact}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -125,7 +141,13 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="ContactList" component={ContactStack}
+            <Tab.Screen name={navigationStrings.Contacts} component={ContactStack}
+                listeners={({ navigation }) => ({
+                    tabPress: (event) => {
+                        event.preventDefault();
+                        navigation.navigate(navigationStrings.Contacts, { screen: navigationStrings.Contacts });
+                    }
+                })}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -148,7 +170,13 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            <Tab.Screen name="Profile" component={ProfileStack}
+            <Tab.Screen name={navigationStrings.Profile} component={ProfileStack}
+                listeners={({ navigation }) => ({
+                    tabPress: (event) => {
+                        event.preventDefault();
+                        navigation.navigate(navigationStrings.Profile, { screen: navigationStrings.Profile });
+                    }
+                })}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarLabelStyle: {
@@ -171,23 +199,16 @@ export default function MainBottomTab({ route }) {
                         );
                     }
                 }} />
-            {/* <Tab.Screen
-                name="All_Lead"
-                component={All_Lead}
-                options={{
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
+            {/*         
+            <Tab.Screen
                 name="lead_manager"
                 component={lead_manager}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
+            />
+            <Tab.Screen
                 name="addLead"
                 component={addLead}
                 options={{
@@ -195,8 +216,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
+            />
+            <Tab.Screen
                 name="editLead"
                 component={editLead}
                 options={{
@@ -204,33 +225,17 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
-                name="Edit_Opportunity"
-                component={Edit_Opportunity}
-                options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name="ReportFeedback"
-                component={ReportFeedback}
-                options={{
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
+            />
+
+            <Tab.Screen
                 name="Task_Manager"
                 component={Task_Manager}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
+            />
+            <Tab.Screen
                 name="AddTask"
                 component={AddTask}
                 options={{
@@ -238,8 +243,8 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
+            />
+            <Tab.Screen
                 name="Action_Manager"
                 component={Action_Manager}
                 options={{
@@ -247,18 +252,136 @@ export default function MainBottomTab({ route }) {
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
+            />
+            <Tab.Screen
                 name="History"
                 component={History}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
-            /> */}
-            {/* <Tab.Screen
+            />
+            <Tab.Screen
                 name="HistoryOne"
                 component={HistoryOne}
+                options={{
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+
+            <Tab.Screen
+                name="Organization"
+                component={Organization}
+                options={{
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name="Campaign"
+                component={Campaign}
+                options={{
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name="AddCampaign"
+                component={AddCampaign}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name="EditCampaign"
+                component={EditCampaign}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+
+            <Tab.Screen
+                name='EditProfile'
+                component={EditProfile}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name='packegeTopups'
+                component={packegeTopups}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name='Staff_Members'
+                component={Staff_Members}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name='Edit_Contact'
+                component={Edit_Contact}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+
+            <Tab.Screen
+                name='orderHistory'
+                component={orderHistory}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+
+            <Tab.Screen
+                name='LeadFilterScreen'
+                component={LeadFilterScreen}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name='TransforLeads'
+                component={TransforLeads}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            />
+            <Tab.Screen
+                name='Lead_ManagerDetail'
+                component={Lead_ManagerDetail}
+                options={{
+                    tabBarHideOnKeyboard: true,
+                    tabBarIcon: () => null,
+                    tabBarButton: () => null,
+                }}
+            /> */}
+            {/* <Tab.Screen
+                name='Notification'
+                component={Notification}
                 options={{
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
@@ -283,24 +406,8 @@ export default function MainBottomTab({ route }) {
         }}
       /> */}
             {/* <Tab.Screen
-                name="Organization"
-                component={Organization}
-                options={{
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name="Campaign"
-                component={Campaign}
-                options={{
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name="AddCampaign"
-                component={AddCampaign}
+                name="Edit_Opportunity"
+                component={Edit_Opportunity}
                 options={{
                     tabBarHideOnKeyboard: true,
                     tabBarIcon: () => null,
@@ -308,54 +415,9 @@ export default function MainBottomTab({ route }) {
                 }}
             /> */}
             {/* <Tab.Screen
-                name="EditCampaign"
-                component={EditCampaign}
+                name="ReportFeedback"
+                component={ReportFeedback}
                 options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name='Notification'
-                component={Notification}
-                options={{
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name='EditProfile'
-                component={EditProfile}
-                options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name='packegeTopups'
-                component={packegeTopups}
-                options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name='Staff_Members'
-                component={Staff_Members}
-                options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
-                name='Edit_Contact'
-                component={Edit_Contact}
-                options={{
-                    tabBarHideOnKeyboard: true,
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
@@ -388,15 +450,6 @@ export default function MainBottomTab({ route }) {
                 }}
             /> */}
             {/* <Tab.Screen
-                name='orderHistory'
-                component={orderHistory}
-                options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-            {/* <Tab.Screen
                 name='MeetingsDetail'
                 component={MeetingsDetail}
                 options={{
@@ -406,24 +459,13 @@ export default function MainBottomTab({ route }) {
                 }}
             /> */}
             {/* <Tab.Screen
-                name='LeadFilterScreen'
-                component={LeadFilterScreen}
+                name="All_Lead"
+                component={All_Lead}
                 options={{
-                    tabBarHideOnKeyboard: true,
                     tabBarIcon: () => null,
                     tabBarButton: () => null,
                 }}
             /> */}
-            {/* <Tab.Screen
-                name='TransforLeads'
-                component={TransforLeads}
-                options={{
-                    tabBarHideOnKeyboard: true,
-                    tabBarIcon: () => null,
-                    tabBarButton: () => null,
-                }}
-            /> */}
-
         </Tab.Navigator>
     );
 }

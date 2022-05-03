@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
-  Pressable, Dimensions, Platform,
-} from 'react-native';
+import {Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
+  Pressable, Dimensions, Platform} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import styles from './styles'
 import Header from '../../component/header/index'
 import DocumentPicker from 'react-native-document-picker';
-import { leadAction, opportunityAction, leadmanagerAction } from '../../redux/Actions/index'
+import { leadAction, opportunityAction, profileAction, leadmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function Lead_manager({ navigation, route }) {
 
   const [modalVisible2, setModalVisible2] = useState(false);
@@ -26,21 +24,17 @@ export default function Lead_manager({ navigation, route }) {
   const [IsULodding, setIsULodding] = useState(false)
   const [IsALodding, setIsALodding] = useState(false)
   const { width, height } = Dimensions.get('window');
-
   const [page, setPage] = useState(0);
   const [perPageItems, setperPageItems] = useState(10);
   const [totalItems, settotalItems] = useState(0);
-
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [text, settext] = useState(true)
-
   const [dates, setDates] = useState(new Date());
   const [modes, setModes] = useState('date');
   const [shows, setShows] = useState(false);
   const [texts, settexts] = useState(true)
-
   const dispatch = useDispatch()
   const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
@@ -49,17 +43,14 @@ export default function Lead_manager({ navigation, route }) {
   const AssignLead = useSelector(state => state.leadmanager.assign)
   const deletelead = useSelector(state => state.leads.deleteLead)
   const leadOwner = useSelector(state => state.leads.leadOwnerNew)
+  const PermissionData = useSelector(state => state.profile.permission)
 
   useEffect(() => {
-    setIsLodding(true)
-    Get_Data(page)
-    setLead([])
+    isFocused ? initialstate() :null
+    isFocused ? Get_Data(page) :null
   }, [isFocused])
-
-
   useEffect(() => {
     if (Lead_OpportunityList) {
-      // console.log('leadmanager.................', Lead_OpportunityList)
       if (Lead_OpportunityList.status == "success") {
         settotalItems(Lead_OpportunityList.total_rows)
         if (page == 0 && Lead_OpportunityList.data.length != 0) {
@@ -78,26 +69,39 @@ export default function Lead_manager({ navigation, route }) {
       }
     }
   }, [Lead_OpportunityList])
-
+  useEffect(() => {
+    if (PermissionData) {
+      if (PermissionData.status == "success") {
+        if (PermissionLead(JSON.parse(PermissionData.permissions)).includes('edit')) { seteditPermission(true) }
+        if (PermissionLead(JSON.parse(PermissionData.permissions)).includes('create')) { setcreatePermission(true) }
+        if (PermissionLead(JSON.parse(PermissionData.permissions)).includes('delete')) { setdeletePermission(true) }
+      }
+      else if (PermissionData.status == "failed") {
+        ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT);
+      }
+    }
+  }, [PermissionData])
+  const PermissionLead = (permiss, account) => {
+    return permiss.leads.map((el) => {
+      return el.value;
+    })
+  }
   const fetchNextItems = () => {
-    // console.log('loadmoeew.................',totalItems)
     if (totalItems > Lead.length) {
       let p = page + 1;
       setPage(p);
       Get_Data(p)
     }
   }
-
   const [refreshing, setrefreshing] = useState(false)
   const handleRefresh = () => {
-    setIsLodding(true)
-    setLead([])
-    setPage(0)
+    initialstate()
     Get_Data(0)
   }
-
+  const [editPermission, seteditPermission] = useState(false)
+  const [deletePermission, setdeletePermission] = useState(false)
+  const [createPermission, setcreatePermission] = useState(false)
   const Get_Data = (p) => {
-    console.log('<><>><.........', p)
     const data = {
       uid: loginData.data.uid,
       profile_id: loginData.data.cProfile.toString(),
@@ -107,8 +111,8 @@ export default function Lead_manager({ navigation, route }) {
       pageNumber: p,
     }
     dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
+    dispatch(profileAction.GetPermission({ account_id: loginData.data.acId.toString() }, loginData.data.token));
   }
-
   const onChangeFrom = (event, selectedDate) => {
     if (event.type == 'dismissed') {
       setShow(!show);
@@ -189,15 +193,21 @@ export default function Lead_manager({ navigation, route }) {
       ToastAndroid.show('Please Select Search Criteria', ToastAndroid.SHORT);
     }
   }
-  const Reset = () => {
+  const initialstate = () => {
+    setIsLodding(true)
     settext(true)
     settexts(true)
     setDate(new Date())
     setDates(new Date())
-    setIsLodding(true)
     setLead([])
     settemarray([])
     setPage(0)
+    seteditPermission(false)
+    setdeletePermission(false)
+    setcreatePermission(false)
+  }
+  const Reset = () => {
+    initialstate()
     Get_Data(0)
   }
   useEffect(() => {
@@ -206,8 +216,6 @@ export default function Lead_manager({ navigation, route }) {
         setleadOwnerData(leadOwner.data)
         setAssignOwner(true)
         dispatch(leadAction.clearResponse())
-      }
-      else if (leadOwner.status == "failed") {
       }
       else if (leadOwner.status == "fail") {
       }
@@ -242,9 +250,6 @@ export default function Lead_manager({ navigation, route }) {
         setModalVisible2(!modalVisible2)
         setIsLodding(false)
       }
-      else if (deletelead.status == "failed") {
-        setIsLodding(false)
-      }
       else if (deletelead.status == 'fail') {
         setIsLodding(false)
       }
@@ -253,11 +258,8 @@ export default function Lead_manager({ navigation, route }) {
   const DeleteSuccessFully = () => {
     dispatch(leadAction.clearResponse());
     dispatch(opportunityAction.clearResponse());
-    setIsLodding(true)
-    setPage(0)
+    initialstate()
     Get_Data(0)
-    setLead([])
-    settemarray([])
     setModalVisible2(!modalVisible2)
   }
   const [singleFile, setSingleFile] = useState(null);
@@ -310,11 +312,8 @@ export default function Lead_manager({ navigation, route }) {
   useEffect(() => {
     if (importLead) {
       if (importLead.status == "success") {
-        // CombineArrayData()
-        setPage(0)
+        initialstate()
         Get_Data(0)
-        setLead([])
-        settemarray([])
         setImportFiles(false)
         ToastAndroid.show(importLead.message, ToastAndroid.SHORT);
         setSingleFile(null)
@@ -338,7 +337,7 @@ export default function Lead_manager({ navigation, route }) {
         setAssignOwner(false)
         Get_Data(0)
         ToastAndroid.show(AssignLead.message, ToastAndroid.SHORT);
-        settemarray([])
+        settemarray([]);
         dispatch(leadmanagerAction.clearResponse())
         setIsALodding(false)
       }
@@ -352,7 +351,6 @@ export default function Lead_manager({ navigation, route }) {
     }
   }, [AssignLead])
   const onPressRadioBtn = (value, type) => {
-    // console.log(type, value)
     if (type == true) {
       temarray.push(value)
     } else {
@@ -373,15 +371,13 @@ export default function Lead_manager({ navigation, route }) {
   const onPressSendItem = (value, type) => {
     if (temarray.length == 0) {
       ToastAndroid.show('Please Select atlest Lead', ToastAndroid.SHORT);
-    }
-    else {
+    } else {
       const data = {
         uid: loginData.data.uid,
         org_uid: loginData.data.org_uid,
         profile_id: loginData.data.cProfile,
       }
       dispatch(leadAction.LeadOwneList(data, loginData.data.token));
-      // console.log('press..................')
     }
   }
   const UserAssignLead = (value) => {
@@ -444,31 +440,32 @@ export default function Lead_manager({ navigation, route }) {
               <View />}
           </View>
           <View style={{ flexDirection: 'row', }}>
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Image
                 style={{ height: 22, width: 22, marginRight: '2%' }}
                 source={require('../../images/okCall.png')}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate('editLead', { Edata: item })}
-            >
-              <Image
-                style={{ height: 22, width: 22, marginRight: '2%' }}
-                source={require('../../images/editCall.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => CheckDeleteFunction({ type: "Lead", id: item.id })}
-            >
-              <Image
-                style={{ height: 22, width: 22, }}
-                source={require('../../images/deleteCall.png')}
-              />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            {editPermission ?
+              <TouchableOpacity
+                onPress={() => navigation.navigate(navigationStrings.editLead, { Edata: item })}
+              >
+                <Image
+                  style={{ height: 22, width: 22, marginRight: '2%' }}
+                  source={require('../../images/editCall.png')}
+                />
+              </TouchableOpacity> : null}
+            {deletePermission ?
+              <TouchableOpacity
+                onPress={() => CheckDeleteFunction({ type: "Lead", id: item.id })}
+              >
+                <Image
+                  style={{ height: 22, width: 22, }}
+                  source={require('../../images/deleteCall.png')}
+                />
+              </TouchableOpacity> : null}
           </View>
         </View>
-
         <View style={{ marginLeft: '2%', marginTop: '1%' }}>
           <View style={{ flexDirection: 'row' }}>
             <Image
@@ -477,16 +474,15 @@ export default function Lead_manager({ navigation, route }) {
             />
             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
           </View>
-          <TouchableOpacity 
-          style={{ backgroundColor: '#3373F3',borderRadius:20, marginTop: '30%', }}
-          onPress={()=>navigation.navigate('Lead_ManagerDetail',{item:item})}>
+          <TouchableOpacity
+            style={{ backgroundColor: '#3373F3', borderRadius: 20, marginTop: '30%', }}
+            onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
             <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
-
   const AssignVIew = ({ item }) => {
     return (
       <Pressable onPress={() => UserAssignLead(item.id)}>
@@ -502,20 +498,13 @@ export default function Lead_manager({ navigation, route }) {
       <Header style={Platform.OS == 'ios' ? { height: "16%" } : null}
         onPressLeft={() => { navigation.openDrawer() }}
         title='Lead Manager'
-        onPressRight={() => { navigation.navigate('Notification') }}
-      />
+        onPressRight={() => { navigation.navigate('Notification') }} />
       <View style={{ flex: 1 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-around', padding: '2%' }}>
-          <TouchableOpacity
-            style={{ width: '48%' }}
-            onPress={showDatepicker}
-          >
+          <TouchableOpacity style={{ width: '48%' }} onPress={showDatepicker}>
             <View style={styles.pickers}>
-              <Image
-                style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/DOB.png')}
-              />
-
+              <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
+                source={require('../../images/DOB.png')}  />
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -524,35 +513,24 @@ export default function Lead_manager({ navigation, route }) {
                   mode={mode}
                   // is24Hour={true}
                   display="default"
-                  onChange={onChangeFrom}
-                />
-              )
+                  onChange={onChangeFrom} />)
               }
               {Platform.OS == 'ios' ? <View>
-                {text == true ?
-                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
-                  :
-                  null
-                }
+                {text == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>:null}
               </View>
                 :
                 <View>
-                  {text == true ?
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
+                  {text == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
                     :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('DD/MM/YYYY')}</Text>
-                  }
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('DD/MM/YYYY')}</Text>}
                 </View>
               }
             </View>
           </TouchableOpacity>
-
           <TouchableOpacity style={{ width: '48%' }} onPress={showDatepickers}>
             <View style={styles.pickers}>
-              <Image
-                style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/DOB.png')}
-              />
+              <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
+                source={require('../../images/DOB.png')}/>
               {shows && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -562,74 +540,39 @@ export default function Lead_manager({ navigation, route }) {
                   format="YYYY-MM-DD"
                   // is24Hour={true}
                   display="default"
-                  onChange={onChangeTo}
-                />
-              )
+                  onChange={onChangeTo}/>)
               }
               {Platform.OS == 'ios' ? <View>
-                {texts == true ?
-                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
-                  :
-                  null
-                }
+                {texts == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>:null}
               </View>
                 :
                 <View>
-                  {texts == true ?
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>To</Text>
+                  {texts == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>To</Text>
                     :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(dates).format('DD/MM/YYYY')}</Text>
-                  }
-                </View>
-              }
+                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(dates).format('DD/MM/YYYY')}</Text>}
+                </View>}
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('addLead')}
-            style={styles.addNewBtn}
-          >
-            <Text style={{ color: "#fff", fontSize: 13 }}>
-              Add New Lead
-            </Text>
-          </TouchableOpacity>
-          {temarray.length > 0 ?
-            <TouchableOpacity
-              onPress={() => onPressSendItem()}
-              style={styles.addNewBtn}
-            >
-              <Text style={{ color: "#fff", fontSize: 13 }}>
-                Assign
-              </Text>
+        {createPermission ?
+          <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.addLead)}style={styles.addNewBtn}>
+              <Text style={{ color: "#fff", fontSize: 13 }}>Add New Lead</Text>
             </TouchableOpacity>
-            :
-            <View />}
-
-          <TouchableOpacity
-            onPress={() => CheckImportType("lead")}
-            style={styles.addNewBtn}
-          >
-            <Text style={{ color: "#fff", fontSize: 13 }}>
-              Import From Storage
-            </Text>
-          </TouchableOpacity>
-        </View>
+            {temarray.length > 0 ?
+              <TouchableOpacity onPress={() => onPressSendItem()} style={styles.addNewBtn}>
+                <Text style={{ color: "#fff", fontSize: 13 }}>Assign</Text>
+              </TouchableOpacity>:<View />}
+            <TouchableOpacity onPress={() => CheckImportType("lead")} style={styles.addNewBtn}>
+              <Text style={{ color: "#fff", fontSize: 13 }}>Import From Storage</Text>
+            </TouchableOpacity>
+          </View> : null}
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity style={[styles.button, { width: '60%' }]}
-            onPress={() => Search()}
-          >
+          <TouchableOpacity style={[styles.button, { width: '60%' }]}onPress={() => Search()}>
             <Text style={styles.btnText}>SEARCH</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            // style={styles.button}
-            style={{ marginTop: '2%' }}
-            onPress={() => Reset()}
-          >
-            {/* <Text style={styles.btnText}>RESET</Text> */}
-            <Image
-              source={require('../../images/refreshButton.png')}
-              style={{ height: 24, width: 24 }} />
+          <TouchableOpacity style={{ marginTop: '2%' }}onPress={() => Reset()}>
+            <Image source={require('../../images/refreshButton.png')} style={{ height: 24, width: 24 }} />
           </TouchableOpacity>
         </View>
       </View>
@@ -639,11 +582,9 @@ export default function Lead_manager({ navigation, route }) {
           :
           <FlatList
             data={Lead}
-            // style={{ height: height - 300 }}
             renderItem={LeadView}
             ListEmptyComponent={() => (!Lead.length ?
-              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
-              : null)}
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>: null)}
             refreshing={refreshing}
             onRefresh={handleRefresh}
             onEndReached={() => fetchNextItems()}
@@ -651,112 +592,64 @@ export default function Lead_manager({ navigation, route }) {
           />
         }
       </View>
-      <Modal animationType="slide" transparent={true} visible={askDelete}
-        onRequestClose={() => { setaskDelete(!askDelete); }}>
+      <Modal animationType="slide" transparent={true} visible={askDelete} onRequestClose={() => { setaskDelete(!askDelete); }}>
         <View style={styles.askModel}>
           <Text style={styles.askTitle}> Are you sure ?</Text>
-          <Text style={styles.askSubtitle}>
-            you want to delete this{'\n'}{tempType} ?</Text>
+          <Text style={styles.askSubtitle}> you want to delete this{'\n'}{tempType} ?</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Pressable
-              style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}
-              onPress={() => CencelFunction()}
-            >
+            <Pressable style={[styles.askBtn, { paddingHorizontal: '6.5%' }]} onPress={() => CencelFunction()}>
               <Text style={styles.askBtnText}>NO</Text>
             </Pressable>
             <View style={{ margin: '5%' }} />
-            <Pressable
-              style={[styles.askBtn, { paddingHorizontal: '5%' }]}
-              onPress={() => DeleteFunction()}
-            >
+            <Pressable style={[styles.askBtn, { paddingHorizontal: '5%' }]} onPress={() => DeleteFunction()}>
               <Text style={styles.askBtnText}>YES</Text>
             </Pressable>
           </View>
           <View style={{ margin: '2%' }} />
         </View>
       </Modal>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible2}
-        onRequestClose={() => { DeleteSuccessFully() }}
-      >
+      <Modal animationType="slide" transparent={true} visible={modalVisible2} onRequestClose={() => { DeleteSuccessFully() }} >
         <View style={styles.centeredView3}>
           <View style={styles.modalView3}>
-            <TouchableOpacity
-              style={{ alignSelf: 'flex-end' }}
-              onPress={() => DeleteSuccessFully()}
-            >
-              <Image
-                style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
-                source={require('../../images/crossImgR.png')}
-              />
+            <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => DeleteSuccessFully()}>
+              <Image style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
+                source={require('../../images/crossImgR.png')}/>
             </TouchableOpacity>
-            <Image
-              source={require('../../images/checkmark-circle.png')}
-              style={{ width: 38, height: 38 }}
-            />
+            <Image source={require('../../images/checkmark-circle.png')}
+              style={{ width: 38, height: 38 }} />
             <Text style={styles.modalText3}>Successfully {'\n'} Deleted</Text>
-
-            <Pressable
-              style={[styles.button3, styles.buttonClose3]}
-
-
-              onPress={() => DeleteSuccessFully()}
-            >
+            <Pressable style={[styles.button3, styles.buttonClose3]} onPress={() => DeleteSuccessFully()}>
               <Text style={styles.textStyle3}>OK</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-      <Modal animationType="slide" transparent={true} visible={ImportFiles}
-        onRequestClose={() => { setImportFiles(!ImportFiles); }}>
+      <Modal animationType="slide" transparent={true} visible={ImportFiles} onRequestClose={() => { setImportFiles(!ImportFiles); }}>
         <View style={styles.askModel}>
           <Text style={styles.askTitle}>Import File </Text>
-          {/* <Text style={styles.askSubtitle}>
-      Please Select Only .CSV files </Text> */}
-          <TouchableOpacity
-            onPress={() => OpenFilePicker()}
+          <TouchableOpacity onPress={() => OpenFilePicker()}
             style={{ borderWidth: 1, borderRadius: 10, padding: 8, marginVertical: '10%', marginHorizontal: '15%' }}>
             <Text>{SelectedFile}</Text>
           </TouchableOpacity>
-
-          {IsULodding == true ?
-            <ActivityIndicator size="large" color="#0000ff" />
-            :
-            <View />}
+          {IsULodding == true ? <ActivityIndicator size="large" color="#0000ff" /> :<View />}
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Pressable
-              style={[styles.askBtnFixed, { paddingHorizontal: '6.5%' }]}
-              onPress={() => UploadFileCancel()}
-            >
+            <Pressable style={[styles.askBtnFixed, { paddingHorizontal: '6.5%' }]} onPress={() => UploadFileCancel()}>
               <Text style={styles.askBtnTextFixed}>NO</Text>
             </Pressable>
             <View style={{ margin: '5%' }} />
-
-            <Pressable
-              style={[styles.askBtnFixed, { paddingHorizontal: '5%' }]}
-              onPress={() => UploadFile()}
-            >
+            <Pressable style={[styles.askBtnFixed, { paddingHorizontal: '5%' }]}onPress={() => UploadFile()} >
               <Text style={styles.askBtnTextFixed}>YES</Text>
             </Pressable>
           </View>
           <View style={{ margin: '2%' }} />
         </View>
       </Modal>
-      <Modal animationType="slide" transparent={true} visible={AssignOwner}
-        onRequestClose={() => { setAssignOwner(!AssignOwner); }}>
+      <Modal animationType="slide" transparent={true} visible={AssignOwner} onRequestClose={() => { setAssignOwner(!AssignOwner); }}>
         <View style={[styles.askModel, { marginTop: '40%', }]}>
           <Text style={styles.askTitle}>Assign To </Text>
-
-          <TouchableOpacity
-            style={[styles.askTitleR]}
-            onPress={() => setAssignOwner(false)}
-          >
-            <Image
-              style={{ height: 14, width: 14 }}
-              source={require('../../images/cross.png')}
-            />
+          <TouchableOpacity style={[styles.askTitleR]} onPress={() => setAssignOwner(false)}>
+            <Image style={{ height: 14, width: 14 }}
+              source={require('../../images/cross.png')} />
           </TouchableOpacity>
           {IsALodding == true ? <ActivityIndicator size="large" color="#0000ff" /> : null}
           <FlatList
@@ -772,5 +665,3 @@ export default function Lead_manager({ navigation, route }) {
     </View>
   );
 }
-
-

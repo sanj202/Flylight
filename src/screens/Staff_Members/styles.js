@@ -293,6 +293,18 @@ const styles = StyleSheet.create({
         color: '#0F0F0F',
         fontFamily: 'Roboto'
     },
+
+    askTitleDetailR: {
+        marginTop: '-8%',
+        alignSelf: 'flex-end',
+        padding: 10,
+    },
+    askTitleDetail: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#46484B',
+        // paddingVertical: '3%'
+    },
 });
 
 export default styles

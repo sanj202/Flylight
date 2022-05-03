@@ -6,39 +6,57 @@ import styles from './styles';
 import Header from '../../component/header';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { leadmanagerAction, historyAction } from '../../redux/Actions/index'
-
+import { useIsFocused } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import navigationStrings from '../../constant/navigationStrings';
 export default function LeadFilterScreen({ navigation, route }) {
   console.log(route.params)
-  const [IsLodding, setIsLodding] = useState({
-    leadLodding: true,
-    statusLodding: true,
-  })
-  const [leadList, setleadList] = useState('')
+  const [IsLodding, setIsLodding] = useState(true)
+  const [leadList, setleadList] = useState([])
   const [isService, setisService] = useState(route.params.value);
   const dispatch = useDispatch()
+  const isFocused = useIsFocused();
   const loginData = useSelector(state => state.auth.data)
   const Leads = useSelector(state => state.leadmanager.GetList)
-  const { width, height } = Dimensions.get('window');
   const [page, setPage] = useState(0);
   const [perPageItems, setperPageItems] = useState(10);
   const [totalItems, settotalItems] = useState(0);
   const [filterKeys, setfilterKeys] = useState(route.params ? route.params.filters : [])
 
   useEffect(() => {
-    setleadList([])
-    FetchData(page)
-    setfilterKeys([])
-  }, [])
-
+    isFocused ? initialstate() : initialstate()
+    isFocused ? FetchData(page) : null
+    // setfilterKeys([])
+  }, [isFocused])
+  useEffect(() => {
+    if (Leads) {
+      if (Leads.status == "success") {
+        settotalItems(Leads.total_rows)
+        if (page == 0 && Leads.data.length != 0) {
+          setleadList(Leads.data)
+          setIsLodding(false)
+        } else if (Leads.data.length != 0) {
+          let dataLive = Leads.data;
+          let listTemp = [...leadList, ...dataLive];
+          setleadList(listTemp)
+          setIsLodding(false)
+        }
+        dispatch(leadmanagerAction.clearResponse())
+      }
+      else if (Leads.status == "failed") {
+        setIsLodding(false)
+        ToastAndroid.show(Leads.message, ToastAndroid.SHORT);
+        dispatch(leadmanagerAction.clearResponse())
+      }
+    }
+  }, [Leads])
   const FetchData = (p) => {
-    let data = {
-      uid: loginData.data.uid,
+    let data = { uid: loginData.data.uid,
       org_uid: loginData.data.org_uid,
       profile_id: loginData.data.cProfile.toString(),
       pageSize: perPageItems,
       pageNumber: p,
-      filters: filterKeys
-    }
+      filters: filterKeys}
     if (isService == 'Called') {
       data.filters.push({ eq: "called", key: "status" })
       dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
@@ -51,36 +69,11 @@ export default function LeadFilterScreen({ navigation, route }) {
       dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
     }
   }
-
-  useEffect(() => {
-    if (Leads) {
-      // console.log('......................', Leads)
-      if (Leads.status == "success") {
-        settotalItems(Leads.total_rows)
-        // setleadList([...leadList, ...Leads.data])
-        if (page == 0 && Leads.data.length != 0) {
-          setleadList(Leads.data)
-        } else if (Leads.data.length != 0) {
-          let dataLive = Leads.data;
-          let listTemp = [...leadList, ...dataLive];
-          setleadList(listTemp)
-        }
-        setIsLodding({
-          ...IsLodding,
-          leadLodding: false
-        })
-        dispatch(leadmanagerAction.clearResponse())
-      }
-      else if (Leads.status == "failed") {
-        setIsLodding({
-          ...IsLodding,
-          leadLodding: false
-        })
-        ToastAndroid.show(Leads.message, ToastAndroid.SHORT);
-        dispatch(leadmanagerAction.clearResponse())
-      }
-    }
-  }, [Leads])
+  const initialstate = () => {
+    setIsLodding(true)
+    setleadList([])
+    setPage(0)
+  }
   const fetchNextItems = () => {
     if (totalItems > leadList.length) {
       let p = page + 1;
@@ -90,56 +83,34 @@ export default function LeadFilterScreen({ navigation, route }) {
   }
   const [refreshing, setrefreshing] = useState(false)
   const handleRefresh = () => {
-    console.log(refreshing)
-    setIsLodding({
-      statusLodding: true,
-      leadLodding: true
-    })
-    setleadList([])
-    setPage(0)
+    initialstate()
     FetchData(0)
   }
   const renderItem = ({ item }) => {
     return (
-      // <TouchableOpacity onPress={() => navigation.navigate('LeadDetail', { item: item })} >
-      <View style={styles.listData} >
-        <View style={{ backgroundColor: '', justifyContent: 'center', }}>
+      <TouchableOpacity style={styles.listData}  onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
+        <View>
           <Image style={{ height: 48, width: 48, }} source={require('../../images/profileCall.png')} />
         </View>
-        <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
-          <Text style={{
-            fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto'
-          }}>{item.first_name} {item.last_name}</Text>
-          <View style={{ flexDirection: 'row', }}>
-            <View style={{ width: '35%', backgroundColor: '' }}>
-              <Text numberOfLines={1} style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F', flexShrink: 1 }}>
-                {item.company}</Text>
+        <View style={{ flex: 1, marginHorizontal: '2%' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.first_name} {item.last_name}</Text>
+          <Text style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
+          {item.description ? <Text style={{ color: 'black', fontSize: 10 }} numberOfLines={1}>{item.description}</Text> : null}
+          {item.status == 'pending' ?
+            <View style={{ backgroundColor: '#F69708', paddingHorizontal: '3%', width: '26%', borderRadius: 10, marginBottom: '2%' }}>
+              <Text style={{ color: '#fff', fontSize: 12, textAlign: 'center' }}>{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Text>
             </View>
-            {item.status == 'pending' ?
-              <View style={{ backgroundColor: '#F69708', paddingHorizontal: '3%', paddingVertical: '1%', borderRadius: 10 }}>
-                <Text style={{ color: '#fff' }}>{item.status}</Text>
-              </View>
-              :
-              <View style={{ backgroundColor: '#05B829', paddingHorizontal: '3%', paddingVertical: '1%', borderRadius: 10 }}>
-                <Text style={{ color: '#fff' }}>{item.status}</Text>
-              </View>}
-          </View>
-          <View style={{ flexDirection: 'row', }}>
-            <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
-          </View>
+            :
+            <View style={{ backgroundColor: '#05B829', paddingHorizontal: '3%', width: '25%', borderRadius: 10, marginBottom: '2%' }}>
+              <Text style={{ color: '#fff', fontSize: 12, textAlign: 'center' }}>{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Text>
+            </View>}
         </View>
-        {/* <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <TouchableOpacity style={{ marginLeft: '2%' }} onPress={() => call(item)} >
-                <Image style={{ height: 40, width: 40, }} source={require('../../images/GroupCall.png')} />
-              </TouchableOpacity>
-            </View>
-          </View> */}
-      </View>
-      // </TouchableOpacity>
+        <View >
+          <Image style={{ height: 35, width: 35, marginTop: '10%' }} source={require('../../images/GroupCall.png')} />
+        </View>
+      </TouchableOpacity>
     );
   }
-
   return (
     <View style={{ flex: 1 }}>
       <Header
@@ -148,14 +119,12 @@ export default function LeadFilterScreen({ navigation, route }) {
         onPressRight={() => { navigation.navigate('Notification') }}
       />
       <View style={{ flex: 1, marginVertical: '2%', marginHorizontal: '3%' }}>
-        {IsLodding.leadLodding == true ?
+        {IsLodding == true ?
           <ActivityIndicator size="small" color="#0000ff" />
           :
           <FlatList
-            // style={{ height: '65%' }}
             data={leadList}
             renderItem={renderItem}
-            initialNumToRender={10}
             ListEmptyComponent={() => (!leadList.length ?
               <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
               : null)}
@@ -168,5 +137,3 @@ export default function LeadFilterScreen({ navigation, route }) {
     </View>
   );
 }
-
-

@@ -4,20 +4,20 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Card } from 'react-native-paper'
 import styles from "./styles";
 import Header from '../../component/header'
-import { reportAction, campaignAction, dashboardAction, leadAction } from '../../redux/Actions/index'
+import { reportAction, campaignAction, profileAction, dashboardAction, leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import PieChart from 'react-native-pie-chart';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
+import navigationStrings from "../../constant/navigationStrings";
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Report2({ navigation }) {
 
-    const [totalChart, settotalChart] = useState({
-        calledLeads: 0,
+    const [totalChart, settotalChart] = useState({calledLeads: 0,
         pendingLeads: 0,
         totalLeads: 0,
-        IsLodding: true,
-    })
+        IsLodding: true})
     const [userList, setuserList] = useState([]);
     const [user, setuser] = useState(null);
     const [value, setValue] = useState(null);
@@ -28,78 +28,90 @@ export default function Report2({ navigation }) {
     const [startmode, setstartMode] = useState('date');
     const [startshow, setstartshow] = useState(false);
     const [starttext, setstarttext] = useState(true)
-
     const [enddate, setendDate] = useState(new Date());
     const [endmode, setendMode] = useState('date');
     const [endshow, setendShow] = useState(false);
     const [endtext, setendtext] = useState(true)
-
+    const [viewPermission, setviewPermission] = useState(false)
     const widthAndHeight = 140
     // const series = [totalChart.calledLeads, totalChart.pendingLeads]
     const series = [totalChart.calledLeads, totalChart.pendingLeads]
     const sliceColor = ['#6191F3', '#FFBC04']
 
     const dispatch = useDispatch()
+    const isFocused = useIsFocused();
     const loginData = useSelector(state => state.auth.data)
     const reportData = useSelector(state => state.report.getReportList)
     const campaignList = useSelector(state => state.leads.campaign)
     const leadOwner = useSelector(state => state.leads.leadOwner)
+    const PermissionData = useSelector(state => state.profile.permission)
 
     useEffect(() => {
-        const data = {
-            uid: loginData.data.uid,
-            org_uid: loginData.data.org_uid,
-            profile_id: loginData.data.cProfile.toString(),
-        }
-        dispatch(reportAction.reportList(data, loginData.data.token));
-        dispatch(campaignAction.CampaignList(data, loginData.data.token));
-        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-    }, [])
-
+        isFocused ? initialstate : null
+        isFocused ? Get_Data() : null
+    }, [isFocused])
     useEffect(() => {
         if (reportData) {
             if (reportData.status == "success") {
                 let total = reportData.data.leadsCalled.count + reportData.data.leadsPending.count
-                settotalChart({
-                    calledLeads: reportData.data.leadsCalled.count,
+                settotalChart({ calledLeads: reportData.data.leadsCalled.count,
                     pendingLeads: reportData.data.leadsPending.count,
                     totalLeads: total,
-                    IsLodding: false
-                })
+                    IsLodding: false })
             }
             else if (reportData.status == "failed") {
-                settotalChart({
-                    ...totalChart,
-                    IsLodding: false
-                })
+                settotalChart({...totalChart,IsLodding: false})
                 ToastAndroid.show(reportData.message, ToastAndroid.SHORT);
             }
         }
     }, [reportData])
-
     useEffect(() => {
         if (leadOwner) {
             if (leadOwner.status == "200") {
                 setuserList(leadOwner.data.map((item, index) => item.user))
             }
-            else if (leadOwner.status == "failed") {
-
-            }
             else if (leadOwner.status == "fail") {
-
+                ToastAndroid.show(leadOwner.message, ToastAndroid.SHORT);
             }
         }
     }, [leadOwner])
-
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "success") {
                 setcampaignData(campaignList.data.rows)
             }
             else if (campaignList.status == "failed") {
+                ToastAndroid.show(campaignList.message, ToastAndroid.SHORT);
             }
         }
     }, [campaignList])
+    useEffect(() => {
+        if (PermissionData) {
+          if (PermissionData.status == "success") {
+            if (PermissionReports(JSON.parse(PermissionData.permissions)).includes('view')) { setviewPermission(true) }
+          }
+          else if (PermissionData.status == "failed") {
+            ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT);
+          }
+        }
+      }, [PermissionData])
+      const PermissionReports = (permiss, account) => {
+        return permiss.reports.map((el) => {
+            return el.value;
+        })
+    }
+
+    const Get_Data = () => {
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
+        }
+        isFocused ? dispatch(profileAction.GetPermission({ account_id: loginData.data.acId.toString() }, loginData.data.token)) : null
+        isFocused ? dispatch(reportAction.reportList(data, loginData.data.token)) : null
+        isFocused ? dispatch(campaignAction.CampaignList(data, loginData.data.token)) : null
+        isFocused ? dispatch(leadAction.LeadOwnerList(data, loginData.data.token)) : null
+    }
 
     const Search = () => {
         let StartDate = moment(startDate).format("YYYY-MM-DD")
@@ -177,7 +189,12 @@ export default function Report2({ navigation }) {
         }
     }
 
-    const Reset = () => {
+
+    // Get_Data
+    // initia
+
+
+    const initialstate = () => {
         setValue(null)
         setuser(null)
         setstarttext(true)
@@ -188,33 +205,32 @@ export default function Report2({ navigation }) {
             ...totalChart,
             IsLodding: true
         })
-        const data = {
-            uid: loginData.data.uid,
-            org_uid: loginData.data.org_uid,
-            profile_id: loginData.data.cProfile.toString(),
-        }
-        dispatch(reportAction.reportList(data, loginData.data.token));
+        setviewPermission(false)
+    }
+    const Reset = () => {
+        initialstate()
+        Get_Data()
     }
 
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
-        console.log(refreshing)
-        Reset()
+        initialstate()
+        Get_Data()
     }
 
     const checkStatusValue = (value) => {
         if (value == 'All') {
-            navigation.navigate('LeadFilterScreen', { filters: filterKeys, value: 'All' })
+            navigation.navigate(navigationStrings.LeadFilterScreen, { filters: filterKeys, value: 'All' })
             setfilterKeys([])
             Reset()
         }
         else if (value == 'Called') {
-            navigation.navigate('LeadFilterScreen', { filters: filterKeys, value: 'Called' })
+            navigation.navigate(navigationStrings.LeadFilterScreen, { filters: filterKeys, value: 'Called' })
             setfilterKeys([])
             Reset()
         }
         else if (value == 'Pending') {
-            navigation.navigate('LeadFilterScreen', { filters: filterKeys, value: 'Pending' })
+            navigation.navigate(navigationStrings.LeadFilterScreen, { filters: filterKeys, value: 'Pending' })
             setfilterKeys([])
             Reset()
         }

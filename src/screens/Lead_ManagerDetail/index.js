@@ -1,24 +1,42 @@
 import React, { useState, useEffect, } from 'react';
-import { Text, View, TouchableOpacity, ActivityIndicator, Image, Alert, Platform, Linking, ToastAndroid } from 'react-native';
+import { Text, View, TouchableOpacity, ActivityIndicator, Dimensions, Alert, Platform, Linking, ToastAndroid } from 'react-native';
 import styles from './styles';
 import Header from '../../component/header';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { leadmanagerAction } from '../../redux/Actions/index'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+import { useIsFocused } from '@react-navigation/native';
 
 export default function Lead_ManagerDetail({ navigation, route }) {
     const [IsLodding, setIsLodding] = useState(true)
-    const [leadDetail, setleadDetail] = useState('')
-    const [GetMore, setGetMore] = useState(false)
+    const [leadDetail, setleadDetail] = useState([])
+    const isFocused = useIsFocused();
     const dispatch = useDispatch()
     const loginData = useSelector(state => state.auth.data)
     const LeadInfo = useSelector(state => state.leadmanager.GetDetail)
+    const { width, height } = Dimensions.get('window');
 
     useEffect(() => {
-        Get_Data()
-    }, [])
-
+        isFocused ? initialstate : null
+        isFocused ? Get_Data() : null
+    }, [isFocused])
+    useEffect(() => {
+        if (LeadInfo) {
+            if (LeadInfo.status == "success") {
+                // console.log('LeadInfo.lead.leadStatus.......',LeadInfo.lead)
+                setIsLodding(false)
+                // setleadDetail(LeadInfo.lead)
+                setleadDetail(LeadInfo.data)
+                dispatch(leadmanagerAction.clearResponse())
+            }
+            else if (LeadInfo.status == "failed") {
+                setIsLodding(false)
+                ToastAndroid.show(LeadInfo.message, ToastAndroid.SHORT);
+                dispatch(leadmanagerAction.clearResponse())
+            }
+        }
+    }, [LeadInfo])
     const Get_Data = () => {
         let data = {
             uid: loginData.data.uid,
@@ -28,43 +46,25 @@ export default function Lead_ManagerDetail({ navigation, route }) {
         }
         dispatch(leadmanagerAction.GetDetail(data, loginData.data.token));
     }
-    useEffect(() => {
-        if (LeadInfo) {
-            if (LeadInfo.status == "200") {
-                setIsLodding(false)
-                setleadDetail(LeadInfo.lead)
-                dispatch(leadmanagerAction.clearResponse())
-            }
-            else if (LeadInfo.status == "fail") {
-                setIsLodding(false)
-                ToastAndroid.show(LeadInfo.message, ToastAndroid.SHORT);
-                dispatch(leadmanagerAction.clearResponse())
-            }
-        }
-    }, [LeadInfo])
-
+    const initialstate = () => {
+        setIsLodding(true)
+        setleadDetail([])
+    }
     const call = (mobileNo) => {
         let phoneNumber = mobileNo;
-        if (Platform.OS !== "android") {
-            phoneNumber = `telprompt:${mobileNo}`;
-        } else {
+        if (Platform.OS !== "android") { phoneNumber = `telprompt:${mobileNo}`; } else {
             phoneNumber = `tel:${mobileNo}`;
         }
-        Linking.canOpenURL(phoneNumber)
-            .then(supported => {
-                if (!supported) {
-                    // Alert.alert("Number is not available");
-                    ToastAndroid.show("Number is not available", ToastAndroid.SHORT);
-                } else {
-                    return Linking.openURL(phoneNumber);
-                }
-            })
+        Linking.canOpenURL(phoneNumber).then(supported => {
+            if (!supported) {
+                ToastAndroid.show("Number is not available", ToastAndroid.SHORT);
+            } else { return Linking.openURL(phoneNumber); }
+        })
             .catch(err => console.log(err));
     };
-
     return (
         <View style={{ flex: 1 }}>
-            <Header style={Platform.OS == 'ios' ? { height: "16%" } : null}
+            <Header style={Platform.OS == 'ios' ? { height: "16%" } : { height: height * 14 / 100 }}
                 onPressLeft={() => { navigation.openDrawer() }}
                 title='Lead Detail'
                 onPressRight={() => { navigation.navigate('Notification') }}
@@ -72,124 +72,168 @@ export default function Lead_ManagerDetail({ navigation, route }) {
             {IsLodding == true ?
                 <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                 :
-                <ScrollView style={{ margin: '2%', flex: 1 }}>
-                    <View>
-                        <View style={{ justifyContent: 'center' }}>
+                <View style={{ flex: 1, marginHorizontal: '2%', marginBottom: '2%' }}>
+                    <Card style={{ marginTop: '-12%' }}>
+                        <View style={{ padding: '2%', flexDirection: 'row' }}>
                             <Avatar.Image
-                                size={100}
-                                style={{ alignSelf: 'center', backgroundColor: '#C6CCD1' }}
+                                size={60}
+                                style={{ backgroundColor: '#C6CCD1' }}
                                 source={require('../../images/profileCall.png')} />
-                        </View>
-                        <Card.Content style={{ marginTop: '0%', marginLeft: '-2%' }}>
-                            <Title style={{
-                                fontSize: 18, fontFamily: 'Roboto',
-                                fontWeight: 'bold', textAlign: 'center'
-                            }}>
-                                {leadDetail.first_name} {leadDetail.last_name}
-                            </Title>
-                            <Paragraph
-                                style={{
-                                    marginTop: '0%', fontSize: 13,
-                                    fontFamily: 'Roboto', fontWeight: 'normal', textAlign: 'center'
-                                }}>
-                                {leadDetail.company}
-                            </Paragraph>
-                        </Card.Content>
-                        <View style={{ flexDirection: 'row', marginLeft: '26%' }} >
-                            <TouchableOpacity
-                                onPress={() => call(leadDetail.phone)}
-                            >
-                                <Avatar.Image
-                                    size={40}
-                                    style={{ marginLeft: '8%' }}
-                                    source={require('../../images/GroupCall.png')} />
-                                <Text style={{ marginHorizontal: '15%', color: '#2B6EF2' }}>Call</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{ marginHorizontal: '2%' }}>
-                        <Text style={styles.textTitle}>Phone</Text>
-                        <Text style={styles.textDainamic}>{leadDetail.phone}</Text>
-                        {
-                            leadDetail.phone2 ?
-                                <View>
-                                    <Text style={styles.textTitle}>Secondary Phone</Text>
-                                    <Text style={styles.textDainamic}>{leadDetail.phone2}</Text>
-                                </View>
-                                :
-                                <View />
-                        }
-                        <Text style={styles.textTitle}>Email</Text>
-                        <TouchableOpacity
-                            onPress={() => Linking.openURL(`mailto:${leadDetail.email}`)}>
-                            <Text style={styles.textDainamic}>{leadDetail.email}</Text>
-                        </TouchableOpacity>
-
-                        {
-                            leadDetail.email2 ?
-                                <View>
-                                    <Text style={styles.textTitle}>Secondary Email</Text>
-                                    <TouchableOpacity
-                                        onPress={() => Linking.openURL(`mailto:${leadDetail.email2}`)}>
-                                        <Text style={styles.textDainamic}>{leadDetail.email2}</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                :
-                                null
-                        }
-                        <Text style={styles.textTitle} >Fax</Text>
-                        <Text style={styles.textDainamic}>{leadDetail.fax}</Text>
-                        <Text style={styles.textTitle} >Website</Text>
-                        <Text style={styles.textDainamic}>{leadDetail.website}</Text>
-                        <Text style={styles.textTitle} >Gender</Text>
-                        <Text style={styles.textDainamic}>{leadDetail.gender}</Text>
-                        <Text style={styles.textTitle} >Date of Birth</Text>
-                        <Text style={styles.textDainamic}>{leadDetail.dob}</Text>
-                        <Text style={styles.textTitle} >Description</Text>
-                        <Text style={styles.textDainamic}>{leadDetail.description}</Text>
-                        <Text style={styles.textTitle} >Address</Text>
-                        <Text style={{ fontWeight: 'bold', color: '#2B6EF2', width: '95%' }}>{leadDetail.address} {leadDetail.city} {leadDetail.state} {leadDetail.country} {leadDetail.zip} </Text>
-                    </View>
-
-                    <View style={{ borderBottomWidth: 0.5, marginVertical: '1%', marginHorizontal: '3%', color: 'gray' }}>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => setGetMore(!GetMore)}
-                        style={{
-                            borderColor: '#fff',
-                            borderWidth: 1,
-                            paddingHorizontal: 10,
-                            paddingVertical: 5,
-                            marginHorizontal: '30%',
-                            marginVertical: '2%',
-                            backgroundColor: '#2B6EF2',
-                            borderRadius: 15
-                        }}
-                    >
-                        <Text style={{ color: "#fff", textAlign: 'center' }}>
-                            {GetMore ? 'Less' : 'More'}
-                        </Text>
-                    </TouchableOpacity>
-                    {
-                        GetMore ?
-                            <View style={{ marginHorizontal: '2%' }}>
-                                <Text style={styles.textTitle} >Lead Source</Text>
-                                <Text style={styles.textDainamic}>{leadDetail.lead_source}</Text>
-                                <Text style={styles.textTitle} >Lead Status</Text>
-                                <Text style={styles.textDainamic}>{leadDetail.lead_status}</Text>
-                                <Text style={styles.textTitle} >Industry</Text>
-                                <Text style={styles.textDainamic}>{leadDetail.industry}</Text>
-                                <Text style={styles.textTitle} >Number of employee</Text>
-                                <Text style={styles.textDainamic}>{leadDetail.number_of_employee}</Text>
-                                <Text style={styles.textTitle} >Annual Revenue</Text>
-                                <Text style={styles.textDainamic}>{leadDetail.annual_revenue}</Text>
+                            <View style={{ flex: 1, marginHorizontal: '2%' }}>
+                                <Text style={{ fontSize: 18, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', }}>{leadDetail.first_name} {leadDetail.last_name}</Text>
+                                <Text style={{ fontSize: 15, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', }}>{leadDetail.company ? leadDetail.company.charAt(0).toUpperCase() + leadDetail.company.slice(1) : ''}</Text>
+                                <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', }}>+91 {leadDetail.phone}</Text>
                             </View>
-                            :
-                            <View />
-                    }
-
-                </ScrollView>
-            }
+                            <Avatar.Image
+                                size={45}
+                                style={{ backgroundColor: '#C6CCD1', marginTop: '2%' }}
+                                source={require('../../images/GroupCall.png')} />
+                        </View>
+                    </Card>
+                    <Text style={{ fontSize: 18, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', marginVertical: '2%' }}>Personal Information</Text>
+                    <ScrollView>
+                        {leadDetail.email ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newEmail.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Email Address</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.email}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.email2 ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newEmail.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Secondary Email Address</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.email2}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.phone2 ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newCall.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>secondary Phone</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.phone2}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.fax ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newFax.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Fax</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.fax}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.website ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newGlobe.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Website</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.website}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.gender ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newGender.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Gender</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.gender}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.dob ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newDob.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Date Of Birth</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.dob}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.address ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newAddress.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Address</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.address ? leadDetail.address + ',' : null}{leadDetail.city ? leadDetail.city + ',' : null}{leadDetail.state ? leadDetail.state + ',' : null}{leadDetail.country ? leadDetail.country + ',' : null}{leadDetail.zip}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.lead_source ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newLeadsource.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Lead Source</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.lead_source}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.leadStatus ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newLeadsource.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Lead Status</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.leadStatus.name}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.industry ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newIndustry.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Industry</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.industry}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.number_of_employee ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newMember.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Number Of Employee</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.number_of_employee}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.annual_revenue ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newRevenue.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Annual Revenue</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.annual_revenue}</Text>
+                            </View>
+                        </View> : null}
+                        {leadDetail.description ? <View style={{ flexDirection: 'row', marginVertical: '1%' }}>
+                            <Avatar.Image
+                                size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/newDescription.png')} />
+                            <View style={{ flex: 1, marginHorizontal: '2%', justifyContent: 'center' }}>
+                                <Text style={styles.infoText}>Description</Text>
+                                <Text style={[styles.infoText, { fontWeight: 'bold' }]}>{leadDetail.description}</Text>
+                            </View>
+                        </View> : null}
+                    </ScrollView>
+                </View>}
         </View>
     );
 }

@@ -8,8 +8,8 @@ import Header from '../../component/header/index'
 import { Card } from 'react-native-paper'
 import { historyAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function History({ navigation }) {
 
   const [History, setHistory] = useState([])
@@ -45,15 +45,14 @@ export default function History({ navigation }) {
       org_uid: loginData.data.org_uid,
       profile_id: loginData.data.cProfile.toString(),
     }
-    FetchData(page)
-    dispatch(historyAction.LeadStatusList(data, loginData.data.token));
-    dispatch(historyAction.CampaignList(data, loginData.data.token));
-  }, [])
+    isFocused ? FetchData(page) : null
+    isFocused ? dispatch(historyAction.LeadStatusList(data, loginData.data.token)) : null
+    isFocused ? dispatch(historyAction.CampaignList(data, loginData.data.token)) : null
+  }, [isFocused])
   useEffect(() => {
     if (historyData) {
       if (historyData.status == "success") {
         settotalItems(historyData.total_rows)
-        // setHistory([...History, ...historyData.data])
         if (page == 0 && historyData.data.length != 0) {
           setHistory(historyData.data)
         } else if (historyData.data.length != 0) {
@@ -87,10 +86,6 @@ export default function History({ navigation }) {
     if (LeadData) {
       if (LeadData.status == "200") {
         setstatusList(LeadData.data)
-        dispatch(historyAction.clearResponse())
-      }
-      else if (LeadData.status == "failed") {
-        ToastAndroid.show(LeadData.message, ToastAndroid.SHORT);
         dispatch(historyAction.clearResponse())
       }
       else if (LeadData.status == "fail") {
@@ -238,7 +233,7 @@ export default function History({ navigation }) {
     FetchData(0)
   }
   const Detail = (value) => {
-    navigation.navigate('HistoryOne', { id: value })
+    navigation.navigate(navigationStrings.HistoryOne, { id: value })
   }
   const campaignSelect = (value) => {
     setcampId(value);

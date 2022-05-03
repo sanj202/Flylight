@@ -10,7 +10,7 @@ import { BaseUrl, Base_NodeUrl } from '../../../const';
 export const GetDetail = (data, token,) => {
     return (dispatch) => {
         dispatch({ type: LeadDetail })
-        fetch(`${BaseUrl}/getleadDetails`,
+        fetch(`${Base_NodeUrl}/getleadDetails`,
             {
                 method: "POST",
                 headers: {

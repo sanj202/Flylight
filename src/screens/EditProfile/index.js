@@ -9,7 +9,7 @@ import { editProfileAction } from '../../redux/Actions/index'
 import { ScrollView } from 'react-native-gesture-handler';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function EditProfile({ navigation, route }) {
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false)
@@ -98,7 +98,7 @@ export default function EditProfile({ navigation, route }) {
             if (UpdatedData.status == "success") {
                 setIsLodding(false)
                 ToastAndroid.show(UpdatedData.message, ToastAndroid.SHORT);
-                navigation.navigate("ProfileStack")
+                navigation.navigate(navigationStrings.Profile)
                 dispatch(editProfileAction.clearResponse())
             }
             else if (UpdatedData.status == "failed") {

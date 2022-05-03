@@ -208,10 +208,8 @@ const styles = StyleSheet.create({
   askTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    backgroundColor: '#3373F3',
-    color: 'white',
-    textAlign: "center",
-    paddingVertical: '3%'
+    color: '#46484B',
+    // paddingVertical: '3%'
   },
   askSubtitle: {
     fontSize: 15,
@@ -230,15 +228,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   askTitleR: {
-    margin: '5%',
-    marginRight: '3%',
-    marginTop: '-11.5%',
+    marginTop: '-8%',
     alignSelf: 'flex-end',
-    padding: 10
+    padding: 10,
   },
   DetailCampTitle: {
     fontSize: 14,
-    color: '#000000',
+    // color: '#000000',
+    color: '#46484B',
     fontFamily: 'Roboto'
   },
 

@@ -258,16 +258,16 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
-    // askTitle: {
-    //     fontSize: 18,
-    //     fontWeight: 'bold',
-    //     backgroundColor: '#3373F3',
-    //     color: 'white',
-    //     textAlign: "center",
-    //     paddingVertical: '3%',
-    //     borderTopLeftRadius:15,
-    //     borderTopRightRadius:15
-    // },
+    askTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        backgroundColor: '#3373F3',
+        color: 'white',
+        textAlign: "center",
+        paddingVertical: '3%',
+        borderTopLeftRadius:15,
+        borderTopRightRadius:15
+    },
     askSubtitle: {
         fontSize: 15,
         color: 'red',
@@ -284,29 +284,18 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 20,
     },
-    // askTitleR: {
-    //     margin: '5%',
-    //     marginRight: '3%',
-    //     marginTop: '-11.5%',
-    //     alignSelf: 'flex-end',
-    //     padding: 10
-    // },
+    askTitleR: {
+        margin: '5%',
+        marginRight: '3%',
+        marginTop: '-11.5%',
+        alignSelf: 'flex-end',
+        padding: 10
+    },
     DetailCampTitle: {
         fontSize: 14,
         color: '#0F0F0F',
         fontFamily: 'Roboto',
-        marginVertical: '1%'
-    },
-    askTitleR: {
-        marginTop: '-8%',
-        alignSelf: 'flex-end',
-        padding: 10,
-    },
-    askTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#46484B',
-        // paddingVertical: '3%'
+        marginVertical:'1%'
     },
 });
 

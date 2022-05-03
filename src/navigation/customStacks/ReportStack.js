@@ -9,17 +9,17 @@ import {
     Notification,
     LeadFilterScreen
 } from '../../screens/index'
-
+import navigationStrings from '../../constant/navigationStrings';
 const Stack = createNativeStackNavigator();
 function ReportStack() {
     return (
         // <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="ReportStack" component={Report2} />
-                <Stack.Screen name="LeadFilterScreen" component={LeadFilterScreen} />
+                <Stack.Screen name={navigationStrings.Report} component={Report2} />
+                <Stack.Screen name={navigationStrings.LeadFilterScreen} component={LeadFilterScreen} />
                 {/* <Stack.Screen name="orderHistory" component={orderHistory} />
                 <Stack.Screen name="packegeTopups" component={packegeTopups} /> */}
-                <Stack.Screen name="Notification" component={Notification} />
+                {/* <Stack.Screen name="Notification" component={Notification} /> */}
             </Stack.Navigator>
         // </NavigationContainer>
     );

@@ -9,7 +9,7 @@ import { useIsFocused } from "@react-navigation/core"
 import ImagePicker from 'react-native-image-crop-picker';
 import { Base_ImageUrl } from '../../../const'
 import { ScrollView } from 'react-native-gesture-handler';
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function AddContact({ navigation }) {
 
     const [user, setUser] = useState('');
@@ -115,7 +115,7 @@ export default function AddContact({ navigation }) {
                     }}>My Account</Text>
                     <TouchableOpacity
                         style={styles.headerBtn}
-                        onPress={() => navigation.navigate('EditProfile', {
+                        onPress={() => navigation.navigate(navigationStrings.EditProfile, {
                             phone: user.phone,
                             email: user.email,
                             fname: user.first_name,
@@ -131,7 +131,7 @@ export default function AddContact({ navigation }) {
                     </TouchableOpacity>
                 </SafeAreaView>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('orderHistory')}
+                    onPress={() => navigation.navigate(navigationStrings.orderHistory)}
                     style={[styles.headerBtn, { marginRight: '3%', marginTop: '3%' }]} >
                     <Text style={styles.headerBtntext}>Order history</Text>
                 </TouchableOpacity>

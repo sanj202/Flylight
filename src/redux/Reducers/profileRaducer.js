@@ -1,10 +1,12 @@
 import {
     Get_Profile, Profile_Suceess, Profile_Clear,
-    Edit_ProfileImage, Edit_ProfileImage_Suceess, Edit_ProfileImage_Clear, Edit_ProfileImage_Error
+    Edit_ProfileImage, Edit_ProfileImage_Suceess, Edit_ProfileImage_Clear, Edit_ProfileImage_Error,
+    Permissions, Permissions_Success, Permissions_Clear
 } from '../Actions/actionTypes';
 const initialState = {
     userDetail: [],
     userImage: [],
+    permission: []
 };
 const profileR = (state = initialState, action) => {
     switch (action.type) {
@@ -39,6 +41,20 @@ const profileR = (state = initialState, action) => {
                 ...state,
                 userImage: []
             }
+        case Permissions:
+            return {
+                ...state,
+            };
+        case Permissions_Success:
+            return {
+                ...state,
+                permission: action.payload
+            };
+        case Permissions_Clear:
+            return {
+                ...state,
+                permission: []
+            };
         default:
             return state;
     }

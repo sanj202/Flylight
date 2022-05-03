@@ -6,7 +6,9 @@ import Header from '../../component/header/index'
 import { historyAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
-
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+// import { BottomSheet } from '@rneui/themed';
+import { BottomSheet } from 'react-native-elements';
 export default function HistoryOne({ navigation, route }) {
 
     const [Data, setData] = useState('')
@@ -123,11 +125,11 @@ export default function HistoryOne({ navigation, route }) {
     const DetailView = ({ item }) => {
         return (
             <TouchableOpacity onPress={() => OpenDetail(item)} >
-                <View style={{ paddingHorizontal: 10, borderWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', margin: '3%', marginTop: '0%' }}>
+                <View style={{ paddingHorizontal: 10, borderBottomWidth: 1, borderRadius: 10, borderColor: '#DBDBDB', marginHorizontal: '3%', }}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: '3%' }}>
                         <View>
                             <Text style={{
-                                fontWeight: 'bold', fontSize: 18, color: '#0F0F0F', fontFamily: 'Roboto'
+                                fontWeight: 'bold', fontSize: 16, color: '#0F0F0F', fontFamily: 'Roboto'
                             }}>{moment(item.created_at).utc().format("LT")}</Text>
                             <Text style={{
                                 color: '#0F0F0F', paddingBottom: '2%',
@@ -136,12 +138,19 @@ export default function HistoryOne({ navigation, route }) {
                         </View>
                         <View>
                             {item.feedbackStatus ?
-                                <Text style={{
-                                    color: '#fff', backgroundColor: '#F69708',
+                                item.feedbackStatus.status == 'Success' ? <Text style={{
+                                    color: '#fff', backgroundColor: '#32CD32',
                                     paddingLeft: 15, paddingRight: 15,
                                     padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10,
                                     marginTop: '20%'
                                 }}>{item.feedbackStatus.status ? item.feedbackStatus.status : ''}</Text>
+                                    :
+                                    <Text style={{
+                                        color: '#fff', backgroundColor: '#F69708',
+                                        paddingLeft: 15, paddingRight: 15,
+                                        padding: 1, borderRadius: 15, marginLeft: '2%', fontSize: 10,
+                                        marginTop: '20%'
+                                    }}>{item.feedbackStatus.status ? item.feedbackStatus.status : ''}</Text>
                                 :
                                 null}
                         </View>
@@ -153,7 +162,7 @@ export default function HistoryOne({ navigation, route }) {
     return (
         <View style={{ flex: 1 }}>
             <Header onPressLeft={() => { navigation.openDrawer() }}
-                title='History'
+                title='History Detail'
                 onPressRight={() => { navigation.navigate('Notification') }}
             />
             <View style={{ flex: 1, marginVertical: '2%' }}>
@@ -161,44 +170,30 @@ export default function HistoryOne({ navigation, route }) {
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                     :
                     <View style={{ flex: 1 }}>
-                        {/* <View style={styles.listData}>
-                            <Image style={{ height: 53, width: 53, margin: '2%' }}
-                                source={require('../../images/profileCall.png')}
-                            />
-                            <View style={{ marginHorizontal: '2%', width: '50%' }}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 19, fontFamily: 'Roboto', marginTop: '5%', color: '#0F0F0F' }}>{User.first_name} {User.last_name}</Text>
-                                <View style={{ flexDirection: 'row',backgroundColor:'green' }}>
-                                    <Image style={{ height: 12, width: 12, marginRight: '3%', marginTop: '8%' }}
-                                        source={require('../../images/material-call.png')}
-                                    />
-                                    <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#0F0F0F' }}>+91 {User.phone}</Text>
-                                </View>
-                            </View>
-                            <View style={{ width: '25%' }}>
-                                <Text style={{ color: '#565656', fontFamily: 'Roboto', fontSize: 12, marginRight: '2%', marginTop: '35%' }}>{User.company}</Text>
-                            </View>
-                        </View> */}
 
-
-                        <View style={styles.listData}>
-                            <Image style={{ height: 53, width: 53, marginHorizontal: '2%' }}
-                                source={require('../../images/profileCall.png')}
-                            />
-                            <View style={{ marginHorizontal: '2%', width: width * 60 / 100, }}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 19, fontFamily: 'Roboto', color: '#0F0F0F' }}>{User.first_name} {User.last_name}</Text>
-                                <View style={{ flexDirection: 'row', }}>
-                                    <Image style={{ height: 12, width: 12, marginTop: height * 0.4 / 100, marginRight: '3%' }}
-                                        source={require('../../images/material-call.png')}
-                                    />
-                                    <Text style={{ fontWeight: 'bold', fontSize: 12, color: '#0F0F0F' }}>+91-{User.phone}</Text>
-                                </View>
-                            </View>
-                            <View>
-                                <Text style={{ color: '#565656', marginTop: height * 2 / 100, fontFamily: 'Roboto', fontSize: 12 }}>{User.company}</Text>
-                            </View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <Avatar.Image
+                                size={80}
+                                style={{ alignSelf: 'center', backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/profileCall.png')} />
                         </View>
-
-
+                        <Card.Content >
+                            <Title style={{ fontSize: 18, fontFamily: 'Roboto', fontWeight: 'bold', textAlign: 'center' }}>
+                                {User.first_name} {User.last_name}
+                            </Title>
+                            <Paragraph style={{ marginTop: '-0.5%', fontSize: 16, fontFamily: 'Roboto', fontWeight: 'normal', textAlign: 'center' }}>
+                                {User.company}
+                            </Paragraph>
+                        </Card.Content>
+                        <View style={{
+                            flexDirection: 'row', paddingBottom: '3%', paddingHorizontal: '1%',
+                            justifyContent: 'space-between', marginHorizontal: '3%', borderBottomWidth: 1
+                        }}>
+                            <Text style={{ fontWeight: 'bold', marginTop: '3%', color: '#000000', fontSize: 18 }}>+91 {User.phone}</Text>
+                            <Image style={{ height: 35, width: 35, marginTop: '1%' }}
+                                source={require('../../images/GroupCall.png')}
+                            />
+                        </View>
                         <FlatList
                             data={Data}
                             renderItem={DetailView}
@@ -212,7 +207,7 @@ export default function HistoryOne({ navigation, route }) {
                         />
                     </View>}
             </View>
-            <Modal animationType="slide" transparent={true} visible={bottom.isVisible4}
+            {/* <Modal animationType="slide" transparent={true} visible={bottom.isVisible4}
                 onRequestClose={() => CloseBottomSheet()}>
                 <View style={styles.askModel}>
                     <Text style={styles.askTitle}>History Detail</Text>
@@ -248,7 +243,7 @@ export default function HistoryOne({ navigation, route }) {
                                 {'\n'}
                                 :   {bottom.status}
                                 {'\n'}
-                                :   {bottom.note ? bottom.note  : null}
+                                :   {bottom.note ? bottom.note : null}
                                 {bottom.message ? '\n' + ':   ' + bottom.message.messageT + '\n' + ':   ' + bottom.message.phoneT + '\n' + ':   ' + bottom.message.emailT : null}
                                 {bottom.businessCard ? '\n' + ':   ' + bottom.businessCard.contactName + '\n' + ':   ' + bottom.businessCard.mobile
                                     + '\n' + ':   ' + bottom.businessCard.orgName + '\n' + ':   ' + bottom.businessCard.orgLink + '\n' + ':   ' + bottom.businessCard.orgAddress : null}
@@ -256,7 +251,73 @@ export default function HistoryOne({ navigation, route }) {
                         </View>
                     </View>
                 </View>
-            </Modal>
+            </Modal> */}
+
+            <BottomSheet modalProps={{
+                animationType: 'fade', hardwareAccelerated: true,
+                onRequestClose: () => CloseBottomSheet(),}} onBackdropPress={() => CloseBottomSheet()} isVisible={bottom.isVisible4}>
+                <View style={{
+                    flex: 1, backgroundColor: '#fff',
+                    padding: '3%', paddingTop: '5%',
+                    borderTopLeftRadius: 20, borderTopRightRadius: 20
+                }}>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ borderBottomWidth: 1 }}>
+                            <Text style={styles.askTitle}>History Detail</Text>
+                            <TouchableOpacity style={styles.askTitleR}
+                                onPress={() => CloseBottomSheet()}>
+                                <Image style={{ height: 14, width: 14, }}
+                                    source={require('../../images/cross_blackIos.png')}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginVertical: '2%', flex: 1 }}>
+                            <View style={{justifyContent:'center'}}>
+                                <Avatar.Image
+                                    size={50}
+                                    style={{ backgroundColor: '#C6CCD1' }}
+                                    source={require('../../images/profileCall.png')} />
+                            </View>
+                            <View style={{ width: '60%', marginHorizontal: '2%', flex: 1 }}>
+                                <Text style={styles.DetailCampTitle}>{bottom.callTime}</Text>
+                                <Text style={styles.DetailCampTitle}>Call-Date {bottom.callDate}</Text>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={styles.DetailCampTitle}>Status  </Text>
+                                    <Text style={{ backgroundColor: 'red',color:'#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
+                                        {bottom.status.charAt(0).toUpperCase() + bottom.status.slice(1)}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ marginRight: '2%',justifyContent:'center' }}>
+                                <Text style={{ backgroundColor: 'green',color:'#fff',paddingHorizontal: '3%', borderRadius: 20 }}>
+                                    {bottom.callAction.charAt(0).toUpperCase() + bottom.callAction.slice(1)}</Text>
+                            </View>
+                        </View>
+                        {bottom.note ?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Note</Text>:null}
+                        <Text style={styles.DetailCampTitle}>{bottom.note ? bottom.note : null}</Text>
+                        {bottom.message ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>{'\n'}Message</Text> : null}
+                        {bottom.businessCard ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>{'\n'}BusinessCard</Text> : null}
+                        <View style={{ flexDirection: 'row' }}>
+                            <View>
+                                <Text style={[styles.DetailCampTitle, { fontWeight: 'bold' }]}>
+                                    {bottom.message ? 'Message' + '\n' + 'Mobile'
+                                        + '\n' + 'Email' : null}
+                                    {bottom.businessCard ? 'Contact Name' + '\n' + 'Mobile'
+                                        + '\n' + 'Org Name' + '\n' + 'OrgUrl' + '\n' + 'OrgAdress' : null}
+                                </Text>
+                            </View>
+                            <View style={{ marginLeft: '3%', width: '70%' }}>
+                                <Text style={styles.DetailCampTitle}>
+                                    {bottom.message ? ':   ' + bottom.message.messageT + '\n' + ':   ' + bottom.message.phoneT + '\n' + ':   ' + bottom.message.emailT : null}
+                                    {bottom.businessCard ? ':   ' + bottom.businessCard.contactName + '\n' + ':   ' + bottom.businessCard.mobile
+                                        + '\n' + ':   ' + bottom.businessCard.orgName + '\n' + ':   ' + bottom.businessCard.orgLink + '\n' + ':   ' + bottom.businessCard.orgAddress : null}
+                                </Text>
+                            </View>
+                        </View>
+
+                    </View>
+                </View>
+            </BottomSheet>
         </View >
     );
 }

@@ -11,10 +11,9 @@ import moment from 'moment';
 import { editContactAction, leadAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
-
+import navigationStrings from '../../constant/navigationStrings';
 export default function EditContact({ navigation, route }) {
-
-    console.log('................',route.params.Edata.campaign)
+    // console.log('................',route.params.Edata.campaign)
     const [LeadOwner, setLeadOwner] = useState(null)
     const [title, settitle] = useState("")
     const [fname, setfname] = useState("")
@@ -236,7 +235,7 @@ export default function EditContact({ navigation, route }) {
                 ToastAndroid.show(Data.message, ToastAndroid.SHORT);
                 setIsLodding(false)
                 dispatch(editContactAction.clearResponse());
-                navigation.navigate('ContactStack')
+                navigation.navigate(navigationStrings.Contacts)
                 // setfname(''),setlname(''), settitle(''),setemail(''), setAemail(''),setgender(null),
                 // setAphone(''),setfax(''),setwebsite(''),setLeadSource(''),setLeadStatus(null),setIndustry(''),
                 // setphone(''),setemployee(''),setrevenue(''),setcompanyName(''),setAddress(''),

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
-    StatusBar, Dimensions, ActivityIndicator,
+    StatusBar, Dimensions, ActivityIndicator
 } from 'react-native';
 import styles from './styles';
 import moment from 'moment';
@@ -10,12 +10,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
 import { leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function AddLead({ navigation, route }) {
-
-    // const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
-    // const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState("")
     const [fname, setfname] = useState("")
     const [lname, setlname] = useState("")
@@ -40,37 +37,90 @@ export default function AddLead({ navigation, route }) {
     const [campaign, setcampaign] = useState(null);
     const [description, setdescription] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
-
-    // const [leadOwnerData, setleadOwnerData] = useState([])
     const [leadstatusData, setleadstatusData] = useState([])
     const [campaignData, setcampaignData] = useState([])
     const [stateData, setstateData] = useState([])
     const { width, height } = Dimensions.get('window');
-
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
-
     const loginData = useSelector(state => state.auth.data)
     const leadData = useSelector(state => state.leads.newLead)
-    // const leadOwner = useSelector(state => state.leads.leadOwner)
     const campaignList = useSelector(state => state.leads.campaign)
     const leadstatusList = useSelector(state => state.leads.leadstatus)
     const stateList = useSelector(state => state.leads.states)
     const ZipList = useSelector(state => state.leads.ByZip)
-
     const [modalVisible, setModalVisible] = useState(false);
-
     const data = [
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' },
     ];
-
-    // const [date, setDate] = useState(new Date(1598051730000));
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, settext] = useState(true)
 
+    useEffect(() => {
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString()
+        }
+        isFocused ? dispatch(leadAction.CampaignList(data, loginData.data.token)) : null
+        isFocused ? dispatch(leadAction.LeadStatusList(data, loginData.data.token)) : null
+        isFocused ? dispatch(leadAction.StateList(data, loginData.data.token)) : null
+    }, [isFocused])
+
+    useEffect(() => {
+        if (ZipCode) {
+            if (ZipCode.length == 6) {
+                const data = { uid: loginData.data.uid, zipcode: ZipCode }
+                dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
+            }
+            else {
+                setState(null)
+                setCity('')
+            }
+        }
+        else {
+        }
+    }, [ZipCode])
+    useEffect(() => {
+        if (campaignList) {
+            if (campaignList.status == "success") {
+                setcampaignData(campaignList.data.rows)
+            }
+            else if (campaignList.status == "failed") {
+                ToastAndroid.show(campaignList.message, ToastAndroid.SHORT);
+            }
+        }
+    }, [campaignList])
+    useEffect(() => {
+        if (leadstatusList) {
+            if (leadstatusList.status == "200") {
+                setleadstatusData(leadstatusList.data.LeadStatus)
+            }
+            else if (leadstatusList.status == "fail") {
+                ToastAndroid.show(leadstatusList.message, ToastAndroid.SHORT);
+            }
+        }
+    }, [leadstatusList])
+    useEffect(() => {
+        if (stateList) {
+            setstateData(stateList.states)
+        }
+    }, [stateList])
+    useEffect(() => {
+        if (ZipList) {
+            if (ZipList.status == "success") {
+                setState(ZipList.data.State)
+                setCity(ZipList.data.City)
+            }
+            else if (ZipList.status == "failed") {
+                setState(null)
+                setCity('')
+            }
+        }
+    }, [ZipList])
     const onChangeFrom = (event, selectedDate) => {
         if (event.type == 'dismissed') {
             setShow(!show);
@@ -89,109 +139,6 @@ export default function AddLead({ navigation, route }) {
     const showDatepicker = () => {
         showMode('date');
     };
-
-    useEffect(() => {
-        const data = {
-            uid: loginData.data.uid,
-            org_uid: loginData.data.org_uid,
-            profile_id: loginData.data.cProfile.toString(),
-        }
-        dispatch(leadAction.CampaignList(data, loginData.data.token));
-        dispatch(leadAction.LeadStatusList(data, loginData.data.token));
-        dispatch(leadAction.StateList(data, loginData.data.token));
-    }, [isFocused])
-
-    useEffect(() => {
-        if (ZipCode) {
-            if (ZipCode.length == 6) {
-                const data = {
-                    uid: loginData.data.uid,
-                    zipcode: ZipCode
-                }
-                dispatch(leadAction.Get_By_ZipCodeList(data, loginData.data.token));
-            }
-            else {
-                setState(null)
-                setCity('')
-            }
-        }
-        else {
-        }
-    }, [ZipCode])
-
-    // useEffect(() => {
-    //     if (leadOwner) {
-    //         if (leadOwner.status == "200") {
-    //             let userData = leadOwner.data && leadOwner.data.map((ld) => {
-    //                 let user = { label: ld.user.name, value: ld.id }
-    //                 return user;
-    //             })
-    //             setleadOwnerData(userData ? userData : [{ label: 'None', value: 'None' }])
-    //         }
-    //         else if (leadOwner.status == "failed") {
-    //         }
-    //         else if (leadOwner.status == "fail") {
-    //         }
-    //     }
-    //     else {
-    //     }
-    // }, [leadOwner])
-
-    useEffect(() => {
-        if (campaignList) {
-            // console.log('campaignList.......................',campaignList)
-            if (campaignList.status == "success") {
-                //    console.log('campaignList.......................',campaignList.data.rows)
-                   setcampaignData(campaignList.data.rows)
-                // let campList = campaignList.data && campaignList.data.map((ld) => {
-                //     let user = { label: ld.campaign_name, value: ld.id }
-                //     return user;
-                // })
-                // setcampaignData(campList ? campList : [{ label: 'None', value: 'None' }])
-            }
-            else {
-
-            }
-        }
-    }, [campaignList])
-
-    useEffect(() => {
-        if (leadstatusList) {
-            if (leadstatusList.status == "200") {
-                setleadstatusData(leadstatusList.data.LeadStatus && leadstatusList.data.LeadStatus.map((item, index) =>
-                    item ? { label: item.name, value: item.id } : { label: 'None', value: 'None' }))
-            }
-            else {
-            }
-        }
-    }, [leadstatusList])
-
-    useEffect(() => {
-        if (stateList) {
-            setstateData(stateList.states && stateList.states.map((item, index) =>
-                item ? { label: item.name, value: item.name } : { label: 'None', value: 'None' }))
-        }
-    }, [stateList])
-
-    useEffect(() => {
-        if (ZipList) {
-            // console.log("dsamn...........",ZipList)
-            if (ZipList.status == "success") {
-                setState(ZipList.data.State)
-                setCity(ZipList.data.City)
-            }
-            else if (ZipList.status == "failed") {
-                setState(null)
-                setCity('')
-            }
-            else if (ZipList.status == "fail") {
-                setState(null)
-                setCity('')
-            }
-        }
-    }, [ZipList])
-
-
     const AddLeadFuction = () => {
         if (title == "") {
             ToastAndroid.show('Enter Lead Title', ToastAndroid.SHORT);
@@ -208,9 +155,6 @@ export default function AddLead({ navigation, route }) {
         else if (phone == "") {
             ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);
         }
-        // else if (Aphone == "") {
-        //     ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT);
-        // }
         else if (email == "") {
             ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT);
         }
@@ -254,7 +198,6 @@ export default function AddLead({ navigation, route }) {
             setIsLodding(true)
         }
     }
-
     useEffect(() => {
         if (leadData) {
             if (leadData.status == "success") {
@@ -264,7 +207,7 @@ export default function AddLead({ navigation, route }) {
                     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
                     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
                     setZipCode(''), setdescription(''), setcampaign(null), settext(true), setDate(new Date())
-                navigation.navigate('lead_manager')
+                navigation.navigate(navigationStrings.lead_manager)
                 dispatch(leadAction.clearResponse());
             }
             else if (leadData.status == "failed") {
@@ -272,23 +215,13 @@ export default function AddLead({ navigation, route }) {
                 ToastAndroid.show(leadData.message, ToastAndroid.SHORT);
                 dispatch(leadAction.clearResponse());
             }
-            else if (leadData.status == "fail") {
-                setIsLodding(false)
-                ToastAndroid.show(leadData.message, ToastAndroid.SHORT);
-                dispatch(leadAction.clearResponse());
-            }
-        }
-        else {
-            setIsLodding(false)
         }
     }, [leadData])
-
     const addLeadSuccesfully = () => {
         setIsLodding(false)
         setModalVisible(!modalVisible);
-        navigation.navigate('lead_manager')
+        navigation.navigate(navigationStrings.lead_manager)
     }
-
     return (
         <View style={{ flex: 1 }}>
             <Header onPressLeft={() => { navigation.openDrawer() }}
@@ -665,12 +598,12 @@ export default function AddLead({ navigation, route }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="id"
                         placeholder='Lead Status'
                         value={LeadStatus}
                         onChange={item => {
-                            setLeadStatus(item.value);
+                            setLeadStatus(item.id);
                         }}
                         renderLeftIcon={() => (
                             <View>

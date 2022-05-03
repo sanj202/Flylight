@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
-    StatusBar, Dimensions, ActivityIndicator,
-} from 'react-native';
+import {View, Text, Image, TextInput, Alert, Modal, Pressable, TouchableOpacity, ScrollView, ToastAndroid,
+    StatusBar, Dimensions, ActivityIndicator,} from 'react-native';
 import styles from './styles';
 import moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -10,13 +8,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Header from '../../component/header/index'
 import { leadAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function EditLead({ navigation, route }) {
-
-    // console.log("route data...................", route.params.Edata.campaign)
-    // const [LeadOwner, setLeadOwner] = useState(route.params.Edata ? null : null)
-    // const [isFocus, setIsFocus] = useState(false);
     const [title, settitle] = useState("")
     const [fname, setfname] = useState("")
     const [lname, setlname] = useState("")
@@ -41,36 +35,32 @@ export default function EditLead({ navigation, route }) {
     const [campaign, setcampaign] = useState(null);
     const [description, setdescription] = useState('');
     const [IsLodding, setIsLodding] = useState(false)
-
-    // const [leadOwnerData, setleadOwnerData] = useState([])
     const [leadstatusData, setleadstatusData] = useState([])
     const [campaignData, setcampaignData] = useState([])
     const [stateData, setstateData] = useState([])
     const { width, height } = Dimensions.get('window');
-
     const dispatch = useDispatch()
     const isFocused = useIsFocused();
-
     const loginData = useSelector(state => state.auth.data)
     const leadData = useSelector(state => state.leads.newLead)
-    // const leadOwner = useSelector(state => state.leads.leadOwner)
     const campaignList = useSelector(state => state.leads.campaign)
     const leadstatusList = useSelector(state => state.leads.leadstatus)
     const stateList = useSelector(state => state.leads.states)
     const ZipList = useSelector(state => state.leads.ByZip)
-
     const [modalVisible, setModalVisible] = useState(false);
-
     const data = [
         { label: 'Male', value: 'Male' },
         { label: 'Female', value: 'Female' },
     ];
-
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [text, settext] = useState(true)
 
+
+
+
+    
     const onChangeFrom = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
@@ -281,7 +271,7 @@ export default function EditLead({ navigation, route }) {
                     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
                     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
                     setZipCode(''), setdescription(''), setcampaign(null), settext(true), setDate(new Date())
-                navigation.navigate('lead_manager')
+                navigation.navigate(navigationStrings.lead_manager)
                 dispatch(leadAction.clearResponse());
             }
             else if (leadData.status == "failed") {
@@ -300,7 +290,7 @@ export default function EditLead({ navigation, route }) {
     const addLeadSuccesfully = () => {
         setIsLodding(false)
         setModalVisible(!modalVisible);
-        navigation.navigate('lead_manager')
+        navigation.navigate(navigationStrings.lead_manager)
     }
 
     return (

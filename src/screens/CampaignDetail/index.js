@@ -7,26 +7,28 @@ import styles from './styles'
 import { useIsFocused } from '@react-navigation/native';
 import moment from 'moment';
 import navigationStrings from '../../constant/navigationStrings';
-import { BottomSheet } from 'react-native-elements';
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 
-export default function Campaign({ navigation }) {
-    const [CampaignData, setCampaignData] = useState([])
+export default function Campaign({ navigation, route }) {
+
+    const isFocused = useIsFocused();
+    const { width, height } = Dimensions.get('window');
+    const [CampaignData, setCampaignData] = useState('')
     const [IsLodding, setIsLodding] = useState(true)
     const [askDelete, setaskDelete] = useState(false);
     const [page, setPage] = useState(0);
     const [perPageItems, setperPageItems] = useState(10);
     const [totalItems, settotalItems] = useState(0);
     const dispatch = useDispatch()
-    const isFocused = useIsFocused();
-    const { width, height } = Dimensions.get('window');
+
     const loginData = useSelector(state => state.auth.data)
     const campaignList = useSelector(state => state.campaign.campaign)
     const PermissionData = useSelector(state => state.profile.permission)
-    useEffect(() => {
-        isFocused ? initialstate() : null
-        isFocused ? FetchData(page) : null
-    }, [isFocused])
+
+    // useEffect(() => {
+    //     isFocused ? initialstate() : null
+    //     isFocused ? FetchData(page) : null
+    // }, [isFocused])
     useEffect(() => {
         if (campaignList) {
             if (campaignList.status == "success") {
@@ -35,7 +37,9 @@ export default function Campaign({ navigation }) {
                 setIsLodding(false)
                 dispatch(campaignAction.clearResponse())
             }
-            else if (campaignList.status == "failed") { setIsLodding(false)}
+            else if (campaignList.status == "failed") {
+                setIsLodding(false)
+            }
         }
     }, [campaignList])
     useEffect(() => {
@@ -45,7 +49,9 @@ export default function Campaign({ navigation }) {
                 if (PermissionCampaigns(JSON.parse(PermissionData.permissions)).includes('create')) { setcreatePermission(true) }
                 if (PermissionCampaigns(JSON.parse(PermissionData.permissions)).includes('delete')) { setdeletePermission(true) }
             }
-            else if (PermissionData.status == "failed") {ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT);}
+            else if (PermissionData.status == "failed") {
+                ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT);
+            }
         }
     }, [PermissionData])
     const PermissionCampaigns = (permiss, account) => {
@@ -129,8 +135,33 @@ export default function Campaign({ navigation }) {
         setaskDelete(!askDelete)
     }
     const CampaignView = ({ item }) => {
+        console.log(',..............', item)
         return (
-            <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#e9ebf2', padding: '2%', borderRadius: 10 }}>
+            // <View style={styles.listData}>
+            //         <View>
+            //             <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
+            //             <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Status </Text>
+            //             <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Type</Text>
+            //         </View>
+            //         <View style={{ marginLeft: '2%', width: '60%' }}>
+            //             <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name}</Text>
+            //             <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.status}</Text>
+            //             <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_type}</Text>
+            //         </View>
+            //         <View style={{ alignSelf: 'flex-end' }}>
+            //             {editPermission ? <TouchableOpacity style={{ alignItems: 'flex-end' }}
+            //                 onPress={() => navigation.navigate(navigationStrings.EditCampaign, { campData: item })}>
+            //                 <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
+            //                     source={require('../../images/editCall.png')} />
+            //             </TouchableOpacity> : null}
+            //             <TouchableOpacity
+            //                 style={{ alignItems: 'flex-end', marginTop: '20%', backgroundColor: '#3373F3', borderRadius: 20 }}
+            //                 onPress={() => Details(item)} >
+            //                 <Text style={{ color: '#fff', padding: '1%' }}>More Detail</Text>
+            //             </TouchableOpacity>
+            //         </View>
+            //     </View>
+            <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#dce3f7', padding: '2%', borderRadius: 10 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingBottom: '1%' }}>
                     <View style={{ justifyContent: 'center', }}>
                         <Image
@@ -139,7 +170,7 @@ export default function Campaign({ navigation }) {
                         />
                     </View>
                     <View style={{ justifyContent: 'center', flex: 1, marginHorizontal: '2%', }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name.charAt(0).toUpperCase() + item.campaign_name.slice(1)}</Text>
+                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name.charAt(0).toUpperCase() + item.campaign_name.slice(1)}</Text>
                         <Text numberOfLines={2}>{item.description}</Text>
                     </View>
                     <View style={{ justifyContent: 'center', }}>
@@ -162,7 +193,7 @@ export default function Campaign({ navigation }) {
 
                     <TouchableOpacity style={{ flexDirection: 'row', paddingHorizontal: '7%' }}
                         onPress={() => Details(item)} >
-                        <Text style={{ marginHorizontal: '5%', paddingTop: '3%', fontSize: 13 }}>More Detail</Text>
+                        <Text style={{ marginHorizontal: '3%', paddingTop: '3%', fontSize: 13 }}>More Detail</Text>
                         <Image style={{ height: 22, width: 15, marginTop: '5%' }}
                             source={require('../../images/newDetail.png')} />
                     </TouchableOpacity>
@@ -173,14 +204,40 @@ export default function Campaign({ navigation }) {
     return (
         <View style={{ flex: 1 }}>
             <Header style={{ height: height * 12 / 100 }} onPressLeft={() => { navigation.openDrawer() }}
-                title='Campaigns'
+                title='Campaigns Detail'
                 onPressRight={() => { navigation.navigate('Notification') }} />
             <View style={{ flex: 1, marginVertical: '2%' }}>
                 {IsLodding == true ?
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                     :
-                    <View style={{ flex: 1 ,}}>
-                        {createPermission ? <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.AddCampaign)}
+                    <View style={{ flex: 1 ,marginHorizontal:'3%'}}>
+
+                        <Card style={{ marginTop: '-12%' }}>
+                            <View style={{ padding: '2%', flexDirection: 'row' }}>
+                                <Avatar.Image
+                                    size={60}
+                                    style={{ backgroundColor: '#C6CCD1' }}
+                                    source={require('../../images/profileCall.png')} />
+                                <View style={{ flex: 1, marginHorizontal: '2%' }}>
+                                    <Text style={{ fontSize: 18, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', }}>
+                                        {/* {leadDetail.first_name} {leadDetail.last_name} */}sfczdsfsd
+                                        </Text>
+                                    <Text style={{ fontSize: 15, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', }}>
+                                        {/* {leadDetail.company ? leadDetail.company.charAt(0).toUpperCase() + leadDetail.company.slice(1) : ''} */}
+                                        545455454
+                                        </Text>
+                                    <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto', fontWeight: 'bold', }}>
+                                        {/* +91 {leadDetail.phone} */}
+                                        5454545
+                                        </Text>
+                                </View>
+                                <Avatar.Image
+                                    size={45}
+                                    style={{ backgroundColor: '#C6CCD1', marginTop: '2%' }}
+                                    source={require('../../images/GroupCall.png')} />
+                            </View>
+                        </Card>
+                        {/* {createPermission ? <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.AddCampaign)}
                             style={{
                                 borderColor: '#fff',
                                 borderWidth: 1,
@@ -192,8 +249,8 @@ export default function Campaign({ navigation }) {
                                 borderRadius: 15
                             }}>
                             <Text style={{ color: "#fff", fontSize: 12 }}>+Add</Text>
-                        </TouchableOpacity> : null}
-                        <FlatList style={{ marginTop: '2%' }}
+                        </TouchableOpacity> : null} */}
+                        {/* <FlatList style={{ marginTop: '5%' }}
                             data={CampaignData}
                             renderItem={CampaignView}
                             ListEmptyComponent={() => (!CampaignData.length ?
@@ -203,10 +260,10 @@ export default function Campaign({ navigation }) {
                             onRefresh={handleRefresh}
                             onEndReached={() => fetchNextItems()}
                             keyExtractor={item => item.id}
-                        />
+                        /> */}
                     </View>}
             </View>
-            {/* <Modal animationType="slide" transparent={true} visible={askDelete} onRequestClose={() => { setaskDelete(false); }}>
+            <Modal animationType="slide" transparent={true} visible={askDelete} onRequestClose={() => { setaskDelete(false); }}>
                 <View style={styles.askModel}>
                     <Text style={styles.askTitle}> Campaign Detail</Text>
                     <TouchableOpacity style={styles.askTitleR} onPress={() => DetailsCancel()}>
@@ -237,66 +294,7 @@ export default function Campaign({ navigation }) {
                         </View>
                     </View>
                 </View>
-            </Modal> */}
-
-            <BottomSheet modalProps={{
-                animationType: 'fade', hardwareAccelerated: true,
-                onRequestClose: () => DetailsCancel() }} onBackdropPress={() => DetailsCancel()} isVisible={askDelete}>
-                <View style={{ flex: 1, backgroundColor: '#fff',
-                    padding: '3%', paddingTop: '5%',
-                    borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
-                    <View style={{ flex: 1 }}>
-                        <View style={{ borderBottomWidth: 1 }}>
-                            <Text style={styles.askTitle}>Campaign Detail</Text>
-                            <TouchableOpacity style={styles.askTitleR}
-                                onPress={() => DetailsCancel()}>
-                                <Image style={{ height: 14, width: 14, }}
-                                    source={require('../../images/cross_blackIos.png')}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', marginVertical: '2%', flex: 1 }}>
-                            <View style={{justifyContent:'center'}}>
-                                <Avatar.Image size={50}
-                                    style={{ backgroundColor: '#fff' }}
-                                    source={require('../../images/profileCall.png')} />
-                            </View>
-                            <View style={{ width: '60%', marginHorizontal: '2%', flex: 1 }}>
-                                <Text style={[styles.DetailCampTitle,{fontWeight:'bold'}]}>{Objcet.CampaignName.charAt(0).toUpperCase() + Objcet.CampaignName.slice(1)}</Text>
-                                <Text style={styles.DetailCampTitle}>{moment(Objcet.EndDate).format('lll')}</Text>
-                                {/* <View style={{ flexDirection: 'row' }}>
-                                    <Text style={styles.DetailCampTitle}>Status  </Text>
-                                    <Text style={{ backgroundColor: 'red',color:'#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
-                                        {bottom.status.charAt(0).toUpperCase() + bottom.status.slice(1)}
-                                    </Text>
-                                </View> */}
-                            </View>
-                            <View style={{ marginRight: '2%',justifyContent:'center' }}>
-                                <Text style={{ backgroundColor: 'green',color:'#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
-                                    {Objcet.Status.charAt(0).toUpperCase() + Objcet.Status.slice(1)}</Text>
-                            </View>
-                        </View>
-                        {/* <Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Name</Text>
-                        <Text style={styles.DetailCampTitle}>{Objcet.CampaignName}</Text> */}
-                        {Objcet.CampaignType?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Type</Text>:null}
-                        {Objcet.CampaignType?<Text style={styles.DetailCampTitle}>{Objcet.CampaignType}</Text>:null}
-                        {/* <Text style={{ fontWeight: 'bold', color: '#000000' }}>Status</Text>
-                        <Text style={styles.DetailCampTitle}>{Objcet.Status}</Text> */}
-                        {Objcet.StartDate || Objcet.EndDate?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Duration</Text>:null}
-                        {Objcet.StartDate || Objcet.EndDate?<Text style={styles.DetailCampTitle}>{moment(Objcet.StartDate).format('DD MMMM YYYY')} - {moment(Objcet.EndDate).format('DD MMMM YYYY')}</Text>:null}
-                        {/* <Text style={{ fontWeight: 'bold', color: '#000000' }}>End Date</Text>
-                        <Text style={styles.DetailCampTitle}>{Objcet.EndDate}</Text> */}
-                        {Objcet.BudgetedCost?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Budgeted Cost</Text>:null}
-                        {Objcet.BudgetedCost?<Text style={styles.DetailCampTitle}>{Objcet.BudgetedCost}</Text>:null}
-                        {Objcet.ExpectedRevenue?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Expected Revenue</Text>:null}
-                        {Objcet.ExpectedRevenue?<Text style={styles.DetailCampTitle}>{Objcet.ExpectedRevenue}</Text>:null}
-                        {Objcet.created_at?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Created Date</Text>:null}
-                        {Objcet.created_at?<Text style={styles.DetailCampTitle}>{moment(Objcet.created_at).format('lll')}</Text>:null}
-                        {Objcet.Description ?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Description</Text>:null}
-                        {Objcet.Description ?<Text style={styles.DetailCampTitle}>{Objcet.Description}</Text>:null}
-                </View>
-            </BottomSheet>
+            </Modal>
         </View>
     )
 }

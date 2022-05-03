@@ -3,13 +3,12 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-    listData: {
-        padding: 5,
+    listData: {padding: 5,
         borderWidth: 1,
         borderRadius: 10,
         borderColor: '#000000',
-        margin: '3%',
-        marginTop: '-0.5%',
+        marginVertical: '0.5%',
+        marginHorizontal: '3%',
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -175,14 +174,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 20,
-    } ,
+    },
     askTitleR: {
         margin: '5%',
         marginRight: '3%',
         marginTop: '-11.5%',
         alignSelf: 'flex-end',
         padding: 10
-    }, 
+    },
 });
 
 export default styles

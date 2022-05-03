@@ -10,10 +10,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { addcontactManuallyAction, leadAction, campaignAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function EditCampaign({ navigation, route }) {
-
     const [CampaignOwnerList, setCampaignOwnerList] = useState([])
     const [CampaignOwner, setCampaignOwner] = useState(null)
     const [campaignName, setcampaignName] = useState(route.params.campData ? route.params.campData.campaign_name : "")
@@ -24,64 +23,14 @@ export default function EditCampaign({ navigation, route }) {
     const [BudgetedCost, setBudgetedCost] = useState(route.params.campData ? route.params.campData.budgeted_cost : "")
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false);
-    useEffect(() => {
-        const data = {
-            uid: loginData.data.uid,
-            org_uid: loginData.data.org_uid,
-            profile_id: loginData.data.cProfile.toString(),
-        }
-        dispatch(leadAction.LeadOwnerList(data, loginData.data.token));
-
-    }, [isFocused])
-
     const [startdate, setstartDate] = useState(new Date());
     const [startmode, setstartMode] = useState('date');
     const [startshow, setstartShow] = useState(false);
     const [starttext, setstarttext] = useState(true)
-
-
-    const onChangeStartDate = (event, selectedDate) => {
-        if (event.type == 'dismissed') {
-            setstartShow(!startshow);
-        }
-        else {
-            const currentDate = selectedDate || startdate;
-            setstartShow(Platform.OS === 'ios');
-            setstartDate(currentDate)
-            setstarttext(false)
-        }
-    };
-    const setMode = (currentMode) => {
-        setstartShow(!startshow);
-        setstartMode(currentMode);
-    };
-    const showDatepicker = () => {
-        setMode('date');
-    };
     const [enddate, setendDate] = useState(new Date());
     const [endmode, setendMode] = useState('date');
     const [endshow, setendShow] = useState(false);
     const [endtext, setendtext] = useState(true)
-
-    const onChangeEndDate = (event, selectedDate) => {
-        if (event.type == 'dismissed') {
-            setendShow(!endshow);
-        }
-        else {
-            const currentDate = selectedDate || enddate;
-            setendShow(Platform.OS === 'ios');
-            setendDate(currentDate)
-            setendtext(false)
-        }
-    };
-    const showMode2 = (currentMode) => {
-        setendShow(!endshow);
-        setendMode(currentMode);
-    };
-    const showDatepicker2 = () => {
-        showMode2('date');
-    };
-
     const data = [
         { label: 'active', value: 'active' },
         { label: 'planning', value: 'planning' },
@@ -107,47 +56,35 @@ export default function EditCampaign({ navigation, route }) {
         setendDate(route.params.campData ? new Date(route.params.campData.end_date) : new Date());
         setendtext(route.params.campData ? route.params.campData.end_date ? false : true : true)
     }, [route.params])
-
+    useEffect(() => {
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString(),
+        }
+        isFocused ? dispatch(leadAction.LeadOwnerList(data, loginData.data.token)) : null
+    }, [isFocused])
     useEffect(() => {
         if (leadOwner) {
-            if (leadOwner.status == "200") {
-                let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.id }
-                    if (user !== undefined) {
-                        setCampaignOwnerList([user])
-                    }
-                    return user;
-                })
-            }
-            else if (leadOwner.status == "failed") {
-            }
-            else if (leadOwner.status == "fail") {
+            if (leadOwner) {
+                if (leadOwner.status == "200") { setCampaignOwnerList(leadOwner.data.map((item, index) => item.user)) }
+                else if (leadOwner.status == "fail") { ToastAndroid.show(leadOwner.message, ToastAndroid.SHORT); }
             }
         }
     }, [leadOwner])
-
     useEffect(() => {
         if (responseAdd_Edit) {
             setIsLodding(false)
             if (responseAdd_Edit.status == "success") {
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
                 dispatch(campaignAction.AddEditclearResponse())
-                navigation.navigate('Campaign')
+                navigation.navigate(navigationStrings.Campaign)
             }
             else if (responseAdd_Edit.status == "failed") {
                 ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
             }
-            else if (responseAdd_Edit.status == "fail") {
-                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
-            }
-
-        }
-        else {
         }
     }, [responseAdd_Edit])
-
-
-
     const AddNewCampaign = () => {
         if (campaignName == "") {
             ToastAndroid.show('Enter campaign Name', ToastAndroid.SHORT);
@@ -182,16 +119,49 @@ export default function EditCampaign({ navigation, route }) {
             dispatch(campaignAction.Add_EditCampaign(data, loginData.data.token));
         }
     }
-
-
-
+    const onChangeStartDate = (event, selectedDate) => {
+        if (event.type == 'dismissed') {
+            setstartShow(!startshow);
+        }
+        else {
+            const currentDate = selectedDate || startdate;
+            setstartShow(Platform.OS === 'ios');
+            setstartDate(currentDate)
+            setstarttext(false)
+        }
+    };
+    const setMode = (currentMode) => {
+        setstartShow(!startshow);
+        setstartMode(currentMode);
+    };
+    const showDatepicker = () => {
+        setMode('date');
+    };
+    const onChangeEndDate = (event, selectedDate) => {
+        if (event.type == 'dismissed') {
+            setendShow(!endshow);
+        }
+        else {
+            const currentDate = selectedDate || enddate;
+            setendShow(Platform.OS === 'ios');
+            setendDate(currentDate)
+            setendtext(false)
+        }
+    };
+    const showMode2 = (currentMode) => {
+        setendShow(!endshow);
+        setendMode(currentMode);
+    };
+    const showDatepicker2 = () => {
+        showMode2('date');
+    };
     return (
         <View style={{ flex: 1 }}>
             <Header onPressLeft={() => { navigation.openDrawer() }}
                 title='Edit Campaign'
                 onPressRight={() => { navigation.navigate('Notification') }}
             />
-            <ScrollView style={{ flex: 1, marginVertical: '2%',marginHorizontal: '3%' }}>
+            <ScrollView style={{ flex: 1, marginVertical: '2%', marginHorizontal: '3%' }}>
                 <View style={{ marginTop: '2%' }}>
                     <Dropdown
                         style={styles.dropdown3}
@@ -202,11 +172,11 @@ export default function EditCampaign({ navigation, route }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="id"
                         placeholder='Campaign Owner'
                         value={CampaignOwner}
-                        onChange={item => { setCampaignOwner(item.value); }}
+                        onChange={item => { setCampaignOwner(item.id); }}
                         renderLeftIcon={() => (
                             <View>
                                 <Image style={styles.icon}

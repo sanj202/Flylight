@@ -10,8 +10,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { leadmanagerAction, contactListAction, taskmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector } from 'react-redux';
-import { useIsFocused } from "@react-navigation/core"
-
+import { useIsFocused } from '@react-navigation/native';
+import navigationStrings from '../../constant/navigationStrings';
 export default function AddContact({ navigation }) {
 
     const [modalVisible2, setModalVisible2] = useState(false);
@@ -30,14 +30,99 @@ export default function AddContact({ navigation }) {
     const [PriorityList, setPriorityList] = useState([])
     const [Priority, setPriority] = useState(null)
     const [Description, setDescription] = useState("")
-
     const { width, height } = Dimensions.get('window');
     const [IsLodding, setIsLodding] = useState(false);
     const [startdate, setstartDate] = useState(new Date());
     const [startmode, setstartMode] = useState('date');
     const [startshow, setstartShow] = useState(false);
     const [starttext, setstarttext] = useState(true)
+    const dispatch = useDispatch()
+    const isFocused = useIsFocused();
+    const loginData = useSelector(state => state.auth.data)
+    const leadOwner = useSelector(state => state.taskmanager.taskOwner)
+    const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
+    const Lead_OpportunityList = useSelector(state => state.taskmanager.tasklead)
+    const contactData = useSelector(state => state.taskmanager.taskcontact)
+    const TaskStatus = useSelector(state => state.taskmanager.taskstatus)
 
+    useEffect(() => {
+        const data = {
+            uid: loginData.data.uid,
+            org_uid: loginData.data.org_uid,
+            profile_id: loginData.data.cProfile.toString()
+        }
+        dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
+        dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
+    }, [isFocused])
+    useEffect(() => {
+        if (leadOwner) {
+            if (leadOwner.status == "200") {
+                setTaskOwnerList(leadOwner.data.map((item, index) => item.user))
+            }
+            else if (leadOwner.status == "fail") {
+                ToastAndroid.show(leadOwner.message, ToastAndroid.SHORT);
+            }
+        }
+    }, [leadOwner])
+    useEffect(() => {
+        if (TaskStatus) {
+            if (TaskStatus.status == "200") {
+                setStatusList(TaskStatus.data.TaskStatus)
+                setTaskForList(TaskStatus.data.TaskFor)
+                setPriorityList(TaskStatus.data.TaskPriority)
+            }
+            else if (TaskStatus.status == "fail") {
+                ToastAndroid.show(TaskStatus.message, ToastAndroid.SHORT);
+            }
+        }
+    }, [TaskStatus])
+    useEffect(() => {
+        if (contactData) {
+            if (contactData.status == "200") {
+                setListValues(contactData.data)
+                setModalVisible2(true)
+                dispatch(contactListAction.clearResponse())
+            }
+            else if (contactData.status == "fail") {
+                setIsLodding(false)
+                ToastAndroid.show(contactData.message, ToastAndroid.SHORT);
+            }
+        }
+    }, [contactData])
+    useEffect(() => {
+        if (Lead_OpportunityList) {
+            if (Lead_OpportunityList.status == "200") {
+                setListValues(Lead_OpportunityList.data.lead ? Lead_OpportunityList.data.lead : Lead_OpportunityList.data)
+                setModalVisible2(true)
+                dispatch(leadmanagerAction.clearResponse())
+            }
+            else if (Lead_OpportunityList.status == "fail") {
+                setIsLodding(false)
+                ToastAndroid.show(Lead_OpportunityList.message, ToastAndroid.SHORT);
+            }
+        }
+    }, [Lead_OpportunityList])
+    useEffect(() => {
+        if (responseAdd_Edit) {
+            if (responseAdd_Edit.status == "success") {
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
+                navigation.navigate(navigationStrings.Task_Manager)
+                initialstate()
+                dispatch(taskmanagerAction.clearResponse())
+            }
+            else if (responseAdd_Edit.status == "failed") {
+                setIsLodding(false)
+                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
+                dispatch(taskmanagerAction.clearResponse())
+            }
+        }
+    }, [responseAdd_Edit])
+    const initialstate = () => {
+        setTaskOwner(null), settitle(""), setTaskFor(null), setreleetedTo(''),
+            setreleetedToId(''), setreleetedToFname('Contact'), setreleetedToLname('Person'),
+            setstartDate(new Date()), setstarttext(true), setStatus(null), setPriority(null),
+            setDescription(""),setIsLodding(false)
+    }
     const onChangeStartDate = (event, selectedDate) => {
         if (event.type == 'dismissed') {
             setstartShow(!startshow);
@@ -57,91 +142,6 @@ export default function AddContact({ navigation }) {
         // setstarttext(false)
         setMode('date');
     };
-
-    const dispatch = useDispatch()
-    const isFocused = useIsFocused();
-    const loginData = useSelector(state => state.auth.data)
-    const leadOwner = useSelector(state => state.taskmanager.taskOwner)
-    const responseAdd_Edit = useSelector(state => state.taskmanager.addTask)
-    const Lead_OpportunityList = useSelector(state => state.taskmanager.tasklead)
-    const contactData = useSelector(state => state.taskmanager.taskcontact)
-    const TaskStatus = useSelector(state => state.taskmanager.taskstatus)
-
-    useEffect(() => {
-        const data = {
-            uid: loginData.data.uid,
-            org_uid: loginData.data.org_uid,
-            profile_id: loginData.data.cProfile.toString(),
-        }
-        dispatch(taskmanagerAction.TaskOwnerList(data, loginData.data.token));
-        dispatch(taskmanagerAction.TaskStatusList(data, loginData.data.token));
-    }, [isFocused])
-
-    useEffect(() => {
-        if (leadOwner) {
-            if (leadOwner.status == "200") {
-                let userData = leadOwner.data && leadOwner.data.map((ld) => {
-                    let user = { label: ld.user.name, value: ld.id }
-                    if (user !== undefined) {
-                        setTaskOwnerList([user])
-                    }
-                    return user;
-                })
-            }
-            else if (leadOwner.status == "failed") {
-            }
-            else if (leadOwner.status == "fail") {
-            }
-        }
-    }, [leadOwner])
-
-    useEffect(() => {
-        if (TaskStatus) {
-            if (TaskStatus.status == "200") {
-                setStatusList(TaskStatus.data.TaskStatus)
-                setTaskForList(TaskStatus.data.TaskFor)
-                setPriorityList(TaskStatus.data.TaskPriority)
-            }
-            else if (TaskStatus.status == "failed") {
-            }
-            else if (TaskStatus.status == "fail") {
-            }
-        }
-    }, [TaskStatus])
-
-    useEffect(() => {
-        if (contactData) {
-            if (contactData.status == "200") {
-                setListValues(contactData.data)
-                setModalVisible2(true)
-                dispatch(contactListAction.clearResponse())
-            }
-            else if (contactData.status == "failed") {
-                setIsLodding(false)
-            }
-            else {
-                setIsLodding(false)
-            }
-        }
-    }, [contactData])
-
-    useEffect(() => {
-        if (Lead_OpportunityList) {
-            if (Lead_OpportunityList.status == "200") {
-                setListValues(Lead_OpportunityList.data.lead ? Lead_OpportunityList.data.lead : Lead_OpportunityList.data)
-                setModalVisible2(true)
-                dispatch(leadmanagerAction.clearResponse())
-            }
-            else if (Lead_OpportunityList.status == "failed") {
-                setIsLodding(false)
-            }
-            else {
-                setIsLodding(false)
-            }
-        }
-    }, [Lead_OpportunityList])
-
-
     const selectOneFile = (value) => {
         const data = {
             uid: loginData.data.uid,
@@ -158,31 +158,15 @@ export default function AddContact({ navigation }) {
             console.log('account APi..........account........................ ')
         }
     }
-
     const AddNewCampaign = () => {
-        if (title == "") {
-            ToastAndroid.show("Enter Title", ToastAndroid.SHORT);
-        }
-        else if (TaskFor == null) {
-            ToastAndroid.show("Select TaskFor", ToastAndroid.SHORT);
-        }
-        else if (releetedTo == "") {
-            ToastAndroid.show("Enter Related To", ToastAndroid.SHORT);
-        }
-        else if (releetedToId == "") {
-            ToastAndroid.show("TaskFor contact person not selected", ToastAndroid.SHORT);
-        }
-        else if (starttext == true) {
-            ToastAndroid.show("Select Due Date", ToastAndroid.SHORT);
-        }
-        else if (Status == null) {
-            ToastAndroid.show("Select Status", ToastAndroid.SHORT);
-        }
-        else if (Priority == null) {
-            ToastAndroid.show("Select Priority", ToastAndroid.SHORT);
-        }
-        else {
-            let formateStartDate = moment(startdate).format("YYYY-MM-DD")
+        if (title == "") {ToastAndroid.show("Enter Title", ToastAndroid.SHORT);}
+        else if (TaskFor == null) {ToastAndroid.show("Select TaskFor", ToastAndroid.SHORT);}
+        else if (releetedTo == "") {ToastAndroid.show("Enter Related To", ToastAndroid.SHORT);}
+        else if (releetedToId == "") {ToastAndroid.show("TaskFor contact person not selected", ToastAndroid.SHORT);}
+        else if (starttext == true) {ToastAndroid.show("Select Due Date", ToastAndroid.SHORT);}
+        else if (Status == null) {ToastAndroid.show("Select Status", ToastAndroid.SHORT);}
+        else if (Priority == null) {ToastAndroid.show("Select Priority", ToastAndroid.SHORT);}
+        else {let formateStartDate = moment(startdate).format("YYYY-MM-DD")
             setIsLodding(true)
             const data = {
                 uid: loginData.data.uid,
@@ -197,33 +181,10 @@ export default function AddContact({ navigation }) {
                 status: Status,
                 priority: Priority,
                 description: Description,
-                due_date: formateStartDate,
-            }
+                due_date: formateStartDate}
             dispatch(taskmanagerAction.Add_EditTask(data, loginData.data.token));
         }
     }
-
-    useEffect(() => {
-        if (responseAdd_Edit) {
-            if (responseAdd_Edit.status == "success") {
-                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
-                navigation.navigate('Task_Manager')
-                settitle(''), setTaskFor(null), setreleetedTo(''),
-                    setreleetedToId(), setreleetedToFname('Contact'), setreleetedToLname('Person'),
-                    setStatus(null), setPriority(null),
-                    setDescription(""), setstartDate(new Date()), setstarttext(true)
-                dispatch(taskmanagerAction.clearResponse())
-            }
-            else if (responseAdd_Edit.status == "failed") {
-            }
-            else if (responseAdd_Edit.status == "fail") {
-                ToastAndroid.show(responseAdd_Edit.message, ToastAndroid.SHORT);
-                dispatch(taskmanagerAction.clearResponse())
-            }
-            setIsLodding(false)
-        }
-    }, [responseAdd_Edit])
-
     const RadioSelect = (value) => {
         setreleetedToFname(value.first_name)
         setreleetedToLname(value.last_name)
@@ -231,15 +192,11 @@ export default function AddContact({ navigation }) {
         setreleetedTo(value.title)
         setModalVisible2(false)
     }
-
     const AllView = ({ item }) => {
-        return (
-            <ScrollView style={
-                releetedToId !== undefined && releetedToId == item.id ?
-                    { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', backgroundColor: '#24BCFF' }
-                    :
-                    { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', }
-            }>
+        return (<ScrollView style={releetedToId !== undefined && releetedToId == item.id ?
+                { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', backgroundColor: '#24BCFF' }
+                :
+                { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%' }}>
                 <TouchableOpacity onPress={() => RadioSelect(item)}>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ width: '20%', marginLeft: '1%' }}>
@@ -253,24 +210,17 @@ export default function AddContact({ navigation }) {
                             <Text>{item.email}</Text>
                         </View>
                         <View>
-                            <Image
-                                source={require('../../images/white_check.png')}
-                                style={{ height: 16, width: 25, marginTop: '40%', marginRight: '5%', }}
-                            />
+                            <Image source={require('../../images/white_check.png')} style={{ height: 16, width: 25, marginTop: '40%', marginRight: '5%', }} />
                         </View>
                     </View>
                 </TouchableOpacity>
-            </ScrollView>
-        )
+            </ScrollView>)
     }
-
     return (
         <View style={{ flex: 1 }}>
-            <Header
-                onPressLeft={() => { navigation.openDrawer() }}
+            <Header onPressLeft={() => { navigation.openDrawer() }}
                 title='Add Task'
-                onPressRight={() => { navigation.navigate('Notification') }}
-            />
+                onPressRight={() => { navigation.navigate('Notification') }} />
             <ScrollView style={{ flex: 1, marginBottom: '2%', marginHorizontal: '3%' }}>
                 <View style={{ marginTop: '2%' }}>
                     <Dropdown
@@ -282,11 +232,11 @@ export default function AddContact({ navigation }) {
                         search={true}
                         searchPlaceholder='Search'
                         maxHeight={160}
-                        labelField="label"
-                        valueField="value"
+                        labelField="name"
+                        valueField="id"
                         placeholder='Task Owner'
                         value={TaskOwner}
-                        onChange={item => { setTaskOwner(item.value); }}
+                        onChange={item => { setTaskOwner(item.id); }}
                         renderLeftIcon={() => (
                             <View>
                                 <Image

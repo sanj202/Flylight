@@ -64,8 +64,7 @@ export const GetPermission = (data, Token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log('.....................',responseData)
-                // dispatch({ type: Permissions_Success, payload: responseData })
+                dispatch({ type: Permissions_Success, payload: responseData })
             })
             .catch((error) => {
                 console.log("error" + error);
