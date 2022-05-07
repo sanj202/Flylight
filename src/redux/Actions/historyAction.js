@@ -45,7 +45,6 @@ export const HistoryList = (data, token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log(responseData)
                 dispatch({ type: callhistory_Success, payload: responseData })
             })
             .catch((error) => {

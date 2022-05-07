@@ -199,7 +199,12 @@ export default function Staff_Members({ navigation }) {
     }
     const UserLisView = ({ item }) => {
         return (
-            <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#e9ebf2', padding: '2%', borderRadius: 10 }}>
+            <TouchableOpacity
+                onPress={() => Details(item)}
+                style={{
+                    marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#e9ebf2',
+                    padding: '2%', borderRadius: 10
+                }}>
                 <View style={{ flexDirection: 'row', paddingBottom: '1%' }}>
                     <View style={{ justifyContent: 'center', }}>
                         <Image
@@ -216,12 +221,12 @@ export default function Staff_Members({ navigation }) {
                         <TouchableOpacity style={{ flexDirection: 'row', alignSelf: 'flex-end', }}
                             onPress={() => Details(item)} >
                             <Text style={{ paddingRight: '2%', fontSize: 13 }}>More Detail</Text>
-                            <Image style={{ height: 22, width: 15, }}
+                            <Image style={{height: 18, width: 12  }}
                                 source={require('../../images/newDetail.png')} />
                         </TouchableOpacity>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
     return (
@@ -282,94 +287,6 @@ export default function Staff_Members({ navigation }) {
                     </View>
                 }
             </View>
-            {/* <Modal animationType="slide" transparent={true} visible={askDelete}
-                onRequestClose={() => CencelFunction()}>
-                <View style={styles.askModel}>
-                    <Text style={styles.askTitle}> Invite New Member</Text>
-                    <View style={styles.inputFields}>
-                        <Image
-                            style={[styles.icon, {
-                                height: 18, width: '7%',
-                                marginRight: '1.5%', marginTop: '4%'
-                            }]}
-                            source={require('../../images/mail.png')}
-                        />
-                        <TextInput
-                            style={{ flex: 1 }}
-                            value={Email}
-                            onChangeText={e1 => setEmail(e1)}
-                            placeholder="Enter Email" />
-                    </View>
-                    <Dropdown
-                        style={styles.dropdown3}
-                        placeholderStyle={styles.placeholderStyle3}
-                        selectedTextStyle={styles.selectedTextStyle3}
-                        iconStyle={styles.iconStyle3}
-                        data={Roles}
-                        search={true}
-                        searchPlaceholder='Search'
-                        maxHeight={160}
-                        labelField="name"
-                        valueField="id"
-                        placeholder='Role'
-                        value={role}
-                        onChange={item => {
-                            setrole(item.id);
-                        }}
-                        renderLeftIcon={() => (
-                            <View>
-                                <Image
-                                    style={[styles.icon, { height: 22, width: 22 }]}
-                                    source={require('../../images/transgender.png')}
-                                />
-                            </View>
-                        )}
-                    />
-                    <View style={{ marginTop: '2%' }}>
-                        <Dropdown
-                            style={styles.dropdown3}
-                            placeholderStyle={styles.placeholderStyle3}
-                            selectedTextStyle={styles.selectedTextStyle3}
-                            iconStyle={styles.iconStyle3}
-                            data={AccountType}
-                            search={true}
-                            searchPlaceholder='Search'
-                            maxHeight={160}
-                            labelField="name"
-                            valueField="id"
-                            placeholder='Account Type'
-                            value={account}
-                            onChange={item => {
-                                setaccount(item.id);
-                            }}
-                            renderLeftIcon={() => (
-                                <View>
-                                    <Image style={[styles.icon, { height: 22, width: 22 }]}
-                                        source={require('../../images/transgender.png')} />
-                                </View>
-                            )}
-                        />
-                    </View>
-                    {IsLodding.inviteLodding == true ? <ActivityIndicator size="large" color="#0000ff" /> : null}
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: '3%' }}>
-                        <Pressable
-                            style={[styles.askBtn]}
-                            onPress={() => CencelFunction()}
-                        >
-                            <Text style={styles.askBtnText}>Cancel</Text>
-                        </Pressable>
-                        <View style={{ margin: '5%' }} />
-                        <Pressable
-                            style={[styles.askBtn]}
-                            onPress={() => invite_Members()}
-                        >
-                            <Text style={styles.askBtnText}>Send</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal> */}
-
-
             <BottomSheet modalProps={{
                 animationType: 'fade', hardwareAccelerated: true,
                 onRequestClose: () => CencelFunction()
@@ -461,45 +378,6 @@ export default function Staff_Members({ navigation }) {
                     </View>
                 </View>
             </BottomSheet>
-
-            {/* <Modal animationType="slide" transparent={true} visible={askDelete1}
-                onRequestClose={() => { setaskDelete1(false); }}>
-                <View style={styles.askModel}>
-                    <Text style={styles.askTitle}> Staff Member Detail</Text>
-                    <TouchableOpacity
-                        style={styles.askTitleR}
-                        onPress={() => DetailsCancel()}
-                    >
-                        <Image
-                            style={{ height: 14, width: 14, }}
-                            source={require('../../images/cross.png')}
-                        />
-                    </TouchableOpacity>
-                    <View style={[styles.inputFields, { padding: 10 }]}>
-                        <View>
-                            <Text style={styles.DetailCampTitle}>Name </Text>
-                            <Text style={styles.DetailCampTitle}>Organization</Text>
-                            <Text style={styles.DetailCampTitle}>Dob</Text>
-                            <Text style={styles.DetailCampTitle}>Phone</Text>
-                            <Text style={styles.DetailCampTitle}>Email</Text>
-                            <Text style={styles.DetailCampTitle}>Address</Text>
-                            <Text style={styles.DetailCampTitle}>created Date</Text>
-                            <Text style={styles.DetailCampTitle}>updated Date</Text>
-                        </View>
-                        <View style={{ marginLeft: '3%', width: '70%' }}>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.name}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.organization}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.dob}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.phone}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.email}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{Objcet.Address}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{moment(Objcet.created_at).format('lll')}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>{moment(Objcet.updated_at).format('lll')}</Text>
-                        </View>
-                    </View>
-                </View>
-            </Modal> */}
-
             <BottomSheet modalProps={{
                 animationType: 'fade', hardwareAccelerated: true,
                 onRequestClose: () => DetailsCancel()
@@ -537,7 +415,7 @@ export default function Staff_Members({ navigation }) {
                     {Objcet.email ? <Text style={styles.DetailCampTitle}>{Objcet.email}</Text> : null}
                     {Objcet.dob ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Date Of Birth</Text> : null}
                     {Objcet.dob ? <Text style={styles.DetailCampTitle}>{Objcet.dob}</Text> : null}
-                    {Objcet.created_at ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Invitation Accepted On </Text> : null}
+                    {Objcet.created_at ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Created </Text> : null}
                     {Objcet.created_at ? <Text style={styles.DetailCampTitle}>{moment(Objcet.created_at).format('lll')}</Text> : null}
                     {Objcet.Address ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Address</Text> : null}
                     {Objcet.Address ? <Text style={styles.DetailCampTitle}>{Objcet.Address}</Text> : null}

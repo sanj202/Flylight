@@ -268,7 +268,7 @@ export default function SideMenu(props) {
                                 <Image style={{ marginRight: '2%', height: 20.09, width: 23.44 }}
                                     source={require('../images/history.png')} />
                                 <View style={styles.menus}>
-                                    <Text style={styles.items}>History</Text>
+                                    <Text style={styles.items}>Feedback</Text>
                                     {/* <Image style={[styles.image3]} source={require('../images/next.png')}
                                     /> */}
                                 </View>

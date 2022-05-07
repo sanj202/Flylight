@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#000000',
         borderRadius: 10,
-        margin: '3%',
+        marginVertical: '2%',
     },
     icon: {
         height: 21,
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 8,
         width: '50%',
-        marginRight: '3%',
+        // marginRight: '3%',
         paddingHorizontal: 8,
     },
     placeholderStyle3: {
@@ -181,6 +181,18 @@ const styles = StyleSheet.create({
         marginTop: '-11.5%',
         alignSelf: 'flex-end',
         padding: 10
+    },
+    askTitleEdit: {
+        alignSelf: 'flex-end',
+        paddingVertical: '3%',
+        paddingLeft: '15%',
+        paddingRight:'2%'
+    },
+    modalTextLL: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#46484B',
+        textAlignVertical:'center'
     },
 });
 

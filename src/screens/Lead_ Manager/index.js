@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
-  Pressable, Dimensions, Platform} from 'react-native';
+import {
+  Text, View, TouchableOpacity, ActivityIndicator, FlatList, Image, Modal, ToastAndroid,
+  Pressable, Dimensions, Platform
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import styles from './styles'
@@ -46,8 +48,8 @@ export default function Lead_manager({ navigation, route }) {
   const PermissionData = useSelector(state => state.profile.permission)
 
   useEffect(() => {
-    isFocused ? initialstate() :null
-    isFocused ? Get_Data(page) :null
+    isFocused ? initialstate() : null
+    isFocused ? Get_Data(0) : null
   }, [isFocused])
   useEffect(() => {
     if (Lead_OpportunityList) {
@@ -335,6 +337,7 @@ export default function Lead_manager({ navigation, route }) {
     if (AssignLead) {
       if (AssignLead.status == "success") {
         setAssignOwner(false)
+        initialstate()
         Get_Data(0)
         ToastAndroid.show(AssignLead.message, ToastAndroid.SHORT);
         settemarray([]);
@@ -343,6 +346,7 @@ export default function Lead_manager({ navigation, route }) {
       }
       else if (AssignLead.status == "failed") {
         setAssignOwner(false)
+        initialstate()
         ToastAndroid.show(AssignLead.message, ToastAndroid.SHORT);
         settemarray([])
         dispatch(leadmanagerAction.clearResponse())
@@ -440,12 +444,6 @@ export default function Lead_manager({ navigation, route }) {
               <View />}
           </View>
           <View style={{ flexDirection: 'row', }}>
-            {/* <TouchableOpacity>
-              <Image
-                style={{ height: 22, width: 22, marginRight: '2%' }}
-                source={require('../../images/okCall.png')}
-              />
-            </TouchableOpacity> */}
             {editPermission ?
               <TouchableOpacity
                 onPress={() => navigation.navigate(navigationStrings.editLead, { Edata: item })}
@@ -475,9 +473,9 @@ export default function Lead_manager({ navigation, route }) {
             <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
           </View>
           <TouchableOpacity
-            style={{ backgroundColor: '#3373F3', borderRadius: 20, marginTop: '30%', }}
+            style={{ borderColor: '#3373F3', borderRadius: 20,borderWidth:1, marginTop: '30%', }}
             onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
-            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
+            <Text style={{ textAlign: 'center', color: '#3373F3', fontSize: 12, marginVertical: '5%' }}>More ></Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -504,7 +502,7 @@ export default function Lead_manager({ navigation, route }) {
           <TouchableOpacity style={{ width: '48%' }} onPress={showDatepicker}>
             <View style={styles.pickers}>
               <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/DOB.png')}  />
+                source={require('../../images/DOB.png')} />
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -516,11 +514,11 @@ export default function Lead_manager({ navigation, route }) {
                   onChange={onChangeFrom} />)
               }
               {Platform.OS == 'ios' ? <View>
-                {text == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>:null}
+                {text == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text> : null}
               </View>
                 :
                 <View>
-                  {text == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
+                  {text == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
                     :
                     <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('DD/MM/YYYY')}</Text>}
                 </View>
@@ -530,7 +528,7 @@ export default function Lead_manager({ navigation, route }) {
           <TouchableOpacity style={{ width: '48%' }} onPress={showDatepickers}>
             <View style={styles.pickers}>
               <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/DOB.png')}/>
+                source={require('../../images/DOB.png')} />
               {shows && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -540,41 +538,43 @@ export default function Lead_manager({ navigation, route }) {
                   format="YYYY-MM-DD"
                   // is24Hour={true}
                   display="default"
-                  onChange={onChangeTo}/>)
+                  onChange={onChangeTo} />)
               }
               {Platform.OS == 'ios' ? <View>
-                {texts == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>:null}
+                {texts == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text> : null}
               </View>
                 :
                 <View>
-                  {texts == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>To</Text>
+                  {texts == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>To</Text>
                     :
                     <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(dates).format('DD/MM/YYYY')}</Text>}
                 </View>}
             </View>
           </TouchableOpacity>
         </View>
+
         {createPermission ?
           <View style={{ marginHorizontal: '5%', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.addLead)}style={styles.addNewBtn}>
-              <Text style={{ color: "#fff", fontSize: 13 }}>Add New Lead</Text>
+            <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.addLead)} style={styles.addNewBtn}>
+              <Text style={{ color: "#3373F3", fontSize: 13 }}>Add New Lead</Text>
             </TouchableOpacity>
             {temarray.length > 0 ?
               <TouchableOpacity onPress={() => onPressSendItem()} style={styles.addNewBtn}>
-                <Text style={{ color: "#fff", fontSize: 13 }}>Assign</Text>
-              </TouchableOpacity>:<View />}
+                <Text style={{ color: "#3373F3", fontSize: 13 }}>Assign</Text>
+              </TouchableOpacity> : <View />}
             <TouchableOpacity onPress={() => CheckImportType("lead")} style={styles.addNewBtn}>
-              <Text style={{ color: "#fff", fontSize: 13 }}>Import From Storage</Text>
+              <Text style={{ color: "#3373F3", fontSize: 13 }}>Import Lead File</Text>
             </TouchableOpacity>
           </View> : null}
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity style={[styles.button, { width: '60%' }]}onPress={() => Search()}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: '1%' }}>
+          <TouchableOpacity style={[styles.button, { width: '60%' }]} onPress={() => Search()}>
             <Text style={styles.btnText}>SEARCH</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ marginTop: '2%' }}onPress={() => Reset()}>
+          <TouchableOpacity style={{ justifyContent:'center' }} onPress={() => Reset()}>
             <Image source={require('../../images/refreshButton.png')} style={{ height: 24, width: 24 }} />
           </TouchableOpacity>
         </View>
+
       </View>
       <View style={{ flex: 3, marginBottom: '2%' }}>
         {IsLodding == true ?
@@ -584,7 +584,7 @@ export default function Lead_manager({ navigation, route }) {
             data={Lead}
             renderItem={LeadView}
             ListEmptyComponent={() => (!Lead.length ?
-              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>: null)}
+              <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text> : null)}
             refreshing={refreshing}
             onRefresh={handleRefresh}
             onEndReached={() => fetchNextItems()}
@@ -613,7 +613,7 @@ export default function Lead_manager({ navigation, route }) {
           <View style={styles.modalView3}>
             <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => DeleteSuccessFully()}>
               <Image style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
-                source={require('../../images/crossImgR.png')}/>
+                source={require('../../images/crossImgR.png')} />
             </TouchableOpacity>
             <Image source={require('../../images/checkmark-circle.png')}
               style={{ width: 38, height: 38 }} />
@@ -631,13 +631,13 @@ export default function Lead_manager({ navigation, route }) {
             style={{ borderWidth: 1, borderRadius: 10, padding: 8, marginVertical: '10%', marginHorizontal: '15%' }}>
             <Text>{SelectedFile}</Text>
           </TouchableOpacity>
-          {IsULodding == true ? <ActivityIndicator size="large" color="#0000ff" /> :<View />}
+          {IsULodding == true ? <ActivityIndicator size="large" color="#0000ff" /> : <View />}
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <Pressable style={[styles.askBtnFixed, { paddingHorizontal: '6.5%' }]} onPress={() => UploadFileCancel()}>
               <Text style={styles.askBtnTextFixed}>NO</Text>
             </Pressable>
             <View style={{ margin: '5%' }} />
-            <Pressable style={[styles.askBtnFixed, { paddingHorizontal: '5%' }]}onPress={() => UploadFile()} >
+            <Pressable style={[styles.askBtnFixed, { paddingHorizontal: '5%' }]} onPress={() => UploadFile()} >
               <Text style={styles.askBtnTextFixed}>YES</Text>
             </Pressable>
           </View>

@@ -244,30 +244,30 @@ export default function TransforLeads({ navigation, route }) {
   }
   const LeadView = ({ item, index }) => {
     return (<View style={styles.listData}>
-        <Pressable style={styles.radio} onPress={() =>onPressRadioBtn(item.id, !item.selected)}>
-          {item.selected == true ?<Image style={[styles.radio, { marginTop: '-5%', marginLeft: '-5%' }]}
-              source={require('../../images/okCall.png')} /> : null}
-        </Pressable>
-        <View style={{ justifyContent: 'center', }}>
-          <Image style={{ height: 48, width: 48, }}
-            source={require('../../images/profileCall.png')}/>
+      <Pressable style={styles.radio} onPress={() => onPressRadioBtn(item.id, !item.selected)}>
+        {item.selected == true ? <Image style={[styles.radio, { marginTop: '-5%', marginLeft: '-5%' }]}
+          source={require('../../images/okCall.png')} /> : null}
+      </Pressable>
+      <View style={{ justifyContent: 'center', }}>
+        <Image style={{ height: 48, width: 48, }}
+          source={require('../../images/profileCall.png')} />
+      </View>
+      <View style={{ flex: 1, marginLeft: '2%', paddingHorizontal: '2%' }}>
+        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.first_name} {item.last_name}</Text>
+        <Text numberOfLines={1} style={{ color: '#000000', fontFamily: 'Roboto', fontSize: 12, flexShrink: 1 }}>{item.company ? item.company : null}</Text>
+        <Text style={{ borderRadius: 15, backgroundColor: '#F69708', color: '#fff', fontSize: 12, width: '60%', textAlign: 'center' }}>{item.profile.user.name}</Text>
+      </View>
+      <View style={{ marginLeft: '2%',flexDirection:'column',justifyContent:'space-between'}}>
+        <View style={{ flexDirection: 'row' }}>
+          <Image style={{ height: 10, width: 10, marginRight: '2%' }} source={require('../../images/material-call.png')} />
+          <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
         </View>
-        <View style={{ flex: 1, marginLeft: '2%', paddingHorizontal: '2%' }}>
-          <Text style={{fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',fontFamily: 'Roboto'}}>{item.first_name} {item.last_name}</Text>
-          <Text numberOfLines={1}style={{color: '#000000', fontFamily: 'Roboto',fontSize: 12, flexShrink: 1}}>{item.company ? item.company : null}</Text>
-          <Text style={{borderRadius: 15,backgroundColor: '#F69708',color: '#fff', fontSize: 12,width: '60%', textAlign: 'center'}}>{item.profile.user.name}</Text>
-        </View>
-        <View style={{ marginLeft: '2%', marginTop: '1%' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Image style={{ height: 10, width: 10, marginRight: '2%' }} source={require('../../images/material-call.png')}/>
-            <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone}</Text>
-          </View>
-          <TouchableOpacity style={{ backgroundColor: '#3373F3', borderRadius: 20, marginTop: '30%', }}
-            onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
-            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
-          </TouchableOpacity>
-        </View>
-      </View>);
+        <TouchableOpacity style={{ borderColor: '#3373F3', borderRadius: 20,borderWidth:1, }}
+          onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
+          <Text style={{ textAlign: 'center', color: '#3373F3', fontSize: 12, marginVertical: '5%' }}>More ></Text>
+        </TouchableOpacity>
+      </View>
+    </View>);
   }
   const AssignVIew = ({ item }) => {
     return (
@@ -281,7 +281,7 @@ export default function TransforLeads({ navigation, route }) {
   }
   return (
     <View style={{ flex: 1 }}>
-      <Header style={Platform.OS == 'ios' ?{ height: "16%" } : {}}
+      <Header style={Platform.OS == 'ios' ? { height: "16%" } : {}}
         onPressLeft={() => { navigation.openDrawer() }}
         title='Lead Transfer'
         onPressRight={() => { navigation.navigate('Notification') }} />
@@ -290,7 +290,7 @@ export default function TransforLeads({ navigation, route }) {
           <TouchableOpacity style={{ width: '48%' }} onPress={showDatepicker}>
             <View style={styles.pickers}>
               <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/DOB.png')}/>
+                source={require('../../images/DOB.png')} />
               {show && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -300,20 +300,20 @@ export default function TransforLeads({ navigation, route }) {
                   // is24Hour={true}
                   display="default"
                   onChange={onChangeFrom}
-                /> ) }
+                />)}
               {Platform.OS == 'ios' ? <View>
-                {text == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>:null}
-              </View>:<View>
-                  {text == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
-                    :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('DD/MM/YYYY')}</Text>}
-                </View>}
+                {text == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text> : null}
+              </View> : <View>
+                {text == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>
+                  :
+                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('DD/MM/YYYY')}</Text>}
+              </View>}
             </View>
           </TouchableOpacity>
           <TouchableOpacity style={{ width: '48%' }} onPress={showDatepickers}>
             <View style={styles.pickers}>
               <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
-                source={require('../../images/DOB.png')}/>
+                source={require('../../images/DOB.png')} />
               {shows && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -324,14 +324,14 @@ export default function TransforLeads({ navigation, route }) {
                   // is24Hour={true}
                   display="default"
                   onChange={onChangeTo}
-                /> ) }
+                />)}
               {Platform.OS == 'ios' ? <View>
-                {texts == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text>:null}
-              </View>:<View>
-                  {texts == true ?<Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>To</Text>
-                    :
-                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(dates).format('DD/MM/YYYY')}</Text>}
-                </View>}
+                {texts == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>From</Text> : null}
+              </View> : <View>
+                {texts == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>To</Text>
+                  :
+                  <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(dates).format('DD/MM/YYYY')}</Text>}
+              </View>}
             </View>
           </TouchableOpacity>
         </View>
@@ -343,7 +343,7 @@ export default function TransforLeads({ navigation, route }) {
             <Image source={require('../../images/refreshButton.png')} style={{ height: 24, width: 24 }} />
           </TouchableOpacity>
           {temarray.length > 0 ?
-            <TouchableOpacity onPress={() => onPressSendItem()}style={styles.addNewBtn}>
+            <TouchableOpacity onPress={() => onPressSendItem()} style={styles.addNewBtn}>
               <Text style={{ color: "#fff", fontSize: 13, padding: 10 }}> Transfer </Text>
             </TouchableOpacity> : null}
         </View>
@@ -369,7 +369,7 @@ export default function TransforLeads({ navigation, route }) {
         <View style={[styles.askModel, { marginTop: '40%', }]}>
           <Text style={styles.askTitle}>Transfer To </Text>
           <TouchableOpacity style={[styles.askTitleR]} onPress={() => setAssignOwner(false)}>
-            <Image style={{ height: 14, width: 14 }}source={require('../../images/cross.png')}/>
+            <Image style={{ height: 14, width: 14 }} source={require('../../images/cross.png')} />
           </TouchableOpacity>
           {IsALodding == true ? <ActivityIndicator size="large" color="#0000ff" /> : null}
           <FlatList

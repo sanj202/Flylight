@@ -69,7 +69,6 @@ export default function AddLead({ navigation, route }) {
         isFocused ? dispatch(leadAction.LeadStatusList(data, loginData.data.token)) : null
         isFocused ? dispatch(leadAction.StateList(data, loginData.data.token)) : null
     }, [isFocused])
-
     useEffect(() => {
         if (ZipCode) {
             if (ZipCode.length == 6) {
@@ -229,41 +228,12 @@ export default function AddLead({ navigation, route }) {
                 onPressRight={() => { navigation.navigate('Notification') }}
             />
             <ScrollView style={{ flex: 1, marginBottom: '2%', marginHorizontal: '3%' }}>
-                {/* <View style={{ marginTop: '2%' }}>
-        <Dropdown
-            style={styles.dropdown3}
-            placeholderStyle={styles.placeholderStyle3}
-            selectedTextStyle={styles.selectedTextStyle3}
-            iconStyle={styles.iconStyle3}
-            data={leadOwnerData}
-            maxHeight={80}
-            labelField="label"
-            valueField="value"
-            placeholder='Lead Owner'
-            value={LeadOwner}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-                setLeadOwner(item.value);
-                setIsFocus(false);
-            }}
-            renderLeftIcon={() => (
-                <View>
-                    <Image
-                        style={[styles.icon, { height: 26, width: 20 }]}
-                        source={require('../../images/list.png')}
-                    />
-                </View>
-            )}
-        />
-    </View> */}
                 <View style={styles.inputFields}>
-                    <Image
-                        style={styles.icon}
+                    <Image style={styles.icon}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={title}
                         onChangeText={e1 => settitle(e1)}
                         placeholder="Lead Title" />
@@ -271,14 +241,13 @@ export default function AddLead({ navigation, route }) {
                         <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
                         : null}
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
                         style={styles.icon}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={fname}
                         onChangeText={e2 => setfname(e2)}
                         placeholder="First Name" />
@@ -286,14 +255,13 @@ export default function AddLead({ navigation, route }) {
                         <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
                         : null}
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
                         style={styles.icon}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={lname}
                         onChangeText={e3 => setlname(e3)}
                         placeholder="Last Name" />
@@ -301,100 +269,83 @@ export default function AddLead({ navigation, route }) {
                         <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
                         : null}
                 </View>
-
-                <TouchableOpacity
-                    style={{
-                        borderWidth: 1,
-                        borderColor: '#000000',
-                        borderRadius: 10,
-                        paddingVertical: 11,
-                        marginTop: '2%'
-                    }}
-                    onPress={showDatepicker} >
-                    <View style={{ flexDirection: 'row' }}>
-                        <Image
-                            style={Platform.OS == 'ios' ?
-                                [styles.icon] : [styles.icon, { marginTop: '1%' }]}
-                            source={require('../../images/DOB.png')}
+                <TouchableOpacity style={[styles.inputFields, { alignItems: 'center' }]} onPress={showDatepicker}>
+                    <Image
+                        style={Platform.OS == 'ios' ?
+                            [styles.icon] : [styles.icon, { height: height * 3.1 / 100 }]}
+                        source={require('../../images/DOB.png')}
+                    />
+                    {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            style={{ paddingVertical: '5%', width: '50%', color: 'red' }}
+                            // is24Hour={true}
+                            value={date}
+                            mode={mode}
+                            maximumDate={new Date(moment().subtract(20, "years"))}
+                            display="default"
+                            onChange={onChangeFrom}
                         />
-                        {show && (
-                            <DateTimePicker
-                                testID="dateTimePicker"
-                                style={{ paddingVertical: '5%', width: '50%', color: 'red' }}
-                                // is24Hour={true}
-                                value={date}
-                                mode={mode}
-                                maximumDate={new Date(moment().subtract(20, "years"))}
-                                display="default"
-                                onChange={onChangeFrom}
-                            />
-                        )}
-                        {Platform.OS == 'ios' ? <View>
-                            {text == true ?
-                                <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Date of Birth</Text>
-                                :
-                                null
-                            }
-                        </View>
+                    )}
+                    {Platform.OS == 'ios' ? <View>
+                        {text == true ?
+                            <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Date of Birth</Text>
                             :
-                            <View>
-                                {text == true ?
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Text style={{ marginTop: '2%', fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>Date of Birth</Text>
-                                        <Text style={{ fontSize: 15, color: 'red', marginTop: '-3%' }}>*</Text>
-                                    </View>
-
-                                    :
-                                    <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                                }
-                            </View>
+                            null
                         }
                     </View>
+                        :
+                        <View>
+                            {text == true ?
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ fontSize: 12, width: '90%', color: '#000000', marginLeft: '2%' }}>Date of Birth</Text>
+                                    <Text style={{ fontSize: 15, color: 'red', marginTop: '-3%' }}>*</Text>
+                                </View>
+
+                                :
+                                <Text style={{ fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                            }
+                        </View>
+                    }
                 </TouchableOpacity>
-                <View style={{ marginTop: '2%' }}>
-                    <Dropdown
-                        style={styles.dropdown3}
-                        placeholderStyle={styles.placeholderStyle3}
-                        selectedTextStyle={styles.selectedTextStyle3}
-                        iconStyle={styles.iconStyle3}
-                        data={data}
-                        search={true}
-                        searchPlaceholder='Search'
-                        maxHeight={160}
-                        labelField="label"
-                        valueField="value"
-                        placeholder='Select Gender'
-                        value={gender}
-                        onChange={item => {
-                            setgender(item.value);
-                        }}
-                        renderLeftIcon={() => (
-                            <View>
-                                <Image
-                                    style={[styles.icon, { height: 22, width: 22 }]}
-                                    source={require('../../images/transgender.png')}
-                                />
-                            </View>
-                        )}
-                        renderRightIcon={() => (
-                            <View>
-                                {gender == null ?
-                                    <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
-                                    : null}
-                            </View>
-                        )}
-                    />
-                </View>
+                <Dropdown
+                    style={styles.dropdown3}
+                    placeholderStyle={styles.placeholderStyle3}
+                    selectedTextStyle={styles.selectedTextStyle3}
+                    iconStyle={styles.iconStyle3}
+                    data={data}
+                    search={true}
+                    searchPlaceholder='Search'
+                    maxHeight={160}
+                    labelField="label"
+                    valueField="value"
+                    placeholder='Select Gender'
+                    value={gender}
+                    onChange={item => {
+                        setgender(item.value);
+                    }}
+                    renderLeftIcon={() => (
+                        <View>
+                            <Image
+                                style={[styles.icon, { height: 22, width: 22 }]}
+                                source={require('../../images/transgender.png')}
+                            />
+                        </View>
+                    )}
+                    renderRightIcon={() => (
+                        <View>
+                            {gender == null ?
+                                <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                : null}
+                        </View>
+                    )}
+                />
                 <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, {
-                            height: 28, width: '4.8%',
-                            marginRight: '3.8%'
-                        }]}
+                    <Image style={[styles.icon, { height: height * 3.5 / 100, width: width * 4.3 / 100, }]}
                         source={require('../../images/mobile.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={phone}
                         maxLength={14}
                         keyboardType='numeric'
@@ -404,37 +355,26 @@ export default function AddLead({ navigation, route }) {
                         <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
                         : null}
                 </View>
-
                 <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, {
-                            height: 28, width: '4.8%',
-                            marginRight: '3.8%'
-                        }]}
+                    <Image style={[styles.icon, { height: height * 3.5 / 100, width: width * 4.3 / 100, }]}
                         source={require('../../images/mobile.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={Aphone}
                         maxLength={14}
                         keyboardType='numeric'
                         onChangeText={e6 => setAphone(e6)}
                         placeholder="Alternate Mobile Number"
                     />
-                    {/* {!Aphone.length ?
-            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
-            : null} */}
                 </View>
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, {
-                            height: 20, width: '7%',
-                            marginRight: '1.5%'
-                        }]}
+                        style={[styles.icon, { width: width * 6.2 / 100, height: height * 2.5 / 100, marginVertical: '4.5%' }]}
                         source={require('../../images/mail.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={email}
                         onChangeText={e7 => setemail(e7)}
                         placeholder="Enter Email" />
@@ -442,290 +382,243 @@ export default function AddLead({ navigation, route }) {
                         <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
                         : null}
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, {
-                            height: 20, width: '7%',
-                            marginRight: '1.5%'
-                        }]}
+                        style={[styles.icon, { width: width * 6.2 / 100, height: height * 2.5 / 100, marginVertical: '4.5%' }]}
                         source={require('../../images/mail.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={Aemail}
                         onChangeText={e8 => setAemail(e8)}
                         placeholder="Enter Alternate Email" />
-                    {/* {!Aemail.length ?
-            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
-            : null} */}
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 22, width: '5%', marginLeft: '2.5%' }]}
+                        style={styles.icon}
                         source={require('../../images/building.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={companyName}
                         onChangeText={e9 => setcompanyName(e9)}
                         placeholder="Company Name" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 22, width: '6%', marginLeft: '2.5%' }]}
+                        style={[styles.icon, { marginVertical: '3.5%', width: width * 6 / 100 }]}
                         source={require('../../images/globe.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={website}
                         onChangeText={e10 => setwebsite(e10)}
                         placeholder="website" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 22, width: '5%', marginLeft: '2.5%' }]}
+                        style={styles.icon}
                         source={require('../../images/building.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={fax}
                         onChangeText={e11 => setfax(e11)}
                         placeholder="fax" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 26, width: '5.5%', marginRight: '3%' }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={Address}
-                        onChangeText={e12 => setAddress(e12)}
-                        placeholder="Address" />
-                </View>
-                <View style={styles.inputFields}>
-                    <Image
-                        style={[styles.icon, { height: 23, width: 23, }]}
+                        style={[styles.icon, { marginVertical: '3.8%', width: width * 6.2 / 100 }]}
                         source={require('../../images/info.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={ZipCode}
                         maxLength={6}
                         keyboardType='numeric'
                         onChangeText={e16 => setZipCode(e16)}
                         placeholder="Zip Code " />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 26, width: '4.5%', marginRight: '3%' }]}
+                        style={[styles.icon, { height: height * 4 / 100, width: width * 4.5 / 100, marginRight: '3%' }]}
                         source={require('../../images/city.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={City}
                         onChangeText={e13 => setCity(e13)}
                         placeholder="City" />
                 </View>
-
-                <View style={{ marginTop: '2%' }}>
-                    <Dropdown
-                        style={styles.dropdown3}
-                        placeholderStyle={styles.placeholderStyle3}
-                        selectedTextStyle={styles.selectedTextStyle3}
-                        iconStyle={styles.iconStyle3}
-                        data={stateData}
-                        search={true}
-                        searchPlaceholder='Search'
-                        maxHeight={160}
-                        labelField="label"
-                        valueField="value"
-                        placeholder='State'
-                        value={State}
-                        onChange={item => {
-                            setState(item.value);
-                        }}
-                        renderLeftIcon={() => (
-                            <View>
-                                <Image
-                                    style={[styles.icon, { height: 22, width: 22 }]}
-                                    source={require('../../images/state.png')}
-                                />
-                            </View>
-                        )}
-                    />
-                </View>
-
+                <Dropdown
+                    style={styles.dropdown3}
+                    placeholderStyle={styles.placeholderStyle3}
+                    selectedTextStyle={styles.selectedTextStyle3}
+                    iconStyle={styles.iconStyle3}
+                    data={stateData}
+                    search={true}
+                    searchPlaceholder='Search'
+                    maxHeight={160}
+                    labelField="name"
+                    valueField="name"
+                    placeholder='State'
+                    value={State}
+                    onChange={item => {
+                        setState(item.value);
+                    }}
+                    renderLeftIcon={() => (
+                        <View>
+                            <Image
+                                style={[styles.icon, { height: 22, width: 22 }]}
+                                source={require('../../images/state.png')}
+                            />
+                        </View>
+                    )}
+                />
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 23, width: 23, }]}
+                        style={[styles.icon, { width: width * 6 / 100, marginVertical: '3.5%' }]}
                         source={require('../../images/globe.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={Country}
                         onChangeText={e15 => setCountry(e15)}
                         placeholder="Country" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 19, width: 25, }]}
+                        style={[styles.icon, { height: height * 2.5 / 100, width: width * 7.2 / 100, marginTop: '4%' }]}
                         source={require('../../images/leadDetail.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={LeadSource}
                         onChangeText={e17 => setLeadSource(e17)}
                         placeholder="Lead Source" />
                 </View>
-
-                <View style={{ marginTop: '2%' }}>
-                    {/* {renderLabel()} */}
-
-                    <Dropdown
-                        style={styles.dropdown3}
-                        placeholderStyle={styles.placeholderStyle3}
-                        selectedTextStyle={styles.selectedTextStyle3}
-                        iconStyle={styles.iconStyle3}
-                        data={leadstatusData}
-                        search={true}
-                        searchPlaceholder='Search'
-                        maxHeight={160}
-                        labelField="name"
-                        valueField="id"
-                        placeholder='Lead Status'
-                        value={LeadStatus}
-                        onChange={item => {
-                            setLeadStatus(item.id);
-                        }}
-                        renderLeftIcon={() => (
-                            <View>
-                                <Image
-                                    style={[styles.icon, { height: 18, width: 25, marginRight: '-0.5%', marginTop: '5%' }]}
-                                    source={require('../../images/leadDetail.png')}
-                                />
-                            </View>
-                        )}
-                        renderRightIcon={() => (
-                            <View>
-                                {LeadStatus == null ?
-                                    <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
-                                    : null}
-                            </View>
-                        )}
-                    />
-                </View>
+                <Dropdown
+                    style={styles.dropdown3}
+                    placeholderStyle={styles.placeholderStyle3}
+                    selectedTextStyle={styles.selectedTextStyle3}
+                    iconStyle={styles.iconStyle3}
+                    data={leadstatusData}
+                    search={true}
+                    searchPlaceholder='Search'
+                    maxHeight={160}
+                    labelField="name"
+                    valueField="id"
+                    placeholder='Lead Status'
+                    value={LeadStatus}
+                    onChange={item => {
+                        setLeadStatus(item.id);
+                    }}
+                    renderLeftIcon={() => (
+                        <View>
+                            <Image
+                                style={[styles.icon, { height: height * 2.5 / 100, width: width * 7.2 / 100, marginRight: '-0.5%', }]}
+                                source={require('../../images/leadDetail.png')}
+                            />
+                        </View>
+                    )}
+                    renderRightIcon={() => (
+                        <View>
+                            {LeadStatus == null ?
+                                <Text style={{ fontSize: 15, marginTop: '-350%', color: 'red' }}>*</Text>
+                                : null}
+                        </View>
+                    )}
+                />
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 22, width: '5%', }]}
+                        style={styles.icon}
                         source={require('../../images/building.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={Industry}
                         onChangeText={e17 => setIndustry(e17)}
                         placeholder="Industry" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 23, width: 23, }]}
+                        style={[styles.icon, { marginVertical: '3.8%', width: width * 6 / 100 }]}
                         source={require('../../images/info.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={employee}
                         onChangeText={e18 => setemployee(e18)}
                         keyboardType='numeric'
                         placeholder="No. of Employee" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 23, width: 23, }]}
+                        style={[styles.icon, { marginVertical: '3.8%', width: width * 6 / 100 }]}
                         source={require('../../images/info.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={revenue}
                         keyboardType='decimal-pad'
                         onChangeText={e18 => setrevenue(e18)}
                         placeholder="Revenue" />
                 </View>
-
                 <View style={styles.inputFields}>
                     <Image
-                        style={[styles.icon, { height: 26, width: '5.5%', marginLeft: '2.5%' }]}
+                        style={[styles.icon, { width: width * 4.6 / 100, marginTop: '3.5%' }]}
                         source={require('../../images/list.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, marginRight: '3%' }}
                         value={description}
                         onChangeText={e19 => setdescription(e19)}
                         placeholder="Description" />
                 </View>
-
-                <View style={{ marginTop: '2%' }}>
-                    <Dropdown
-                        style={styles.dropdown3}
-                        placeholderStyle={styles.placeholderStyle3}
-                        selectedTextStyle={styles.selectedTextStyle3}
-                        iconStyle={styles.iconStyle3}
-                        data={campaignData}
-                        search={true}
-                        searchPlaceholder='Search'
-                        maxHeight={160}
-                        labelField="campaign_name"
-                        valueField="id"
-                        placeholder='Campaign'
-                        value={campaign}
-                        onChange={item => {
-                            setcampaign(item.id);
-                        }}
-                        renderLeftIcon={() => (
-                            <View>
-                                <Image
-                                    style={[styles.icon, { height: 26, width: 20 }]}
-                                    source={require('../../images/list.png')}
-                                />
-                            </View>
-                        )}
-                    />
-                </View>
+                <Dropdown
+                    style={styles.dropdown3}
+                    placeholderStyle={styles.placeholderStyle3}
+                    selectedTextStyle={styles.selectedTextStyle3}
+                    iconStyle={styles.iconStyle3}
+                    data={campaignData}
+                    search={true}
+                    searchPlaceholder='Search'
+                    maxHeight={160}
+                    labelField="campaign_name"
+                    valueField="id"
+                    placeholder='Campaign'
+                    value={campaign}
+                    onChange={item => {
+                        setcampaign(item.id);
+                    }}
+                    renderLeftIcon={() => (
+                        <View>
+                            <Image
+                                style={[styles.icon, { width: width * 4.6 / 100, marginTop: '3.5%' }]}
+                                source={require('../../images/list.png')}
+                            />
+                        </View>
+                    )}
+                />
                 {IsLodding == true ?
                     <ActivityIndicator size="small" color="#0000ff" />
                     :
-                    <View />}
-
-
+                    null}
                 <TouchableOpacity style={[styles.button, { marginHorizontal: '5%', marginBottom: '5%' }]}
-                    onPress={() => AddLeadFuction()}
-                >
+                    onPress={() => AddLeadFuction()}>
                     <Text style={[styles.textButton, { fontWeight: 'bold' }]}>Submit</Text>
                 </TouchableOpacity>
-            </ScrollView >
-            {/* <View style={styles.centeredView}> */}
-            <Modal
-                animationType="slide"
+            </ScrollView>
+            <Modal animationType="slide"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
-                }}
-            >
+                }}>
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <TouchableOpacity
-                            style={{ alignSelf: 'flex-end' }}
-                            onPress={() => addLeadSuccesfully()}
-                        >
+                        <TouchableOpacity style={{ alignSelf: 'flex-end' }}
+                            onPress={() => addLeadSuccesfully()} >
                             <Image
                                 style={{ margin: '5%', marginRight: '1%', marginTop: '3%', alignSelf: 'flex-end', height: 14, width: 14 }}
                                 source={require('../../images/crossImgR.png')}
@@ -745,8 +638,6 @@ export default function AddLead({ navigation, route }) {
                     </View>
                 </View>
             </Modal>
-            {/* </View> */}
         </View >
     );
 }
-

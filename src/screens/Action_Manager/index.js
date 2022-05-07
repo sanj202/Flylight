@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList, Platform,
-    Image, ToastAndroid, Modal, Pressable, Dimensions} from 'react-native';
+import {
+    ActivityIndicator, Text, View, TouchableOpacity, TextInput, FlatList, Platform,
+    Image, ToastAndroid, Modal, Pressable, Dimensions
+} from 'react-native';
 import { actionmanagerAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector } from 'react-redux';
 import { BottomSheet } from 'react-native-elements';
@@ -139,24 +141,28 @@ export default function Action_Manager({ navigation }) {
     }
     const AddActionFunction = (text) => {
         if (text == "Status") {
-            if (newStatus == '') {ToastAndroid.show(`Please Enter New ${text}`, ToastAndroid.SHORT);}
+            if (newStatus == '') { ToastAndroid.show(`Please Enter New ${text}`, ToastAndroid.SHORT); }
             else {
-                setIsLodding({...IsLodding,addStausLodding: true})
-                const data = { uid: loginData.data.uid,
+                setIsLodding({ ...IsLodding, addStausLodding: true })
+                const data = {
+                    uid: loginData.data.uid,
                     profile_id: loginData.data.cProfile.toString(),
                     status: newStatus,
-                    org_uid: loginData.data.org_uid}
+                    org_uid: loginData.data.org_uid
+                }
                 dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
             }
         }
         else {
-            if (newAction == '') {ToastAndroid.show(`Please Enter New ${text}`, ToastAndroid.SHORT);}
+            if (newAction == '') { ToastAndroid.show(`Please Enter New ${text}`, ToastAndroid.SHORT); }
             else {
-                setIsLodding({...IsLodding,addActionLodding: true})
-                const data = {uid: loginData.data.uid,
+                setIsLodding({ ...IsLodding, addActionLodding: true })
+                const data = {
+                    uid: loginData.data.uid,
                     profile_id: loginData.data.cProfile.toString(),
                     action: newAction,
-                    org_uid: loginData.data.org_uid}
+                    org_uid: loginData.data.org_uid
+                }
                 dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token,));
             }
         }
@@ -170,21 +176,25 @@ export default function Action_Manager({ navigation }) {
     const EditData = () => {
         setIsVisible(!isVisible)
         if (type == "Action") {
-            setIsLodding({...IsLodding,editDeteteActionLodding: true})
-            const data = {uid: loginData.data.uid,
+            setIsLodding({ ...IsLodding, editDeteteActionLodding: true })
+            const data = {
+                uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 action: EditingValue,
                 org_uid: loginData.data.org_uid,
-                action_id: EditingId}
+                action_id: EditingId
+            }
             dispatch(actionmanagerAction.add_EditAction(data, loginData.data.token));
         }
         else {
-            setIsLodding({...IsLodding,editDeteteStatusLodding: true})
-            const data = {uid: loginData.data.uid,
+            setIsLodding({ ...IsLodding, editDeteteStatusLodding: true })
+            const data = {
+                uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 status: EditingValue,
                 org_uid: loginData.data.org_uid,
-                status_id: EditingId}
+                status_id: EditingId
+            }
             dispatch(actionmanagerAction.add_EditStatus(data, loginData.data.token));
         }
     }
@@ -204,21 +214,25 @@ export default function Action_Manager({ navigation }) {
     const deleteData = () => {
         // setIsLoddingNew(true)
         if (tempType == "Action") {
-            setIsLodding({...IsLodding,editDeteteActionLodding: true})
+            setIsLodding({ ...IsLodding, editDeteteActionLodding: true })
             setaskDelete(!askDelete)
-            const data = { uid: loginData.data.uid,
+            const data = {
+                uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
-                action_id: tempId }
+                action_id: tempId
+            }
             dispatch(actionmanagerAction.delete_Action(data, loginData.data.token));
         }
         else if (tempType == "status") {
-            setIsLodding({...IsLodding,editDeteteStatusLodding: true})
+            setIsLodding({ ...IsLodding, editDeteteStatusLodding: true })
             setaskDelete(!askDelete)
-            const data = { uid: loginData.data.uid,
+            const data = {
+                uid: loginData.data.uid,
                 profile_id: loginData.data.cProfile.toString(),
                 org_uid: loginData.data.org_uid,
-                status_id: tempId}
+                status_id: tempId
+            }
             dispatch(actionmanagerAction.delete_Status(data, loginData.data.token));
         }
     }
@@ -228,35 +242,35 @@ export default function Action_Manager({ navigation }) {
         Get_ActionStatus()
     }
     const StatusView = ({ item }) => {
-        return ( <View style={[styles.listData, { marginTop: '1%', padding: '3%' }]}>
-                <Text style={{ marginTop: '2%', fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 13 }}> {item.status} </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity onPress={() => EditDataFunction({ text: 'Status', Id: item.id, status: item.status })}>
-                        <Image style={{ height: 25, width: 25, marginTop: '8%', marginRight: '3%' }}
-                            source={require('../../images/editCall.png')} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => CheckDeleteFunction({ type: 'status', id: item.id })}>
-                        <Image style={{ height: 25, width: 25, marginTop: '8%', }}
-                            source={require('../../images/deleteCall.png')} />
-                    </TouchableOpacity>
-                </View>
-            </View> )
+        return (<View style={[styles.listData, { marginTop: '1%', padding: '3%' }]}>
+            <Text style={{ marginTop: '2%', fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 13 }}> {item.status} </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => EditDataFunction({ text: 'Status', Id: item.id, status: item.status })}>
+                    <Image style={{ height: 25, width: 25, marginTop: '8%', marginRight: '3%' }}
+                        source={require('../../images/editCall.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => CheckDeleteFunction({ type: 'status', id: item.id })}>
+                    <Image style={{ height: 25, width: 25, marginTop: '8%', }}
+                        source={require('../../images/deleteCall.png')} />
+                </TouchableOpacity>
+            </View>
+        </View>)
     }
 
     const ActionView = ({ item }) => {
-        return ( <View style={[styles.listData, { marginTop: '1%', padding: '3%' }]}>
-                <Text style={{ marginTop: '2%', fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 13 }}> {item.action} </Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity onPress={() => EditDataFunction({ text: 'Action', Id: item.id, status: item.action })}>
-                        <Image style={{ height: 25, width: 25, marginTop: '8%', marginRight: '3%' }}
-                            source={require('../../images/editCall.png')} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => CheckDeleteFunction({ type: 'Action', id: item.id })}>
-                        <Image style={{ height: 25, width: 25, marginTop: '8%', }}
-                            source={require('../../images/deleteCall.png')}/>
-                    </TouchableOpacity>
-                </View>
-            </View>)
+        return (<View style={[styles.listData, { marginTop: '1%', padding: '3%' }]}>
+            <Text style={{ marginTop: '2%', fontFamily: 'Roboto', color: '#4A4A4A', fontSize: 13 }}> {item.action} </Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <TouchableOpacity onPress={() => EditDataFunction({ text: 'Action', Id: item.id, status: item.action })}>
+                    <Image style={{ height: 25, width: 25, marginTop: '8%', marginRight: '3%' }}
+                        source={require('../../images/editCall.png')} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => CheckDeleteFunction({ type: 'Action', id: item.id })}>
+                    <Image style={{ height: 25, width: 25, marginTop: '8%', }}
+                        source={require('../../images/deleteCall.png')} />
+                </TouchableOpacity>
+            </View>
+        </View>)
     }
     return (
         <View style={{ flex: 1 }}>
@@ -289,10 +303,55 @@ export default function Action_Manager({ navigation }) {
                     <ActivityIndicator size="small" color="#0000ff" />
                     :
                     <View style={{ flex: 1, marginHorizontal: '1%' }}>
-                        { isService == "Status" ?
+                        {isService == "Status" ?
+                            <View style={{ flex: 1 }}>
+                                <View style={[styles.listData1]}>
+                                    <Text style={styles.title}>Add Status</Text>
+                                    <View style={styles.listData}>
+                                        <Image style={Platform.OS == 'ios' ?
+                                            [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
+                                            :
+                                            [styles.icon, { height: 24, width: 26, marginHorizontal: '2%', marginTop: '4%' }]}
+                                            source={require('../../images/statusnet.png')}
+                                        />
+                                        <TextInput
+                                            style={{ flex: 1 }}
+                                            value={newStatus}
+                                            onChangeText={e2 => setnewStatus(e2)}
+                                            placeholder="Enter Status"
+                                        />
+                                    </View>
+                                    {IsLodding.addStausLodding == true ?
+                                        <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
+                                        :
+                                        <View style={{ height: '8%' }} />}
+                                </View>
+                                <TouchableOpacity onPress={() => AddActionFunction("Status")} style={styles.buttonClose3} >
+                                    <Text style={styles.textStyle3}>Save Status</Text>
+                                </TouchableOpacity>
+                                <View style={[styles.listData1, { flex: 1 }]}>
+                                    <Text style={styles.title}>Status</Text>
+                                    {IsLodding.editDeteteStatusLodding == true ?
+                                        <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
+                                        :
+                                        <FlatList
+                                            data={allStatus}
+                                            keyExtractor={(item, index) => index.toString()}
+                                            renderItem={StatusView}
+                                            ListEmptyComponent={() => (!allStatus.length ?
+                                                <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
+                                                : null)}
+                                            refreshing={refreshing}
+                                            onRefresh={handleRefresh}
+                                        />
+                                    }
+                                </View>
+                            </View>
+                            :
+                            isService == "Action" ?
                                 <View style={{ flex: 1 }}>
                                     <View style={[styles.listData1]}>
-                                        <Text style={styles.title}>Add Status</Text>
+                                        <Text style={styles.title}>Add Action</Text>
                                         <View style={styles.listData}>
                                             <Image style={Platform.OS == 'ios' ?
                                                 [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
@@ -302,103 +361,73 @@ export default function Action_Manager({ navigation }) {
                                             />
                                             <TextInput
                                                 style={{ flex: 1 }}
-                                                value={newStatus}
-                                                onChangeText={e2 => setnewStatus(e2)}
-                                                placeholder="Enter Status"
+                                                value={newAction}
+                                                onChangeText={e => setnewAction(e)}
+                                                placeholder="Enter Action"
                                             />
                                         </View>
-                                        {IsLodding.addStausLodding == true ?
+                                        {IsLodding.addActionLodding == true ?
                                             <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
                                             :
                                             <View style={{ height: '8%' }} />}
                                     </View>
-                                    <TouchableOpacity onPress={() => AddActionFunction("Status")} style={styles.buttonClose3} >
+                                    <TouchableOpacity onPress={() => AddActionFunction("Action")} style={styles.buttonClose3} >
                                         <Text style={styles.textStyle3}>Save Status</Text>
                                     </TouchableOpacity>
+
                                     <View style={[styles.listData1, { flex: 1 }]}>
-                                        <Text style={styles.title}>Status</Text>
-                                        {IsLodding.editDeteteStatusLodding == true ?
+                                        <Text style={styles.title}>Actions</Text>
+                                        {IsLodding.editDeteteActionLodding == true ?
                                             <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
                                             :
                                             <FlatList
-                                                data={allStatus}
+                                                data={allAction}
                                                 keyExtractor={(item, index) => index.toString()}
-                                                renderItem={StatusView}
-                                                ListEmptyComponent={() => (!allStatus.length ?
+                                                renderItem={ActionView}
+                                                ListEmptyComponent={() => (!allAction.length ?
                                                     <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
                                                     : null)}
                                                 refreshing={refreshing}
                                                 onRefresh={handleRefresh}
-                                            />
-                                        }
+                                            />}
                                     </View>
                                 </View>
                                 :
-                                isService == "Action" ?
-                                    <View style={{ flex: 1 }}>
-                                        <View style={[styles.listData1]}>
-                                            <Text style={styles.title}>Add Action</Text>
-                                            <View style={styles.listData}>
-                                                <Image style={Platform.OS == 'ios' ?
-                                                    [styles.icon, { height: 24, width: 26, marginHorizontal: '2%' }]
-                                                    :
-                                                    [styles.icon, { height: 24, width: 26, marginHorizontal: '2%', marginTop: '4%' }]}
-                                                    source={require('../../images/statusnet.png')}
-                                                />
-                                                <TextInput
-                                                    style={{ flex: 1 }}
-                                                    value={newAction}
-                                                    onChangeText={e => setnewAction(e)}
-                                                    placeholder="Enter Action"
-                                                />
-                                            </View>
-                                            {IsLodding.addActionLodding == true ?
-                                                <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
-                                                :
-                                                <View style={{ height: '8%' }} />}
-                                        </View>
-                                        <TouchableOpacity onPress={() => AddActionFunction("Action")} style={styles.buttonClose3} >
-                                            <Text style={styles.textStyle3}>Save Status</Text>
-                                        </TouchableOpacity>
-
-                                        <View style={[styles.listData1, { flex: 1 }]}>
-                                            <Text style={styles.title}>Actions</Text>
-                                            {IsLodding.editDeteteActionLodding == true ?
-                                                <ActivityIndicator size="small" color="#0000ff" style={{ marginVertical: '5%' }} />
-                                                :
-                                                <FlatList
-                                                    data={allAction}
-                                                    keyExtractor={(item, index) => index.toString()}
-                                                    renderItem={ActionView}
-                                                    ListEmptyComponent={() => (!allAction.length ?
-                                                        <Text style={{ fontSize: 20, textAlign: 'center', marginTop: '3%' }}>Data Not Found</Text>
-                                                        : null)}
-                                                    refreshing={refreshing}
-                                                    onRefresh={handleRefresh}
-                                                />}
-                                        </View>
-                                    </View>
-                                    :
-                                    null }
-                    </View> }
+                                null}
+                    </View>}
             </View>
-            <BottomSheet modalProps={{ animationType: 'fade', hardwareAccelerated: true,
-                    onRequestClose: () => { setIsVisible(false); }}} isVisible={isVisible}>
-                <View style={{ backgroundColor: '#fff', padding: '5%', borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
-                    <Text style={styles.modalText3}>Edit {isService} Manager</Text>
-                    <View style={styles.listDataModal}>
-                        <Image style={[styles.icon, { height: 24, width: 26, marginTop: '4%', marginHorizontal: '1.5%' }]}
+            <BottomSheet modalProps={{
+                animationType: 'fade', hardwareAccelerated: true,
+                onRequestClose: () => { setIsVisible(false); }}} isVisible={isVisible}>
+                <View style={{
+                    flex: 1, backgroundColor: '#fff',
+                    padding: '3%', paddingTop: '5%',
+                    borderTopLeftRadius: 20, borderTopRightRadius: 20
+                }}>
+                    <View style={{ flex: 1 }}>
+                        <View style={{ borderBottomWidth: 1 }}>
+                            <Text style={styles.askTitleDS}>Edit {isService} Manager</Text>
+                            <TouchableOpacity style={styles.askTitleD}
+                                onPress={() => setIsVisible(false)}>
+                                <Image style={{ height: 14, width: 14, }}
+                                    source={require('../../images/cross_blackIos.png')}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.listDataModal}>
+                        <Image style={[styles.icon, { height: 24, width: 26,marginHorizontal:'2%' }]}
                             source={require('../../images/statusnet.png')}/>
                         <TextInput
-                            style={{ flex: 1 }}
+                            style={{ flex: 1 ,marginRight:'3%'}}
                             value={EditingValue}
                             onChangeText={e45 => setEditingValue(e45)}
                             placeholder="Enter new Value"
                         />
                     </View>
-                    <Pressable style={[styles.buttonClose3, { marginTop: '5%' }]} onPress={() => EditData()}>
+                    <Pressable style={[styles.buttonClose3,{marginTop:'1%'}]} onPress={() => EditData()}>
                         <Text style={[styles.textStyle3]}>Update</Text>
                     </Pressable>
+                    </View>
                 </View>
             </BottomSheet>
             <Modal animationType="slide" transparent={true} visible={askDelete}

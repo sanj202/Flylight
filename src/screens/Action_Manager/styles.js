@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         marginHorizontal: '15%',
-        marginTop: '-9%'
+        marginTop: '-6%'
     },
     textStyle3: {
         color: "#FFFFFF",
@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: '10%'
     },
     listDataModal: {
-        padding: 1,
+        alignItems:'center',
         borderWidth: 1,
         borderRadius: 10,
-        borderColor: '#DBDBDB',
+        borderColor: '#000000',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        marginVertical:'3%'
     },
     modalText3: {
         marginBottom: 15,
@@ -105,7 +105,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 20,
-    }
+    },
+    askTitleD: {
+        marginTop: '-8%',
+        alignSelf: 'flex-end',
+        padding: 10,
+    },
+    askTitleDS: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#46484B',
+        // paddingVertical: '3%'
+    },
 });
 
 export default styles

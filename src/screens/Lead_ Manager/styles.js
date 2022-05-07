@@ -178,11 +178,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   addNewBtn: {
-    borderColor: '#fff',
+    borderColor: '#3373F3',
     borderWidth: 1,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    backgroundColor: '#2296E4',
+    // backgroundColor: '#3373F3',
     borderRadius: 15
   },
   radio: {

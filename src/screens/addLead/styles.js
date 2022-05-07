@@ -1,28 +1,56 @@
 
-import { StyleSheet } from 'react-native';
-import { transparent } from 'react-native-paper/lib/typescript/styles/colors';
+import { StyleSheet ,Dimensions} from 'react-native';
 
-
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
-    headerView: {
-        backgroundColor: '#3373F3',
-        height: '10%',
-        borderBottomLeftRadius: 15,
-        borderBottomRightRadius: 15,
-    },
     inputFields: {
         flexDirection: 'row',
         borderWidth: 1,
         borderColor: '#000000',
         borderRadius: 10,
-        marginTop: '3%',
+        marginVertical: '1%',
     },
     icon: {
+        height: height*3/100,
+        width:  width*5.5/100,
+        marginHorizontal:'2%',
+        marginVertical:'3%'
+    },
+    dropdown3: {
+        height: height*6.7/100,
+        borderColor: '#000000',
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        marginVertical: '1%',
+    },
+    icon3: {
+        marginRight: 5,
+    },
+    label3: {
+        // position: 'absolute',
+        backgroundColor: 'white',
+        left: 22,
+        top: 8,
+        zIndex: 999,
+        paddingHorizontal: 8,
+        fontSize: 14,
+    },
+    placeholderStyle3: {
+        fontSize: 14,
+        color: '#000000'
+    },
+    selectedTextStyle3: {
+        fontSize: 14,
+        color: '#000000'
+    },
+    iconStyle3: {
+        width: 20,
         height: 20,
-        width: 18,
-        marginRight: '2%',
-        marginTop: '3%',
-        marginLeft: '2%'
+    },
+    inputSearchStyle3: {
+        height: 40,
+        fontSize: 16,
     },
     button: {
         backgroundColor: '#3373F3',
@@ -36,6 +64,23 @@ const styles = StyleSheet.create({
         color: 'white',
         textAlign: 'center',
     },
+
+
+
+
+
+
+
+
+
+    headerView: {
+        backgroundColor: '#3373F3',
+        height: '10%',
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
+    },
+
+
     image2: {
         width: 28,
         height: 28
@@ -48,12 +93,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         // alignItems: "center",
         // marginTop: 22
-        margin:"5%"
+        margin: "5%"
     },
 
     modalView: {
         margin: 20,
-        
+
         backgroundColor: "#FFFFFF",
         borderRadius: 20,
         padding: 15,
@@ -105,41 +150,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 16,
     },
-    dropdown3: {
-        height: 45,
-        borderColor: '#000000',
-        borderWidth: 1,
-        borderRadius: 10,
-        paddingHorizontal: 8,
-    },
-    icon3: {
-        marginRight: 5,
-    },
-    label3: {
-        // position: 'absolute',
-        backgroundColor: 'white',
-        left: 22,
-        top: 8,
-        zIndex: 999,
-        paddingHorizontal: 8,
-        fontSize: 14,
-    },
-    placeholderStyle3: {
-        fontSize: 16,
-        color: '#B9BAC8'
-    },
-    selectedTextStyle3: {
-        fontSize: 16,
-        color: '#000000'
-    },
-    iconStyle3: {
-        width: 20,
-        height: 20,
-    },
-    inputSearchStyle3: {
-        height: 40,
-        fontSize: 16,
-    },
+    
     modalText3: {
         marginBottom: 15,
         fontSize: 21,

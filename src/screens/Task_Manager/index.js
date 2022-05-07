@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image, ActivityIndicator, Modal, Pressable } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, ToastAndroid, FlatList, Image, Linking, ActivityIndicator, Modal, Pressable } from 'react-native';
 import { BottomSheet } from 'react-native-elements';
 import moment from 'moment';
 import Header from '../../component/header/index'
@@ -10,6 +10,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { Dropdown } from 'react-native-element-dropdown';
 import navigationStrings from '../../constant/navigationStrings';
 import { useIsFocused } from '@react-navigation/native';
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+
 export default function Task_Manager({ navigation, route }) {
     const [StatusList, setStatusList] = useState([]);
     const [isService, setisService] = useState(route.params ? route.params.type : 'All');
@@ -216,7 +218,7 @@ export default function Task_Manager({ navigation, route }) {
     const DeleteSuccessFully = () => {
         dispatch(taskmanagerAction.clearResponse());
         initialstate()
-        Get_Data(0)
+        checkValue(isService)
         setModalVisible2(!modalVisible2)
     }
     const onChangeFrom = (event, selectedDate) => {
@@ -265,129 +267,119 @@ export default function Task_Manager({ navigation, route }) {
     const [detail, setDetail] = useState(false)
     const [detailObject, setdetailObject] = useState({
         name: '',
+        mobile: '',
+        email: '',
         title: '',
         taskFor: '',
         reletedTo: '',
         status: '',
         priority: '',
         DueData: '',
+        description: ''
     })
     const ShowDetail = (item) => {
         setDetail(true)
         setdetailObject({
             name: item.profile.user.name,
+            mobile: item.profile.user.phone,
+            email: item.profile.user.email,
             title: item.title,
             taskFor: item.task_for,
             reletedTo: item.related_to,
             status: item.taskstatus.status,
             priority: item.taskpriority.priority,
-            DueData: item.due_date
+            DueData: item.due_date,
+            description: item.description
         })
     }
     const HideDetail = (item) => {
         setDetail(false)
         setdetailObject({
             name: '',
+            mobile: '',
+            email: '',
             title: '',
             taskFor: '',
             reletedTo: '',
             status: '',
             priority: '',
             DueData: '',
+            description: ''
         })
     }
     const AllView = ({ item }) => {
         return (
-                <View style={styles.listData}>
-                    <View style={{ backgroundColor: '', justifyContent: 'center', }}>
-                        <Image style={{ height: 48, width: 48, }}source={require('../../images/profileCall.png')} />
+            <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#e9ebf2', paddingHorizontal: '2%', borderRadius: 10 }}>
+                <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderColor: '#B5B8C0', paddingVertical: '2%' }}>
+                    <View style={{ justifyContent: 'center', }}>
+                        <Image style={{ height: 48, width: 48, }}
+                            source={require('../../images/profileCall.png')}
+                        />
                     </View>
-                    <View style={{ marginLeft: '2%', flex: 1, backgroundColor: '', }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F',fontFamily: 'Roboto'}}>{item.profile ? item.profile.user.name : ''}</Text>
-                        <View style={{ flexDirection: 'row', }}>
-                            <View style={{ width: '45%', backgroundColor: '' }}>
-                                <Text numberOfLines={1} style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F', flexShrink: 1 }}>{item.title ? item.title : "not available"}</Text>
-                            </View>
-                            <View style={{
-                                    backgroundColor: '#F69708', borderRadius: 15,
-                                    paddingHorizontal: 8, marginLeft: '2%',
-                                    borderWidth: 1, borderColor: '#F69708',
-                                }}>
-                                <Text style={{ color: '#fff', fontSize: 12 }}>{item.task_for}</Text>
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'column', }}>
-                            <Text style={{ color: 'black', fontFamily: 'Roboto', fontSize: 12, color: '#0F0F0F',  flexShrink: 1 }}> {item.subject}</Text>
-                        </View>
+                    <View style={{ justifyContent: 'center', flex: 1, marginHorizontal: '3%', }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.profile.user.name.charAt(0).toUpperCase() + item.profile.user.name.slice(1)}</Text>
+                        <Text style={{ fontSize: 15, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.title}</Text>
+                        <Text numberOfLines={1}>{item.description}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: '10%' }}>
-                        {/* {item.status == '3' ?
-                            < TouchableOpacity >
-                                <Image style={{ height: 22, width: 22, marginRight: '2%' }}
-                                    source={require('../../images/okCall.png')}
-                                />
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity>
-                                <Image style={{ height: 22, width: 22, marginRight: '2%' }}
-                                    source={require('../../images/to-do.png')}
-                                />
-                            </TouchableOpacity>
-                        } */}
-                        {editPermission ?
-                            <TouchableOpacity onPress={() => CheckEditTask(item)}>
-                                <Image style={{ height: 22, width: 22, marginRight: '2%' }}
-                                    source={require('../../images/editCall.png')} />
-                            </TouchableOpacity> : null}
-                        {deletePermission ? <TouchableOpacity onPress={() => CheckDeleteFunction({ type: "Task", id: item.id })}>
-                            <Image style={{ height: 22, width: 22, }}
-                                source={require('../../images/deleteCall.png')} />
-                        </TouchableOpacity> : null}
-                    </View>
-                    <View style={{ marginLeft: '2%', backgroundColor: '', marginTop: '1%' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Image style={{ height: 10, width: 10, marginRight: '2%' }}
-                                source={require('../../images/material-call.png')}
-                            />
-                            <Text max style={{ color: 'black', fontSize: 10 }}>{item.phone ? item.phone : ' 8596547895'}</Text>
-                        </View>
-                        {/* <Text style={{
-                            marginTop: '30%', textAlign: 'right',
-                            color: 'black', fontSize: 11
-                        }}>{moment(item.updated_at).format('MM/DD/YYYY')} </Text> */}
-                        <TouchableOpacity
-                            style={{ backgroundColor: '#3373F3', borderRadius: 20, marginTop: '30%', }}
-                            onPress={() => ShowDetail(item)}>
-                            <Text style={{ textAlign: 'center', color: '#fff', fontSize: 11, marginVertical: '5%' }}>More...</Text>
-                        </TouchableOpacity>
+                    <View style={{ justifyContent: 'center', }}>
+                        <Text style={{
+                            backgroundColor: '#7a9bf5', color: '#0e4af0', borderRadius: 5,
+                            paddingHorizontal: '3%', paddingVertical: '1%', fontSize: 15, fontWeight: 'bold'
+                        }}>{item.task_for.charAt(0).toUpperCase() + item.task_for.slice(1)}</Text>
                     </View>
                 </View>
-        )
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                    {editPermission ? <TouchableOpacity
+                        style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+                            width: '33%', borderRightWidth: 1, borderColor: '#B5B8C0', paddingVertical: '3%'}}
+                        onPress={() => CheckEditTask(item)}>
+                        <Image style={{ height: 16, width: 18, }}
+                            source={require('../../images/newEdit.png')} />
+                        <Text style={{ marginHorizontal: '3%', fontSize: 14 }}>Edit Task</Text>
+                    </TouchableOpacity> : null}
+                    {deletePermission ? <TouchableOpacity
+                        style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+                            width: '34%', borderRightWidth: 1, borderColor: '#B5B8C0', paddingVertical: '3%'}}
+                        onPress={() => CheckDeleteFunction({ type: "Task", id: item.id })}>
+                        <Image style={{ height: 16, width: 16, }}
+                            source={require('../../images/deleteCall.png')} />
+                        <Text style={{ marginHorizontal: '3%', fontSize: 14 }}>Delete Task</Text>
+                    </TouchableOpacity> : null}
+                    <TouchableOpacity
+                        onPress={() => ShowDetail(item)}
+                        style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+                            width: '33%', paddingVertical: '4%'}}>
+                        <Text style={{ marginHorizontal: '3%', fontSize: 14 }}>More Detail</Text>
+                        <Image style={{ height: 13, width: 9, }}
+                            source={require('../../images/newDetail.png')} />
+                    </TouchableOpacity>
+                </View>
+            </View>)
     }
     return (
         <View style={{ flex: 1 }}>
             <Header onPressLeft={() => { navigation.openDrawer() }}
                 title='Task Manager'
-                onPressRight={() => { navigation.navigate('Notification') }}/>
+                onPressRight={() => { navigation.navigate('Notification') }} />
             <View style={{
-                    flexDirection: 'row',
-                    marginHorizontal: '5%',
-                    marginTop: '-5%',
-                    backgroundColor: '#fff',
-                    borderRadius: 20,
-                    justifyContent: 'space-between'
-                }}>
+                flexDirection: 'row',
+                marginHorizontal: '5%',
+                marginTop: '-5%',
+                backgroundColor: '#fff',
+                borderRadius: 20,
+                justifyContent: 'space-between'
+            }}>
                 {isService == 'All' ?
-                    <TouchableOpacity style={[styles.headerBtn,{ backgroundColor: '#4F46BA' }]} onPress={() => checkValue("All")}>
+                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]} onPress={() => checkValue("All")}>
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>All</Text>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity style={[styles.headerBtn]}onPress={() => checkValue("All")}>
+                    <TouchableOpacity style={[styles.headerBtn]} onPress={() => checkValue("All")}>
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>All</Text>
                     </TouchableOpacity>
                 }
                 {isService == 'To-Do' ?
-                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}onPress={() => checkValue("To-Do")}>
+                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]} onPress={() => checkValue("To-Do")}>
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>To-Do</Text>
                     </TouchableOpacity>
                     :
@@ -396,11 +388,11 @@ export default function Task_Manager({ navigation, route }) {
                     </TouchableOpacity>
                 }
                 {isService == 'Done' ?
-                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]}onPress={() => checkValue("Done")}>
+                    <TouchableOpacity style={[styles.headerBtn, { backgroundColor: '#4F46BA' }]} onPress={() => checkValue("Done")}>
                         <Text style={{ color: '#FFF', textAlign: 'center', padding: 10, }}>Done</Text>
                     </TouchableOpacity>
                     :
-                    <TouchableOpacity style={[styles.headerBtn]}onPress={() => checkValue("Done")}>
+                    <TouchableOpacity style={[styles.headerBtn]} onPress={() => checkValue("Done")}>
                         <Text style={{ textAlign: 'center', color: 'black', padding: 10, }}>Done</Text>
                     </TouchableOpacity>
                 }
@@ -413,16 +405,16 @@ export default function Task_Manager({ navigation, route }) {
                         {createPermission ? <TouchableOpacity
                             onPress={() => navigation.navigate(navigationStrings.AddTask)}
                             style={{
-                                borderColor: '#fff',
+                                borderColor: '#3373F3',
                                 borderWidth: 1,
-                                paddingHorizontal: 10,
-                                paddingVertical: 2,
+                                paddingHorizontal: '5%',
+                                paddingVertical: '1%',
                                 alignSelf: 'flex-end',
                                 marginHorizontal: '5%',
-                                backgroundColor: '#2296E4',
+                                backgroundColor: '#edeef5',
                                 borderRadius: 15
                             }}>
-                            <Text style={{ color: "#fff", fontSize: 13 }}>
+                            <Text style={{ color: "#3373F3", fontSize: 13 }}>
                                 +Add
                             </Text>
                         </TouchableOpacity> : <TouchableOpacity
@@ -456,11 +448,26 @@ export default function Task_Manager({ navigation, route }) {
                     </View>
                 }
             </View>
-            <BottomSheet modalProps={{ animationType: 'fade', hardwareAccelerated: true, onRequestClose: () => { setIsVisible(false); }}} isVisible={isVisible}>
-                <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Edit Task Manager</Text>
+            <BottomSheet modalProps={{
+                animationType: 'fade',
+                hardwareAccelerated: true,
+                onRequestClose: () => { setIsVisible(false); }
+            }}
+                isVisible={isVisible}>
+                <View style={{ backgroundColor: '#fff', paddingHorizontal: '3%', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                    <View style={{ borderBottomWidth: 1, flexDirection: 'row', marginVertical: '2%', justifyContent: 'space-between', }}>
+                        <Text style={styles.modalTextLL}>Edit Task</Text>
+                        <Pressable style={styles.askTitleEdit}
+                            onPress={() => setIsVisible(false)}>
+                            <Image style={{ height: 14, width: 14, }}
+                                source={require('../../images/cross_blackIos.png')}
+                            />
+                        </Pressable>
+                    </View>
                     <View style={styles.inputFields}>
-                        <Image style={styles.icon} source={require('../../images/user.png')}/>
+                        <Image style={styles.icon}
+                            source={require('../../images/user.png')}
+                        />
                         <TextInput
                             placeholder="Meeting with Mr.George"
                             placeholderTextColor='#4A4A4A'
@@ -468,13 +475,16 @@ export default function Task_Manager({ navigation, route }) {
                             onChangeText={e19 => settitle(e19)}
                             style={{ paddingRight: '20%', flex: 1, }}
                         />
+                        {!title.length ?
+                            <Text style={{ fontSize: 15, marginRight: '2%', color: 'red' }}>*</Text>
+                            : null}
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Pressable style={{ marginLeft: '3%' }}
+                        <Pressable
                         // onPress={showDatepicker}
                         >
                             <View style={styles.pickers}>
-                                <Image  style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
+                                <Image style={{ height: 17.50, width: 15.91, marginTop: '2%', marginRight: '5%' }}
                                     source={require('../../images/DOB.png')} />
                                 {show && (
                                     <DateTimePicker
@@ -487,14 +497,14 @@ export default function Task_Manager({ navigation, route }) {
                                         onChange={onChangeFrom}
                                     />)}
                                 {Platform.OS == 'ios' ? <View>
-                                    {text == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', }}>From</Text>:null}
-                                </View> :<View>
-                                        {text == true ?
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', paddingRight: '15%' }}>From</Text>
-                                            :
-                                            <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('MM/DD/YYYY')}</Text>
-                                        }
-                                    </View>
+                                    {text == true ? <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', }}>From</Text> : null}
+                                </View> : <View>
+                                    {text == true ?
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000', paddingRight: '15%' }}>From</Text>
+                                        :
+                                        <Text style={{ marginTop: '5%', fontSize: 12, color: '#000000' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                    }
+                                </View>
                                 }
                             </View>
                         </Pressable>
@@ -520,6 +530,62 @@ export default function Task_Manager({ navigation, route }) {
                     </Pressable>
                 </View>
             </BottomSheet>
+
+            <BottomSheet modalProps={{
+                animationType: 'fade', hardwareAccelerated: true,
+                onRequestClose: () => { HideDetail() }
+            }} isVisible={detail}>
+                <View style={{ backgroundColor: '#fff', paddingHorizontal: '3%', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+                    <View style={{ borderBottomWidth: 1, flexDirection: 'row', marginVertical: '2%', justifyContent: 'space-between', }}>
+                        <Text style={styles.modalTextLL}>Task Detail</Text>
+                        <Pressable style={styles.askTitleEdit}
+                            onPress={() => HideDetail()}>
+                            <Image style={{ height: 14, width: 14, }}
+                                source={require('../../images/cross_blackIos.png')}
+                            />
+                        </Pressable>
+                    </View>
+                    <View style={{ flexDirection: 'row', marginVertical: '2%', flex: 1 }}>
+                        <View style={{ justifyContent: 'center' }}>
+                            <Avatar.Image size={50}
+                                style={{ backgroundColor: '#C6CCD1' }}
+                                source={require('../../images/profileCall.png')} />
+                        </View>
+                        <View style={{ justifyContent: 'center', marginHorizontal: '2%', flex: 1 }}>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', fontSize: 15, color: '#000000' }]}>{detailObject.name}</Text>
+                            {detailObject.mobile ? <TouchableOpacity >
+                                <Text style={[styles.DetailCampTitle, { color: '#000000' }]}>{detailObject.mobile}</Text>
+                            </TouchableOpacity> : null}
+                            {detailObject.email ? <TouchableOpacity onPress={() => Linking.openURL(`mailto:${detailObject.email}`)}>
+                                <Text style={[styles.DetailCampTitle, { color: '#000000' }]}>{detailObject.email}</Text>
+                            </TouchableOpacity> : null}
+                        </View>
+                        <View style={{ marginRight: '2%', justifyContent: 'center' }}>
+                            {detailObject.status === 'Completed' ?
+                                <Text style={{ backgroundColor: 'green', color: '#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
+                                    {detailObject.status.charAt(0).toUpperCase() + detailObject.status.slice(1)}</Text>
+                                :
+                                <Text style={{ backgroundColor: 'red', color: '#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
+                                    {detailObject.status.charAt(0).toUpperCase() + detailObject.status.slice(1)}</Text>}
+                        </View>
+                    </View>
+                    {detailObject.title ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Title</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.title ? detailObject.title : null}</Text>
+                    {detailObject.taskFor ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Task For</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.taskFor ? detailObject.taskFor : null}</Text>
+                    {detailObject.reletedTo ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Related To</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.reletedTo ? detailObject.reletedTo : null}</Text>
+                    {detailObject.DueData ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Due Data</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.reletedTo ? detailObject.DueData : null}</Text>
+                    {detailObject.status ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Status</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.status ? detailObject.status : null}</Text>
+                    {detailObject.priority ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Priority</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.priority ? detailObject.priority : null}</Text>
+                    {detailObject.description ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Description</Text> : null}
+                    <Text style={styles.DetailCampTitle}>{detailObject.priority ? detailObject.description : null}</Text>
+                </View>
+            </BottomSheet>
+
             <Modal animationType="slide" transparent={true} visible={modalVisible2}
                 onRequestClose={() => { setModalVisible2(!modalVisible2); }} >
                 <View style={styles.centeredView3}>
@@ -529,7 +595,7 @@ export default function Task_Manager({ navigation, route }) {
                                 source={require('../../images/crossImgR.png')} />
                         </TouchableOpacity>
                         <Image source={require('../../images/checkmark-circle.png')}
-                            style={{ width: 38.75, height: 38.75 }}/>
+                            style={{ width: 38.75, height: 38.75 }} />
                         <Text style={[styles.modalText3, { fontWeight: 'bold' }]} >Successfully{'\n'}Deleted</Text>
                         <Pressable style={[styles.button3, styles.buttonClose3, { paddingLeft: '10%', paddingRight: '10%' }]} onPress={() => DeleteSuccessFully()}>
                             <Text style={styles.textStyle3}>OK</Text>
@@ -542,7 +608,7 @@ export default function Task_Manager({ navigation, route }) {
                     <Text style={styles.askTitle}> Are you sure ?</Text>
                     <Text style={styles.askSubtitle}> you want to delete this{'\n'} Task ?</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <Pressable style={[styles.askBtn, { paddingHorizontal: '6.5%' }]}onPress={() => CencelFunction()}>
+                        <Pressable style={[styles.askBtn, { paddingHorizontal: '6.5%' }]} onPress={() => CencelFunction()}>
                             <Text style={styles.askBtnText}>NO</Text>
                         </Pressable>
                         <View style={{ margin: '5%' }} />
@@ -553,7 +619,9 @@ export default function Task_Manager({ navigation, route }) {
                     <View style={{ margin: '2%' }} />
                 </View>
             </Modal>
-            <Modal animationType="slide" transparent={true} visible={detail} onRequestClose={() => { setDetail(!detail); }}>
+
+
+            {/* <Modal animationType="slide" transparent={true} visible={detail} onRequestClose={() => { setDetail(!detail); }}>
                 <View style={styles.askModel}>
                     <Text style={styles.askTitle}>Task Detail</Text>
                     <Pressable  style={styles.askTitleR} onPress={() => HideDetail()} >
@@ -581,7 +649,7 @@ export default function Task_Manager({ navigation, route }) {
                     </View>
                     <View style={{ margin: '2%' }} />
                 </View>
-            </Modal>
+            </Modal> */}
         </View >
     );
 }

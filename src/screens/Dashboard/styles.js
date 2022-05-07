@@ -177,7 +177,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Roboto',
     color: '#000000'
-  }
+  },
+  moreButton: {
+    color: '#3072F2',
+    paddingHorizontal: '5%',
+    paddingVertical: '1%',
+    textAlign: 'center',
+}
 
 });
 

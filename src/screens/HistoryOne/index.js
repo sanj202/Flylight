@@ -207,52 +207,6 @@ export default function HistoryOne({ navigation, route }) {
                         />
                     </View>}
             </View>
-            {/* <Modal animationType="slide" transparent={true} visible={bottom.isVisible4}
-                onRequestClose={() => CloseBottomSheet()}>
-                <View style={styles.askModel}>
-                    <Text style={styles.askTitle}>History Detail</Text>
-                    <TouchableOpacity style={styles.askTitleR}
-                        onPress={() => CloseBottomSheet()}>
-                        <Image style={{ height: 14, width: 14, }}
-                            source={require('../../images/cross.png')}
-                        />
-                    </TouchableOpacity>
-                    <View style={[styles.inputFields, { padding: 10 }]}>
-                        <View>
-                            <Text style={styles.DetailCampTitle}>
-                                Call Date
-                                {'\n'}
-                                Call Time
-                                {'\n'}
-                                Call Action
-                                {'\n'}
-                                Call Status
-                                {'\n'}
-                                {bottom.note ? "Note" : null}
-                                {bottom.message ? '\n' + 'Message' : null}
-                                {bottom.businessCard ? '\n' + 'businessCard' : null}
-                            </Text>
-                        </View>
-                        <View style={{ marginLeft: '3%', width: '70%' }}>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold' }]}>
-                                :   {bottom.callDate}
-                                {'\n'}
-                                :   {bottom.callTime}
-                                {'\n'}
-                                :   {bottom.callAction}
-                                {'\n'}
-                                :   {bottom.status}
-                                {'\n'}
-                                :   {bottom.note ? bottom.note : null}
-                                {bottom.message ? '\n' + ':   ' + bottom.message.messageT + '\n' + ':   ' + bottom.message.phoneT + '\n' + ':   ' + bottom.message.emailT : null}
-                                {bottom.businessCard ? '\n' + ':   ' + bottom.businessCard.contactName + '\n' + ':   ' + bottom.businessCard.mobile
-                                    + '\n' + ':   ' + bottom.businessCard.orgName + '\n' + ':   ' + bottom.businessCard.orgLink + '\n' + ':   ' + bottom.businessCard.orgAddress : null}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-            </Modal> */}
-
             <BottomSheet modalProps={{
                 animationType: 'fade', hardwareAccelerated: true,
                 onRequestClose: () => CloseBottomSheet(),}} onBackdropPress={() => CloseBottomSheet()} isVisible={bottom.isVisible4}>
@@ -321,5 +275,3 @@ export default function HistoryOne({ navigation, route }) {
         </View >
     );
 }
-
-

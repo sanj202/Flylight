@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2196F3",
     },
     askBtnText: {
-        margin:'5%',
+        margin: '5%',
         color: "white",
         fontWeight: "bold",
         textAlign: "center",
@@ -297,7 +297,9 @@ const styles = StyleSheet.create({
     askTitleDetailR: {
         marginTop: '-8%',
         alignSelf: 'flex-end',
-        padding: 10,
+        paddingVertical: '3%',
+        paddingLeft: '15%',
+        paddingRight:'2%'
     },
     askTitleDetail: {
         fontSize: 18,

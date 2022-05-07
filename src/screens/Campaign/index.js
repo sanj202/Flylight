@@ -35,7 +35,7 @@ export default function Campaign({ navigation }) {
                 setIsLodding(false)
                 dispatch(campaignAction.clearResponse())
             }
-            else if (campaignList.status == "failed") { setIsLodding(false)}
+            else if (campaignList.status == "failed") { setIsLodding(false) }
         }
     }, [campaignList])
     useEffect(() => {
@@ -45,7 +45,7 @@ export default function Campaign({ navigation }) {
                 if (PermissionCampaigns(JSON.parse(PermissionData.permissions)).includes('create')) { setcreatePermission(true) }
                 if (PermissionCampaigns(JSON.parse(PermissionData.permissions)).includes('delete')) { setdeletePermission(true) }
             }
-            else if (PermissionData.status == "failed") {ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT);}
+            else if (PermissionData.status == "failed") { ToastAndroid.show(PermissionData.message, ToastAndroid.SHORT); }
         }
     }, [PermissionData])
     const PermissionCampaigns = (permiss, account) => {
@@ -130,40 +130,44 @@ export default function Campaign({ navigation }) {
     }
     const CampaignView = ({ item }) => {
         return (
-            <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#e9ebf2', padding: '2%', borderRadius: 10 }}>
-                <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingBottom: '1%' }}>
+            <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#e9ebf2', paddingHorizontal: '2%', borderRadius: 10 }}>
+                <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#B5B8C0', paddingVertical: '2%' }}>
                     <View style={{ justifyContent: 'center', }}>
                         <Image
                             style={{ height: 48, width: 48, }}
                             source={require('../../images/profileCall.png')}
                         />
                     </View>
-                    <View style={{ justifyContent: 'center', flex: 1, marginHorizontal: '2%', }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name.charAt(0).toUpperCase() + item.campaign_name.slice(1)}</Text>
+                    <View style={{ justifyContent: 'center', flex: 1, marginHorizontal: '3%', }}>
+                        <Text numberOfLines={1} style={{ fontWeight: 'bold', fontSize: 15, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name.charAt(0).toUpperCase() + item.campaign_name.slice(1)}</Text>
                         <Text numberOfLines={2}>{item.description}</Text>
                     </View>
                     <View style={{ justifyContent: 'center', }}>
                         <Text style={{
                             backgroundColor: '#7a9bf5', color: '#0e4af0', borderRadius: 5,
-                            paddingHorizontal: '5%', paddingVertical: '2%', fontSize: 15, fontWeight: 'bold'
+                            paddingHorizontal: '4%', paddingVertical: '1%', fontSize: 15, fontWeight: 'bold'
                         }}>{item.status.charAt(0).toUpperCase() + item.status.slice(1)}</Text>
                     </View>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-around', }}>
-                    {editPermission ? <TouchableOpacity style={{
-                        flexDirection: 'row',
-                        paddingHorizontal: '7%', borderRightWidth: 1
-                    }}
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                {editPermission ?<TouchableOpacity
+                        style={{
+                            flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+                            width: '50%', borderRightWidth: 1, borderColor: '#B5B8C0', paddingVertical: '3%',
+                        }}
                         onPress={() => navigation.navigate(navigationStrings.EditCampaign, { campData: item })}>
-                        <Image style={{ height: 22, width: 24, marginTop: '5%' }}
+                        <Image style={{ height: 16, width: 18, }}
                             source={require('../../images/newEdit.png')} />
-                        <Text style={{ marginHorizontal: '3%', paddingTop: '3%', fontSize: 13 }}>Edit Campaign</Text>
-                    </TouchableOpacity> : null}
-
-                    <TouchableOpacity style={{ flexDirection: 'row', paddingHorizontal: '7%' }}
+                        <Text style={{ marginHorizontal: '3%', fontSize: 15 }}>Edit Campaign</Text>
+                    </TouchableOpacity>:null}
+                    <TouchableOpacity
+                        style={{
+                            flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+                            width: '50%', paddingVertical: '4%',
+                        }}
                         onPress={() => Details(item)} >
-                        <Text style={{ marginHorizontal: '5%', paddingTop: '3%', fontSize: 13 }}>More Detail</Text>
-                        <Image style={{ height: 22, width: 15, marginTop: '5%' }}
+                        <Text style={{ marginHorizontal: '3%', fontSize: 14 }}>More Detail</Text>
+                        <Image style={{ height: 13, width: 9, }}
                             source={require('../../images/newDetail.png')} />
                     </TouchableOpacity>
                 </View>
@@ -179,7 +183,7 @@ export default function Campaign({ navigation }) {
                 {IsLodding == true ?
                     <ActivityIndicator size="large" color="#0000ff" style={{ marginTop: '40%' }} />
                     :
-                    <View style={{ flex: 1 ,}}>
+                    <View style={{ flex: 1, }}>
                         {createPermission ? <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.AddCampaign)}
                             style={{
                                 borderColor: '#fff',
@@ -206,45 +210,15 @@ export default function Campaign({ navigation }) {
                         />
                     </View>}
             </View>
-            {/* <Modal animationType="slide" transparent={true} visible={askDelete} onRequestClose={() => { setaskDelete(false); }}>
-                <View style={styles.askModel}>
-                    <Text style={styles.askTitle}> Campaign Detail</Text>
-                    <TouchableOpacity style={styles.askTitleR} onPress={() => DetailsCancel()}>
-                        <Image style={{ height: 14, width: 14, }} source={require('../../images/cross.png')} />
-                    </TouchableOpacity>
-                    <View style={styles.inputFields}>
-                        <View>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Campaign Name:</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Status:</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Start Date</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>End Date</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Campaign Type</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Expected Revenue</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Budgeted Cost</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>created Date</Text>
-                            <Text style={[styles.DetailCampTitle, { marginVertical: '1.6%' }]}>Description</Text>
-                        </View>
-                        <View style={{ marginLeft: '3%', width: '60%' }}>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.CampaignName}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.Status}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.StartDate}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.EndDate}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.CampaignType}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.ExpectedRevenue}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.BudgetedCost}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {moment(Objcet.created_at).format('lll')}</Text>
-                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold', }]}>: {Objcet.Description}</Text>
-                        </View>
-                    </View>
-                </View>
-            </Modal> */}
-
             <BottomSheet modalProps={{
                 animationType: 'fade', hardwareAccelerated: true,
-                onRequestClose: () => DetailsCancel() }} onBackdropPress={() => DetailsCancel()} isVisible={askDelete}>
-                <View style={{ flex: 1, backgroundColor: '#fff',
+                onRequestClose: () => DetailsCancel()
+            }} onBackdropPress={() => DetailsCancel()} isVisible={askDelete}>
+                <View style={{
+                    flex: 1, backgroundColor: '#fff',
                     padding: '3%', paddingTop: '5%',
-                    borderTopLeftRadius: 20, borderTopRightRadius: 20}}>
+                    borderTopLeftRadius: 20, borderTopRightRadius: 20
+                }}>
                     <View style={{ flex: 1 }}>
                         <View style={{ borderBottomWidth: 1 }}>
                             <Text style={styles.askTitle}>Campaign Detail</Text>
@@ -257,44 +231,32 @@ export default function Campaign({ navigation }) {
                         </View>
                     </View>
                     <View style={{ flexDirection: 'row', marginVertical: '2%', flex: 1 }}>
-                            <View style={{justifyContent:'center'}}>
-                                <Avatar.Image size={50}
-                                    style={{ backgroundColor: '#fff' }}
-                                    source={require('../../images/profileCall.png')} />
-                            </View>
-                            <View style={{ width: '60%', marginHorizontal: '2%', flex: 1 }}>
-                                <Text style={[styles.DetailCampTitle,{fontWeight:'bold'}]}>{Objcet.CampaignName.charAt(0).toUpperCase() + Objcet.CampaignName.slice(1)}</Text>
-                                <Text style={styles.DetailCampTitle}>{moment(Objcet.EndDate).format('lll')}</Text>
-                                {/* <View style={{ flexDirection: 'row' }}>
-                                    <Text style={styles.DetailCampTitle}>Status  </Text>
-                                    <Text style={{ backgroundColor: 'red',color:'#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
-                                        {bottom.status.charAt(0).toUpperCase() + bottom.status.slice(1)}
-                                    </Text>
-                                </View> */}
-                            </View>
-                            <View style={{ marginRight: '2%',justifyContent:'center' }}>
-                                <Text style={{ backgroundColor: 'green',color:'#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
-                                    {Objcet.Status.charAt(0).toUpperCase() + Objcet.Status.slice(1)}</Text>
-                            </View>
+                        <View style={{ justifyContent: 'center' }}>
+                            <Avatar.Image size={50}
+                                style={{ backgroundColor: '#fff' }}
+                                source={require('../../images/profileCall.png')} />
                         </View>
-                        {/* <Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Name</Text>
-                        <Text style={styles.DetailCampTitle}>{Objcet.CampaignName}</Text> */}
-                        {Objcet.CampaignType?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Type</Text>:null}
-                        {Objcet.CampaignType?<Text style={styles.DetailCampTitle}>{Objcet.CampaignType}</Text>:null}
-                        {/* <Text style={{ fontWeight: 'bold', color: '#000000' }}>Status</Text>
-                        <Text style={styles.DetailCampTitle}>{Objcet.Status}</Text> */}
-                        {Objcet.StartDate || Objcet.EndDate?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Duration</Text>:null}
-                        {Objcet.StartDate || Objcet.EndDate?<Text style={styles.DetailCampTitle}>{moment(Objcet.StartDate).format('DD MMMM YYYY')} - {moment(Objcet.EndDate).format('DD MMMM YYYY')}</Text>:null}
-                        {/* <Text style={{ fontWeight: 'bold', color: '#000000' }}>End Date</Text>
-                        <Text style={styles.DetailCampTitle}>{Objcet.EndDate}</Text> */}
-                        {Objcet.BudgetedCost?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Budgeted Cost</Text>:null}
-                        {Objcet.BudgetedCost?<Text style={styles.DetailCampTitle}>{Objcet.BudgetedCost}</Text>:null}
-                        {Objcet.ExpectedRevenue?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Expected Revenue</Text>:null}
-                        {Objcet.ExpectedRevenue?<Text style={styles.DetailCampTitle}>{Objcet.ExpectedRevenue}</Text>:null}
-                        {Objcet.created_at?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Created Date</Text>:null}
-                        {Objcet.created_at?<Text style={styles.DetailCampTitle}>{moment(Objcet.created_at).format('lll')}</Text>:null}
-                        {Objcet.Description ?<Text style={{ fontWeight: 'bold', color: '#000000' }}>Description</Text>:null}
-                        {Objcet.Description ?<Text style={styles.DetailCampTitle}>{Objcet.Description}</Text>:null}
+                        <View style={{ width: '60%', marginHorizontal: '2%', flex: 1 }}>
+                            <Text style={[styles.DetailCampTitle, { fontWeight: 'bold' }]}>{Objcet.CampaignName.charAt(0).toUpperCase() + Objcet.CampaignName.slice(1)}</Text>
+                            <Text style={styles.DetailCampTitle}>{moment(Objcet.EndDate).format('LL')} </Text>
+                        </View>
+                        <View style={{ marginRight: '2%', justifyContent: 'center' }}>
+                            <Text style={{ backgroundColor: 'green', color: '#fff', paddingHorizontal: '3%', borderRadius: 20 }}>
+                                {Objcet.Status.charAt(0).toUpperCase() + Objcet.Status.slice(1)}</Text>
+                        </View>
+                    </View>
+                    {Objcet.CampaignType ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Type</Text> : null}
+                    {Objcet.CampaignType ? <Text style={styles.DetailCampTitle}>{Objcet.CampaignType}</Text> : null}
+                    {Objcet.StartDate || Objcet.EndDate ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Campaign Duration</Text> : null}
+                    {Objcet.StartDate || Objcet.EndDate ? <Text style={styles.DetailCampTitle}>{moment(Objcet.StartDate).format('DD MMMM YYYY')} - {moment(Objcet.EndDate).format('DD MMMM YYYY')}</Text> : null}
+                    {Objcet.BudgetedCost ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Budgeted Cost</Text> : null}
+                    {Objcet.BudgetedCost ? <Text style={styles.DetailCampTitle}>{Objcet.BudgetedCost}</Text> : null}
+                    {Objcet.ExpectedRevenue ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Expected Revenue</Text> : null}
+                    {Objcet.ExpectedRevenue ? <Text style={styles.DetailCampTitle}>{Objcet.ExpectedRevenue}</Text> : null}
+                    {Objcet.created_at ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Created Date</Text> : null}
+                    {Objcet.created_at ? <Text style={styles.DetailCampTitle}>{moment(Objcet.created_at).format('lll')}</Text> : null}
+                    {Objcet.Description ? <Text style={{ fontWeight: 'bold', color: '#000000' }}>Description</Text> : null}
+                    {Objcet.Description ? <Text style={styles.DetailCampTitle}>{Objcet.Description}</Text> : null}
                 </View>
             </BottomSheet>
         </View>

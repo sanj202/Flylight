@@ -127,16 +127,15 @@ export default function Dashboard({ navigation, route, props }) {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.HistoryOne, { id: item.lead_id })}>
-        <Card style={{ marginTop: '1%' }}>
+        <Card style={{ marginTop: '1%',paddingVertical:'1%'  }}>
           <View style={{ flexDirection: 'row', padding: 3 }}>
-            <View>
+            <View style={{justifyContent:'center'}}>
               <Image
-
                 style={styles.notifyImage}
                 source={require('../../images/call.png')}
               />
             </View>
-            <View style={{ marginHorizontal: '2%', width: '75%' }}>
+            <View style={{ marginHorizontal: '2%',flex:1,justifyContent:'center'}}>
               <Text style={{ fontSize: 12, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item ? item.first_name : ''} {item ? item.last_name : ''}</Text>
               <Text style={{ fontSize: 10, fontFamily: 'ROboto', color: '#0F0F0F' }}>{moment(item.scheduled_time).format('lll')}</Text>
             </View>
@@ -149,15 +148,15 @@ export default function Dashboard({ navigation, route, props }) {
   const renderItemTask = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.Task_Manager)}>
-        <Card style={{ marginTop: '1%' }}>
+        <Card style={{ marginTop: '1%',paddingVertical:'1%'  }}>
           <View style={{ flexDirection: 'row', padding: 3 }}>
-            <View>
+            <View style={{ justifyContent:'center'}}>
               <Image
                 style={styles.notifyImage}
                 source={require('../../images/call.png')}
               />
             </View>
-            <View style={{ marginHorizontal: '2%', width: '78%' }}>
+            <View style={{ marginHorizontal: '2%',flex:1,justifyContent:'center'}}>
               <Text style={{ fontSize: 12, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.title ? item.title : ''}</Text>
               <Text style={{ fontSize: 10, fontFamily: 'ROboto', color: '#0F0F0F' }}>{moment(item.updated_at).format('lll')}</Text>
             </View>
@@ -170,15 +169,15 @@ export default function Dashboard({ navigation, route, props }) {
   const renderItemLead = ({ item }) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate(navigationStrings.Lead_ManagerDetail, { item: item })}>
-        <Card style={{ marginTop: '1%' }}>
+        <Card style={{ marginTop: '1%',paddingVertical:'1%' }}>
           <View style={{ flexDirection: 'row', padding: 3 }}>
-            <View>
+            <View style={{ justifyContent:'center'}}>
               <Image
                 style={styles.notifyImage}
                 source={require('../../images/call.png')}
               />
             </View>
-            <View style={{ marginHorizontal: '2%', width: '75%' }}>
+            <View style={{ marginHorizontal: '2%',flex:1,justifyContent:'center'}}>
               <Text style={{ fontSize: 12, fontFamily: 'ROboto', fontWeight: 'bold', color: '#0F0F0F' }}>{item.first_name} {item.last_name}</Text>
               <Text style={{ fontSize: 10, fontFamily: 'ROboto', color: '#0F0F0F' }}>{moment(item.updated_at).format('lll')}</Text>
             </View>
@@ -296,6 +295,34 @@ export default function Dashboard({ navigation, route, props }) {
               </TouchableOpacity>
             }
           </View>
+
+          <View style={{ marginHorizontal: '3%' }}>
+            {isService == 'Task' ? <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: '2%' }}>
+              <Text style={{ fontSize: 14, textAlignVertical: 'center', color: '#000000', fontWeight: 'bold' }}>Open Task</Text>
+              {totalChart.taskList.length ? <TouchableOpacity
+                style={{ borderColor: '#3072F2', borderWidth: 1, borderRadius: 20 }}
+                onPress={() => navigation.navigate(navigationStrings.Task_Manager, { type: 'All' })}>
+                <Text style={styles.moreButton}>More ></Text>
+              </TouchableOpacity> : null}
+            </View> : null}
+            {isService == 'Feedback' ? <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: '2%' }}>
+              <Text style={{ fontSize: 14, textAlignVertical: 'center', color: '#000000', fontWeight: 'bold' }}>Upcoming</Text>
+              {totalChart.feedbacklist.length ? <TouchableOpacity
+                style={{ borderColor: '#3072F2', borderWidth: 1, borderRadius: 20 }}
+                onPress={() => navigation.navigate(navigationStrings.History)}>
+                <Text style={styles.moreButton}>More ></Text>
+              </TouchableOpacity> : null}
+            </View> : null}
+            {isService == 'Leads' ? <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: '2%' }}>
+              <Text style={{ fontSize: 14, textAlignVertical: 'center', color: '#000000', fontWeight: 'bold' }}>Leads</Text>
+              {totalChart.leadList.length ? <TouchableOpacity
+                style={{ borderColor: '#3072F2', borderWidth: 1, borderRadius: 20 }}
+                onPress={() => navigation.navigate(navigationStrings.lead_manager)}>
+                <Text style={styles.moreButton}>More ></Text>
+              </TouchableOpacity> : null}
+            </View> : null}
+          </View>
+          
           <View style={{ flex: 1 }}>
             <FlatList
               contentContainerStyle={{
@@ -311,7 +338,7 @@ export default function Dashboard({ navigation, route, props }) {
 
                   {isService == 'Task' ?
                     <View >
-                      <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Open Task</Text>
+                      {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Open Task</Text> */}
                       <FlatList
                         style={{ flexGrow: 0 }}
                         data={totalChart.taskList}
@@ -321,16 +348,16 @@ export default function Dashboard({ navigation, route, props }) {
                         renderItem={renderItemTask}
                         keyExtractor={item => item.id}
                       />
-                      {totalChart.taskList.length ? <TouchableOpacity
+                      {/* {totalChart.taskList.length ? <TouchableOpacity
                         onPress={() => navigation.navigate(navigationStrings.Task_Manager, { type: 'All' })}
                         style={{ alignSelf: 'flex-end', width: '20%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '2%' }}>
                         <Text style={{ textAlign: 'center', color: '#fff', paddingVertical: '2%' }}>More...</Text>
-                      </TouchableOpacity> : null}
+                      </TouchableOpacity> : null} */}
                     </View>
                     : null}
                   {isService == 'Feedback' ?
                     <View>
-                      <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Feedback</Text>
+                      {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Feedback</Text> */}
                       <FlatList
                         style={{ flexGrow: 0 }}
                         data={totalChart.feedbacklist}
@@ -340,15 +367,15 @@ export default function Dashboard({ navigation, route, props }) {
                           : null)}
                         keyExtractor={item => item.id}
                       />
-                      {totalChart.feedbacklist.length ? <TouchableOpacity
+                      {/* {totalChart.feedbacklist.length ? <TouchableOpacity
                         onPress={() => navigation.navigate(navigationStrings.History)}
                         style={{ alignSelf: 'flex-end', width: '20%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '2%' }}>
                         <Text style={{ textAlign: 'center', color: '#fff', paddingVertical: '2%' }}>More...</Text>
-                      </TouchableOpacity> : null}
+                      </TouchableOpacity> : null} */}
                     </View> : null}
                   {isService == 'Leads' ?
                     <View style={{ flex: 1 }}>
-                      <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Leads</Text>
+                      {/* <Text style={{ fontSize: 14, fontWeight: 'bold' }}>Leads</Text> */}
                       <FlatList
                         style={{ flexGrow: 0 }}
                         data={totalChart.leadList}
@@ -358,11 +385,11 @@ export default function Dashboard({ navigation, route, props }) {
                         renderItem={renderItemLead}
                         keyExtractor={item => item.id}
                       />
-                      {totalChart.leadList.length ? <TouchableOpacity
+                      {/* {totalChart.leadList.length ? <TouchableOpacity
                         onPress={() => navigation.navigate(navigationStrings.lead_manager)}
                         style={{ alignSelf: 'flex-end', width: '20%', backgroundColor: '#3373F3', borderRadius: 20, marginVertical: '2%' }}>
                         <Text style={{ textAlign: 'center', color: '#fff', paddingVertical: '2%' }}>More...</Text>
-                      </TouchableOpacity> : null}
+                      </TouchableOpacity> : null} */}
                     </View> : null}
                 </View>}
             />
