@@ -114,77 +114,81 @@ export default function EditProfile({ navigation, route }) {
                 title='Edit Profile'
                 onPressRight={() => { navigation.navigate('Notification') }}
             />
-            <ScrollView style={{ flex: 1, margin: '2%' }}>
+            <ScrollView style={{ flex: 1, marginVertical: '2%', marginHorizontal: '3%' }}>
                 <Text style={styles.fieldsLable}>First Name</Text>
                 <View style={styles.inputFields2}>
                     <Image style={Platform.OS == 'ios' ? [styles.icon, { height: 22, width: '5.5%', margin: '2%' }]
-                        : [styles.icon, { height: 22, width: '6.5%', margin: '2%', marginTop: '3%' }]}
+                        : [styles.icon]}
                         source={require('../../images/user.png')}
                     />
                     <TextInput
-                        style={{ flex: 1 }}
+                        style={{ flex: 1,  marginHorizontal: '2%' }}
                         value={fname}
                         onChangeText={e => setfname(e)}
                         placeholder="  Name"
                     />
                 </View>
-                <Text style={styles.fieldsLable}>Last Name</Text>
-                <View style={styles.inputFields2}>
-                    <Image style={
-                        Platform.OS == 'ios' ? [styles.icon, { height: 22, width: '5.5%', margin: '2%' }]
-                            :
-                            [styles.icon, { height: 22, width: '6.5%', margin: '2%', marginTop: '3%' }]}
-                        source={require('../../images/user.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={lname}
-                        onChangeText={e1 => setlname(e1)}
-                        placeholder="  Name"
-                    />
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Last Name</Text>
+                    <View style={styles.inputFields2}>
+                        <Image style={Platform.OS == 'ios' ? [styles.icon, { height: 22, width: '5.5%', margin: '2%' }]
+                            : [styles.icon]}
+                            source={require('../../images/user.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1, marginHorizontal: '2%' }}
+                            value={lname}
+                            onChangeText={e1 => setlname(e1)}
+                            placeholder="  Name"
+                        />
+                    </View>
                 </View>
-                <Text style={styles.fieldsLable}>Email </Text>
-                <View style={styles.inputFields2}>
-                    <Image style={
-                        Platform.OS == 'ios' ? [styles.icon, { height: 17, width: '6%', margin: '2.5%' }]
-                            :
-                            [styles.icon, { height: 18, width: '7%', margin: '2.5%', marginTop: '5%' }]}
-                        source={require('../../images/mail.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={email}
-                        editable={false}
-                        color='#000000'
-                        onChangeText={e2 => setemail(e2)}
-                        placeholder="example@gmail.com"
-                        placeholderTextColor='#000000'
-                    />
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Email </Text>
+                    <View style={styles.inputFields2}>
+                        <Image style={
+                            Platform.OS == 'ios' ? [styles.icon, { height: 17, width: '6%', margin: '2.5%' }]
+                                :
+                                [styles.icon, { width: width * 6.4 / 100, }]}
+                            source={require('../../images/mail.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1, marginRight: '3%' }}
+                            value={email}
+                            editable={false}
+                            color='#000000'
+                            onChangeText={e2 => setemail(e2)}
+                            placeholder="example@gmail.com"
+                            placeholderTextColor='#000000'
+                        />
+                    </View>
                 </View>
-                <Text style={styles.fieldsLable}>Phone</Text>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '4.5%', margin: '2%' }]
-                            :
-                            [styles.icon, { height: 24, width: '4.6%', margin: '2%', marginTop: '3.5%' }]}
-                        source={require('../../images/mobile.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={phone}
-                        keyboardType='numeric'
-                        editable={false}
-                        color='#000000'
-                        onChangeText={e3 => setphone(e3)}
-                        placeholder="   Phone"
-                    />
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Phone</Text>
+                    <View style={styles.inputFields2}>
+                        <Image
+                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '4.5%', margin: '2%' }]
+                                :
+                                [styles.icon, { height: height * 3.8 / 100, }]}
+                            source={require('../../images/mobile.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1,  marginHorizontal: '2%' }}
+                            value={phone}
+                            keyboardType='numeric'
+                            editable={false}
+                            color='#000000'
+                            onChangeText={e3 => setphone(e3)}
+                            placeholder="   Phone"
+                        />
+                    </View>
                 </View>
-                <Text style={styles.fieldsLable}>Dob</Text>
-                <TouchableOpacity onPress={showDatepicker} >
-                    <View style={Platform.OS == 'ios' ? styles.inputFields2 : [styles.inputFields2, { paddingVertical: '2%' }]}>
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Date of Birth</Text>
+                    <TouchableOpacity style={[styles.inputFields2, { paddingVertical: '3.5%' }]} onPress={showDatepicker}>
                         <Image style={Platform.OS == 'ios' ? [styles.icon, { height: 25, width: '6%', marginLeft: '2%', marginTop: '2%' }]
                             :
-                            [styles.icon, { height: 25, width: '7%', marginLeft: '2%', marginTop: '2%' }]}
+                            [styles.icon, { height: height * 3.3 / 100, width: width * 6 / 100, }]}
                             source={require('../../images/DOB.png')}
                         />
                         {show && (
@@ -202,7 +206,7 @@ export default function EditProfile({ navigation, route }) {
                         }
                         {Platform.OS == 'ios' ? <View>
                             {text == true ?
-                                <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000' }}>Date of Birth</Text>
+                                <Text style={{ fontSize: 15, color: '#000000' }}>Date of Birth</Text>
                                 :
                                 null
                             }
@@ -210,131 +214,107 @@ export default function EditProfile({ navigation, route }) {
                             :
                             <View>
                                 {text == true ?
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>Date of birth</Text>
+                                    <Text style={{ fontSize: 15, color: '#000000', marginLeft: '7%' }}>Date of birth</Text>
                                     :
-                                    <Text style={{ marginTop: '10%', fontSize: 12, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
+                                    <Text style={{ fontSize: 15, color: '#000000', marginLeft: '10%' }}>{moment(date).format('MM/DD/YYYY')}</Text>
                                 }
                             </View>
                         }
+                    </TouchableOpacity>
+                </View>
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Street</Text>
+                    <View style={styles.inputFields2}>
+                        <Image
+                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '5.5%', margin: '1.6%' }]
+                                :
+                                [styles.icon, { height: height * 3.3 / 100 }]}
+                            source={require('../../images/address.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1,  marginHorizontal: '3%' }}
+                            value={street}
+                            onChangeText={e5 => setstreet(e5)}
+                            placeholder="   Street"
+                        />
                     </View>
-                </TouchableOpacity>
-                <Text style={styles.fieldsLable}>Street</Text>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 24, width: '5.5%',
-                                margin: '1.6%'
-                            }]
-                                :
-                                [styles.icon, {
-                                    height: 24, width: '5.8%',
-                                    margin: '1.6%', marginTop: '3%'
-                                }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={street}
-                        onChangeText={e5 => setstreet(e5)}
-                        placeholder="   Street"
-                    />
                 </View>
-                <Text style={styles.fieldsLable}>City</Text>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 24, width: '5.5%',
-                                margin: '1.6%'
-                            }]
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>City</Text>
+                    <View style={styles.inputFields2}>
+                        <Image
+                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '5.5%', margin: '1.6%' }]
                                 :
-                                [styles.icon, {
-                                    height: 24, width: '5.8%',
-                                    margin: '1.6%', marginTop: '3%'
-                                }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={city}
-                        onChangeText={e6 => setcity(e6)}
-                        placeholder="   City"
-                    />
+                                [styles.icon, { height: height * 3.3 / 100 }]}
+                            source={require('../../images/address.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1, marginHorizontal: '2%'}}
+                            value={city}
+                            onChangeText={e6 => setcity(e6)}
+                            placeholder="   City"
+                        />
+                    </View>
                 </View>
-                <Text style={styles.fieldsLable}>State</Text>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 24, width: '5.5%',
-                                margin: '1.6%'
-                            }]
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>State</Text>
+                    <View style={styles.inputFields2}>
+                        <Image
+                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '5.5%', margin: '1.6%' }]
                                 :
-                                [styles.icon, {
-                                    height: 24, width: '5.8%',
-                                    margin: '1.6%', marginTop: '3%'
-                                }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={state}
-                        onChangeText={e7 => setstate(e7)}
-                        placeholder="   State"
-                    />
+                                [styles.icon, { height: height * 3.3 / 100 }]}
+                            source={require('../../images/address.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1, marginHorizontal: '2%' }}
+                            value={state}
+                            onChangeText={e7 => setstate(e7)}
+                            placeholder="   State"
+                        />
+                    </View>
                 </View>
-                <Text style={styles.fieldsLable}>Country</Text>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 24, width: '5.8%',
-                                margin: '1.6%'
-                            }]
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Country</Text>
+                    <View style={styles.inputFields2}>
+                        <Image
+                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '5.5%', margin: '1.6%' }]
                                 :
-                                [styles.icon, {
-                                    height: 24, width: '5.8%',
-                                    margin: '1.6%', marginTop: '3%'
-                                }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={country}
-                        onChangeText={e8 => setcountry(e8)}
-                        placeholder="   Country"
-                    />
+                                [styles.icon, { height: height * 3.3 / 100 }]}
+                            source={require('../../images/address.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1,  marginHorizontal: '2%' }}
+                            value={country}
+                            onChangeText={e8 => setcountry(e8)}
+                            placeholder="   Country"
+                        />
+                    </View>
                 </View>
-                <Text style={styles.fieldsLable}>Zip Code</Text>
-                <View style={styles.inputFields2}>
-                    <Image
-                        style={
-                            Platform.OS == 'ios' ? [styles.icon, {
-                                height: 24, width: '5.5%',
-                                margin: '1.6%'
-                            }]
+                <View style={{ marginVertical: '1%' }}>
+                    <Text style={styles.fieldsLable}>Zip Code</Text>
+                    <View style={styles.inputFields2}>
+                        <Image
+                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '5.5%', margin: '1.6%' }]
                                 :
-                                [styles.icon, {
-                                    height: 24, width: '5.8%',
-                                    margin: '1.6%', marginTop: '3%'
-                                }]}
-                        source={require('../../images/address.png')}
-                    />
-                    <TextInput
-                        style={{ flex: 1 }}
-                        value={zip}
-                        onChangeText={e9 => setzip(e9)}
-                        placeholder="   Zip Code"
-                    />
+                                [styles.icon, { height: height * 3.3 / 100 }]}
+                            source={require('../../images/address.png')}
+                        />
+                        <TextInput
+                            style={{ flex: 1,  marginHorizontal: '2%' }}
+                            value={zip}
+                            onChangeText={e9 => setzip(e9)}
+                            placeholder="   Zip Code"
+                        />
+                    </View>
                 </View>
                 {IsLodding == true ? <ActivityIndicator size="small" color="#0000ff" /> : null}
                 <TouchableOpacity style={styles.button}
                     onPress={() => Update()}>
                     <Text style={styles.textButton}>Submit</Text>
                 </TouchableOpacity>
-            </ScrollView>
-        </View>
+
+            </ScrollView >
+        </View >
     );
 }
 

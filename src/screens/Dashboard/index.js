@@ -111,7 +111,6 @@ export default function Dashboard({ navigation, route, props }) {
 
   const [refreshing, setrefreshing] = useState(false)
   const handleRefresh = () => {
-    console.log(refreshing)
     setleadPermission(false);
     setcontactPermission(false);
     setuserPermission(false);

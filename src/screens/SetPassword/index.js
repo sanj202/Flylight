@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {Text,View,StyleSheet,TouchableOpacity,TextInput,Image,Alert,StatusBar,ToastAndroid,
- SafeAreaView ,ActivityIndicator} from 'react-native';
+import {
+  Text, View, StyleSheet, TouchableOpacity, TextInput, Image, Alert, StatusBar, ToastAndroid,
+  SafeAreaView, ActivityIndicator
+} from 'react-native';
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from './styles';
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -13,32 +15,25 @@ export default function SetPassword({ navigation, route, props }) {
   const [state1, setstate1] = useState("")
   const [email, setemail] = useState(route.params ? route.params.email : '')
   const [IsLodding, setIsLodding] = useState(false)
-
   const dispatch = useDispatch()
   const PassData = useSelector(state => state.setPassword.data)
-
-  // console.log("listData..................................", PassData)
 
   useEffect(() => {
     if (PassData) {
       if (PassData.status == "success") {
-        // console.log('sucess..............',PassData.data.uid)
         setstate("")
         setstate1("")
         setIsLodding(false)
-        ToastAndroid.show(PassData.message, ToastAndroid.SHORT); 
+        ToastAndroid.show(PassData.message, ToastAndroid.SHORT);
         navigation.navigate("Login")
       }
       else if (PassData.status == "failed") {
-        // console.log('sucess...........false...')
         setIsLodding(false)
         ToastAndroid.show(PassData.message, ToastAndroid.SHORT);
       }
       else if (PassData.status == "fail") {
         setIsLodding(false)
         ToastAndroid.show(PassData.message, ToastAndroid.SHORT);
-      }
-      else {
       }
     }
   }, [PassData])
@@ -53,13 +48,10 @@ export default function SetPassword({ navigation, route, props }) {
     else {
       setIsLodding(true)
       dispatch(setPasswordAction.setPassword(email, state, state1));
-      // navigation.navigate("Varification")
     }
   }
 
   return (
-    //     <SafeAreaView style={styles.container} >
-    //  <StatusBar>
     <View style={styles.container}>
 
       <StatusBar

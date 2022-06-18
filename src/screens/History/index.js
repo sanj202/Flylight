@@ -10,6 +10,7 @@ import { historyAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import navigationStrings from '../../constant/navigationStrings';
+
 export default function History({ navigation }) {
 
   const [IsLodding, setIsLodding] = useState(true)
@@ -142,7 +143,6 @@ export default function History({ navigation }) {
   };
   const onChangeendDate = (event, selectedDate) => {
     if (event.type == 'dismissed') {
-      console.log('date not selected end ')
       setendShow(!endshow);
     }
     else {
@@ -213,7 +213,6 @@ export default function History({ navigation }) {
         dispatch(historyAction.HistoryList(data, loginData.data.token));
       }
       setHistory([])
-      // console.log(data)
     }
     else { ToastAndroid.show('Please Select Search Criteria', ToastAndroid.SHORT); }
   }
@@ -233,6 +232,7 @@ export default function History({ navigation }) {
     setHistory([])
     setPage(0)
     FetchData(0)
+    DropDownAPIs()
   }
   const Detail = (value) => {
     navigation.navigate(navigationStrings.HistoryOne, { id: value })

@@ -64,12 +64,10 @@ export default function Meetings() {
     }, [GetMeetings])
 
     const EditMeeting = (value) => {
-        // console.log('value of editdat............',value)
         navigation.navigate('EditMeetings', { item: value })
     }
 
     const MeetingDetails = (value) => {
-        // console.log('value of editdat............',value)
         navigation.navigate('MeetingsDetail', { item: value })
     }
 
@@ -77,43 +75,7 @@ export default function Meetings() {
 
     const meetingListView = ({ item }) => {
         return (
-            <TouchableOpacity
-                onPress={() => MeetingDetails(item)}
-            >
-                {/* <View style={styles.listData}>
-                    <View>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Title   </Text>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Start Date </Text>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>End date</Text>
-                        <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Releted</Text>
-                    </View>
-                    <View style={{ marginLeft: '2%', width: '67%' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.title}</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>
-                            {moment(item.from).format("YYYY-MM-DD HH:mm:ss A")}</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>
-                            {moment(item.to).format("YYYY-MM-DD HH:mm:ss A")}</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.related_to}</Text>
-                    </View>
-
-                    <View >
-                        <View style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
-                            <TouchableOpacity
-                                onPress={() => EditMeeting(item)}
-                            >
-                                <Image style={{ height: 22, width: 22, marginVertical: '3%' }}
-                                    source={require('../../images/editCall.png')} />
-                            </TouchableOpacity>
-                            <Text style={{ marginVertical: '3%' }}></Text>
-                            <TouchableOpacity
-                            // onPress={() => navigation.navigate('EditMeetings', {  campData: item})}
-                            >
-                                <Image style={{ height: 22, width: 22, marginVertical: '3%' }}
-                                    source={require('../../images/deleteCall.png')} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View> */}
+            <TouchableOpacity onPress={() => MeetingDetails(item)}>
                 <View style={styles.listData}>
                     <Image style={{ height: 25, width: 22, marginVertical: '3%', marginHorizontal: '3%' }}
                         source={require('../../images/DOB.png')} />
@@ -124,7 +86,6 @@ export default function Meetings() {
                             {moment(item.from).format('lll')}</Text>
                         <Text style={{ fontWeight: 'bold', fontSize: 10, color: '#0F0F0F', fontFamily: 'Roboto' }}>
                             {moment(item.to).format('lll')}</Text>
-
                     </View>
                     <Image
                         style={{ height: 16, width: 10, marginVertical: '5%', alignSelf: 'flex-end' }}

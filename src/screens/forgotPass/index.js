@@ -29,46 +29,29 @@ export default function ForgotPassword({ navigation }) {
         navigation.navigate("F_Varification", {email: getData.data.email})                                                                                                           //otherwise alert show 
       }
       else if (getData.status == "fail") {
-        // console.log('sucess...........fail...')
         setIsLodding(false)
         ToastAndroid.show(getData.message, ToastAndroid.SHORT);                                                                               //otherwise alert show 
-
       }
       else if (getData.status == "failed") {
-        // console.log('sucess...........failed...')
         setIsLodding(false)
         ToastAndroid.show(getData.message, ToastAndroid.SHORT);                                                                               //otherwise alert show 
-
       }
     }
-    else {
-      // setLoading(false);
-    }
-
   }, [getData])
 
-
-
   const login = () => {
-
     if (state == "") {
       ToastAndroid.show('Enter Email/Mobile', ToastAndroid.SHORT);    
     }
     else {
       setIsLodding(true)
       dispatch(forgotPassAction.forgotPassword(state));
-
-      // navigation.navigate("F_Varification")
     }
   }
-
   const inputRef = useRef();
-
   useEffect(() => {
     inputRef.current.focus();
   }, [])
-
-
   return (
     <View style={styles.container}>
       <StatusBar

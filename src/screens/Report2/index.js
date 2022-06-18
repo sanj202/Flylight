@@ -123,7 +123,6 @@ export default function Report2({ navigation }) {
             filters: []
         }
         if (starttext == false || endtext == false || value !== null || user !== null) {
-            console.log('value...', starttext, endtext, value, user)
             if (StartDate !== EndDate) {
                 if (starttext == true) {
                     ToastAndroid.show("Please Select Start Date", ToastAndroid.SHORT);
@@ -241,7 +240,6 @@ export default function Report2({ navigation }) {
             setstartshow(!startshow);
         }
         else {
-            console.log('date selected ')
             const currentDate = selectedDate || startDate;
             setstartshow(Platform.OS === 'ios' ? true : false);
             setstartDate(currentDate)
@@ -261,7 +259,6 @@ export default function Report2({ navigation }) {
             setendShow(!endshow);
         }
         else {
-            console.log('date selected ')
             const currentDate = selectedDate || enddate;
             setendShow(Platform.OS === 'ios' ? true : false);
             setendDate(currentDate)

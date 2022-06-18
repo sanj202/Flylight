@@ -10,7 +10,6 @@ import { useIsFocused } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import navigationStrings from '../../constant/navigationStrings';
 export default function LeadFilterScreen({ navigation, route }) {
-  console.log(route.params)
   const [IsLodding, setIsLodding] = useState(true)
   const [leadList, setleadList] = useState([])
   const [isService, setisService] = useState(route.params.value);
@@ -26,7 +25,6 @@ export default function LeadFilterScreen({ navigation, route }) {
   useEffect(() => {
     isFocused ? initialstate() : initialstate()
     isFocused ? FetchData(page) : null
-    // setfilterKeys([])
   }, [isFocused])
   useEffect(() => {
     if (Leads) {

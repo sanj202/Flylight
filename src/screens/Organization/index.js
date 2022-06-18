@@ -66,8 +66,6 @@ export default function Organization({ navigation }) {
 
 
     const AllView = ({ item }) => {
-
-        // console.log('.m.....................',item)
         return (
             <TouchableOpacity
                 onPress={() => ChangeOrg({

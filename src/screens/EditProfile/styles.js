@@ -1,68 +1,38 @@
-import { StyleSheet } from 'react-native';
-
+import { StyleSheet, Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    fieldsLable: {
+        color: '#2F394E',
+        fontFamily: 'Roboto',
+        fontSize: 13,
+        marginLeft: '1%'
     },
-    title: {
-        margin: 20,
-        fontSize: 28,
-        color: '#1E263C',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontFamily: 'Roboto'
-    },
-
     inputFields2: {
         flexDirection: 'row',
         borderWidth: 1,
         borderColor: '#000000',
         borderRadius: 10,
-        marginHorizontal: '3%',
-        marginVertical: '2%'
+        alignItems: 'center',
+    },
+    icon: {
+        height: height * 2.6 / 100,
+        width: width * 4.8 / 100,
+        marginLeft: '2%',
     },
     button: {
         backgroundColor: '#3373F3',
-        borderRadius: 18,
-        margin: '3%',
-        marginBottom: '5%'
+        borderRadius: 15,
+        marginHorizontal: '10%',
+        marginVertical: '3%',
+        paddingVertical: '3%'
     },
-    button1: {
-        backgroundColor: '#32CD32',
-        borderRadius: 18,
-        margin: '3%',
-        marginTop: '-1%',
-        marginBottom: '10%',
-    },
-
-
-
     textButton: {
-        paddingTop: 15,
-        paddingBottom: 15,
         color: 'white',
         textAlign: 'center',
-        fontSize: 15,
+        fontSize: 18,
         fontFamily: 'Roboto',
         fontWeight: 'bold'
     },
-    image: {
-        height: 160,
-        width: 200,
-        borderRadius: 15,
-        alignSelf: 'center',
-        marginTop: '10%',
-    },
-
-    fieldsLable: {
-        marginHorizontal: '3%',
-        marginTop: '2%',
-        color: '#2F394E',
-        fontFamily: 'Roboto',
-        fontSize: 12
-    }
-
-
 });
 
 export default styles;

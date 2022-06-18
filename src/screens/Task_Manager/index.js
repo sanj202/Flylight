@@ -226,7 +226,6 @@ export default function Task_Manager({ navigation, route }) {
             setShow(!show);
         }
         else {
-            console.log('date selected ')
             const currentDate = selectedDate || date;
             setShow(Platform.OS === 'ios');
             setDate(currentDate)

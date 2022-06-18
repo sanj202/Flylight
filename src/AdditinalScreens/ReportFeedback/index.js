@@ -150,7 +150,6 @@ export default function AddContact({ navigation, route }) {
   const loginData = useSelector(state => state.auth.data)
   const FeedbackData = useSelector(state => state.contactList.feedbacks)
 
-  // console.log("FeedbackDataFeedbackData....",FeedbackData)
 
   const AddFunction = () => {
     if (fname == "") {

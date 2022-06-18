@@ -111,7 +111,6 @@ export default function MeetingsDetail({ navigation, route }) {
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                // console.log('contact list ...............', contactData.data)
                 let usetdetail = contactData.data && contactData.data.map((ld) => {
                     let user = { label: ld.email, value: ld.id }
                     if (user !== undefined) {
@@ -126,9 +125,6 @@ export default function MeetingsDetail({ navigation, route }) {
             else {
                 setstate({ ...state, modelLodding: false })
             }
-        }
-        else {
-
         }
     }, [contactData])
 
@@ -195,7 +191,6 @@ export default function MeetingsDetail({ navigation, route }) {
     }
 
     const EditMeeting = (value) => {
-        // console.log('value of editdat............',value)
         navigation.navigate('EditMeetings', { item: value })
     }
 

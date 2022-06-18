@@ -178,7 +178,6 @@ export default function EditLead({ navigation, route }) {
 
     useEffect(() => {
         if (ZipList) {
-            // console.log("dsamn...........",ZipList)
             if (ZipList.status == "success") {
                 setState(ZipList.data.State)
                 setCity(ZipList.data.City)
@@ -211,9 +210,6 @@ export default function EditLead({ navigation, route }) {
         else if (phone == "") {
             ToastAndroid.show('Enter phone Number', ToastAndroid.SHORT);
         }
-        // else if (Aphone == "") {
-        //     ToastAndroid.show('Enter Alternative phone Number', ToastAndroid.SHORT);
-        // }
         else if (email == "") {
             ToastAndroid.show('Enter Email Id', ToastAndroid.SHORT);
         }
@@ -235,24 +231,6 @@ export default function EditLead({ navigation, route }) {
                 zip: ZipCode, description: description, campaign: campaign,
             }
             dispatch(leadAction.addLaed(data, loginData.data.token,));
-            // }
-            // else {
-            //     const data = {
-            //         profile_id: loginData.data.cProfile,
-            //         created_by: loginData.data.cProfile,
-            //         modified_by: loginData.data.cProfile,
-            //         org_uid: loginData.data.org_uid,
-            //         uid: loginData.data.uid, first_name: fname, last_name: lname, title: title, email: email, email2: Aemail,
-            //         dob: formateDate, gender: gender, phone: phone, phone2: Aphone, fax: fax, website: website, lead_source: LeadSource,
-            //         lead_status: LeadStatus, industry: Industry, number_of_employee: employee, annual_revenue: revenue, company: companyName, address: Address, city: City,
-            //         state: State, country: Country, zip: ZipCode, description: description, campaign: campaign,
-            //     }
-            //     dispatch(leadAction.addLaed(data, loginData.data.token,));
-            //     // setfname(''), setlname(''), settitle(''), setemail(''), setAemail(''), setgender(''), setphone(''),
-            //     //     setAphone(''), setfax(''), setwebsite(''), setLeadSource(''), setLeadStatus(null), setIndustry(''),
-            //     //     setemployee(''), setrevenue(''), setcompanyName(''), setAddress(''), setCity(''), setState(null), setCountry(''),
-            //     //     setZipCode(''), setdescription(''), setcampaign(null)
-            // }
             setIsLodding(true)
         }
     }

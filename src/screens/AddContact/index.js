@@ -158,15 +158,6 @@ export default function AddContact({ navigation, route }) {
   useEffect(() => {
     if (leadOwner) {
       if (leadOwner.status == "200") {
-        // console.log(',.................',leadOwner.data)
-        // let userData = leadOwner.data && leadOwner.data.map((ld) => {
-        //   let user = { label: ld.user.name, value: ld.user.id }
-        //   if (user !== undefined) {
-        //     setleadOwnerData([user])
-        //     console.log('............',user)
-        //   }
-        //   return user;
-        // })
         setleadOwnerData(leadOwner.data.map((item, index) => item.user))
       }
       else if (leadOwner.status == "fail") {

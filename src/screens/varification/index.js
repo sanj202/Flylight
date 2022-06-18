@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useDebugValue } from 'react';
 import { Text, View, ActivityIndicator, TouchableOpacity, ToastAndroid, Alert, Image, StatusBar, } from 'react-native';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { varificationAction,authAction, resendOtpAction } from '../../redux/Actions/index'
+import { varificationAction, authAction, resendOtpAction } from '../../redux/Actions/index'
 import { CodeField, Cursor, useBlurOnFulfill, useClearByFocusCell } from 'react-native-confirmation-code-field';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
@@ -25,10 +25,10 @@ export default function Varification({ navigation, route }) {
       if (otpData.status == "success") {
         setValue('')
         setIsLodding(false)
-        if (otpData.data.token){
+        if (otpData.data.token) {
           navigation.navigate("MainStack")
         }
-        else{
+        else {
           console.log('something wont to wrong')
         }
 
@@ -39,15 +39,13 @@ export default function Varification({ navigation, route }) {
         ToastAndroid.show(otpData.message, ToastAndroid.SHORT);                                                                              //otherwise alert show 
       }
     }
-    else {
-    }
   }, [otpData])
 
   useEffect(() => {
     if (resendOtpData) {
       if (resendOtpData.status == "success") {
         setIsLodding(false)
-        ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);       
+        ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);
       }
       else if (resendOtpData.status == "failed") {
         setIsLodding(false)
@@ -60,7 +58,7 @@ export default function Varification({ navigation, route }) {
 
   const Register = () => {
     if (value == "") {
-      ToastAndroid.show('Enter OTP', ToastAndroid.SHORT); 
+      ToastAndroid.show('Enter OTP', ToastAndroid.SHORT);
     }
     else {
       setIsLodding(true)
@@ -139,13 +137,11 @@ export default function Varification({ navigation, route }) {
             </View>
           </TouchableOpacity>
         </View>
-
         {IsLodding == true ?
           <ActivityIndicator size="small" color="#0000ff" />
           :
           <View />
         }
-
         <TouchableOpacity style={styles.button} onPress={() => Register()}>
           <Text style={styles.textButton}>Verify & Proceed</Text>
         </TouchableOpacity>

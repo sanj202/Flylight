@@ -687,7 +687,6 @@ export default function AddContact({ navigation, route }) {
                             onFocus={() => setIsFocus5(true)}
                             onBlur={() => setIsFocus5(false)}
                             onChange={item => {
-                                // console.log("value of ............", item)
                                 setState(item.value);
                                 setIsFocus5(false);
                             }}

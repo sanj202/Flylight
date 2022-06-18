@@ -135,32 +135,7 @@ export default function Campaign({ navigation, route }) {
         setaskDelete(!askDelete)
     }
     const CampaignView = ({ item }) => {
-        console.log(',..............', item)
         return (
-            // <View style={styles.listData}>
-            //         <View>
-            //             <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Name   </Text>
-            //             <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Status </Text>
-            //             <Text style={{ fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>Type</Text>
-            //         </View>
-            //         <View style={{ marginLeft: '2%', width: '60%' }}>
-            //             <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_name}</Text>
-            //             <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.status}</Text>
-            //             <Text style={{ fontWeight: 'bold', fontSize: 14, color: '#0F0F0F', fontFamily: 'Roboto' }}>{item.campaign_type}</Text>
-            //         </View>
-            //         <View style={{ alignSelf: 'flex-end' }}>
-            //             {editPermission ? <TouchableOpacity style={{ alignItems: 'flex-end' }}
-            //                 onPress={() => navigation.navigate(navigationStrings.EditCampaign, { campData: item })}>
-            //                 <Image style={{ height: 22, width: 22, marginHorizontal: '5%' }}
-            //                     source={require('../../images/editCall.png')} />
-            //             </TouchableOpacity> : null}
-            //             <TouchableOpacity
-            //                 style={{ alignItems: 'flex-end', marginTop: '20%', backgroundColor: '#3373F3', borderRadius: 20 }}
-            //                 onPress={() => Details(item)} >
-            //                 <Text style={{ color: '#fff', padding: '1%' }}>More Detail</Text>
-            //             </TouchableOpacity>
-            //         </View>
-            //     </View>
             <View style={{ marginHorizontal: '3%', marginVertical: '1%', backgroundColor: '#dce3f7', padding: '2%', borderRadius: 10 }}>
                 <View style={{ flexDirection: 'row', borderBottomWidth: 1, paddingBottom: '1%' }}>
                     <View style={{ justifyContent: 'center', }}>

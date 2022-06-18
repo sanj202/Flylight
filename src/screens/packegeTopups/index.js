@@ -217,7 +217,6 @@ export default function PackegeTopups({ navigation }) {
 
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
-        console.log(refreshing)
         Get_Data()
     }
     const PackView = ({ item, index }) => {

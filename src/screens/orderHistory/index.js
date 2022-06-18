@@ -62,7 +62,6 @@ export default function OrderHistory({ navigation }) {
 
 
     const DetailPackAPI = (item) => {
-        console.log('.......................', item.order_id)
         // setaskDelete1(true)
         return fetch(`http://13.235.42.46/admin/public/api/mobile/v1/PackageInvoice/
         uid=${loginData.data.uid}/profile_id=${loginData.data.cProfile.toString()}/org_uid=${loginData.data.org_uid}/
@@ -76,7 +75,6 @@ export default function OrderHistory({ navigation }) {
         })
             .then((response) => response)
             .then((json) => {
-                console.log('movie.......................', json)
                 return json.movies;
             })
             .catch((error) => {
@@ -91,7 +89,6 @@ export default function OrderHistory({ navigation }) {
 
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
-        console.log(refreshing)
         Get_Data()
     }
 

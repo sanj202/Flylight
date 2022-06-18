@@ -23,7 +23,6 @@ export const AddCallHistory = (data, token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log('Add call History',responseData)
             })
             .catch((error) => {
                 console.log("error" + error);
@@ -67,7 +66,6 @@ export const CampaignList = (data, token,) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                console.log(responseData)
                 dispatch({ type: Campaign_Success, payload: responseData })
             })
             .catch((error) => {

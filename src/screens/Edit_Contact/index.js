@@ -13,7 +13,6 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 import navigationStrings from '../../constant/navigationStrings';
 export default function EditContact({ navigation, route }) {
-    // console.log('................',route.params.Edata.campaign)
     const [LeadOwner, setLeadOwner] = useState(null)
     const [title, settitle] = useState("")
     const [fname, setfname] = useState("")
@@ -541,9 +540,7 @@ export default function EditContact({ navigation, route }) {
                         search={true}
                         searchPlaceholder='Search'
                         value={State}
-                        onChange={item => {
-                            // console.log("value of ............", item)
-                            setState(item.value);
+                        onChange={item => {setState(item.value);
                         }}
                         renderLeftIcon={() => (
                             <View>

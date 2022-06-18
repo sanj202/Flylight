@@ -20,85 +20,50 @@ export default function Varification({ navigation, route }) {
     value,
     setValue,
   });
-
-
   const dispatch = useDispatch()
   const FotpData = useSelector(state => state.Fvarify.otp)
   const resendOtpData = useSelector(state => state.resendOTP.otpResend)
-
-  // const postStatus = useSelector(state => state.posts.status)
-
-  // console.log("F_Varification ......../................", FotpData, resendOtpData)
-
   useEffect(() => {
     if (FotpData) {
       if (FotpData.status == "success") {
-        // console.log('sucess..............', FotpData)
         setValue('')
         setIsLodding(false)
         navigation.navigate("SetPassword", {email: FotpData.data.email })
       }
       else if (FotpData.status == "failed") {
-        // console.log('sucess...........false...')
         setIsLodding(false) 
         ToastAndroid.show(FotpData.message, ToastAndroid.SHORT);                                                                             //otherwise alert show 
       }
     }
-    else {
-    }
-    // }
   }, [FotpData])
-
-
   useEffect(() => {
     if (resendOtpData) {
       if (resendOtpData.status == "success") {
-        // console.log('sucess..............', otpData)
         setIsLodding(false)
        ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);  
-
       }
       else if (resendOtpData.status == "failed") {
-        // console.log('sucess...........false...')
         setIsLodding(false)
        ToastAndroid.show(resendOtpData.message, ToastAndroid.SHORT);                                                                                  //otherwise alert show 
-
       }
     }
-    else {
-      // setLoading(false);
-    }
-    // }
   }, [resendOtpData])
-
-
-
   const login = () => {
-
     if (value == "") {
       ToastAndroid.show('Enter OTP', ToastAndroid.SHORT);  
     }
-
     else {
       setIsLodding(true)
       dispatch(FvarificationAction.varification(value, state));
-
-      // navigation.navigate("Varification")
-      // navigation.navigate('DashBoard');
     }
   }
-
   const resend = () => {
     setIsLodding(true)
     dispatch(resendOtpAction.resend(state));
   }
-
-  // console.log('state..................................', state)
-
   useEffect(() => {
     ref.current.focus();
   }, [])
-
   return (
     <View style={styles.container}>
       <StatusBar

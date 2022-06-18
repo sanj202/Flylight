@@ -72,7 +72,6 @@ export default function HistoryOne({ navigation, route }) {
     }
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
-        console.log(refreshing)
         setIsLodding(true)
         setPage(0)
         setData([])

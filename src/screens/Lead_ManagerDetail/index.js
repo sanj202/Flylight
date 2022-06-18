@@ -24,9 +24,7 @@ export default function Lead_ManagerDetail({ navigation, route }) {
     useEffect(() => {
         if (LeadInfo) {
             if (LeadInfo.status == "success") {
-                // console.log('LeadInfo.lead.leadStatus.......',LeadInfo.lead)
                 setIsLodding(false)
-                // setleadDetail(LeadInfo.lead)
                 setleadDetail(LeadInfo.data)
                 dispatch(leadmanagerAction.clearResponse())
             }

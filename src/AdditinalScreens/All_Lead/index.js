@@ -34,12 +34,10 @@ export default function LeadAll({ navigation, route }) {
   const [starttext, setstarttext] = useState(true)
 
   const onChangeFrom = (event, selectedDate) => {
-    // console.log(event)
     if (event.type == 'dismissed') {
       setstartshow(!startshow);
     }
     else {
-      console.log('date selected ')
       const currentDate = selectedDate || startDate;
       setstartshow(Platform.OS === 'ios' ? true : false);
       setstartDate(currentDate)
@@ -64,7 +62,6 @@ export default function LeadAll({ navigation, route }) {
       setendShow(!endshow);
     }
     else {
-      console.log('date selected ')
       const currentDate = selectedDate || enddate;
       setendShow(Platform.OS === 'ios' ? true : false);
       setendDate(currentDate)
@@ -282,7 +279,6 @@ export default function LeadAll({ navigation, route }) {
     else {
       // Alert.alert('Please Select Any One Filter Key')
     }
-    console.log(data)
   }
 
   const Reset = () => {
@@ -323,7 +319,6 @@ export default function LeadAll({ navigation, route }) {
 
   // const handleOnEndReached = async () => {
   //   setIsLodding(true);
-  //   console.log('call ...handleOnEndReached ',stopFetchMore)
   //   if (!stopFetchMore) {
   //     setPage(page + 1);
   //     FetchData()
@@ -333,12 +328,10 @@ export default function LeadAll({ navigation, route }) {
   // };
 
   const fetchNextItems = () => {
-    console.log(results)
     if (results > 10) {
       setPage(page + 1);
       FetchData()
     } else {
-      console.log('no data ')
       return
     }
   }

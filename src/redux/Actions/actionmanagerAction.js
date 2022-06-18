@@ -141,7 +141,6 @@ export const getAction = (data, token) => {
             })
             .then(response => response.json())
             .then(responseData => {
-                // console.log("response of get API......................",responseData)
                 dispatch({ type: Action_Success, payload: responseData })
             })
             .catch((error) => {

@@ -12,8 +12,6 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { useIsFocused } from "@react-navigation/core"
 
 export default function AddContact({ navigation, route }) {
-
-    // console.log('sdfbsd.....................', route.params)
     const [modalVisible2, setModalVisible2] = useState(false);
     const [ListValues, setListValues] = useState(true)
     const [HostList, setHostList] = useState([])
@@ -185,7 +183,6 @@ export default function AddContact({ navigation, route }) {
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                // console.log('contact list ...............', contactData.data)
                 setListValues(contactData.data)
                 setModalVisible2(true)
             }
@@ -195,9 +192,6 @@ export default function AddContact({ navigation, route }) {
             else {
                 setIsLodding(false)
             }
-        }
-        else {
-
         }
     }, [contactData])
 
@@ -292,7 +286,6 @@ export default function AddContact({ navigation, route }) {
 
     const AllView = ({ item }) => {
         return (
-            // console.log('value of ...........................', item),
             <ScrollView style={
                 releetedToId !== undefined && releetedToId == item.id ?
                     { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', backgroundColor: '#24BCFF' }

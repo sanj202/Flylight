@@ -5,7 +5,6 @@ import {
     ActivityIndicator, Linking, Platform, PermissionsAndroid
 } from 'react-native';
 import styles from './styles';
-import { Card } from 'react-native-paper';
 import Header from '../../component/header/index'
 import { contactListAction, profileAction } from '../../redux/Actions/index'
 import { useDispatch, useSelector, connect } from 'react-redux';
@@ -13,6 +12,8 @@ import moment from 'moment';
 import Contacts from 'react-native-contacts';
 import { useIsFocused } from '@react-navigation/native';
 import navigationStrings from '../../constant/navigationStrings';
+import { BottomSheet } from 'react-native-elements';
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 export default function Contact({ navigation }) {
     const { width, height } = Dimensions.get('window');
     const dispatch = useDispatch()
@@ -37,9 +38,11 @@ export default function Contact({ navigation }) {
     }, [isFocused])
     const Get_Data = () => {
         setIsLodding(true)
-        const data = { uid: loginData.data.uid,
+        const data = {
+            uid: loginData.data.uid,
             profile_id: loginData.data.cProfile,
-            org_uid: loginData.data.org_uid}
+            org_uid: loginData.data.org_uid
+        }
         dispatch(profileAction.GetPermission({ account_id: loginData.data.acId.toString() }, loginData.data.token))
         dispatch(contactListAction.contactList(data, loginData.data.token));
     }
@@ -77,7 +80,6 @@ export default function Contact({ navigation }) {
         setcreatePermission(false)
     }
     const PermissionContacts = (permiss, account) => {
-        console.log(permiss)
         return permiss.contacts.map((el) => {
             return el.value;
         })

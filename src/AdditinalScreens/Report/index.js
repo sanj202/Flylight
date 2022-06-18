@@ -108,12 +108,10 @@ export default function Report({ navigation }) {
     }
 
     const callActionFunction = (value) => {
-        // console.log("value.................callStatusFunction........................", value)
         setcallAction(value)
     }
 
     const callStatusFunction = (value) => {
-        // console.log("value............callStatusFunction.............................", value)
         setcallStatus(value)
     }
 

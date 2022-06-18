@@ -223,7 +223,6 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (contactData) {
             if (contactData.status == "200") {
-                // console.log('contact list ...............', contactData.data)
                 setListValues(contactData.data)
                 setModalVisible2(true)
                 dispatch(meetingAction.clearResponse())
@@ -243,7 +242,6 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (Lead_OpportunityList) {
             if (Lead_OpportunityList.status == "200") {
-                // console.log("leadlist..............", Lead_OpportunityList.data.lead)
                 setListValues(Lead_OpportunityList.data.lead ? Lead_OpportunityList.data.lead : Lead_OpportunityList.data)
                 setModalVisible2(true)
                 dispatch(meetingAction.clearResponse())
@@ -311,7 +309,6 @@ export default function AddContact({ navigation }) {
     }
 
     const RadioSelect = (value) => {
-        // console.log('.....................', value)
         setreleetedToFname(value.first_name)
         setreleetedToLname(value.last_name)
         setreleetedToId(value.id)
@@ -321,7 +318,6 @@ export default function AddContact({ navigation }) {
 
     const AllView = ({ item }) => {
         return (
-            // console.log('value of ...........................', item),
             <ScrollView style={
                 releetedToId !== undefined && releetedToId == item.id ?
                     { borderBottomWidth: 1, borderRadius: 10, margin: '1%', paddingHorizontal: '3%', backgroundColor: '#24BCFF' }

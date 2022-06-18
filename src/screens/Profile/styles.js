@@ -1,74 +1,32 @@
-
-import { StyleSheet } from 'react-native';
-
-
+import { StyleSheet, Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
-  headerView: {
-    backgroundColor: '#3373F3',
-    height: '26%',
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
+  header: {
+    borderBottomLeftRadius: 35,
+    borderBottomRightRadius: 35,
+    height: height * 18 / 100
   },
-  inputFields: {
+  headerTouchable: {
     flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: '#000000',
-    borderRadius: 10,
-    marginVertical: '2%',
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    // height: 43
+    justifyContent: 'space-between',
+    margin: '3%',
+    alignItems: 'center'
   },
-  icon: {
-    height: 24,
-    width: 22,
-    marginRight: '2%',
-    marginTop: '1%',
-    marginLeft: '2%'
-  },
-  button: {
-    backgroundColor: '#3373F3',
-    borderRadius: 10,
-    marginVertical: '2%'
-  },
-  textButton: {
-    padding: 10,
-    fontSize: 21,
-    color: '#FFFFFF',
-  },
-  image2: {
-    width: 35,
-    height: 35
-  },
-  textValues: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#000000',
-    fontFamily: 'Roboto'
-  },
-  dropdown: {
-    height: 45,
-    borderColor: '#C3C7E5',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 8,
-    marginVertical: '1%'
-  },
-  selectedTextStyle: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    color: '#000000',
-    fontFamily: 'Roboto'
+  headerTitle: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'Roboto',
+    marginLeft: '10%'
   },
   headerBtn: {
-    alignSelf: 'flex-end',
     borderColor: '#fff',
     borderWidth: 1,
-    borderRadius: 15,
-    padding: 5,
+    paddingHorizontal: '3%',
+    paddingVertical: '1%',
+    borderRadius: 15
   },
   headerBtntext: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#fff'
   },
   avtarStyle: {
@@ -78,7 +36,53 @@ const styles = StyleSheet.create({
     borderRadius: 52,
     alignSelf: 'center',
     marginTop: '-5%'
-  }
+  },
+  inputFields: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 10,
+    alignItems: 'center',
+    paddingVertical: '3%'
+  },
+  textValues: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#000000',
+    fontFamily: 'Roboto',
+    flex: 1
+  },
+  icon: {
+    height: height * 2.6 / 100,
+    width: width * 4.8 / 100,
+    marginHorizontal: '2%'
+  },
+  fieldsLable: {
+    color: '#000000',
+    fontFamily: 'Roboto',
+    fontSize: 13,
+    marginLeft: '1%'
+  },
+  button: {
+    backgroundColor: '#3373F3',
+    borderRadius: 10,
+    marginVertical: '3%',
+    marginHorizontal: '10%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: '2%'
+  },
+  textButton: {
+    fontSize: 21,
+    color: '#FFFFFF',
+  },
+  profileName: {
+    fontSize: 20,
+    textAlign: 'center',
+    fontFamily: 'Roboto',
+    color: '#000000'
+  },
 });
 
 export default styles

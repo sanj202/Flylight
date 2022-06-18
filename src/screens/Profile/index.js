@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ToastAndroid, Image, TextInput, ActivityIndicator, StatusBar, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ToastAndroid, Image, TextInput, ActivityIndicator, FlatList, StatusBar, TouchableOpacity, Dimensions } from 'react-native';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { Base_ImageUrl } from '../../../const'
 import { ScrollView } from 'react-native-gesture-handler';
 import navigationStrings from '../../constant/navigationStrings';
+
 export default function AddContact({ navigation }) {
 
     const [user, setUser] = useState('');
@@ -40,7 +41,6 @@ export default function AddContact({ navigation }) {
     useEffect(() => {
         if (profileData) {
             if (profileData.status == "200") {
-                // console.log('................',profileData.data.user)
                 setUser(profileData.data.user)
                 setuserImage(profileData.data.user.avatar)
                 setIsLodding(false)
@@ -50,14 +50,11 @@ export default function AddContact({ navigation }) {
                 setIsLodding(false)
             }
         }
-        else {
-        }
     }, [profileData])
 
     useEffect(() => {
         if (profileImage) {
             if (profileImage.status == "success") {
-                // console.log('..........................',profileImage)
                 setIsLodding2(false)
                 setuserImage(profileImage.avatar)
                 ToastAndroid.show(profileImage.message, ToastAndroid.SHORT);
@@ -65,7 +62,6 @@ export default function AddContact({ navigation }) {
             }
             else if (profileImage == "error") {
                 setIsLodding2(false)
-                console.log('error ..............', profileImage)
             }
             else {
                 setIsLodding2(false)
@@ -93,6 +89,13 @@ export default function AddContact({ navigation }) {
         });
     };
 
+
+    const [refreshing, setrefreshing] = useState(false)
+    const handleRefresh = () => {
+        console.log(refreshing)
+        getProfile()
+    }
+
     const LogoutSession = () => {
         dispatch(authAction.clearResponse())
     };
@@ -101,18 +104,12 @@ export default function AddContact({ navigation }) {
         <View style={{ flex: 1 }}>
             <LinearGradient
                 colors={['#2D6FF2', '#2D6FF2', '#2D6FF2', '#8DB3FF',]}
-                style={{ borderBottomLeftRadius: 35, borderBottomRightRadius: 35, height: height * 18 / 100 }}>
-                <SafeAreaView style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: '5%', marginTop: '5%' }}>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                style={styles.header}>
+                <SafeAreaView style={styles.headerTouchable}>
+                    <TouchableOpacity onPress={() => navigation.openDrawer()} >
                         <Image style={{ height: 28, width: 28 }} source={require('../../images/home.png')} />
                     </TouchableOpacity>
-                    <Text style={{
-                        color: 'white',
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                        textAlign: 'center',
-                        marginLeft: '10%'
-                    }}>My Account</Text>
+                    <Text style={styles.headerTitle}>My Account</Text>
                     <TouchableOpacity
                         style={styles.headerBtn}
                         onPress={() => navigation.navigate(navigationStrings.EditProfile, {
@@ -131,14 +128,13 @@ export default function AddContact({ navigation }) {
                     </TouchableOpacity>
                 </SafeAreaView>
                 <TouchableOpacity
-                    onPress={() => navigation.navigate(navigationStrings.orderHistory)}
-                    style={[styles.headerBtn, { marginRight: '3%', marginTop: '3%' }]} >
+                    style={[styles.headerBtn, { width: '24%', alignSelf: 'flex-end', paddingHorizontal: '2%', marginRight: '2%' }]}
+                    onPress={() => navigation.navigate(navigationStrings.orderHistory)}>
                     <Text style={styles.headerBtntext}>Order history</Text>
                 </TouchableOpacity>
                 {IsLodding2 == true ?
                     <ActivityIndicator size="large" color="#0000ff" />
-                    :
-                    <View style={styles.avtarStyle}>
+                    : <View style={styles.avtarStyle}>
                         {user.avatar ?
                             <View style={{ flexDirection: 'row' }}>
                                 <Image source={{ uri: `${Base_ImageUrl}` + userImage }}
@@ -166,60 +162,83 @@ export default function AddContact({ navigation }) {
                                 source={require('../../images/edit_Profile.png')}
                             />
                         </TouchableOpacity>
-                        <Text style={{
-                            marginTop: '5%', marginBottom: '2%', textAlign: 'center',
-                            fontFamily: 'Roboto', fontWeight: '500', color: '#000000'
-                        }}>{user.name}</Text>
+
                     </View>}
+                <Text style={styles.profileName}>{user.name}</Text>
             </LinearGradient>
-            <View style={{ flex: 1, marginVertical: '2%', marginTop: '20%' }}>
+            <View style={{ flex: 1, marginVertical: '2%', marginTop: '20%', }}>
                 {IsLodding == true ?
                     <ActivityIndicator size="large" color="#0000ff" />
                     :
-                    <ScrollView style={{marginHorizontal:'3%'}}>
-                        <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Your Name</Text>
-                        <View style={styles.inputFields}>
-                            <Image
-                                style={{ height: 19, width: 18, marginRight: '2%' }}
-                                source={require('../../images/user.png')}
-                            />
-                            <Text style={styles.textValues}>{user.name ? user.name : ''}</Text>
-                        </View>
-                        <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Mobile Number</Text>
-                        <View style={styles.inputFields}>
-                            <Image
-                                style={[styles.icon, { height: 19, width: 19 }]}
-                                source={require('../../images/VVVV.png')}
-                            />
-                            <Text style={styles.textValues}>{user.phone ? user.phone : ''}</Text>
-                        </View>
-                        <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Email</Text>
-                        <View style={styles.inputFields}>
-                            <Image
-                                style={[styles.icon, { height: 17, width: 21, }]}
-                                source={require('../../images/mail.png')}
-                            />
-                            <Text style={styles.textValues}>{user.email ? user.email : ''}</Text>
-                        </View>
-                        <Text style={{ fontSize: 12, color: '#000000', fontFamily: 'Roboto' }}>Address</Text>
-                        <View style={styles.inputFields}>
-                            <Image
-                                style={[styles.icon, { height: 24, width: 18, marginTop: '-0.5%' }]}
-                                source={require('../../images/address.png')}
-                            />
-                            <Text style={styles.textValues}>{user.state ? user.street + ',' + user.city + ',' + user.state + ',' + user.country + ',' + user.zip : ''}</Text>
-                        </View>
-                        <TouchableOpacity style={styles.button}
-                            onPress={() => LogoutSession()} >
-                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={styles.textButton}>Logout</Text>
-                                <Image
-                                    source={require('../../images/White_logout.png')}
-                                    style={{ height: 17, width: 20, marginTop: '1.5%' }}
-                                />
+                    <FlatList
+                        contentContainerStyle={{
+                            // display: "flex",
+                            flexGrow: 1,
+                        }}
+                        data={[{}]}
+                        keyExtractor={() => 'childrenkeyflatlist'}
+                        refreshing={refreshing}
+                        onRefresh={handleRefresh}
+                        renderItem={() =>
+                            <View style={{ marginHorizontal: '3%' }}>
+                                <View>
+                                    <Text style={styles.fieldsLable}>Your Name</Text>
+                                    <View style={styles.inputFields}>
+                                        <Image
+                                            style={[styles.icon, { height: height * 3 / 100, width: width * 5.4 / 100, }]}
+                                            source={require('../../images/user.png')}
+                                        />
+                                        <Text style={styles.textValues}>{user.name ? user.name : ''}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ marginVertical: '1%' }}>
+                                    <Text style={styles.fieldsLable}>Mobile Number</Text>
+                                    <View style={styles.inputFields}>
+                                        <Image
+                                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '4.5%', margin: '2%' }]
+                                                :
+                                                [styles.icon, { height: height * 3.8 / 100, }]}
+                                            source={require('../../images/mobile.png')}
+                                        />
+                                        <Text style={styles.textValues}>{user.phone ? user.phone : ''}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ marginVertical: '1%' }}>
+                                    <Text style={styles.fieldsLable}>Email</Text>
+                                    <View style={styles.inputFields}>
+                                        <Image style={
+                                            Platform.OS == 'ios' ? [styles.icon, { height: 17, width: '6%', margin: '2.5%' }]
+                                                :
+                                                [styles.icon, { width: width * 6.5 / 100, }]}
+                                            source={require('../../images/mail.png')}
+                                        />
+                                        <Text style={styles.textValues}>{user.email ? user.email : ''}</Text>
+                                    </View>
+                                </View>
+                                <View style={{ marginVertical: '1%' }}>
+                                    <Text style={styles.fieldsLable}>Address</Text>
+                                    <View style={styles.inputFields}>
+                                        <Image
+                                            style={Platform.OS == 'ios' ? [styles.icon, { height: 24, width: '5.5%', margin: '1.6%' }]
+                                                :
+                                                [styles.icon, { height: height * 3.2 / 100 }]}
+                                            source={require('../../images/address.png')}
+                                        />
+                                        <Text style={styles.textValues}>{user.state ? user.street + ',' + user.city + ',' + user.state + ',' + user.country + ',' + user.zip : ''}</Text>
+                                    </View>
+                                </View>
+                                <TouchableOpacity style={styles.button}
+                                    onPress={() => LogoutSession()} >
+                                    <Text style={styles.textButton}>Logout</Text>
+                                    <Image
+                                        source={require('../../images/White_logout.png')}
+                                        style={{ height: height * 2.7 / 100, width: width * 6 / 100, marginHorizontal: '3%' }}
+                                    />
+                                </TouchableOpacity>
                             </View>
-                        </TouchableOpacity>
-                    </ScrollView>}
+                        }
+                    />
+                }
             </View>
         </View>
     );

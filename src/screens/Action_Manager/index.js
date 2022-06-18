@@ -238,7 +238,6 @@ export default function Action_Manager({ navigation }) {
     }
     const [refreshing, setrefreshing] = useState(false)
     const handleRefresh = () => {
-        console.log(refreshing)
         Get_ActionStatus()
     }
     const StatusView = ({ item }) => {

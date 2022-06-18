@@ -189,7 +189,6 @@ export default function Lead_manager({ navigation, route }) {
         dispatch(leadmanagerAction.lead_OpprtunityList(data, loginData.data.token));
       }
       setLead([])
-      // console.log(data)
     }
     else {
       ToastAndroid.show('Please Select Search Criteria', ToastAndroid.SHORT);
